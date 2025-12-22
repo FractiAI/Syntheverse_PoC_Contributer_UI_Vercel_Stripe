@@ -59,13 +59,13 @@ export async function GET(request: NextRequest) {
             status: 'success',
             message: 'Stripe client initialized successfully',
             details: {
-                apiVersion: stripe.getApiField('version')
+                initialized: true
             }
         })
         
         // Step 3: Test API connection - Get account info
         try {
-            const account = await stripe.account.retrieve()
+            const account = await stripe.accounts.retrieve()
             results.push({
                 step: 'API Connection',
                 status: 'success',
