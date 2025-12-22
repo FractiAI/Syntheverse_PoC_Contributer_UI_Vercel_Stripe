@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/utils/supabase/server'
 import { debug, debugError } from '@/utils/debug'
 import Stripe from 'stripe'
+import { db } from '@/utils/db/db'
+import { usersTable } from '@/utils/db/schema'
+import { eq } from 'drizzle-orm'
 
 export async function GET(request: NextRequest) {
     debug('TestStripe', 'Testing Stripe connection')
@@ -159,10 +162,6 @@ export async function GET(request: NextRequest) {
                 
                 // Step 7: Check user's Stripe customer ID
                 try {
-                    const { db } = await import('@/utils/db/db')
-                    const { usersTable } = await import('@/utils/db/schema')
-                    const { eq } = await import('drizzle-orm')
-                    
                     const dbUser = await db.select().from(usersTable).where(eq(usersTable.email, user.email))
                     
                     if (dbUser && dbUser.length > 0 && dbUser[0].stripe_id) {
