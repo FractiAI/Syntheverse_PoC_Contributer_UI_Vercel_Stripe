@@ -11,13 +11,14 @@ import { getStripePlan } from "@/utils/stripe/api"
 import { Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 
-export default async function DashboardHeader() {
+// Separate component for Stripe plan to isolate errors
+async function StripePlanBadge() {
     const supabase = createClient()
-    const { data: { user }, error } = await supabase.auth.getUser()
+    const { data: { user } } = await supabase.auth.getUser()
     
     // Get the user's plan from Stripe (only if user exists)
     let stripePlan = "Free"
-    if (user && user.email) {
+    if (user?.email) {
         try {
             stripePlan = await getStripePlan(user.email)
         } catch (error) {
@@ -25,6 +26,13 @@ export default async function DashboardHeader() {
             // Default to "Free" if there's an error
         }
     }
+    
+    return <Badge variant="outline" className="mr-2">{stripePlan}</Badge>
+}
+
+export default async function DashboardHeader() {
+    const supabase = createClient()
+    const { data: { user }, error } = await supabase.auth.getUser()
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -34,7 +42,7 @@ export default async function DashboardHeader() {
                         <Image src="/logo.png" alt="logo" width={25} height={25} />
                     </Link>
                     <Suspense fallback={<Badge variant="outline" className="mr-2"><Skeleton className="w-[50px] h-[20px] rounded-full" /></Badge>}>
-                        <Badge variant="outline" className="mr-2">{stripePlan}</Badge>
+                        <StripePlanBadge />
                     </Suspense>
                     <nav className="flex items-center space-x-6 text-sm font-medium">
                         <Link className="transition-colors hover:text-foreground/80 text-foreground" href="#">
