@@ -29,6 +29,9 @@ yarn-error.log*
 .env*
 !.env.example
 
+# sensitive configuration files with secrets
+VERCEL_ENV_VARIABLES.txt
+
 # vercel
 .vercel
 
