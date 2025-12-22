@@ -2,37 +2,73 @@ import { Stripe } from 'stripe';
 import { db } from '../db/db';
 import { usersTable } from '../db/schema';
 import { eq } from "drizzle-orm";
+import { debug, debugError, debugWarn } from '@/utils/debug';
 
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+// Initialize Stripe only if secret key is available
+let stripe: Stripe | null = null
+try {
+    if (process.env.STRIPE_SECRET_KEY) {
+        stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+        debug('StripeAPI', 'Stripe initialized successfully');
+    } else {
+        debugWarn('StripeAPI', 'STRIPE_SECRET_KEY not found in environment');
+    }
+} catch (error) {
+    debugError('StripeAPI', 'Failed to initialize Stripe', error);
+}
 const PUBLIC_URL = process.env.NEXT_PUBLIC_WEBSITE_URL || "http://localhost:3000"
 
 export async function getStripePlan(email: string): Promise<string> {
+    debug('getStripePlan', 'Starting getStripePlan', { email });
+    
     try {
+        // Check if Stripe is initialized
+        if (!stripe) {
+            debugWarn('getStripePlan', 'Stripe not initialized, returning Free plan');
+            return "Free"
+        }
+        
+        debug('getStripePlan', 'Querying database for user', { email });
         const user = await db.select().from(usersTable).where(eq(usersTable.email, email))
+        
+        debug('getStripePlan', 'Database query completed', { 
+            found: user?.length > 0,
+            plan: user?.[0]?.plan 
+        });
         
         // If user doesn't exist or has no plan, return "Free"
         if (!user || user.length === 0 || !user[0].plan || user[0].plan === "none") {
+            debug('getStripePlan', 'User has no plan, returning Free');
             return "Free"
         }
 
         // If plan is not a valid Stripe subscription ID, return "Free"
         if (!user[0].plan.startsWith("sub_")) {
+            debugWarn('getStripePlan', 'Plan is not a valid Stripe subscription ID', { plan: user[0].plan });
             return "Free"
         }
 
+        debug('getStripePlan', 'Retrieving Stripe subscription', { subscriptionId: user[0].plan });
         const subscription = await stripe.subscriptions.retrieve(user[0].plan);
         const productId = subscription.items.data[0].plan.product as string
+        
+        debug('getStripePlan', 'Retrieving Stripe product', { productId });
         const product = await stripe.products.retrieve(productId)
+        
+        debug('getStripePlan', 'Stripe plan retrieved successfully', { planName: product.name });
         return product.name
     } catch (error) {
-        console.error("Error getting Stripe plan:", error)
+        debugError('getStripePlan', 'Error getting Stripe plan', error);
         // Return "Free" as default if anything fails
         return "Free"
     }
 }
 
 export async function createStripeCustomer(id: string, email: string, name?: string) {
+    if (!stripe) {
+        throw new Error("Stripe not initialized")
+    }
     const customer = await stripe.customers.create({
         name: name ? name : "",
         email: email,
@@ -46,6 +82,10 @@ export async function createStripeCustomer(id: string, email: string, name?: str
 
 export async function createStripeCheckoutSession(email: string): Promise<string> {
     try {
+        if (!stripe) {
+            throw new Error("Stripe not initialized")
+        }
+        
         const user = await db.select().from(usersTable).where(eq(usersTable.email, email))
         
         // If user doesn't exist or has no stripe_id, throw error
@@ -70,9 +110,9 @@ export async function createStripeCheckoutSession(email: string): Promise<string
 
 export async function generateStripeBillingPortalLink(email: string): Promise<string> {
     try {
-        // Check if Stripe is configured
-        if (!process.env.STRIPE_SECRET_KEY) {
-            console.warn("STRIPE_SECRET_KEY not configured, returning subscribe page")
+        // Check if Stripe is initialized
+        if (!stripe) {
+            console.warn("Stripe not initialized, returning subscribe page")
             return "/subscribe"
         }
 

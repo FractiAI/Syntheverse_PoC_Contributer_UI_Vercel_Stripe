@@ -10,31 +10,61 @@ import { Badge } from "@/components/ui/badge"
 import { getStripePlan } from "@/utils/stripe/api"
 import { Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
+import { debug, debugError, debugWarn } from '@/utils/debug'
 
 // Separate component for Stripe plan to isolate errors
 async function StripePlanBadge() {
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    debug('StripePlanBadge', 'Starting Stripe plan badge render');
     
-    // Get the user's plan from Stripe (only if user exists)
-    let stripePlan = "Free"
-    if (user?.email) {
-        try {
-            stripePlan = await getStripePlan(user.email)
-        } catch (error) {
-            console.error("Error getting Stripe plan:", error)
-            // Default to "Free" if there's an error
+    try {
+        const supabase = createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        
+        debug('StripePlanBadge', 'Auth getUser completed', { hasUser: !!user, hasEmail: !!user?.email });
+        
+        // Get the user's plan from Stripe (only if user exists)
+        let stripePlan = "Free"
+        if (user?.email) {
+            try {
+                debug('StripePlanBadge', 'Fetching Stripe plan', { email: user.email });
+                stripePlan = await getStripePlan(user.email)
+                debug('StripePlanBadge', 'Stripe plan fetched', { plan: stripePlan });
+            } catch (error) {
+                debugError('StripePlanBadge', 'Error getting Stripe plan', error);
+                // Default to "Free" if there's an error
+            }
+        } else {
+            debug('StripePlanBadge', 'No user email, using default Free plan');
         }
+        
+        return <Badge variant="outline" className="mr-2">{stripePlan}</Badge>
+    } catch (error) {
+        debugError('StripePlanBadge', 'Fatal error in StripePlanBadge', error);
+        return <Badge variant="outline" className="mr-2">Free</Badge>
     }
-    
-    return <Badge variant="outline" className="mr-2">{stripePlan}</Badge>
 }
 
 export default async function DashboardHeader() {
-    const supabase = createClient()
-    const { data: { user }, error } = await supabase.auth.getUser()
+    debug('DashboardHeader', 'Starting header render');
+    
+    try {
+        const supabase = createClient()
+        debug('DashboardHeader', 'Supabase client created');
+        
+        const { data: { user }, error } = await supabase.auth.getUser()
+        
+        debug('DashboardHeader', 'Auth getUser completed', { 
+            hasUser: !!user, 
+            hasEmail: !!user?.email,
+            error: error?.message 
+        });
+        
+        // Log auth errors but don't crash
+        if (error) {
+            debugWarn('DashboardHeader', 'Auth error', error);
+        }
 
-    return (
+        return (
         <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container flex h-14 max-w-screen-2xl items-center">
                 <div className="mr-4 hidden md:flex">
@@ -80,5 +110,20 @@ export default async function DashboardHeader() {
                 </div>
             </div>
         </header>
-    )
+        )
+    } catch (error) {
+        debugError('DashboardHeader', 'Error rendering header', error);
+        // Return a minimal fallback header
+        return (
+            <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+                <div className="container flex h-14 max-w-screen-2xl items-center">
+                    <div className="mr-4 hidden md:flex">
+                        <Link className="mr-2 flex items-center space-x-2" href="">
+                            <Image src="/logo.png" alt="logo" width={25} height={25} />
+                        </Link>
+                    </div>
+                </div>
+            </header>
+        )
+    }
 }

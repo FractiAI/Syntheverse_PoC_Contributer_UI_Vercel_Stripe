@@ -5,7 +5,11 @@ const nextConfig = {
     // Exclude syntheverse-ui from compilation
     config.watchOptions = {
       ...config.watchOptions,
-      ignored: ['**/node_modules', '**/syntheverse-ui/**'],
+      ignored: [
+        '**/node_modules/**',
+        '**/syntheverse-ui/**',
+        '**/.next/**',
+      ],
     };
     
     // Ignore syntheverse-ui in resolve
@@ -13,14 +17,36 @@ const nextConfig = {
       ...config.resolve.alias,
     };
     
+    // Exclude syntheverse-ui from module resolution
+    config.module = {
+      ...config.module,
+      rules: [
+        ...(config.module?.rules || []),
+        {
+          test: /\.(ts|tsx|js|jsx)$/,
+          exclude: [
+            /node_modules/,
+            /syntheverse-ui/,
+          ],
+        },
+      ],
+    };
+    
     return config;
   },
   // Exclude syntheverse-ui from page discovery
+  pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
+  // Exclude syntheverse-ui from output file tracing
   experimental: {
     outputFileTracingExcludes: {
-      '*': ['./syntheverse-ui/**/*'],
+      '*': [
+        './syntheverse-ui/**/*',
+        './**/syntheverse-ui/**/*',
+      ],
     },
   },
+  // Explicitly set the app directory to avoid picking up syntheverse-ui
+  distDir: '.next',
 };
 
 export default nextConfig;

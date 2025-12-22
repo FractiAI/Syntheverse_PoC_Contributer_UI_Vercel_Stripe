@@ -6,6 +6,7 @@ import { redirect } from "next/navigation"
 import { db } from '@/utils/db/db'
 import { usersTable } from '@/utils/db/schema'
 import { eq } from "drizzle-orm";
+import { debug, debugError, debugWarn } from '@/utils/debug';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,39 +20,64 @@ export default async function DashboardLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    // Check if user has plan selected. If not redirect to subscribe
-    const supabase = createClient()
-
-    const {
-        data: { user },
-        error: authError,
-    } = await supabase.auth.getUser()
-
-    // If no user, redirect to login
-    if (authError || !user || !user.email) {
-        redirect('/login')
-    }
-
+    debug('DashboardLayout', 'Starting layout render');
+    
     try {
-        // check user plan in db
-        const checkUserInDB = await db.select().from(usersTable).where(eq(usersTable.email, user.email))
+        // Check if user has plan selected. If not redirect to subscribe
+        const supabase = createClient()
+        debug('DashboardLayout', 'Supabase client created');
+
+        const {
+            data: { user },
+            error: authError,
+        } = await supabase.auth.getUser()
         
-        // If user doesn't exist in DB yet, redirect to subscribe
-        if (!checkUserInDB || checkUserInDB.length === 0) {
-            console.log("User not found in database, redirecting to subscribe")
-            redirect('/subscribe')
+        debug('DashboardLayout', 'Auth getUser completed', { 
+            hasUser: !!user, 
+            hasEmail: !!user?.email,
+            authError: authError?.message 
+        });
+
+        // If no user, redirect to login
+        if (authError || !user || !user.email) {
+            debugWarn('DashboardLayout', 'No user or auth error, redirecting to login', { authError });
+            redirect('/login')
         }
 
-        // If user has no plan, redirect to subscribe
-        if (checkUserInDB[0].plan === "none") {
-            console.log("User has no plan selected")
-            redirect('/subscribe')
+        try {
+            debug('DashboardLayout', 'Querying database for user plan', { email: user.email });
+            // check user plan in db
+            const checkUserInDB = await db.select().from(usersTable).where(eq(usersTable.email, user.email))
+            
+            debug('DashboardLayout', 'Database query completed', { 
+                found: checkUserInDB?.length > 0,
+                plan: checkUserInDB?.[0]?.plan 
+            });
+            
+            // If user doesn't exist in DB yet, redirect to subscribe
+            if (!checkUserInDB || checkUserInDB.length === 0) {
+                debug('DashboardLayout', 'User not found in database, redirecting to subscribe');
+                redirect('/subscribe')
+            }
+
+            // If user has no plan, redirect to subscribe
+            if (checkUserInDB[0].plan === "none") {
+                debug('DashboardLayout', 'User has no plan selected, redirecting to subscribe');
+                redirect('/subscribe')
+            }
+            
+            debug('DashboardLayout', 'User plan check passed', { plan: checkUserInDB[0].plan });
+        } catch (dbError) {
+            // If database query fails, log error but don't crash
+            debugError('DashboardLayout', 'Database error in dashboard layout', dbError);
+            // Allow user to continue - they might be able to see the dashboard
+            // or the error will be caught elsewhere
         }
-    } catch (dbError) {
-        // If database query fails, log error but don't crash
-        console.error("Database error in dashboard layout:", dbError)
-        // Allow user to continue - they might be able to see the dashboard
-        // or the error will be caught elsewhere
+        
+        debug('DashboardLayout', 'Layout render successful, rendering children');
+    } catch (error) {
+        debugError('DashboardLayout', 'Fatal error in dashboard layout', error);
+        throw error; // Re-throw to trigger error boundary
     }
 
     return (
