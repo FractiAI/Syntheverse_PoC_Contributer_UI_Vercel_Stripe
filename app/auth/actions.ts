@@ -144,9 +144,16 @@ export async function signInWithGoogle() {
         },
     })
 
-    if (data.url) {
-        redirect(data.url) // use the redirect API for your server framework
+    if (error) {
+        console.error("Google OAuth error:", error)
+        redirect(`/login?error=${encodeURIComponent(error.message)}`)
     }
+
+    if (data.url) {
+        redirect(data.url)
+    }
+    
+    redirect('/login?error=oauth_failed')
 }
 
 
@@ -159,8 +166,14 @@ export async function signInWithGithub() {
         },
     })
 
-    if (data.url) {
-        redirect(data.url) // use the redirect API for your server framework
+    if (error) {
+        console.error("GitHub OAuth error:", error)
+        redirect(`/login?error=${encodeURIComponent(error.message)}`)
     }
 
+    if (data.url) {
+        redirect(data.url)
+    }
+    
+    redirect('/login?error=oauth_failed')
 }
