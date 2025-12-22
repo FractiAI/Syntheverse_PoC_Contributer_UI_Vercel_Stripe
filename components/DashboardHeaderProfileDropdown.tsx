@@ -19,13 +19,18 @@ export default async function DashboardHeaderProfileDropdown() {
     const { data: { user }, error } = await supabase.auth.getUser()
     
     // Get billing portal URL (only if user exists and has email)
-    let billingPortalURL = "#"
+    let billingPortalURL = "/subscribe" // Default to subscribe page if billing portal fails
     if (user && user.email) {
         try {
-            billingPortalURL = await generateStripeBillingPortalLink(user.email)
+            const portalURL = await generateStripeBillingPortalLink(user.email)
+            // Only use the portal URL if it's valid (not just the fallback dashboard URL)
+            if (portalURL && portalURL !== "#" && portalURL.startsWith("http")) {
+                billingPortalURL = portalURL
+            }
         } catch (error) {
             console.error("Error generating billing portal link:", error)
-            // Default to "#" if there's an error
+            // Default to subscribe page if there's an error
+            billingPortalURL = "/subscribe"
         }
     }
     return (
@@ -56,12 +61,12 @@ export default async function DashboardHeaderProfileDropdown() {
                             <span>Settings</span>
                         </DropdownMenuItem>
                     </Link>
-                    <Link href="#">
-                        <DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <Link href={billingPortalURL}>
                             <ReceiptText className="mr-2 h-4 w-4" />
-                            <Link href={billingPortalURL}>Billing</Link>
-                        </DropdownMenuItem>
-                    </Link>
+                            <span>Billing</span>
+                        </Link>
+                    </DropdownMenuItem>
                     <Link href="#">
                         <DropdownMenuItem>
                             <HelpCircle className="mr-2 h-4 w-4" />

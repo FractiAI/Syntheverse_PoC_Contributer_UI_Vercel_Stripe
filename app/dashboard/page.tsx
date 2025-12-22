@@ -79,7 +79,7 @@ export default async function Dashboard() {
                         <p className="text-xs text-muted-foreground mb-4">
                             View ecosystem statistics
                         </p>
-                        <Link href="/explorer">
+                        <Link href="/subscribe">
                             <Button variant="outline" size="sm" className="w-full">Explore</Button>
                         </Link>
                     </CardContent>
