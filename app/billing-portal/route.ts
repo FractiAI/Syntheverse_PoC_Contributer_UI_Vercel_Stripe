@@ -26,8 +26,15 @@ export async function GET(request: NextRequest) {
         
         debug('BillingPortal', 'Generating billing portal link', { email: user.email })
         
-        // Generate billing portal link
-        const portalUrl = await generateStripeBillingPortalLink(user.email)
+        // Generate billing portal link - this function handles all errors internally
+        let portalUrl: string
+        try {
+            portalUrl = await generateStripeBillingPortalLink(user.email)
+        } catch (linkError) {
+            debugError('BillingPortal', 'Error in generateStripeBillingPortalLink', linkError)
+            // Fallback to subscribe page
+            portalUrl = '/subscribe'
+        }
         
         debug('BillingPortal', 'Portal URL generated', { 
             portalUrl, 
@@ -40,12 +47,15 @@ export async function GET(request: NextRequest) {
             return NextResponse.redirect(portalUrl)
         }
         
-        // Otherwise redirect to subscribe page
-        debug('BillingPortal', 'Invalid portal URL, redirecting to subscribe', { portalUrl })
+        // Otherwise redirect to subscribe page (relative or absolute)
+        debug('BillingPortal', 'Redirecting to subscribe page', { portalUrl })
+        if (portalUrl.startsWith('/')) {
+            return NextResponse.redirect(new URL(portalUrl, origin))
+        }
         return NextResponse.redirect(new URL('/subscribe', origin))
     } catch (error) {
-        debugError('BillingPortal', 'Error generating billing portal', error)
-        // On error, redirect to subscribe page
+        debugError('BillingPortal', 'Error in billing portal route', error)
+        // On any error, redirect to subscribe page
         return NextResponse.redirect(new URL('/subscribe', origin))
     }
 }

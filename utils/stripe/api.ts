@@ -143,6 +143,14 @@ export async function generateStripeBillingPortalLink(email: string): Promise<st
             returnUrl: `${PUBLIC_URL}/dashboard`
         })
 
+        // Validate customer ID format
+        if (!user[0].stripe_id.startsWith('cus_')) {
+            debugWarn('generateStripeBillingPortalLink', 'Invalid Stripe customer ID format', {
+                stripeId: user[0].stripe_id
+            })
+            return "/subscribe"
+        }
+
         const portalSession = await stripe.billingPortal.sessions.create({
             customer: user[0].stripe_id,
             return_url: `${PUBLIC_URL}/dashboard`,
