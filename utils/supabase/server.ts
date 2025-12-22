@@ -14,9 +14,18 @@ export function createClient() {
                 },
                 setAll(cookiesToSet) {
                     try {
-                        cookiesToSet.forEach(({ name, value, options }) =>
-                            cookieStore.set(name, value, options)
-                        )
+                        cookiesToSet.forEach(({ name, value, options }) => {
+                            // Merge with defaults to ensure proper cookie settings, preserving Supabase's expiration
+                            const mergedOptions = {
+                                path: '/',
+                                sameSite: 'lax' as const,
+                                secure: process.env.NODE_ENV === 'production',
+                                httpOnly: true,
+                                // Preserve Supabase's expiration settings (maxAge or expires)
+                                ...(options || {}),
+                            }
+                            cookieStore.set(name, value, mergedOptions)
+                        })
                     } catch {
                         // The `setAll` method was called from a Server Component.
                         // This can be ignored if you have middleware refreshing

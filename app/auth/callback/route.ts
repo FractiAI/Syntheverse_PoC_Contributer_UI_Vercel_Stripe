@@ -1,48 +1,100 @@
-import { NextResponse } from 'next/server'
-// The client you created from the Server-Side Auth instructions
-import { createClient } from '@/utils/supabase/server'
+import { NextResponse, NextRequest } from 'next/server'
+import { createServerClient } from '@supabase/ssr'
 import { createStripeCustomer } from '@/utils/stripe/api'
 import { db } from '@/utils/db/db'
 import { usersTable } from '@/utils/db/schema'
 import { eq } from "drizzle-orm";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
     const { searchParams, origin } = new URL(request.url)
     const code = searchParams.get('code')
-    // if "next" is in param, use it as the redirect URL
-    const next = searchParams.get('next') ?? '/'
+    const next = searchParams.get('next') ?? '/dashboard'
 
-    if (code) {
-        const supabase = createClient()
-        const { error } = await supabase.auth.exchangeCodeForSession(code)
-        if (!error) {
-            const {
-                data: { user },
-            } = await supabase.auth.getUser()
-
-            // check to see if user already exists in db
-            const checkUserInDB = await db.select().from(usersTable).where(eq(usersTable.email, user!.email!))
-            const isUserInDB = checkUserInDB.length > 0 ? true : false
-            if (!isUserInDB) {
-                // create Stripe customers
-                const stripeID = await createStripeCustomer(user!.id, user!.email!, user!.user_metadata.full_name)
-                // Create record in DB
-                await db.insert(usersTable).values({ id: user!.id, name: user!.user_metadata.full_name, email: user!.email!, stripe_id: stripeID, plan: 'none' })
-            }
-
-            const forwardedHost = request.headers.get('x-forwarded-host') // original origin before load balancer
-            const isLocalEnv = process.env.NODE_ENV === 'development'
-            if (isLocalEnv) {
-                // we can be sure that there is no load balancer in between, so no need to watch for X-Forwarded-Host
-                return NextResponse.redirect(`${origin}${next}`)
-            } else if (forwardedHost) {
-                return NextResponse.redirect(`https://${forwardedHost}${next}`)
-            } else {
-                return NextResponse.redirect(`${origin}${next}`)
-            }
-        }
+    if (!code) {
+        return NextResponse.redirect(new URL('/auth/auth-code-error', origin))
     }
 
-    // return the user to an error page with instructions
-    return NextResponse.redirect(`${origin}/auth/auth-code-error`)
+    // Determine redirect URL
+    const forwardedHost = request.headers.get('x-forwarded-host')
+    const isLocalEnv = process.env.NODE_ENV === 'development'
+    const redirectUrl = isLocalEnv 
+        ? `${origin}${next}`
+        : forwardedHost 
+            ? `https://${forwardedHost}${next}`
+            : `${origin}${next}`
+
+    // Create the redirect response FIRST - we'll set cookies on it
+    const redirectResponse = NextResponse.redirect(new URL(redirectUrl))
+    
+    // Create Supabase client with cookie handlers that write directly to redirectResponse
+    const supabase = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        {
+            cookies: {
+                getAll() {
+                    return request.cookies.getAll()
+                },
+                setAll(cookiesToSet) {
+                    // Set cookies directly on the redirect response
+                    // Preserve Supabase's options (especially maxAge/expires) and merge with defaults
+                    cookiesToSet.forEach(({ name, value, options }) => {
+                        // Merge Supabase options with our defaults, preserving expiration settings
+                        const mergedOptions = {
+                            path: '/',
+                            sameSite: 'lax' as const,
+                            secure: process.env.NODE_ENV === 'production',
+                            httpOnly: true,
+                            // Preserve Supabase's expiration settings (maxAge or expires)
+                            ...(options || {}),
+                        }
+                        redirectResponse.cookies.set(name, value, mergedOptions)
+                    })
+                },
+            },
+        }
+    )
+    
+    // Exchange the code for a session - this triggers setAll above to set cookies on redirectResponse
+    const { error } = await supabase.auth.exchangeCodeForSession(code)
+    
+    if (error) {
+        console.error("OAuth callback error:", error)
+        return NextResponse.redirect(new URL('/auth/auth-code-error', origin))
+    }
+
+    // Verify we have a user
+    const { data: { user } } = await supabase.auth.getUser()
+    
+    if (!user) {
+        console.error("No user after exchangeCodeForSession")
+        return NextResponse.redirect(new URL('/auth/auth-code-error', origin))
+    }
+
+    // Handle database operations
+    try {
+        const checkUserInDB = await db.select().from(usersTable).where(eq(usersTable.email, user.email!))
+        const isUserInDB = checkUserInDB.length > 0
+        
+        if (!isUserInDB) {
+            const stripeID = await createStripeCustomer(
+                user.id, 
+                user.email!, 
+                user.user_metadata?.full_name || user.email?.split('@')[0] || 'User'
+            )
+            await db.insert(usersTable).values({ 
+                id: user.id, 
+                name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User', 
+                email: user.email!, 
+                stripe_id: stripeID, 
+                plan: 'none' 
+            })
+        }
+    } catch (dbError) {
+        console.error("Database error in callback:", dbError)
+        // Continue even if DB fails - session is still set
+    }
+
+    // Return the redirect response with cookies already set
+    return redirectResponse
 }
