@@ -1,6 +1,10 @@
 // API client for PoC backend
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001'
+// Only use localhost in development, require explicit API URL in production
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 
+  (typeof window !== 'undefined' && window.location.hostname === 'localhost' 
+    ? 'http://localhost:5001' 
+    : '')
 
 interface RetryOptions {
   maxRetries?: number
@@ -129,6 +133,11 @@ class PoCApi {
   }
 
   private async fetch(endpoint: string, options?: RequestInit, retryOptions?: RetryOptions) {
+    // Check if API URL is configured
+    if (!this.baseUrl) {
+      throw new Error('API URL not configured. Please set NEXT_PUBLIC_API_URL environment variable.')
+    }
+
     const { maxRetries = 2, delayMs = 1000, backoffMultiplier = 1.5 } = retryOptions || {}
     let lastError: Error = new Error('Unknown error')
 
