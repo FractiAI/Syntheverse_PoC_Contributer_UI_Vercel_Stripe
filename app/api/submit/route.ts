@@ -5,7 +5,7 @@ import { eq } from 'drizzle-orm'
 import { createClient } from '@/utils/supabase/server'
 import { debug, debugError } from '@/utils/debug'
 import { evaluateWithGrok } from '@/utils/grok/evaluate'
-import crypto from 'crypto'
+import * as crypto from 'crypto'
 
 export async function POST(request: NextRequest) {
     debug('SubmitContribution', 'Submission request received')
@@ -50,13 +50,43 @@ export async function POST(request: NextRequest) {
         if (!process.env.DATABASE_URL) {
             debugError('SubmitContribution', 'DATABASE_URL not configured', new Error('DATABASE_URL environment variable is missing'))
             return NextResponse.json(
-                { error: 'Database not configured' },
+                { 
+                    error: 'Database not configured',
+                    message: 'DATABASE_URL environment variable is missing',
+                    details: 'Please configure DATABASE_URL in Vercel environment variables'
+                },
+                { status: 500 }
+            )
+        }
+        
+        // Validate DATABASE_URL format
+        try {
+            new URL(process.env.DATABASE_URL)
+        } catch (urlError) {
+            debugError('SubmitContribution', 'Invalid DATABASE_URL format', urlError)
+            return NextResponse.json(
+                { 
+                    error: 'Invalid database configuration',
+                    message: 'DATABASE_URL format is invalid'
+                },
                 { status: 500 }
             )
         }
         
         // Generate submission hash
-        const submission_hash = crypto.randomBytes(16).toString('hex')
+        let submission_hash: string
+        try {
+            submission_hash = crypto.randomBytes(16).toString('hex')
+        } catch (cryptoError) {
+            debugError('SubmitContribution', 'Failed to generate submission hash', cryptoError)
+            return NextResponse.json(
+                { 
+                    error: 'Failed to generate submission hash',
+                    message: cryptoError instanceof Error ? cryptoError.message : String(cryptoError)
+                },
+                { status: 500 }
+            )
+        }
         
         // Calculate content hash
         const contentToHash = text_content || title
@@ -78,6 +108,14 @@ export async function POST(request: NextRequest) {
         
         // Insert contribution into database
         try {
+            debug('SubmitContribution', 'Inserting contribution into database', {
+                submission_hash,
+                title: title.trim(),
+                contributor: contributor || user.email,
+                has_text_content: !!text_content,
+                category: category || 'scientific'
+            })
+            
             await db.insert(contributionsTable).values({
                 submission_hash,
                 title: title.trim(),
@@ -90,9 +128,25 @@ export async function POST(request: NextRequest) {
                 metals: [],
                 metadata: {}
             })
+            
+            debug('SubmitContribution', 'Contribution inserted successfully', { submission_hash })
         } catch (dbError) {
             debugError('SubmitContribution', 'Database insert error', dbError)
-            throw new Error(`Database error: ${dbError instanceof Error ? dbError.message : String(dbError)}`)
+            const dbErrorMessage = dbError instanceof Error ? dbError.message : String(dbError)
+            console.error('Database insert error details:', {
+                error: dbError,
+                message: dbErrorMessage,
+                submission_hash,
+                title: title.trim()
+            })
+            return NextResponse.json(
+                { 
+                    error: 'Database error',
+                    message: `Failed to save contribution: ${dbErrorMessage}`,
+                    details: process.env.NODE_ENV === 'development' ? dbErrorMessage : undefined
+                },
+                { status: 500 }
+            )
         }
         
         // Log submission event
