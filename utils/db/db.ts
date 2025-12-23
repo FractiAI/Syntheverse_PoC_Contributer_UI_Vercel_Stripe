@@ -1,6 +1,30 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 
+// Validate DATABASE_URL before creating connection
+if (!process.env.DATABASE_URL) {
+    throw new Error('DATABASE_URL environment variable is not set')
+}
+
+// Parse and validate the connection string
+let databaseUrl = process.env.DATABASE_URL
+try {
+    const url = new URL(databaseUrl)
+    if (!url.hostname || !url.port) {
+        throw new Error('Invalid DATABASE_URL format: missing hostname or port')
+    }
+} catch (error) {
+    throw new Error(`Invalid DATABASE_URL format: ${error instanceof Error ? error.message : String(error)}`)
+}
+
 // Disable prefetch as it is not supported for "Transaction" pool mode
-const client = postgres(process.env.DATABASE_URL!, { prepare: false })
+// Add connection timeout and error handling
+const client = postgres(databaseUrl, { 
+    prepare: false,
+    connect_timeout: 10, // 10 second connection timeout
+    max: 1, // Limit connections for serverless
+    idle_timeout: 20,
+    max_lifetime: 60 * 30
+})
+
 export const db = drizzle(client);
