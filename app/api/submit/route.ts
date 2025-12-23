@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/utils/db/db'
 import { contributionsTable, pocLogTable } from '@/utils/db/schema'
+import { eq } from 'drizzle-orm'
 import { createClient } from '@/utils/supabase/server'
 import { debug, debugError } from '@/utils/debug'
+import { evaluateWithGrok } from '@/utils/grok/evaluate'
 import crypto from 'crypto'
 
 export async function POST(request: NextRequest) {
@@ -125,15 +127,152 @@ export async function POST(request: NextRequest) {
             debugError('SubmitContribution', 'Failed to log submission event', logError)
         }
         
-        debug('SubmitContribution', 'Contribution submitted successfully', {
+        debug('SubmitContribution', 'Contribution submitted successfully, starting evaluation', {
             submission_hash,
             title,
             contributor
         })
         
+        // Automatically trigger Grok API evaluation
+        let evaluation: any = null
+        let evaluationError: Error | null = null
+        
+        try {
+            const textContent = text_content?.trim() || title.trim()
+            evaluation = await evaluateWithGrok(textContent, title.trim(), category || undefined, submission_hash)
+            
+            // Use qualified status from evaluation
+            const qualified = evaluation.qualified || (evaluation.pod_score >= 8000)
+            
+            // Update contribution with evaluation results
+            await db
+                .update(contributionsTable)
+                .set({
+                    status: qualified ? 'qualified' : 'unqualified',
+                    metals: evaluation.metals,
+                    metadata: {
+                        coherence: evaluation.coherence,
+                        density: evaluation.density,
+                        redundancy: evaluation.redundancy,
+                        pod_score: evaluation.pod_score,
+                        novelty: evaluation.novelty,
+                        alignment: evaluation.alignment,
+                        classification: evaluation.classification,
+                        redundancy_analysis: evaluation.redundancy_analysis,
+                        metal_justification: evaluation.metal_justification,
+                        founder_certificate: evaluation.founder_certificate,
+                        homebase_intro: evaluation.homebase_intro,
+                        tokenomics_recommendation: evaluation.tokenomics_recommendation,
+                        qualified_founder: qualified,
+                        allocation_status: 'pending_admin_approval' // Token allocation requires admin approval
+                    },
+                    updated_at: new Date()
+                })
+                .where(eq(contributionsTable.submission_hash, submission_hash))
+            
+            // Log evaluation completion
+            try {
+                const evalLogId = crypto.randomUUID()
+                await db.insert(pocLogTable).values({
+                    id: evalLogId,
+                    submission_hash,
+                    contributor: contributor || user.email,
+                    event_type: 'evaluation_complete',
+                    event_status: 'success',
+                    title: title.trim(),
+                    category: category || 'scientific',
+                    evaluation_result: {
+                        coherence: evaluation.coherence,
+                        density: evaluation.density,
+                        redundancy: evaluation.redundancy,
+                        pod_score: evaluation.pod_score,
+                        novelty: evaluation.novelty,
+                        alignment: evaluation.alignment,
+                        metals: evaluation.metals,
+                        qualified,
+                        qualified_founder: qualified,
+                        classification: evaluation.classification,
+                        redundancy_analysis: evaluation.redundancy_analysis,
+                        metal_justification: evaluation.metal_justification
+                    },
+                    response_data: {
+                        success: true,
+                        qualified,
+                        evaluation
+                    },
+                    processing_time_ms: Date.now() - startTime,
+                    created_at: new Date()
+                })
+            } catch (logError) {
+                debugError('SubmitContribution', 'Failed to log evaluation', logError)
+            }
+            
+            debug('SubmitContribution', 'Evaluation completed successfully', {
+                submission_hash,
+                qualified,
+                pod_score: evaluation.pod_score
+            })
+        } catch (error) {
+            evaluationError = error instanceof Error ? error : new Error(String(error))
+            debugError('SubmitContribution', 'Evaluation failed', evaluationError)
+            
+            // Update status to indicate evaluation error
+            try {
+                await db
+                    .update(contributionsTable)
+                    .set({
+                        status: 'unqualified',
+                        updated_at: new Date()
+                    })
+                    .where(eq(contributionsTable.submission_hash, submission_hash))
+            } catch (updateError) {
+                debugError('SubmitContribution', 'Failed to update status after evaluation error', updateError)
+            }
+            
+            // Log evaluation error
+            try {
+                const errorLogId = crypto.randomUUID()
+                await db.insert(pocLogTable).values({
+                    id: errorLogId,
+                    submission_hash,
+                    contributor: contributor || user.email,
+                    event_type: 'evaluation_error',
+                    event_status: 'error',
+                    title: title.trim(),
+                    error_message: evaluationError.message,
+                    response_data: {
+                        success: false,
+                        error: evaluationError.message
+                    },
+                    created_at: new Date()
+                })
+            } catch (logError) {
+                debugError('SubmitContribution', 'Failed to log evaluation error', logError)
+            }
+        }
+        
         return NextResponse.json({
             success: true,
-            submission_hash
+            submission_hash,
+            evaluation: evaluation ? {
+                coherence: evaluation.coherence,
+                density: evaluation.density,
+                redundancy: evaluation.redundancy,
+                novelty: evaluation.novelty,
+                alignment: evaluation.alignment,
+                metals: evaluation.metals,
+                pod_score: evaluation.pod_score,
+                qualified: evaluation.qualified,
+                qualified_founder: evaluation.qualified,
+                classification: evaluation.classification,
+                redundancy_analysis: evaluation.redundancy_analysis,
+                metal_justification: evaluation.metal_justification,
+                founder_certificate: evaluation.founder_certificate,
+                homebase_intro: evaluation.homebase_intro,
+                tokenomics_recommendation: evaluation.tokenomics_recommendation
+            } : null,
+            evaluation_error: evaluationError ? evaluationError.message : null,
+            status: evaluation ? (evaluation.qualified ? 'qualified' : 'unqualified') : 'draft'
         })
     } catch (error) {
         debugError('SubmitContribution', 'Error submitting contribution', error)
