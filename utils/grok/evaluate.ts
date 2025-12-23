@@ -56,6 +56,10 @@ export async function evaluateWithGrok(
         allocation_notes?: string
         requires_admin_approval?: boolean
     }
+    base_novelty?: number
+    base_density?: number
+    redundancy_penalty_percent?: number
+    density_penalty_percent?: number
 }> {
     const grokApiKey = process.env.NEXT_PUBLIC_GROK_API_KEY
     if (!grokApiKey) {
@@ -172,22 +176,29 @@ Classify Contribution: Research / Development / Alignment (may be multiple)
 
 Redundancy Check:
 • Compare submission to all prior submissions, evaluations, and scores in conversation history
-• Penalize derivative or overlapping content in Novelty (0–500 points)
+• Penalize derivative or overlapping content in Novelty (0–100% penalty)
 • Optionally adjust Density if informational value is reduced by redundancy
 • Clearly justify which prior submissions contributed to the penalty
 
 Scoring Dimensions (0–2,500 each; total 0–10,000):
 
 Dimension | Description | Redundancy Penalty
-Novelty | Originality, frontier contribution, non-derivative insight | Subtract 0–500 points based on redundancy
-Density | Information richness, depth, insight compression | Optional small penalty if repetition reduces insight
+Novelty | Originality, frontier contribution, non-derivative insight | Apply 0–100% penalty based on redundancy (percentage of base Novelty score)
+Density | Information richness, depth, insight compression | Optional small percentage penalty if repetition reduces insight
 Coherence | Internal consistency, clarity, structural integrity | No penalty
 Alignment | Fit with hydrogen-holographic fractal principles & ecosystem goals | No penalty
 
 Total Score Calculation:
-Novelty_Score = Base_Novelty - Redundancy_Penalty
-Density_Score = Base_Density - Optional_Density_Penalty
+Novelty_Score = Base_Novelty × (1 - Redundancy_Penalty_Percentage)
+Density_Score = Base_Density × (1 - Optional_Density_Penalty_Percentage)
 Total_Score = Novelty_Score + Density_Score + Coherence + Alignment
+
+Redundancy Penalty Examples:
+- 0% penalty: Completely original, no overlap with archived PoCs
+- 25% penalty: Some similarity to archived PoCs, but adds new insights
+- 50% penalty: Significant overlap, but some novel elements
+- 75% penalty: Mostly derivative, limited originality
+- 100% penalty: Completely redundant, no novel contribution
 
 🔹 Qualification Logic
 ≥8,000 → ✅ Qualified Open Epoch Founder
@@ -200,13 +211,13 @@ Return a JSON object with the following structure:
     "scoring": {
         "novelty": {
             "base_score": <0-2500>,
-            "redundancy_penalty": <0-500>,
+            "redundancy_penalty_percent": <0-100>,
             "final_score": <0-2500>,
             "justification": "<explanation including which prior submissions contributed to penalty>"
         },
         "density": {
             "base_score": <0-2500>,
-            "redundancy_penalty": <0-100>,
+            "redundancy_penalty_percent": <0-100>,
             "final_score": <0-2500>,
             "justification": "<explanation>"
         },
@@ -286,21 +297,27 @@ ${tokenomicsContext}
 
 **Instructions:**
 1. Classify the contribution (Research/Development/Alignment)
-2. **Redundancy Check:** Compare this submission to ALL archived PoCs listed above. Identify any overlapping content, derivative work, or similar contributions. Apply redundancy penalties (0-500 points) to Novelty based on similarity to archived PoCs. Clearly reference which archived PoCs contributed to the penalty.
+2. **Redundancy Check:** Compare this submission to ALL archived PoCs listed above. Identify any overlapping content, derivative work, or similar contributions. Apply redundancy penalties as a PERCENTAGE (0-100%) to Novelty based on similarity to archived PoCs. The penalty is applied as: Final_Novelty = Base_Novelty × (1 - Redundancy_Penalty_Percent / 100). Clearly reference which archived PoCs contributed to the penalty.
 3. Score each dimension (Novelty, Density, Coherence, Alignment) on 0-2,500 scale
-4. Apply redundancy penalties to Novelty (0-500 points) based on archived PoC comparison
-5. Calculate total score (sum of all four dimensions)
-6. Determine Founder qualification (≥8,000 total score)
-7. Recommend metal alignment (Gold/Silver/Copper/Hybrid) based on scores and tokenomics rules
-8. **Tokenomics Recommendation:** Based on the current tokenomics state, recommend:
+4. Apply redundancy penalties to Novelty as a PERCENTAGE (0-100%) based on archived PoC comparison:
+   - 0%: Completely original, no overlap
+   - 25%: Some similarity, but adds new insights
+   - 50%: Significant overlap, but some novel elements
+   - 75%: Mostly derivative, limited originality
+   - 100%: Completely redundant, no novel contribution
+5. Calculate final Novelty score: Base_Novelty × (1 - Redundancy_Penalty_Percent / 100)
+6. Calculate total score (sum of all four dimensions)
+7. Determine Founder qualification (≥8,000 total score)
+8. Recommend metal alignment (Gold/Silver/Copper/Hybrid) based on scores and tokenomics rules
+9. **Tokenomics Recommendation:** Based on the current tokenomics state, recommend:
    - Eligible epoch(s) for allocation
    - Suggested token allocation amount (considering tier multipliers and epoch balances)
    - Allocation distribution across epochs if multiple epochs are eligible
    - Note: Token allocation requires human admin approval before execution
-9. Generate Founder Certificate in markdown format if qualified
-10. Provide Homebase v2.0 introduction paragraph
+10. Generate Founder Certificate in markdown format if qualified
+11. Provide Homebase v2.0 introduction paragraph
 
-**Important:** When checking redundancy, reference specific archived PoCs by their hash or title. Be thorough in comparing content, concepts, and contributions.
+**Important:** When checking redundancy, reference specific archived PoCs by their hash or title. Be thorough in comparing content, concepts, and contributions. The redundancy penalty is a PERCENTAGE (0-100%), not a fixed point value.
 
 Return your complete evaluation as a valid JSON object matching the specified structure, including a "tokenomics_recommendation" field with allocation details.`
     
@@ -351,21 +368,33 @@ Return your complete evaluation as a valid JSON object matching the specified st
         const coherence = scoring.coherence || {}
         const alignment = scoring.alignment || {}
         
-        // Extract scores (handle both old and new format)
-        const noveltyScore = novelty.final_score ?? novelty.score ?? evaluation.novelty ?? 0
-        const densityScore = density.final_score ?? density.score ?? evaluation.density ?? 0
+        // Extract base scores
+        const baseNoveltyScore = novelty.base_score ?? evaluation.novelty ?? 0
+        const baseDensityScore = density.base_score ?? evaluation.density ?? 0
         const coherenceScore = coherence.score ?? evaluation.coherence ?? 0
         const alignmentScore = alignment.score ?? evaluation.alignment ?? 0
+        
+        // Extract redundancy penalty as percentage (0-100%)
+        const redundancyPenaltyPercent = novelty.redundancy_penalty_percent ?? 
+                                        (novelty.redundancy_penalty ? (novelty.redundancy_penalty / baseNoveltyScore * 100) : 0) ?? 0
+        const densityPenaltyPercent = density.redundancy_penalty_percent ?? 0
+        
+        // Calculate final scores with percentage-based penalties
+        const noveltyScore = Math.max(0, Math.min(2500, baseNoveltyScore * (1 - Math.max(0, Math.min(100, redundancyPenaltyPercent)) / 100)))
+        const densityScore = Math.max(0, Math.min(2500, baseDensityScore * (1 - Math.max(0, Math.min(100, densityPenaltyPercent)) / 100)))
+        
+        // Use final_score if provided, otherwise use calculated score
+        const finalNoveltyScore = novelty.final_score ?? noveltyScore
+        const finalDensityScore = density.final_score ?? densityScore
         
         // Calculate total score if not provided
         let pod_score = evaluation.total_score ?? evaluation.pod_score ?? evaluation.poc_score ?? 0
         if (!pod_score || pod_score === 0) {
-            pod_score = noveltyScore + densityScore + coherenceScore + alignmentScore
+            pod_score = finalNoveltyScore + finalDensityScore + coherenceScore + alignmentScore
         }
         
-        // Calculate redundancy penalty (from Novelty penalty)
-        const redundancyPenalty = novelty.redundancy_penalty ?? 0
-        const redundancy = redundancyPenalty // Use penalty as redundancy metric
+        // Store redundancy as percentage (0-100)
+        const redundancy = Math.max(0, Math.min(100, redundancyPenaltyPercent))
         
         // Extract metal alignment
         let metals: string[] = []
@@ -388,13 +417,13 @@ Return your complete evaluation as a valid JSON object matching the specified st
         
         return {
             coherence: Math.max(0, Math.min(2500, coherenceScore)),
-            density: Math.max(0, Math.min(2500, densityScore)),
-            redundancy: Math.max(0, Math.min(500, redundancy)), // Redundancy penalty (0-500)
+            density: Math.max(0, Math.min(2500, finalDensityScore)),
+            redundancy: Math.max(0, Math.min(100, redundancy)), // Redundancy penalty as percentage (0-100%)
             pod_score: Math.max(0, Math.min(10000, pod_score)),
             metals,
             qualified,
             // Additional fields from new evaluation format
-            novelty: Math.max(0, Math.min(2500, noveltyScore)),
+            novelty: Math.max(0, Math.min(2500, finalNoveltyScore)),
             alignment: Math.max(0, Math.min(2500, alignmentScore)),
             classification: evaluation.classification || [],
             redundancy_analysis: evaluation.redundancy_analysis || novelty.justification || '',
@@ -408,7 +437,12 @@ Return your complete evaluation as a valid JSON object matching the specified st
                 epoch_distribution: {},
                 allocation_notes: 'Token allocation requires human admin approval',
                 requires_admin_approval: true
-            }
+            },
+            // Store base scores and penalty percentages for transparency
+            base_novelty: baseNoveltyScore,
+            base_density: baseDensityScore,
+            redundancy_penalty_percent: redundancy,
+            density_penalty_percent: densityPenaltyPercent
         }
     } catch (error) {
         debugError('EvaluateWithGrok', 'Grok API call failed', error)
