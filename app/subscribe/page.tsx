@@ -6,7 +6,7 @@ import { createStripeCheckoutSession, createStripeCustomer } from "@/utils/strip
 import { db } from '@/utils/db/db'
 import { usersTable } from '@/utils/db/schema'
 import { eq } from "drizzle-orm"
-import { debug, debugError } from '@/utils/debug'
+import { debug, debugError, debugWarn } from '@/utils/debug'
 
 export default async function Subscribe() {
     const supabase = createClient()
@@ -86,7 +86,7 @@ export default async function Subscribe() {
     // If we couldn't get a checkout session secret, we still render the page
     // The Stripe pricing table might work without it or show an error
     if (!checkoutSessionSecret) {
-        debugError('Subscribe', 'No checkout session secret available')
+        debugWarn('Subscribe', 'No checkout session secret available')
     }
 
     return (
