@@ -85,8 +85,14 @@ export const pocLogTable = pgTable('poc_log', {
         density?: number;
         redundancy?: number;
         pod_score?: number;
+        novelty?: number;
+        alignment?: number;
         metals?: string[];
         qualified?: boolean;
+        qualified_founder?: boolean;
+        classification?: string[];
+        redundancy_analysis?: string;
+        metal_justification?: string;
         error?: string;
     }>(),
     grok_api_request: jsonb('grok_api_request').$type<any>(), // GROK API request details
