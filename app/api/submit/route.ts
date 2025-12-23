@@ -116,18 +116,21 @@ export async function POST(request: NextRequest) {
                 category: category || 'scientific'
             })
             
-            await db.insert(contributionsTable).values({
+            // Prepare values for insert - handle JSONB fields carefully
+            const insertValues: any = {
                 submission_hash,
                 title: title.trim(),
                 contributor: contributor || user.email,
                 content_hash,
                 text_content: text_content?.trim() || null,
-                pdf_path,
+                pdf_path: pdf_path || null,
                 status: 'draft',
                 category: category || 'scientific',
-                metals: [],
-                metadata: {}
-            })
+                metals: [] as string[], // Empty array for metals
+                metadata: {} as Record<string, any> // Empty object for metadata
+            }
+            
+            await db.insert(contributionsTable).values(insertValues)
             
             debug('SubmitContribution', 'Contribution inserted successfully', { submission_hash })
         } catch (dbError) {
@@ -146,16 +149,21 @@ export async function POST(request: NextRequest) {
                 contributor: contributor || user.email
             })
             
-            // Return more detailed error for debugging
+            // Return more detailed error for debugging - show actual error in production too
             return NextResponse.json(
                 { 
                     error: 'Database error',
                     message: `Failed to save contribution: ${dbErrorMessage}`,
-                    details: process.env.NODE_ENV === 'development' || process.env.VERCEL_ENV === 'preview'
-                        ? dbErrorMessage 
-                        : 'Please check server logs for details',
+                    details: dbErrorMessage, // Show actual error message
                     code: dbErrorCode,
-                    // Include more info in development/preview
+                    // Include helpful info for debugging
+                    hint: dbErrorMessage.includes('does not exist') 
+                        ? 'Database table may not exist. Please run migrations.'
+                        : dbErrorMessage.includes('relation') 
+                        ? 'Database table may not exist. Please check migrations.'
+                        : dbErrorMessage.includes('column') 
+                        ? 'Database schema mismatch. Please check table structure.'
+                        : 'Check database connection and table structure.',
                     ...(process.env.NODE_ENV === 'development' || process.env.VERCEL_ENV === 'preview' ? {
                         stack: dbErrorStack,
                         submission_hash,
