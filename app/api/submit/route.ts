@@ -133,17 +133,34 @@ export async function POST(request: NextRequest) {
         } catch (dbError) {
             debugError('SubmitContribution', 'Database insert error', dbError)
             const dbErrorMessage = dbError instanceof Error ? dbError.message : String(dbError)
+            const dbErrorStack = dbError instanceof Error ? dbError.stack : undefined
+            const dbErrorCode = (dbError as any)?.code || (dbError as any)?.constraint || undefined
+            
             console.error('Database insert error details:', {
                 error: dbError,
                 message: dbErrorMessage,
+                stack: dbErrorStack,
+                code: dbErrorCode,
                 submission_hash,
-                title: title.trim()
+                title: title.trim(),
+                contributor: contributor || user.email
             })
+            
+            // Return more detailed error for debugging
             return NextResponse.json(
                 { 
                     error: 'Database error',
                     message: `Failed to save contribution: ${dbErrorMessage}`,
-                    details: process.env.NODE_ENV === 'development' ? dbErrorMessage : undefined
+                    details: process.env.NODE_ENV === 'development' || process.env.VERCEL_ENV === 'preview'
+                        ? dbErrorMessage 
+                        : 'Please check server logs for details',
+                    code: dbErrorCode,
+                    // Include more info in development/preview
+                    ...(process.env.NODE_ENV === 'development' || process.env.VERCEL_ENV === 'preview' ? {
+                        stack: dbErrorStack,
+                        submission_hash,
+                        title: title.trim().substring(0, 50)
+                    } : {})
                 },
                 { status: 500 }
             )
