@@ -322,22 +322,37 @@ ${tokenomicsContext}
 Return your complete evaluation as a valid JSON object matching the specified structure, including a "tokenomics_recommendation" field with allocation details.`
     
     try {
-        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${grokApiKey}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                model: 'llama-3.1-8b-instant',
-                messages: [
-                    { role: 'system', content: systemPrompt },
-                    { role: 'user', content: evaluationQuery }
-                ],
-                temperature: 0.0, // Deterministic evaluation
-                max_tokens: 2000,
-            }),
-        })
+        // Add timeout to prevent hanging
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 30000) // 30 second timeout for Grok API
+        
+        let response: Response
+        try {
+            response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${grokApiKey}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    model: 'llama-3.1-8b-instant',
+                    messages: [
+                        { role: 'system', content: systemPrompt },
+                        { role: 'user', content: evaluationQuery }
+                    ],
+                    temperature: 0.0, // Deterministic evaluation
+                    max_tokens: 2000,
+                }),
+                signal: controller.signal
+            })
+            clearTimeout(timeoutId)
+        } catch (fetchError) {
+            clearTimeout(timeoutId)
+            if (fetchError instanceof Error && fetchError.name === 'AbortError') {
+                throw new Error('Grok API request timed out after 30 seconds')
+            }
+            throw fetchError
+        }
         
         if (!response.ok) {
             const errorText = await response.text()
