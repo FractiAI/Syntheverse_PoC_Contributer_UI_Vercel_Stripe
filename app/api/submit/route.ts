@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
         
         // Check database connection
         if (!process.env.DATABASE_URL) {
-            debugError('SubmitContribution', 'DATABASE_URL not configured')
+            debugError('SubmitContribution', 'DATABASE_URL not configured', new Error('DATABASE_URL environment variable is missing'))
             return NextResponse.json(
                 { error: 'Database not configured' },
                 { status: 500 }
