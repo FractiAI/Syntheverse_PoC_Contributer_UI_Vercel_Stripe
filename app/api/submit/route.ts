@@ -22,16 +22,34 @@ export async function POST(request: NextRequest) {
         }
         
         const formData = await request.formData()
-        const title = formData.get('title') as string
-        const contributor = formData.get('contributor') as string || user.email
-        const category = formData.get('category') as string || 'scientific'
-        const text_content = formData.get('text_content') as string || ''
+        const title = formData.get('title') as string | null
+        const contributor = formData.get('contributor') as string | null || user.email
+        const category = formData.get('category') as string | null || 'scientific'
+        const text_content = formData.get('text_content') as string | null || ''
         const file = formData.get('file') as File | null
         
-        if (!title) {
+        if (!title || !title.trim()) {
             return NextResponse.json(
                 { error: 'Title is required' },
                 { status: 400 }
+            )
+        }
+        
+        if (!text_content || !text_content.trim()) {
+            if (!file) {
+                return NextResponse.json(
+                    { error: 'Either text content or a file is required' },
+                    { status: 400 }
+                )
+            }
+        }
+        
+        // Check database connection
+        if (!process.env.DATABASE_URL) {
+            debugError('SubmitContribution', 'DATABASE_URL not configured')
+            return NextResponse.json(
+                { error: 'Database not configured' },
+                { status: 500 }
             )
         }
         
@@ -57,45 +75,55 @@ export async function POST(request: NextRequest) {
         const startTime = Date.now()
         
         // Insert contribution into database
-        await db.insert(contributionsTable).values({
-            submission_hash,
-            title,
-            contributor,
-            content_hash,
-            text_content: text_content || null,
-            pdf_path,
-            status: 'draft',
-            category,
-            metals: [],
-            metadata: {}
-        })
+        try {
+            await db.insert(contributionsTable).values({
+                submission_hash,
+                title: title.trim(),
+                contributor: contributor || user.email,
+                content_hash,
+                text_content: text_content?.trim() || null,
+                pdf_path,
+                status: 'draft',
+                category: category || 'scientific',
+                metals: [],
+                metadata: {}
+            })
+        } catch (dbError) {
+            debugError('SubmitContribution', 'Database insert error', dbError)
+            throw new Error(`Database error: ${dbError instanceof Error ? dbError.message : String(dbError)}`)
+        }
         
         // Log submission event
-        const logId = crypto.randomUUID()
-        await db.insert(pocLogTable).values({
-            id: logId,
-            submission_hash,
-            contributor,
-            event_type: 'submission',
-            event_status: 'success',
-            title,
-            category,
-            request_data: {
-                title,
-                contributor,
-                category,
-                has_text_content: !!text_content,
-                has_file: !!file,
-                file_name: file?.name,
-                file_size: file?.size
-            },
-            response_data: {
-                success: true,
-                submission_hash
-            },
-            processing_time_ms: Date.now() - startTime,
-            created_at: new Date()
-        })
+        try {
+            const logId = crypto.randomUUID()
+            await db.insert(pocLogTable).values({
+                id: logId,
+                submission_hash,
+                contributor: contributor || user.email,
+                event_type: 'submission',
+                event_status: 'success',
+                title: title.trim(),
+                category: category || 'scientific',
+                request_data: {
+                    title: title.trim(),
+                    contributor: contributor || user.email,
+                    category: category || 'scientific',
+                    has_text_content: !!text_content,
+                    has_file: !!file,
+                    file_name: file?.name,
+                    file_size: file?.size
+                },
+                response_data: {
+                    success: true,
+                    submission_hash
+                },
+                processing_time_ms: Date.now() - startTime,
+                created_at: new Date()
+            })
+        } catch (logError) {
+            // Log error but don't fail the submission
+            debugError('SubmitContribution', 'Failed to log submission event', logError)
+        }
         
         debug('SubmitContribution', 'Contribution submitted successfully', {
             submission_hash,
@@ -109,8 +137,21 @@ export async function POST(request: NextRequest) {
         })
     } catch (error) {
         debugError('SubmitContribution', 'Error submitting contribution', error)
+        
+        const errorMessage = error instanceof Error ? error.message : String(error)
+        const errorDetails = error instanceof Error ? {
+            name: error.name,
+            stack: error.stack,
+            message: error.message
+        } : { error: String(error) }
+        
+        // Return more detailed error for debugging (in production, you might want to hide this)
         return NextResponse.json(
-            { error: 'Failed to submit contribution' },
+            { 
+                error: 'Failed to submit contribution',
+                details: process.env.NODE_ENV === 'development' ? errorMessage : undefined,
+                ...(process.env.NODE_ENV === 'development' ? errorDetails : {})
+            },
             { status: 500 }
         )
     }

@@ -65,7 +65,9 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
             const result = await response.json()
 
             if (!response.ok) {
-                throw new Error(result.error || 'Failed to submit contribution')
+                const errorMsg = result.error || 'Failed to submit contribution'
+                const details = result.details ? `: ${result.details}` : ''
+                throw new Error(`${errorMsg}${details}`)
             }
 
             setSubmissionHash(result.submission_hash)
