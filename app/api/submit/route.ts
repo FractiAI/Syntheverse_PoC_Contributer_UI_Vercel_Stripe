@@ -137,9 +137,18 @@ export async function POST(request: NextRequest) {
         let evaluation: any = null
         let evaluationError: Error | null = null
         
-        try {
-            const textContent = text_content?.trim() || title.trim()
-            evaluation = await evaluateWithGrok(textContent, title.trim(), category || undefined, submission_hash)
+        // Check if Grok API key is configured
+        if (!process.env.NEXT_PUBLIC_GROK_API_KEY) {
+            debug('SubmitContribution', 'GROK_API_KEY not configured, skipping evaluation')
+            evaluationError = new Error('GROK_API_KEY not configured. Evaluation skipped.')
+        } else {
+            try {
+                const textContent = text_content?.trim() || title.trim()
+                debug('SubmitContribution', 'Starting Grok API evaluation', {
+                    textLength: textContent.length,
+                    title: title.trim()
+                })
+                evaluation = await evaluateWithGrok(textContent, title.trim(), category || undefined, submission_hash)
             
             // Use qualified status from evaluation
             const qualified = evaluation.qualified || (evaluation.pod_score >= 8000)
@@ -207,50 +216,52 @@ export async function POST(request: NextRequest) {
                 debugError('SubmitContribution', 'Failed to log evaluation', logError)
             }
             
-            debug('SubmitContribution', 'Evaluation completed successfully', {
-                submission_hash,
-                qualified,
-                pod_score: evaluation.pod_score
-            })
-        } catch (error) {
-            evaluationError = error instanceof Error ? error : new Error(String(error))
-            debugError('SubmitContribution', 'Evaluation failed', evaluationError)
-            
-            // Update status to indicate evaluation error
-            try {
-                await db
-                    .update(contributionsTable)
-                    .set({
-                        status: 'unqualified',
-                        updated_at: new Date()
-                    })
-                    .where(eq(contributionsTable.submission_hash, submission_hash))
-            } catch (updateError) {
-                debugError('SubmitContribution', 'Failed to update status after evaluation error', updateError)
-            }
-            
-            // Log evaluation error
-            try {
-                const errorLogId = crypto.randomUUID()
-                await db.insert(pocLogTable).values({
-                    id: errorLogId,
+                debug('SubmitContribution', 'Evaluation completed successfully', {
                     submission_hash,
-                    contributor: contributor || user.email,
-                    event_type: 'evaluation_error',
-                    event_status: 'error',
-                    title: title.trim(),
-                    error_message: evaluationError.message,
-                    response_data: {
-                        success: false,
-                        error: evaluationError.message
-                    },
-                    created_at: new Date()
+                    qualified,
+                    pod_score: evaluation.pod_score
                 })
-            } catch (logError) {
-                debugError('SubmitContribution', 'Failed to log evaluation error', logError)
+            } catch (error) {
+                evaluationError = error instanceof Error ? error : new Error(String(error))
+                debugError('SubmitContribution', 'Evaluation failed', evaluationError)
+            
+                // Update status to indicate evaluation error
+                try {
+                    await db
+                        .update(contributionsTable)
+                        .set({
+                            status: 'draft', // Keep as draft if evaluation fails
+                            updated_at: new Date()
+                        })
+                        .where(eq(contributionsTable.submission_hash, submission_hash))
+                } catch (updateError) {
+                    debugError('SubmitContribution', 'Failed to update status after evaluation error', updateError)
+                }
+                
+                // Log evaluation error
+                try {
+                    const errorLogId = crypto.randomUUID()
+                    await db.insert(pocLogTable).values({
+                        id: errorLogId,
+                        submission_hash,
+                        contributor: contributor || user.email,
+                        event_type: 'evaluation_error',
+                        event_status: 'error',
+                        title: title.trim(),
+                        error_message: evaluationError.message,
+                        response_data: {
+                            success: false,
+                            error: evaluationError.message
+                        },
+                        created_at: new Date()
+                    })
+                } catch (logError) {
+                    debugError('SubmitContribution', 'Failed to log evaluation error', logError)
+                }
             }
         }
         
+        // Always return success for submission, even if evaluation failed
         return NextResponse.json({
             success: true,
             submission_hash,
