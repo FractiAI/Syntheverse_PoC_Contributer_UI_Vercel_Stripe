@@ -153,8 +153,7 @@ export default async function AccountPage() {
                     <div className="space-y-2">
                         <h4 className="font-medium">SYNTH Token Rewards</h4>
                         <p className="text-sm text-muted-foreground">
-                            Earn SYNTH tokens based on your contribution quality. Approved contributions
-                            are registered on-chain for $200, establishing your &ldquo;I was here first&rdquo; recognition.
+                            Earn SYNTH tokens based on your contribution quality. Tokens are allocated when your PoC is approved and registered on-chain, based on your PoC Score and available tokens at the time of registration.
                         </p>
                     </div>
                 </CardContent>

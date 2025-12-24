@@ -86,8 +86,9 @@ export async function sendWelcomeEmail(data: WelcomeEmailData): Promise<{ succes
             <div style="margin-bottom: 20px;">
                 <h3 style="color: #333; font-size: 18px; margin-bottom: 10px;">3. Registration — Anchoring Your Contribution</h3>
                 <ul style="margin: 0; padding-left: 20px;">
-                    <li>Blockchain registration cost: $200 per PoC.</li>
-                    <li>Registered PoCs are allocated SYNTH tokens; unregistered PoCs still contribute to ecosystem growth.</li>
+                    <li>Tokens are allocated at the time of registration based on PoC Score and available tokens at the time of registration.</li>
+                    <li>Registration happens when your PoC is approved by admin and anchored on-chain.</li>
+                    <li>All approved PoCs are eligible for token allocation based on their evaluation scores.</li>
                 </ul>
             </div>
             

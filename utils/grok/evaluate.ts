@@ -741,7 +741,7 @@ Mark Founder-Eligible
 
 Recommend metal alignment (Gold / Silver / Copper / Hybrid)
 
-Confirm PoC eligible for optional on-chain anchoring ($200, pending human approval)
+Confirm PoC eligible for on-chain registration and token allocation (pending admin approval)
 
 🔹 
 
@@ -821,7 +821,7 @@ Founder Certificate Format (Markdown, ERC-20 Style)
 
 - **Anchoring Status:** Eligible  
 
-- **Anchoring Fee:** $200  
+- **Token Allocation:** Based on PoC Score and available tokens at registration time  
 
 **AI Integration:**
 

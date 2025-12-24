@@ -131,7 +131,7 @@ export default async function LandingPage() {
                   </div>
                   <h3 className="text-xl font-bold">SYNTH Token Rewards</h3>
                   <p className="text-muted-foreground text-center">
-                    Blockchain-anchored rewards with $200 registration fees for approved contributions
+                    Blockchain-anchored token allocations based on PoC scores and available tokens at registration time
                   </p>
                 </div>
               </CardContent>
@@ -222,7 +222,7 @@ export default async function LandingPage() {
           </div>
           <div className="text-center mt-8">
             <p className="text-muted-foreground">
-              All evaluation submissions are <strong>free</strong>. Registration fees apply only to approved contributions.
+              All evaluation submissions are <strong>free</strong>. Tokens are allocated when PoCs are approved and registered on-chain.
             </p>
           </div>
         </div>

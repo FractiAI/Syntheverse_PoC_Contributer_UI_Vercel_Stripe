@@ -277,15 +277,15 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                     </CardHeader>
                     <CardContent className="space-y-2">
                         <p className="text-sm text-muted-foreground">
-                            Approved contributions earn SYNTH tokens based on:
+                            Approved contributions earn SYNTH tokens allocated at registration time based on:
                         </p>
                         <ul className="text-sm space-y-1 ml-4">
                             <li>• Base reward + metallic amplification</li>
                             <li>• Evaluation scores across dimensions</li>
-                            <li>• Current epoch allocation</li>
+                            <li>• Current epoch allocation and available tokens</li>
                         </ul>
                         <p className="text-sm text-muted-foreground mt-2">
-                            <strong>$200 registration fee</strong> for on-chain anchoring
+                            Tokens are allocated when your PoC is approved by admin and registered on-chain.
                         </p>
                     </CardContent>
                 </Card>
