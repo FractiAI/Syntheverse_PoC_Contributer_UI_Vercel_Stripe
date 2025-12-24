@@ -986,33 +986,25 @@ All redundancy references must be drawn from the archived PoC vectors (3D repres
 Return ONLY the JSON object, no markdown, no code blocks, no explanations outside the JSON.`
 
     // Format archived PoCs for context (as 3D vectors in holographic hydrogen fractal sandbox)
-    const archivedPoCsContext = archivedPoCs.length > 0 
-        ? `**Archived PoC Vectors (3D Representations in Hydrogen-Holographic Fractal Sandbox):**
+    // Limit to top 5 most similar PoCs to reduce token usage
+    const maxArchivedPoCs = 5
+    const archivedPoCsToInclude = archivedPoCs.slice(0, maxArchivedPoCs)
+    
+    const archivedPoCsContext = archivedPoCsToInclude.length > 0 
+        ? `**Top ${archivedPoCsToInclude.length} Archived PoC Vectors (for redundancy check):**
 
-${archivedPoCs.map((poc, idx) => {
+${archivedPoCsToInclude.map((poc, idx) => {
             const vectorData = archivedVectors.find(v => v.submission_hash === poc.submission_hash)
             const hasVector = vectorData && vectorData.vector_x !== null && vectorData.vector_y !== null && vectorData.vector_z !== null
             const vectorCoords = hasVector 
                 ? `(${vectorData!.vector_x!.toFixed(2)}, ${vectorData!.vector_y!.toFixed(2)}, ${vectorData!.vector_z!.toFixed(2)})`
-                : 'Not yet vectorized'
+                : 'Not vectorized'
             
-            return `
-**Archived PoC Vector #${idx + 1} (3D Position in Holographic Space):**
-- Vector Hash (Submission Hash): ${poc.submission_hash}
-- Title: ${poc.title}
-- Contributor: ${poc.contributor}
-- Category: ${poc.category || 'N/A'}
-- Status: ${poc.status}
-- Metals: ${poc.metals?.join(', ') || 'None'}
-- 3D Vector Coordinates: ${vectorCoords}
-- Evaluation Scores: Pod=${poc.pod_score || 'N/A'}, Novelty=${poc.novelty || 'N/A'}, Density=${poc.density || 'N/A'}, Coherence=${poc.coherence || 'N/A'}, Alignment=${poc.alignment || 'N/A'}
-- Content Preview (Vector Content): ${(poc.text_content || poc.title).substring(0, 500)}${(poc.text_content || poc.title).length > 500 ? '...' : ''}
-- Vector Creation Time: ${poc.created_at?.toISOString() || 'N/A'}
-
-*This PoC exists as a 3D vector representation within the Hydrogen-Holographic Fractal Sandbox, encoded through the HHF geometry and HFG symbolic structure.*
-`
+            return `${idx + 1}. ${poc.title} (Hash: ${poc.submission_hash.substring(0, 8)}...)
+   Coords: ${vectorCoords} | Scores: N=${poc.novelty || 0} D=${poc.density || 0} C=${poc.coherence || 0} A=${poc.alignment || 0}
+   Preview: ${(poc.text_content || poc.title).substring(0, 200)}${(poc.text_content || poc.title).length > 200 ? '...' : ''}`
         }).join('\n')}`
-        : '**No prior archived PoC vectors found.** This is the first submission in the archive and will establish the initial 3D vector space.'
+        : '**No prior archived PoC vectors found.**'
     
     // Add calculated redundancy information if available
     const calculatedRedundancyContext = calculatedRedundancy
@@ -1026,83 +1018,41 @@ ${calculatedRedundancy.analysis}
 *Note: This redundancy calculation is based on actual 3D vector similarity in the holographic hydrogen fractal sandbox using HHF geometry. You may refine this based on semantic content analysis.*`
         : ''
 
-    // Format tokenomics context
+    // Format tokenomics context (condensed)
     const tokenomicsContext = tokenomicsInfo 
-        ? `
-**Current Tokenomics State:**
-- Current Epoch: ${tokenomicsInfo.current_epoch}
-- Total Coherence Density: ${tokenomicsInfo.total_coherence_density.toLocaleString()}
-- Founder Halving Count: ${tokenomicsInfo.founder_halving_count}
-- Epoch Progression: ${JSON.stringify(tokenomicsInfo.epoch_progression, null, 2)}
-- Epoch Balances:
-  - Founder: ${tokenomicsInfo.epoch_balances.founder?.toLocaleString() || 0} SYNTH
-  - Pioneer: ${tokenomicsInfo.epoch_balances.pioneer?.toLocaleString() || 0} SYNTH
-  - Community: ${tokenomicsInfo.epoch_balances.community?.toLocaleString() || 0} SYNTH
-  - Ecosystem: ${tokenomicsInfo.epoch_balances.ecosystem?.toLocaleString() || 0} SYNTH
-
-**Tokenomics Rules:**
-- Total Supply: 90 Trillion SYNTH
-- Epoch Distribution: Founder (50%), Pioneer (25%), Community (12.5%), Ecosystem (12.5%)
-- Qualification Thresholds: Founder (≥8,000), Pioneer (≥6,000), Community (≥4,000), Ecosystem (≥0)
-- Tier Multipliers: Gold (1000×), Silver (100×), Copper (1×)
-- Founder Halving: Every 1M coherence density units
-`
-        : '**Tokenomics information not available.** Proceed with standard evaluation.'
+        ? `**Tokenomics:** Epoch=${tokenomicsInfo.current_epoch}, Founder=${tokenomicsInfo.epoch_balances.founder?.toLocaleString() || 0} SYNTH. Thresholds: Founder≥8000, Pioneer≥6000, Community≥4000.`
+        : ''
 
     // Evaluation query with contribution details, archived PoCs, and tokenomics
-    const evaluationQuery = `Evaluate the following Proof-of-Contribution:
+    // Truncate content more aggressively to reduce token usage (max 5000 chars)
+    const maxContentLength = 5000
+    const truncatedContent = textContent.substring(0, maxContentLength)
+    
+    const evaluationQuery = `Evaluate this Proof-of-Contribution:
 
-**PoC Title:** ${title}
+**Title:** ${title}
 **Category:** ${category || 'scientific'}
-**Contribution Class:** ${category === 'scientific' ? 'Research' : category === 'tech' ? 'Development' : 'Alignment'}
 
-**Description/Content:**
-${textContent.substring(0, 10000)}${textContent.length > 10000 ? '\n\n[Content truncated for evaluation - full content available in archive...]' : ''}
+**Content:**
+${truncatedContent}${textContent.length > maxContentLength ? '\n[Content truncated...]' : ''}
 
-**Archived PoC Vectors (3D Representations in Hydrogen-Holographic Fractal Sandbox) for Redundancy Comparison:**
+**Archived PoCs for Redundancy:**
 ${archivedPoCsContext}
-${calculatedRedundancyContext}
-
-${tokenomicsContext}
+${calculatedRedundancyContext ? `\n${calculatedRedundancyContext}` : ''}
 
 **Instructions:**
-1. Classify the contribution (Research/Development/Alignment)
-2. **Redundancy Check (3D Vector Comparison in Holographic Space):** 
-   ${calculatedRedundancy 
-        ? `- **NOTE:** Vector-based redundancy calculation has already been performed using actual 3D coordinates in HHF space (see Vector-Based Redundancy Calculation above). The calculated redundancy penalty is ${calculatedRedundancy.redundancy_percent.toFixed(1)}%. You may refine this based on semantic content analysis, but the vector calculation provides the baseline.`
-        : `- Map the current submission to its 3D vector representation within the Hydrogen-Holographic Fractal Sandbox
-   - Compare this submission's 3D vector to ALL archived PoC vectors listed above
-   - Calculate vector similarity/distance in the holographic hydrogen fractal space using HHF geometry (Λᴴᴴ ≈ 1.12 × 10²² scaling)
-   - Identify overlapping content, derivative work, or similar contributions based on 3D vector proximity in the holographic space`}
-   - Apply redundancy penalties as a PERCENTAGE (0-100%) to Novelty based on 3D vector similarity to archived PoCs
-   - The penalty is applied as: Final_Novelty = Base_Novelty × (1 - Redundancy_Penalty_Percent / 100)
-   - Clearly reference which archived PoC vectors (by hash/title) contributed to the penalty, describing their relative positions in the 3D holographic space
-3. Score each dimension (Novelty, Density, Coherence, Alignment) on 0-2,500 scale
-4. Apply redundancy penalties to Novelty as a PERCENTAGE (0-100%) based on archived PoC comparison:
-   - 0%: Completely original, no overlap
-   - 25%: Some similarity, but adds new insights
-   - 50%: Significant overlap, but some novel elements
-   - 75%: Mostly derivative, limited originality
-   - 100%: Completely redundant, no novel contribution
-5. Calculate final Novelty score: Base_Novelty × (1 - Redundancy_Penalty_Percent / 100)
-6. Calculate total score (sum of all four dimensions)
-7. Determine Founder qualification (≥8,000 total score)
-8. Recommend metal alignment (Gold/Silver/Copper/Hybrid) based on scores and tokenomics rules
-9. **Tokenomics Recommendation:** Based on the current tokenomics state, recommend:
-   - Eligible epoch(s) for allocation
-   - Suggested token allocation amount (considering tier multipliers and epoch balances)
-   - Allocation distribution across epochs if multiple epochs are eligible
-   - Note: Token allocation requires human admin approval before execution
-10. Generate Founder Certificate in markdown format if qualified
-11. Provide Homebase v2.0 introduction paragraph
-
-**Important:** 
-- When checking redundancy, treat all submissions as 3D vector representations within the Hydrogen-Holographic Fractal Sandbox
-- Compare vectors in the 3D holographic space using HHF geometry principles
-- Reference specific archived PoC vectors by their hash or title, describing their positions in the 3D space
-- Be thorough in comparing content, concepts, and contributions through the lens of 3D vector similarity
-- The redundancy penalty is a PERCENTAGE (0-100%), not a fixed point value
-- Use the Fractal Cognitive Grammar (✦ ◇ ⊙ ⚛ ❂ ✶ △ ∞ ◎) to understand vector relationships and energy flow patterns between submissions
+1. Classify: Research/Development/Alignment
+2. Redundancy: ${calculatedRedundancy 
+        ? `Use calculated penalty: ${calculatedRedundancy.redundancy_percent.toFixed(1)}% (from vector similarity)`
+        : `Compare to archived PoCs above. Apply 0-100% penalty to Novelty based on similarity.`}
+3. Score each dimension 0-2500: Novelty, Density, Coherence, Alignment
+4. Calculate: Final_Novelty = Base_Novelty × (1 - Redundancy_Penalty% / 100)
+5. Total = Novelty + Density + Coherence + Alignment
+6. Qualified if total ≥ 8000
+7. Recommend metal: Gold/Silver/Copper/Hybrid
+8. Tokenomics: Suggest eligible epochs and allocation
+9. Generate Founder Certificate if qualified
+10. Add Homebase v2.0 intro paragraph
 
 **FINAL INSTRUCTIONS:**
 1. Calculate ALL scores as NUMBERS (0-2500 for dimensions, 0-10000 for total)
@@ -1133,7 +1083,7 @@ Return your complete evaluation as a valid JSON object matching the specified st
                         { role: 'user', content: evaluationQuery }
                     ],
                     temperature: 0.0, // Deterministic evaluation
-                    max_tokens: 2000,
+                    max_tokens: 1500, // Reduced to help with token limits
                 }),
                 signal: controller.signal
             })
