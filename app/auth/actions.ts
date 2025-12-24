@@ -6,6 +6,7 @@ import { createStripeCustomer } from '@/utils/stripe/api'
 import { db } from '@/utils/db/db'
 import { usersTable } from '@/utils/db/schema'
 import { eq } from 'drizzle-orm'
+import { sendWelcomeEmail } from '@/utils/email/send-welcome-email'
 
 
 const PUBLIC_URL = process.env.NEXT_PUBLIC_WEBSITE_URL || "http://localhost:3000"
@@ -96,6 +97,17 @@ export async function signup(currentState: { message: string }, formData: FormDa
             stripe_id: stripeID, 
             plan: 'none' 
         })
+        
+        // Send welcome email (don't fail signup if email fails)
+        try {
+            await sendWelcomeEmail({
+                userEmail: signUpData.user.email!,
+                userName: data.name
+            })
+        } catch (emailError) {
+            console.error("Failed to send welcome email:", emailError)
+            // Continue - signup should succeed even if email fails
+        }
     } catch (err) {
         console.error("Error in signup:", err instanceof Error ? err.message : "Unknown error")
         return { message: "Failed to setup user account" }
