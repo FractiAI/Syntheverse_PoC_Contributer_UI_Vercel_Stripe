@@ -9,6 +9,7 @@ import { db } from '@/utils/db/db'
 import { usersTable } from '@/utils/db/schema'
 import { eq } from "drizzle-orm"
 import { PoCDashboardStats } from '@/components/PoCDashboardStats'
+import { SandboxMap3D } from '@/components/SandboxMap3D'
 
 export default async function Dashboard() {
     const supabase = createClient()
@@ -83,6 +84,11 @@ export default async function Dashboard() {
 
             {/* PoC Evaluation Statistics - Client Component for API calls */}
             <PoCDashboardStats />
+
+            {/* 3D Sandbox Map Visualization */}
+            <div className="mt-8">
+                <SandboxMap3D />
+            </div>
 
             {/* Quick Actions */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

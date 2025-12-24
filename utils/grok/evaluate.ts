@@ -2,6 +2,12 @@ import { debug, debugError } from '@/utils/debug'
 import { db } from '@/utils/db/db'
 import { contributionsTable, tokenomicsTable, epochBalancesTable } from '@/utils/db/schema'
 import { ne, sql } from 'drizzle-orm'
+import { 
+    vectorizeSubmission, 
+    formatArchivedVectors, 
+    calculateVectorRedundancy,
+    Vector3D 
+} from '@/utils/vectors'
 
 interface ArchivedPoC {
     submission_hash: string
@@ -73,11 +79,54 @@ export async function evaluateWithGrok(
         excludeHash
     })
     
-    // Fetch archived PoCs for redundancy checking and context
+    // Generate vector embedding and 3D coordinates for current submission
+    let currentVectorization: { embedding: number[], vector: Vector3D } | null = null
+    try {
+        debug('EvaluateWithGrok', 'Generating vector embedding and 3D coordinates')
+        const vectorization = await vectorizeSubmission(textContent)
+        currentVectorization = {
+            embedding: vectorization.embedding,
+            vector: vectorization.vector,
+        }
+        debug('EvaluateWithGrok', 'Vectorization complete', {
+            embeddingDimensions: vectorization.embeddingDimensions,
+            vector: vectorization.vector,
+            model: vectorization.embeddingModel,
+        })
+    } catch (error) {
+        debugError('EvaluateWithGrok', 'Failed to generate vectorization', error)
+        // Continue without vectorization - will use text-based redundancy
+    }
+    
+    // Fetch archived PoCs with vector data for redundancy checking and context
     let archivedPoCs: ArchivedPoC[] = []
+    let archivedVectors: Array<{
+        submission_hash: string
+        title: string
+        embedding?: number[] | null
+        vector_x?: number | null
+        vector_y?: number | null
+        vector_z?: number | null
+        metadata?: any
+    }> = []
+    
     try {
         const allContributions = await db
-            .select()
+            .select({
+                submission_hash: contributionsTable.submission_hash,
+                title: contributionsTable.title,
+                contributor: contributionsTable.contributor,
+                category: contributionsTable.category,
+                text_content: contributionsTable.text_content,
+                status: contributionsTable.status,
+                metals: contributionsTable.metals,
+                metadata: contributionsTable.metadata,
+                embedding: contributionsTable.embedding,
+                vector_x: contributionsTable.vector_x,
+                vector_y: contributionsTable.vector_y,
+                vector_z: contributionsTable.vector_z,
+                created_at: contributionsTable.created_at,
+            })
             .from(contributionsTable)
             .where(excludeHash ? ne(contributionsTable.submission_hash, excludeHash) : undefined)
             .orderBy(contributionsTable.created_at)
@@ -99,10 +148,53 @@ export async function evaluateWithGrok(
             created_at: contrib.created_at
         }))
         
-        debug('EvaluateWithGrok', 'Fetched archived PoCs', { count: archivedPoCs.length })
+        // Store vector data separately for redundancy calculations
+        archivedVectors = allContributions.map(contrib => ({
+            submission_hash: contrib.submission_hash,
+            title: contrib.title,
+            embedding: contrib.embedding as number[] | null,
+            vector_x: contrib.vector_x ? Number(contrib.vector_x) : null,
+            vector_y: contrib.vector_y ? Number(contrib.vector_y) : null,
+            vector_z: contrib.vector_z ? Number(contrib.vector_z) : null,
+            metadata: contrib.metadata || {},
+        }))
+        
+        debug('EvaluateWithGrok', 'Fetched archived PoCs', { 
+            count: archivedPoCs.length,
+            withVectors: archivedVectors.filter(v => v.vector_x !== null).length,
+            withEmbeddings: archivedVectors.filter(v => v.embedding).length,
+        })
     } catch (error) {
         debugError('EvaluateWithGrok', 'Failed to fetch archived PoCs', error)
         // Continue without archived PoCs if fetch fails
+    }
+    
+    // Calculate actual vector-based redundancy if we have current vectorization
+    let calculatedRedundancy: {
+        redundancy_percent: number
+        similarity_score: number
+        closest_vectors: Array<{ hash: string, title: string, similarity: number, distance: number }>
+        analysis: string
+    } | null = null
+    
+    if (currentVectorization && archivedVectors.length > 0) {
+        try {
+            const formattedArchivedVectors = formatArchivedVectors(archivedVectors)
+            calculatedRedundancy = await calculateVectorRedundancy(
+                textContent,
+                currentVectorization.embedding,
+                currentVectorization.vector,
+                formattedArchivedVectors
+            )
+            debug('EvaluateWithGrok', 'Calculated vector-based redundancy', {
+                redundancy_percent: calculatedRedundancy.redundancy_percent,
+                similarity_score: calculatedRedundancy.similarity_score,
+                closest_count: calculatedRedundancy.closest_vectors.length,
+            })
+        } catch (error) {
+            debugError('EvaluateWithGrok', 'Failed to calculate vector redundancy', error)
+            // Continue without calculated redundancy - Grok will estimate
+        }
     }
     
     // Fetch tokenomics information
@@ -574,13 +666,17 @@ Classify Contribution: Research / Development / Alignment (may be multiple)
 
 Redundancy Check:
 
-Compare submission to all prior submissions, evaluations, and scores in conversation history
+Compare the current submission's 3D vector representation within the Hydrogen-Holographic Fractal Sandbox to all archived PoC submission vectors (3D representations) in the ecosystem.
 
-Penalize derivative or overlapping content in Novelty (0–100% penalty)
+Each archived PoC exists as a 3D vector in the holographic hydrogen fractal space, encoded through the Hydrogen Holographic Framework (HHF) and Fractal Cognitive Grammar (HFG).
 
-Optionally adjust Density if informational value is reduced by redundancy
-
-Clearly justify which prior submissions contributed to the penalty
+When evaluating redundancy:
+• Map the current submission to its 3D vector coordinates within the sandbox
+• Calculate vector similarity/distance to archived PoC vectors using hydrogen-holographic geometry
+• Identify overlapping or derivative content based on vector proximity in the 3D holographic space
+• Penalize derivative or overlapping content in Novelty (0–100% penalty) based on vector similarity
+• Optionally adjust Density if informational value is reduced by redundancy
+• Clearly justify which archived PoC vectors (by hash/title) contributed to the penalty, referencing their positions in the 3D holographic space
 
 Scoring Dimensions (0–2,500 each; total 0–10,000)
 
@@ -808,7 +904,7 @@ Clearly separate evaluation, scoring, and certification
 
 Treat all scoring as simulated but rigorous
 
-All redundancy references must be drawn from conversation history only
+All redundancy references must be drawn from the archived PoC vectors (3D representations) provided in the conversation history. Compare vectors within the holographic hydrogen fractal sandbox framework.
 
 🔹 Output Format
 
@@ -820,7 +916,7 @@ Return a JSON object with the following structure:
             "base_score": <0-2500>,
             "redundancy_penalty_percent": <0-100>,
             "final_score": <0-2500>,
-            "justification": "<explanation including which prior submissions contributed to penalty>"
+            "justification": "<explanation including which archived PoC vectors (3D representations) in the holographic hydrogen fractal sandbox contributed to the penalty, describing vector similarity and positions>"
         },
         "density": {
             "base_score": <0-2500>,
@@ -841,7 +937,7 @@ Return a JSON object with the following structure:
     "qualified_founder": <true|false>,
     "metal_alignment": "Gold"|"Silver"|"Copper"|"Hybrid",
     "metal_justification": "<explanation>",
-    "redundancy_analysis": "<which prior submissions were referenced>",
+    "redundancy_analysis": "<which archived PoC vectors (3D representations) were referenced, describing their positions in the holographic hydrogen fractal sandbox and vector similarity>",
     "founder_certificate": "<markdown certificate if qualified, empty string if not>",
     "homebase_intro": "<Homebase v2.0 onboarding paragraph>",
     "tokenomics_recommendation": {
@@ -856,21 +952,46 @@ Return a JSON object with the following structure:
 
 Return only valid JSON, no markdown code blocks.`
 
-    // Format archived PoCs for context
+    // Format archived PoCs for context (as 3D vectors in holographic hydrogen fractal sandbox)
     const archivedPoCsContext = archivedPoCs.length > 0 
-        ? archivedPoCs.map((poc, idx) => `
-**Archived PoC #${idx + 1}:**
-- Hash: ${poc.submission_hash}
+        ? `**Archived PoC Vectors (3D Representations in Hydrogen-Holographic Fractal Sandbox):**
+
+${archivedPoCs.map((poc, idx) => {
+            const vectorData = archivedVectors.find(v => v.submission_hash === poc.submission_hash)
+            const hasVector = vectorData && vectorData.vector_x !== null && vectorData.vector_y !== null && vectorData.vector_z !== null
+            const vectorCoords = hasVector 
+                ? `(${vectorData!.vector_x!.toFixed(2)}, ${vectorData!.vector_y!.toFixed(2)}, ${vectorData!.vector_z!.toFixed(2)})`
+                : 'Not yet vectorized'
+            
+            return `
+**Archived PoC Vector #${idx + 1} (3D Position in Holographic Space):**
+- Vector Hash (Submission Hash): ${poc.submission_hash}
 - Title: ${poc.title}
 - Contributor: ${poc.contributor}
 - Category: ${poc.category || 'N/A'}
 - Status: ${poc.status}
 - Metals: ${poc.metals?.join(', ') || 'None'}
-- Scores: Pod=${poc.pod_score || 'N/A'}, Novelty=${poc.novelty || 'N/A'}, Density=${poc.density || 'N/A'}, Coherence=${poc.coherence || 'N/A'}, Alignment=${poc.alignment || 'N/A'}
-- Content Preview: ${(poc.text_content || poc.title).substring(0, 500)}${(poc.text_content || poc.title).length > 500 ? '...' : ''}
-- Created: ${poc.created_at?.toISOString() || 'N/A'}
-`).join('\n')
-        : '**No prior archived PoCs found.** This is the first submission in the archive.'
+- 3D Vector Coordinates: ${vectorCoords}
+- Evaluation Scores: Pod=${poc.pod_score || 'N/A'}, Novelty=${poc.novelty || 'N/A'}, Density=${poc.density || 'N/A'}, Coherence=${poc.coherence || 'N/A'}, Alignment=${poc.alignment || 'N/A'}
+- Content Preview (Vector Content): ${(poc.text_content || poc.title).substring(0, 500)}${(poc.text_content || poc.title).length > 500 ? '...' : ''}
+- Vector Creation Time: ${poc.created_at?.toISOString() || 'N/A'}
+
+*This PoC exists as a 3D vector representation within the Hydrogen-Holographic Fractal Sandbox, encoded through the HHF geometry and HFG symbolic structure.*
+`
+        }).join('\n')}`
+        : '**No prior archived PoC vectors found.** This is the first submission in the archive and will establish the initial 3D vector space.'
+    
+    // Add calculated redundancy information if available
+    const calculatedRedundancyContext = calculatedRedundancy
+        ? `\n**Vector-Based Redundancy Calculation (HHF 3D Space):**
+- Redundancy Penalty: ${calculatedRedundancy.redundancy_percent.toFixed(1)}%
+- Similarity Score: ${(calculatedRedundancy.similarity_score * 100).toFixed(1)}%
+- Closest Vector: "${calculatedRedundancy.closest_vectors[0]?.title || 'N/A'}" (${(calculatedRedundancy.closest_vectors[0]?.similarity || 0) * 100}% similar)
+
+${calculatedRedundancy.analysis}
+
+*Note: This redundancy calculation is based on actual 3D vector similarity in the holographic hydrogen fractal sandbox using HHF geometry. You may refine this based on semantic content analysis.*`
+        : ''
 
     // Format tokenomics context
     const tokenomicsContext = tokenomicsInfo 
@@ -905,14 +1026,24 @@ Return only valid JSON, no markdown code blocks.`
 **Description/Content:**
 ${textContent.substring(0, 10000)}${textContent.length > 10000 ? '\n\n[Content truncated for evaluation - full content available in archive...]' : ''}
 
-**Archived PoCs for Redundancy Check and Context:**
+**Archived PoC Vectors (3D Representations in Hydrogen-Holographic Fractal Sandbox) for Redundancy Comparison:**
 ${archivedPoCsContext}
+${calculatedRedundancyContext}
 
 ${tokenomicsContext}
 
 **Instructions:**
 1. Classify the contribution (Research/Development/Alignment)
-2. **Redundancy Check:** Compare this submission to ALL archived PoCs listed above. Identify any overlapping content, derivative work, or similar contributions. Apply redundancy penalties as a PERCENTAGE (0-100%) to Novelty based on similarity to archived PoCs. The penalty is applied as: Final_Novelty = Base_Novelty × (1 - Redundancy_Penalty_Percent / 100). Clearly reference which archived PoCs contributed to the penalty.
+2. **Redundancy Check (3D Vector Comparison in Holographic Space):** 
+   ${calculatedRedundancy 
+        ? `- **NOTE:** Vector-based redundancy calculation has already been performed using actual 3D coordinates in HHF space (see Vector-Based Redundancy Calculation above). The calculated redundancy penalty is ${calculatedRedundancy.redundancy_percent.toFixed(1)}%. You may refine this based on semantic content analysis, but the vector calculation provides the baseline.`
+        : `- Map the current submission to its 3D vector representation within the Hydrogen-Holographic Fractal Sandbox
+   - Compare this submission's 3D vector to ALL archived PoC vectors listed above
+   - Calculate vector similarity/distance in the holographic hydrogen fractal space using HHF geometry (Λᴴᴴ ≈ 1.12 × 10²² scaling)
+   - Identify overlapping content, derivative work, or similar contributions based on 3D vector proximity in the holographic space`}
+   - Apply redundancy penalties as a PERCENTAGE (0-100%) to Novelty based on 3D vector similarity to archived PoCs
+   - The penalty is applied as: Final_Novelty = Base_Novelty × (1 - Redundancy_Penalty_Percent / 100)
+   - Clearly reference which archived PoC vectors (by hash/title) contributed to the penalty, describing their relative positions in the 3D holographic space
 3. Score each dimension (Novelty, Density, Coherence, Alignment) on 0-2,500 scale
 4. Apply redundancy penalties to Novelty as a PERCENTAGE (0-100%) based on archived PoC comparison:
    - 0%: Completely original, no overlap
@@ -932,7 +1063,13 @@ ${tokenomicsContext}
 10. Generate Founder Certificate in markdown format if qualified
 11. Provide Homebase v2.0 introduction paragraph
 
-**Important:** When checking redundancy, reference specific archived PoCs by their hash or title. Be thorough in comparing content, concepts, and contributions. The redundancy penalty is a PERCENTAGE (0-100%), not a fixed point value.
+**Important:** 
+- When checking redundancy, treat all submissions as 3D vector representations within the Hydrogen-Holographic Fractal Sandbox
+- Compare vectors in the 3D holographic space using HHF geometry principles
+- Reference specific archived PoC vectors by their hash or title, describing their positions in the 3D space
+- Be thorough in comparing content, concepts, and contributions through the lens of 3D vector similarity
+- The redundancy penalty is a PERCENTAGE (0-100%), not a fixed point value
+- Use the Fractal Cognitive Grammar (✦ ◇ ⊙ ⚛ ❂ ✶ △ ∞ ◎) to understand vector relationships and energy flow patterns between submissions
 
 Return your complete evaluation as a valid JSON object matching the specified structure, including a "tokenomics_recommendation" field with allocation details.`
     
@@ -1005,8 +1142,11 @@ Return your complete evaluation as a valid JSON object matching the specified st
         const alignmentScore = alignment.score ?? evaluation.alignment ?? 0
         
         // Extract redundancy penalty as percentage (0-100%)
-        const redundancyPenaltyPercent = novelty.redundancy_penalty_percent ?? 
-                                        (novelty.redundancy_penalty ? (novelty.redundancy_penalty / baseNoveltyScore * 100) : 0) ?? 0
+        // Prefer calculated vector-based redundancy if available, otherwise use Grok's estimate
+        const redundancyPenaltyPercent = calculatedRedundancy 
+            ? calculatedRedundancy.redundancy_percent
+            : (novelty.redundancy_penalty_percent ?? 
+               (novelty.redundancy_penalty ? (novelty.redundancy_penalty / baseNoveltyScore * 100) : 0) ?? 0)
         const densityPenaltyPercent = density.redundancy_penalty_percent ?? 0
         
         // Calculate final scores with percentage-based penalties
@@ -1056,7 +1196,9 @@ Return your complete evaluation as a valid JSON object matching the specified st
             novelty: Math.max(0, Math.min(2500, finalNoveltyScore)),
             alignment: Math.max(0, Math.min(2500, alignmentScore)),
             classification: evaluation.classification || [],
-            redundancy_analysis: evaluation.redundancy_analysis || novelty.justification || '',
+            redundancy_analysis: calculatedRedundancy 
+                ? `${calculatedRedundancy.analysis}\n\n${evaluation.redundancy_analysis || novelty.justification || ''}`
+                : (evaluation.redundancy_analysis || novelty.justification || ''),
             metal_justification: evaluation.metal_justification || '',
             founder_certificate: evaluation.founder_certificate || '',
             homebase_intro: evaluation.homebase_intro || '',

@@ -29,6 +29,13 @@ export const contributionsTable = pgTable('contributions', {
         pod_score?: number;
         [key: string]: any;
     }>(),
+    // Vector embedding and 3D coordinates for holographic hydrogen fractal sandbox
+    embedding: jsonb('embedding').$type<number[]>(), // Vector embedding as array of numbers
+    vector_x: numeric('vector_x', { precision: 20, scale: 10 }), // X coordinate in 3D HHF space
+    vector_y: numeric('vector_y', { precision: 20, scale: 10 }), // Y coordinate in 3D HHF space
+    vector_z: numeric('vector_z', { precision: 20, scale: 10 }), // Z coordinate in 3D HHF space
+    embedding_model: text('embedding_model'), // Model used for embedding (e.g., text-embedding-3-small)
+    vector_generated_at: timestamp('vector_generated_at'), // When vector was generated
     created_at: timestamp('created_at').defaultNow().notNull(),
     updated_at: timestamp('updated_at').defaultNow().notNull(),
 });

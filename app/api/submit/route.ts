@@ -5,6 +5,7 @@ import { eq } from 'drizzle-orm'
 import { createClient } from '@/utils/supabase/server'
 import { debug, debugError } from '@/utils/debug'
 import { evaluateWithGrok } from '@/utils/grok/evaluate'
+import { vectorizeSubmission } from '@/utils/vectors'
 import * as crypto from 'crypto'
 
 export async function POST(request: NextRequest) {
@@ -232,7 +233,28 @@ export async function POST(request: NextRequest) {
                 // Use qualified status from evaluation
                 const qualified = evaluation.qualified || (evaluation.pod_score >= 8000)
             
-                // Update contribution with evaluation results
+                // Generate vector embedding and 3D coordinates using evaluation scores
+                let vectorizationResult: { embedding: number[], vector: { x: number, y: number, z: number }, embeddingModel: string } | null = null
+                try {
+                    const textContent = text_content?.trim() || title.trim()
+                    vectorizationResult = await vectorizeSubmission(textContent, {
+                        novelty: evaluation.novelty,
+                        density: evaluation.density,
+                        coherence: evaluation.coherence,
+                        alignment: evaluation.alignment,
+                        pod_score: evaluation.pod_score,
+                    })
+                    debug('SubmitContribution', 'Vectorization complete', {
+                        embeddingDimensions: vectorizationResult.embedding.length,
+                        vector: vectorizationResult.vector,
+                        model: vectorizationResult.embeddingModel,
+                    })
+                } catch (vectorError) {
+                    debugError('SubmitContribution', 'Failed to generate vectorization', vectorError)
+                    // Continue without vectorization - submission still succeeds
+                }
+                
+                // Update contribution with evaluation results and vector data
                 try {
                     await db
                         .update(contributionsTable)
@@ -255,6 +277,13 @@ export async function POST(request: NextRequest) {
                                 qualified_founder: qualified,
                                 allocation_status: 'pending_admin_approval' // Token allocation requires admin approval
                             },
+                            // Store vector embedding and 3D coordinates if available
+                            embedding: vectorizationResult ? vectorizationResult.embedding : null,
+                            vector_x: vectorizationResult ? vectorizationResult.vector.x.toString() : null,
+                            vector_y: vectorizationResult ? vectorizationResult.vector.y.toString() : null,
+                            vector_z: vectorizationResult ? vectorizationResult.vector.z.toString() : null,
+                            embedding_model: vectorizationResult ? vectorizationResult.embeddingModel : null,
+                            vector_generated_at: vectorizationResult ? new Date() : null,
                             updated_at: new Date()
                         })
                         .where(eq(contributionsTable.submission_hash, submission_hash))
