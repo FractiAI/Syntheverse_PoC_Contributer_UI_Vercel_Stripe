@@ -6,6 +6,7 @@ import { createClient } from '@/utils/supabase/server'
 import { debug, debugError } from '@/utils/debug'
 import { evaluateWithGrok } from '@/utils/grok/evaluate'
 import { vectorizeSubmission } from '@/utils/vectors'
+import { sendApprovalRequestEmail } from '@/utils/email/send-approval-request'
 import * as crypto from 'crypto'
 
 export async function POST(request: NextRequest) {
@@ -400,10 +401,12 @@ export async function POST(request: NextRequest) {
                 metal_justification: evaluation.metal_justification,
                 founder_certificate: evaluation.founder_certificate,
                 homebase_intro: evaluation.homebase_intro,
-                tokenomics_recommendation: evaluation.tokenomics_recommendation
+                tokenomics_recommendation: evaluation.tokenomics_recommendation,
+                allocation_status: 'pending_admin_approval' // Token allocation requires admin approval
             } : null,
             evaluation_error: evaluationError ? evaluationError.message : null,
             status: evaluation ? (evaluation.qualified ? 'qualified' : 'unqualified') : 'draft',
+            allocation_status: evaluation ? 'pending_admin_approval' : undefined,
             message: evaluation 
                 ? 'Contribution submitted and evaluated successfully'
                 : evaluationError 

@@ -5,6 +5,7 @@ import { eq, sql } from 'drizzle-orm'
 import { debug, debugError } from '@/utils/debug'
 import { evaluateWithGrok } from '@/utils/grok/evaluate'
 import { vectorizeSubmission } from '@/utils/vectors'
+import { sendApprovalRequestEmail } from '@/utils/email/send-approval-request'
 import crypto from 'crypto'
 
 export async function POST(
@@ -102,6 +103,9 @@ export async function POST(
             // Continue without vectorization - evaluation still succeeds
         }
         
+        // Get current metadata to preserve existing values
+        const currentMetadata = contrib.metadata as any || {}
+        
         // Update contribution with evaluation results and vector data
         await db
             .update(contributionsTable)
@@ -109,6 +113,7 @@ export async function POST(
                 status: qualified ? 'qualified' : 'unqualified',
                 metals: evaluation.metals,
                 metadata: {
+                    ...currentMetadata,
                     coherence: evaluation.coherence,
                     density: evaluation.density,
                     redundancy: evaluation.redundancy,
@@ -120,7 +125,9 @@ export async function POST(
                     metal_justification: evaluation.metal_justification,
                     founder_certificate: evaluation.founder_certificate,
                     homebase_intro: evaluation.homebase_intro,
-                    qualified_founder: qualified
+                    tokenomics_recommendation: evaluation.tokenomics_recommendation,
+                    qualified_founder: qualified,
+                    allocation_status: qualified ? 'pending_admin_approval' : 'not_qualified' // Token allocation requires admin approval
                 },
                 // Store vector embedding and 3D coordinates if available
                 embedding: vectorizationResult ? vectorizationResult.embedding : undefined,
@@ -196,6 +203,39 @@ export async function POST(
             evaluation
         })
         
+        // Send approval request email if qualified
+        if (qualified) {
+            try {
+                await sendApprovalRequestEmail({
+                    submission_hash: submissionHash,
+                    title: contrib.title,
+                    contributor: contrib.contributor,
+                    pod_score: evaluation.pod_score,
+                    metals: evaluation.metals || [],
+                    tokenomics_recommendation: evaluation.tokenomics_recommendation
+                })
+                debug('EvaluateContribution', 'Approval request email sent', { submissionHash })
+            } catch (emailError) {
+                debugError('EvaluateContribution', 'Failed to send approval request email', emailError)
+                // Don't fail evaluation if email fails
+            }
+        }
+        
+        // Get existing allocations if any
+        const existingAllocations = await db
+            .select()
+            .from(allocationsTable)
+            .where(eq(allocationsTable.submission_hash, submissionHash))
+        
+        const allocations = existingAllocations.map(a => ({
+            id: a.id,
+            metal: a.metal,
+            epoch: a.epoch,
+            reward: Number(a.reward),
+            tier_multiplier: Number(a.tier_multiplier),
+            created_at: a.created_at?.toISOString()
+        }))
+        
         return NextResponse.json({
             success: true,
             submission_hash: submissionHash,
@@ -213,7 +253,10 @@ export async function POST(
                 redundancy_analysis: evaluation.redundancy_analysis,
                 metal_justification: evaluation.metal_justification,
                 founder_certificate: evaluation.founder_certificate,
-                homebase_intro: evaluation.homebase_intro
+                homebase_intro: evaluation.homebase_intro,
+                tokenomics_recommendation: evaluation.tokenomics_recommendation,
+                allocation_status: (contrib.metadata as any)?.allocation_status || 'pending_admin_approval',
+                allocations: allocations.length > 0 ? allocations : undefined
             },
             status: qualified ? 'qualified' : 'unqualified',
             qualified,
