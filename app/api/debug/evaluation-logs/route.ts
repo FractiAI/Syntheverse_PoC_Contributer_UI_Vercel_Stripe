@@ -17,23 +17,22 @@ export async function GET(request: NextRequest) {
         const limit = parseInt(searchParams.get('limit') || '10')
         const submissionHash = searchParams.get('hash')
         
-        let query = db
-            .select()
-            .from(pocLogTable)
-            .where(eq(pocLogTable.event_type, 'evaluation_complete'))
-            .orderBy(desc(pocLogTable.created_at))
-            .limit(limit)
-        
+        let logs
         if (submissionHash) {
-            query = db
+            logs = await db
                 .select()
                 .from(pocLogTable)
                 .where(eq(pocLogTable.submission_hash, submissionHash))
                 .orderBy(desc(pocLogTable.created_at))
-                .limit(limit) as any
+                .limit(limit)
+        } else {
+            logs = await db
+                .select()
+                .from(pocLogTable)
+                .where(eq(pocLogTable.event_type, 'evaluation_complete'))
+                .orderBy(desc(pocLogTable.created_at))
+                .limit(limit)
         }
-        
-        const logs = await query
         
         const formattedLogs = logs.map(log => ({
             id: log.id,
