@@ -28,7 +28,8 @@ export function UpdateUsernameForm({ currentName }: UpdateUsernameFormProps) {
                 setStatus({ type: 'success', message: 'Username updated successfully' })
                 setTimeout(() => setStatus({ type: null, message: '' }), 3000)
             } else {
-                setStatus({ type: 'error', message: result.error || 'Failed to update username' })
+                const errorMessage = 'error' in result ? result.error : 'Failed to update username'
+                setStatus({ type: 'error', message: errorMessage })
             }
         })
     }

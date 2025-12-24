@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -64,12 +64,6 @@ export function SandboxMap3D() {
         fetchMapData()
     }, [])
 
-    useEffect(() => {
-        if (data && canvasRef.current) {
-            render3D()
-        }
-    }, [data, camera, selectedNode])
-
     async function fetchMapData() {
         setLoading(true)
         setError(null)
@@ -87,7 +81,7 @@ export function SandboxMap3D() {
         }
     }
 
-    function render3D() {
+    const render3D = useCallback(() => {
         const canvas = canvasRef.current
         if (!canvas || !data) return
 
@@ -254,7 +248,13 @@ export function SandboxMap3D() {
         ctx.stroke()
         ctx.fillStyle = '#3b82f6'
         ctx.fillText('Z (Coherence)', zAxis.x + 5, zAxis.y)
-    }
+    }, [data, camera, selectedNode])
+
+    useEffect(() => {
+        if (data && canvasRef.current) {
+            render3D()
+        }
+    }, [data, camera, selectedNode, render3D])
 
     function handleMouseDown(e: React.MouseEvent<HTMLCanvasElement>) {
         setIsDragging(true)
