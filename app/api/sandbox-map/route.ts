@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
     debug('SandboxMap', 'Fetching sandbox map data with 3D vectors')
     
     try {
-        // Get all contributions with vector data
+        // Get ALL contributions (including those without vectors - they'll be included in map with derived positions)
         const contributions = await db
             .select({
                 submission_hash: contributionsTable.submission_hash,
@@ -25,35 +25,59 @@ export async function GET(request: NextRequest) {
                 created_at: contributionsTable.created_at,
             })
             .from(contributionsTable)
+            .orderBy(contributionsTable.created_at)
         
-        // Generate nodes from contributions with 3D vector coordinates
-        const nodes = contributions.map(contrib => ({
-            id: contrib.submission_hash,
-            submission_hash: contrib.submission_hash,
-            title: contrib.title,
-            contributor: contrib.contributor,
-            status: contrib.status,
-            category: contrib.category,
-            metals: (contrib.metals as string[]) || [],
-            // 3D vector coordinates for visualization
-            vector: contrib.vector_x !== null && contrib.vector_y !== null && contrib.vector_z !== null
-                ? {
+        // Generate nodes from ALL contributions (include both vectorized and non-vectorized)
+        // Non-vectorized submissions will be positioned at origin (0,0,0) or based on scores if available
+        const nodes = contributions.map(contrib => {
+            const metadata = contrib.metadata as any || {}
+            const hasVector = contrib.vector_x !== null && contrib.vector_y !== null && contrib.vector_z !== null
+            
+            // If vector exists, use it; otherwise, try to derive from scores or use origin
+            let vector: { x: number, y: number, z: number } | null = null
+            
+            if (hasVector) {
+                vector = {
                     x: Number(contrib.vector_x),
                     y: Number(contrib.vector_y),
                     z: Number(contrib.vector_z),
                 }
-                : null,
-            // Evaluation scores
-            scores: {
-                coherence: (contrib.metadata as any)?.coherence,
-                density: (contrib.metadata as any)?.density,
-                novelty: (contrib.metadata as any)?.novelty,
-                alignment: (contrib.metadata as any)?.alignment,
-                pod_score: (contrib.metadata as any)?.pod_score,
-                redundancy: (contrib.metadata as any)?.redundancy,
-            },
-            created_at: contrib.created_at?.toISOString(),
-        }))
+            } else if (metadata.novelty || metadata.density || metadata.coherence) {
+                // Derive approximate position from scores if available (even if not fully vectorized)
+                const hhfScale = Math.log10(1.12e22) / 10 // ~2.05
+                vector = {
+                    x: ((metadata.novelty || 0) / 2500) * hhfScale * 100,
+                    y: ((metadata.density || 0) / 2500) * hhfScale * 100,
+                    z: ((metadata.coherence || 0) / 2500) * hhfScale * 100,
+                }
+            } else {
+                // Place at origin if no vector and no scores
+                vector = { x: 0, y: 0, z: 0 }
+            }
+            
+            return {
+                id: contrib.submission_hash,
+                submission_hash: contrib.submission_hash,
+                title: contrib.title,
+                contributor: contrib.contributor,
+                status: contrib.status,
+                category: contrib.category,
+                metals: (contrib.metals as string[]) || [],
+                // 3D vector coordinates for visualization (always present, may be derived)
+                vector,
+                vectorized: hasVector, // Flag to indicate if fully vectorized
+                // Evaluation scores
+                scores: {
+                    coherence: metadata.coherence,
+                    density: metadata.density,
+                    novelty: metadata.novelty,
+                    alignment: metadata.alignment,
+                    pod_score: metadata.pod_score,
+                    redundancy: metadata.redundancy,
+                },
+                created_at: contrib.created_at?.toISOString(),
+            }
+        })
         
         // Generate edges based on 3D vector similarity
         const edges: Array<{
@@ -65,12 +89,11 @@ export async function GET(request: NextRequest) {
         }> = []
         
         // Calculate edges based on 3D vector proximity
-        const vectorizedNodes = nodes.filter(n => n.vector !== null)
-        
-        for (let i = 0; i < vectorizedNodes.length; i++) {
-            for (let j = i + 1; j < vectorizedNodes.length; j++) {
-                const nodeA = vectorizedNodes[i]
-                const nodeB = vectorizedNodes[j]
+        // Use all nodes (they all have vectors now, either actual or derived)
+        for (let i = 0; i < nodes.length; i++) {
+            for (let j = i + 1; j < nodes.length; j++) {
+                const nodeA = nodes[i]
+                const nodeB = nodes[j]
                 
                 if (nodeA.vector && nodeB.vector) {
                     // Calculate 3D distance
@@ -78,12 +101,17 @@ export async function GET(request: NextRequest) {
                     const similarity = similarityFromDistance(distance)
                     
                     // Only create edge if similarity is above threshold (0.3 = 30% similar)
-                    if (similarity > 0.3) {
+                    // Or if they share contributor/category (lower threshold for those)
+                    const isSameContributor = nodeA.contributor === nodeB.contributor
+                    const isSameCategory = nodeA.category === nodeB.category && nodeA.category
+                    const threshold = (isSameContributor || isSameCategory) ? 0.2 : 0.3
+                    
+                    if (similarity > threshold) {
                         // Determine overlap type
                         let overlapType = 'vector_similarity'
-                        if (nodeA.contributor === nodeB.contributor) {
+                        if (isSameContributor) {
                             overlapType = 'same_contributor'
-                        } else if (nodeA.category === nodeB.category && nodeA.category) {
+                        } else if (isSameCategory) {
                             overlapType = 'same_category'
                         }
                         
@@ -129,13 +157,16 @@ export async function GET(request: NextRequest) {
             }
         })
         
+        const vectorizedCount = nodes.filter(n => (n as any).vectorized === true).length
+        
         const sandboxMap = {
             nodes,
             edges,
             metadata: {
                 total_nodes: nodes.length,
                 total_edges: edges.length,
-                vectorized_nodes: vectorizedNodes.length,
+                vectorized_nodes: vectorizedCount,
+                fully_vectorized: vectorizedCount === nodes.length,
                 coordinate_system: 'HHF 3D Holographic Hydrogen Fractal Sandbox',
                 hhf_constant: 'Λᴴᴴ ≈ 1.12 × 10²²',
                 generated_at: new Date().toISOString()
@@ -145,7 +176,8 @@ export async function GET(request: NextRequest) {
         debug('SandboxMap', 'Sandbox map generated with 3D vectors', {
             nodes: nodes.length,
             edges: edges.length,
-            vectorized: vectorizedNodes.length
+            vectorized: vectorizedCount,
+            all_included: true
         })
         
         return NextResponse.json(sandboxMap)
