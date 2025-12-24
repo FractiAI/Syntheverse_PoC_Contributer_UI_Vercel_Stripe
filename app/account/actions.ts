@@ -5,6 +5,7 @@ import { db } from '@/utils/db/db'
 import { usersTable } from '@/utils/db/schema'
 import { eq } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
+import { createStripeCustomer } from '@/utils/stripe/api'
 
 export async function updateUsername(formData: FormData) {
     const supabase = createClient()
@@ -42,9 +43,31 @@ export async function updateUsername(formData: FormData) {
                 .limit(1)
             
             if (usersByEmail.length === 0) {
-                return { 
-                    success: false, 
-                    error: 'User account not found in database. Please contact support or sign up again.'
+                // User doesn't exist at all - create the record automatically
+                try {
+                    const stripeID = await createStripeCustomer(
+                        user.id,
+                        user.email!,
+                        newName.trim()
+                    )
+                    
+                    await db.insert(usersTable).values({
+                        id: user.id,
+                        name: newName.trim(),
+                        email: user.email!,
+                        stripe_id: stripeID,
+                        plan: 'none'
+                    })
+                    
+                    // User created successfully, continue to return success
+                    revalidatePath('/account')
+                    return { success: true }
+                } catch (createError) {
+                    console.error('Error creating user record:', createError)
+                    return {
+                        success: false,
+                        error: 'Failed to create user account. Please try again or contact support.'
+                    }
                 }
             }
             
