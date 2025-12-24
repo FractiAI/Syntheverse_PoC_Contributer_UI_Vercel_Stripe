@@ -5,7 +5,6 @@ import { db } from '@/utils/db/db'
 import { usersTable } from '@/utils/db/schema'
 import { eq } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
-import { createStripeCustomer } from '@/utils/stripe/api'
 
 export async function updateUsername(formData: FormData) {
     const supabase = createClient()
