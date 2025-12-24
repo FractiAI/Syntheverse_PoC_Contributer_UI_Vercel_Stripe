@@ -1135,11 +1135,22 @@ Return your complete evaluation as a valid JSON object matching the specified st
         const coherence = scoring.coherence || {}
         const alignment = scoring.alignment || {}
         
-        // Extract base scores
-        const baseNoveltyScore = novelty.base_score ?? evaluation.novelty ?? 0
-        const baseDensityScore = density.base_score ?? evaluation.density ?? 0
-        const coherenceScore = coherence.score ?? evaluation.coherence ?? 0
-        const alignmentScore = alignment.score ?? evaluation.alignment ?? 0
+        // Extract base scores with multiple fallback options
+        const baseNoveltyScore = novelty.base_score ?? novelty.final_score ?? evaluation.novelty ?? evaluation.scoring?.novelty?.base_score ?? evaluation.scoring?.novelty?.final_score ?? 0
+        const baseDensityScore = density.base_score ?? density.final_score ?? density.score ?? evaluation.density ?? evaluation.scoring?.density?.base_score ?? evaluation.scoring?.density?.final_score ?? evaluation.scoring?.density?.score ?? 0
+        const coherenceScore = coherence.score ?? coherence.final_score ?? evaluation.coherence ?? evaluation.scoring?.coherence?.score ?? 0
+        const alignmentScore = alignment.score ?? alignment.final_score ?? evaluation.alignment ?? evaluation.scoring?.alignment?.score ?? 0
+        
+        // Debug logging for score extraction
+        debug('EvaluateWithGrok', 'Score extraction', {
+            baseNoveltyScore,
+            baseDensityScore,
+            coherenceScore,
+            alignmentScore,
+            evaluationKeys: Object.keys(evaluation),
+            scoringKeys: evaluation.scoring ? Object.keys(evaluation.scoring) : [],
+            densityKeys: density ? Object.keys(density) : [],
+        })
         
         // Extract redundancy penalty as percentage (0-100%)
         // Prefer calculated vector-based redundancy if available, otherwise use Grok's estimate
@@ -1154,13 +1165,31 @@ Return your complete evaluation as a valid JSON object matching the specified st
         const densityScore = Math.max(0, Math.min(2500, baseDensityScore * (1 - Math.max(0, Math.min(100, densityPenaltyPercent)) / 100)))
         
         // Use final_score if provided, otherwise use calculated score
-        const finalNoveltyScore = novelty.final_score ?? noveltyScore
-        const finalDensityScore = density.final_score ?? densityScore
+        // If base score is 0 but final_score exists, use final_score (Grok may have provided final directly)
+        const finalNoveltyScore = novelty.final_score ?? (baseNoveltyScore > 0 ? noveltyScore : baseNoveltyScore)
+        
+        // For density, try multiple fallback paths since Grok may return it in different formats
+        // Priority: final_score > score > calculated from base > direct evaluation.density
+        let finalDensityScore = density.final_score ?? density.score ?? 0
+        if (finalDensityScore === 0 && baseDensityScore > 0) {
+            finalDensityScore = densityScore
+        }
+        if (finalDensityScore === 0) {
+            // Try all possible locations for density score in the evaluation response
+            finalDensityScore = evaluation.density ?? 
+                               evaluation.scoring?.density?.score ?? 
+                               evaluation.scoring?.density?.final_score ?? 
+                               evaluation.scoring?.density?.base_score ??
+                               0
+        }
+        
+        // Use the best available density score (prefer finalDensityScore, fallback to baseDensityScore if final is 0)
+        const densityFinal = finalDensityScore > 0 ? finalDensityScore : (baseDensityScore > 0 ? baseDensityScore : 0)
         
         // Calculate total score if not provided
         let pod_score = evaluation.total_score ?? evaluation.pod_score ?? evaluation.poc_score ?? 0
         if (!pod_score || pod_score === 0) {
-            pod_score = finalNoveltyScore + finalDensityScore + coherenceScore + alignmentScore
+            pod_score = finalNoveltyScore + densityFinal + coherenceScore + alignmentScore
         }
         
         // Store redundancy as percentage (0-100)
@@ -1187,7 +1216,7 @@ Return your complete evaluation as a valid JSON object matching the specified st
         
         return {
             coherence: Math.max(0, Math.min(2500, coherenceScore)),
-            density: Math.max(0, Math.min(2500, finalDensityScore)),
+            density: Math.max(0, Math.min(2500, densityFinal)),
             redundancy: Math.max(0, Math.min(100, redundancy)), // Redundancy penalty as percentage (0-100%)
             pod_score: Math.max(0, Math.min(10000, pod_score)),
             metals,
