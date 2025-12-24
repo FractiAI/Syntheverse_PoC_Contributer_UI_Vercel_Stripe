@@ -121,18 +121,29 @@ export default async function AccountPage() {
 
                     <div className="space-y-2">
                         <h4 className="font-medium">Metallic Amplifications</h4>
-                        <div className="grid gap-2 md:grid-cols-3 text-sm">
-                            <div className="flex items-center gap-2">
-                                <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                                <span>Gold: 1.5× multiplier</span>
+                        <div className="space-y-3 text-sm">
+                            <div className="grid gap-2 md:grid-cols-3">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                                    <span>Gold: Research</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
+                                    <span>Silver: Technology</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <div className="w-3 h-3 bg-orange-600 rounded-full"></div>
+                                    <span>Copper: Alignment</span>
+                                </div>
                             </div>
-                            <div className="flex items-center gap-2">
-                                <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
-                                <span>Silver: 1.2× multiplier</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <div className="w-3 h-3 bg-orange-600 rounded-full"></div>
-                                <span>Copper: 1.15× multiplier</span>
+                            <div className="pt-2 border-t">
+                                <p className="text-xs font-semibold text-muted-foreground mb-1">Combination Amplifications:</p>
+                                <div className="text-xs space-y-1 text-muted-foreground">
+                                    <div>• Gold + Silver + Copper: <strong>1.5×</strong></div>
+                                    <div>• Gold + Silver: <strong>1.25×</strong></div>
+                                    <div>• Gold + Copper: <strong>1.2×</strong></div>
+                                    <div>• Silver + Copper: <strong>1.15×</strong></div>
+                                </div>
                             </div>
                         </div>
                     </div>

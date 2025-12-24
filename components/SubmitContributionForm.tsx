@@ -237,20 +237,29 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                     </CardHeader>
                     <CardContent className="space-y-2">
                         <p className="text-sm text-muted-foreground">
-                            Based on evaluation scores, receive a metallic qualification:
+                            Based on evaluation scores, receive metallic qualifications. Certain combinations produce amplifications:
                         </p>
                         <div className="space-y-2">
                             <div className="flex items-center gap-2">
                                 <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                                <span className="text-sm"><strong>Gold:</strong> Top 10% (1.5× multiplier)</span>
+                                <span className="text-sm"><strong>Gold:</strong> Research contributions</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
-                                <span className="text-sm"><strong>Silver:</strong> Top 30% (1.2× multiplier)</span>
+                                <span className="text-sm"><strong>Silver:</strong> Technology contributions</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <div className="w-3 h-3 bg-orange-600 rounded-full"></div>
-                                <span className="text-sm"><strong>Copper:</strong> Qualified (1.15× multiplier)</span>
+                                <span className="text-sm"><strong>Copper:</strong> Alignment contributions</span>
+                            </div>
+                            <div className="mt-3 pt-2 border-t border-border">
+                                <p className="text-xs font-semibold text-muted-foreground mb-1">Combination Amplifications:</p>
+                                <div className="text-xs space-y-1 text-muted-foreground">
+                                    <div>• Gold + Silver + Copper: <strong>1.5×</strong></div>
+                                    <div>• Gold + Silver: <strong>1.25×</strong></div>
+                                    <div>• Gold + Copper: <strong>1.2×</strong></div>
+                                    <div>• Silver + Copper: <strong>1.15×</strong></div>
+                                </div>
                             </div>
                         </div>
                     </CardContent>

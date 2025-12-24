@@ -103,7 +103,7 @@ export default async function LandingPage() {
                   </div>
                   <h3 className="text-xl font-bold">Metallic Amplifications</h3>
                   <p className="text-muted-foreground text-center">
-                    Gold (1.5×), Silver (1.2×), and Copper (1.15×) multipliers based on evaluation scores
+                    Gold, Silver, and Copper qualifications. Certain combinations (e.g., Gold+Silver+Copper: 1.5×) produce amplifications
                   </p>
                 </div>
               </CardContent>

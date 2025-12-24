@@ -106,10 +106,17 @@ export async function sendWelcomeEmail(data: WelcomeEmailData): Promise<{ succes
             <div style="margin-bottom: 20px;">
                 <h3 style="color: #333; font-size: 18px; margin-bottom: 10px;">5. Metals — Contribution Amplifications</h3>
                 <ul style="margin: 0; padding-left: 20px;">
-                    <li><strong>Gold:</strong> high-impact contributions</li>
-                    <li><strong>Silver:</strong> medium-impact contributions</li>
-                    <li><strong>Copper:</strong> supporting, alignment-focused contributions</li>
-                    <li>Certain combinations allow amplifications, increasing SYNTH allocation.</li>
+                    <li><strong>Gold:</strong> Research contributions</li>
+                    <li><strong>Silver:</strong> Technology/Development contributions</li>
+                    <li><strong>Copper:</strong> Alignment-focused contributions</li>
+                    <li><strong>Combination Amplifications:</strong></li>
+                    <ul style="margin: 5px 0 0 20px; padding-left: 15px;">
+                        <li>Gold + Silver + Copper: <strong>1.5×</strong> (Full Integration)</li>
+                        <li>Gold + Silver: <strong>1.25×</strong> (Research + Technology)</li>
+                        <li>Gold + Copper: <strong>1.2×</strong> (Research + Alignment)</li>
+                        <li>Silver + Copper: <strong>1.15×</strong> (Technology + Alignment)</li>
+                    </ul>
+                    <li>Amplifications are applied based on metal combinations, increasing SYNTH allocation.</li>
                 </ul>
             </div>
             

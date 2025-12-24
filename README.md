@@ -5,7 +5,7 @@ A production-ready web application for the Syntheverse Proof of Contribution sys
 ## ✨ Features
 
 - **Hydrogen-Holographic Evaluation**: AI-powered contribution scoring across novelty, density, coherence, and alignment dimensions
-- **Metallic Amplifications**: Gold (1.5×), Silver (1.2×), and Copper (1.15×) reward multipliers
+- **Metallic Amplifications**: Combination-based amplifications (Gold+Silver+Copper: 1.5×, Gold+Silver: 1.25×, Gold+Copper: 1.2×, Silver+Copper: 1.15×)
 - **SYNTH Token Rewards**: Blockchain-anchored token allocations with $200 registration fees
 - **Secure Authentication**: Supabase-powered auth with Google/GitHub OAuth and email/password
 - **Real-time Dashboard**: Live evaluation status and ecosystem impact visualization

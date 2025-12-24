@@ -20,6 +20,7 @@ import { eq, sql } from 'drizzle-orm'
 import { debug, debugError } from '@/utils/debug'
 import { createClient } from '@/utils/supabase/server'
 import { isQualifiedForOpenEpoch } from '@/utils/epochs/qualification'
+import { calculateMetalAmplification } from '@/utils/tokenomics/metal-amplification'
 import crypto from 'crypto'
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'espressolico@gmail.com'
@@ -168,7 +169,21 @@ async function handleApproval(submission_hash: string, approvedBy: string): Prom
             })
         })
         
-        // Create allocations for each metal
+        // Calculate metallic amplification based on COMBINATIONS (Blueprint §3.4)
+        const amplification = calculateMetalAmplification(metals)
+        
+        // Calculate base reward
+        let baseReward = suggestedAllocation
+        if (baseReward === 0) {
+            // Calculate from pod_score if no suggested allocation
+            // Base allocation formula: pod_score / 1000 * tier_multiplier
+            baseReward = Math.floor((metadata.pod_score || 0) / 1000) * tierMultiplier
+        }
+        
+        // Apply combination-based amplification (not individual metal multipliers)
+        const amplifiedReward = Math.floor(baseReward * amplification.multiplier)
+        
+        // Create allocations for each metal (all share the same amplified reward)
         const createdAllocations: Array<{
             id: string
             submission_hash: string
@@ -181,29 +196,15 @@ async function handleApproval(submission_hash: string, approvedBy: string): Prom
         
         const updatedEpochBalances: Array<{ epoch: string, balance_before: number, balance_after: number }> = []
         
+        // Determine epoch (use first eligible epoch or current epoch)
+        const epoch = eligibleEpochs[0] || currentEpoch
+        
+        // Calculate reward per metal: divide amplified reward equally among all metals
+        // Each metal gets its own allocation record, but they share the amplified reward
+        const rewardPerMetal = Math.floor(amplifiedReward / metals.length)
+        
         for (const metal of metals) {
-            // Determine epoch for this metal (use first eligible epoch or current epoch)
-            const epoch = eligibleEpochs[0] || currentEpoch
-            
-            // Calculate reward based on metal tier multiplier
-            let baseReward = suggestedAllocation
-            if (baseReward === 0) {
-                // Calculate from pod_score if no suggested allocation
-                // Base allocation formula: pod_score / 1000 * tier_multiplier
-                baseReward = Math.floor((metadata.pod_score || 0) / 1000) * tierMultiplier
-            }
-            
-            // Apply metal-specific multipliers
-            let metalMultiplier = 1
-            if (metal.toLowerCase() === 'gold') {
-                metalMultiplier = 1000 // Gold tier
-            } else if (metal.toLowerCase() === 'silver') {
-                metalMultiplier = 100 // Silver tier
-            } else if (metal.toLowerCase() === 'copper') {
-                metalMultiplier = 1 // Copper tier
-            }
-            
-            const reward = Math.floor(baseReward * metalMultiplier)
+            const reward = rewardPerMetal
             
             // Check epoch balance
             const epochBalance = epochBalancesMap.get(epoch)
@@ -235,7 +236,7 @@ async function handleApproval(submission_hash: string, approvedBy: string): Prom
                 epoch,
                 tier: metal.toLowerCase(),
                 reward: reward.toString(),
-                tier_multiplier: tierMultiplier.toString(),
+                tier_multiplier: amplification.multiplier.toString(), // Store combination amplification multiplier
                 epoch_balance_before: balanceBefore.toString(),
                 epoch_balance_after: balanceAfter.toString(),
                 created_at: new Date()
@@ -267,7 +268,7 @@ async function handleApproval(submission_hash: string, approvedBy: string): Prom
                 metal: metal.toLowerCase(),
                 epoch,
                 reward,
-                tier_multiplier: tierMultiplier
+                tier_multiplier: amplification.multiplier // Store combination amplification multiplier
             })
             
             updatedEpochBalances.push({
