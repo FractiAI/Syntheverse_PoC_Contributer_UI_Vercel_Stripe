@@ -68,6 +68,7 @@ export function PoCDetailPanel({ submissionHash, onClose }: PoCDetailPanelProps)
     
     useEffect(() => {
         loadPoCData()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [submissionHash])
     
     async function loadPoCData() {

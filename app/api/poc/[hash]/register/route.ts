@@ -11,7 +11,7 @@ import { createClient } from '@/utils/supabase/server'
 import { db } from '@/utils/db/db'
 import { contributionsTable } from '@/utils/db/schema'
 import { eq } from 'drizzle-orm'
-import { getStripeInstance } from '@/utils/stripe/api'
+import Stripe from 'stripe'
 import { debug, debugError } from '@/utils/debug'
 
 const REGISTRATION_FEE = 20000 // $200.00 in cents
@@ -68,13 +68,27 @@ export async function POST(
         }
         
         // Get Stripe instance
-        const stripe = getStripeInstance()
-        if (!stripe) {
+        if (!process.env.STRIPE_SECRET_KEY) {
             return NextResponse.json(
                 { error: 'Stripe not configured' },
                 { status: 500 }
             )
         }
+        
+        // Sanitize the Stripe key - remove whitespace and invalid characters
+        const sanitizedKey = process.env.STRIPE_SECRET_KEY.trim().replace(/\s+/g, '');
+        
+        // Validate key format
+        if (!sanitizedKey.match(/^sk_(test|live)_/)) {
+            return NextResponse.json(
+                { error: 'Invalid Stripe key format' },
+                { status: 500 }
+            )
+        }
+        
+        const stripe = new Stripe(sanitizedKey, {
+            apiVersion: '2024-06-20'
+        })
         
         // Create Stripe checkout session
         const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_WEBSITE_URL || 'http://localhost:3000'

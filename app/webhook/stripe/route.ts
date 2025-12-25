@@ -35,9 +35,6 @@ export async function POST(req: Request) {
         let event: Stripe.Event
 
         try {
-            if (!stripe) {
-                return new Response('Stripe not configured', { status: 500 });
-            }
             event = stripe.webhooks.constructEvent(body, sig!, process.env.STRIPE_WEBHOOK_SECRET!)
         } catch (err: any) {
             debugError('StripeWebhook', 'Signature verification failed', err)
