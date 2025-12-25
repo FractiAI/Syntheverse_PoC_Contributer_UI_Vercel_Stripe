@@ -92,12 +92,12 @@ export function SandboxMap3DUpgraded() {
     // Calculate camera bounds based on nodes
     const bounds = useMemo(() => {
         if (!data || data.nodes.length === 0) {
-            return { min: [-50, -50, -50], max: [50, 50, 50], center: [0, 0, 0] }
+            return { min: [-50, -50, -50], max: [50, 50, 50], center: [0, 0, 0], range: 100 }
         }
         
         const vectorizedNodes = data.nodes.filter(n => n.vector !== null)
         if (vectorizedNodes.length === 0) {
-            return { min: [-50, -50, -50], max: [50, 50, 50], center: [0, 0, 0] }
+            return { min: [-50, -50, -50], max: [50, 50, 50], center: [0, 0, 0], range: 100 }
         }
         
         const xs = vectorizedNodes.map(n => (n.vector as Vector3D).x)
@@ -128,7 +128,7 @@ export function SandboxMap3DUpgraded() {
     
     // Set initial camera position to view all nodes
     useEffect(() => {
-        if (bounds.range > 0) {
+        if (bounds.range && bounds.range > 0) {
             const distance = bounds.range * 1.5
             setCameraPosition([
                 bounds.center[0],
@@ -223,8 +223,8 @@ export function SandboxMap3DUpgraded() {
                     <OrbitControls
                         enableDamping
                         dampingFactor={0.05}
-                        minDistance={bounds.range * 0.3}
-                        maxDistance={bounds.range * 5}
+                        minDistance={(bounds.range || 100) * 0.3}
+                        maxDistance={(bounds.range || 100) * 5}
                         target={bounds.center}
                     />
                 </Suspense>
