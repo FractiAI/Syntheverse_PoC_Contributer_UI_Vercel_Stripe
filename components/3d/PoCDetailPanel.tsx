@@ -138,7 +138,7 @@ export function PoCDetailPanel({ submissionHash, onClose }: PoCDetailPanelProps)
                 qualified: node.scores?.pod_score >= 8000 || false,
                 projectedAllocation,
                 registrationStatus,
-                allocationStatus
+                allocationStatus: allocationStatus || undefined
             })
             
             setIsContributor(user?.email === node.contributor)
