@@ -25,6 +25,7 @@ export async function POST(
     
     try {
         // Verify user is authenticated
+        // Verify user is authenticated
         const supabase = createClient()
         const { data: { user }, error: authError } = await supabase.auth.getUser()
         
