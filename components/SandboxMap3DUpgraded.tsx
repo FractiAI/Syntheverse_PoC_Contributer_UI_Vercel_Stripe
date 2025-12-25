@@ -8,8 +8,9 @@
 'use client'
 
 import { Suspense, useState, useEffect, useMemo } from 'react'
-import { Canvas } from '@react-three/fiber'
-import { OrbitControls, PerspectiveCamera, Grid } from '@react-three/drei'
+import { Canvas, useThree } from '@react-three/fiber'
+import { OrbitControls, Grid } from '@react-three/drei'
+import * as THREE from 'three'
 import { PoCNode } from './3d/PoCNode'
 import { PoCDetailPanel } from './3d/PoCDetailPanel'
 import { Card, CardContent } from '@/components/ui/card'
@@ -181,13 +182,10 @@ export function SandboxMap3DUpgraded() {
     
     return (
         <div className="relative w-full h-[800px]">
-            <Canvas>
+            <Canvas
+                camera={{ position: cameraPosition, fov: 75 }}
+            >
                 <Suspense fallback={null}>
-                    <PerspectiveCamera 
-                        makeDefault 
-                        position={cameraPosition}
-                        fov={75}
-                    />
                     <ambientLight intensity={0.5} />
                     <pointLight position={[10, 10, 10]} intensity={1} />
                     <pointLight position={[-10, -10, -10]} intensity={0.5} />
@@ -196,7 +194,7 @@ export function SandboxMap3DUpgraded() {
                     <Grid args={[100, 100]} cellColor="#6b7280" sectionColor="#9ca3af" />
                     
                     {/* Axes helper */}
-                    <axesHelper args={[50]} />
+                    <primitive object={new THREE.AxesHelper(50)} />
                     
                     {/* Render PoC nodes */}
                     {vectorizedNodes.map((node) => {
