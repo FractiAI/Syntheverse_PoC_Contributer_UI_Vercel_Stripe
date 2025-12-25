@@ -225,7 +225,7 @@ export function SandboxMap3DUpgraded() {
                         dampingFactor={0.05}
                         minDistance={(bounds.range || 100) * 0.3}
                         maxDistance={(bounds.range || 100) * 5}
-                        target={bounds.center}
+                        target={[bounds.center[0], bounds.center[1], bounds.center[2]]}
                     />
                 </Suspense>
             </Canvas>
