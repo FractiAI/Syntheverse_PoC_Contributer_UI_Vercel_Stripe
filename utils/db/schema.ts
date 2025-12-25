@@ -36,6 +36,11 @@ export const contributionsTable = pgTable('contributions', {
     vector_z: numeric('vector_z', { precision: 20, scale: 10 }), // Z coordinate in 3D HHF space
     embedding_model: text('embedding_model'), // Model used for embedding (e.g., text-embedding-3-small)
     vector_generated_at: timestamp('vector_generated_at'), // When vector was generated
+    // PoC Registration fields (for blockchain registration)
+    registered: boolean('registered').default(false), // Is PoC registered on blockchain
+    registration_date: timestamp('registration_date'), // When PoC was registered
+    registration_tx_hash: text('registration_tx_hash'), // Blockchain transaction hash
+    stripe_payment_id: text('stripe_payment_id'), // Stripe payment ID for registration
     created_at: timestamp('created_at').defaultNow().notNull(),
     updated_at: timestamp('updated_at').defaultNow().notNull(),
 });

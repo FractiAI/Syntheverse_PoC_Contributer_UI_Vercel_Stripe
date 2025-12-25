@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/utils/db/db'
-import { contributionsTable } from '@/utils/db/schema'
+import { contributionsTable, allocationsTable } from '@/utils/db/schema'
+import { eq, sql } from 'drizzle-orm'
 import { debug, debugError } from '@/utils/debug'
 import { distance3D, similarityFromDistance } from '@/utils/vectors/hhf-3d-mapping'
 
@@ -22,10 +23,23 @@ export async function GET(request: NextRequest) {
                 vector_y: contributionsTable.vector_y,
                 vector_z: contributionsTable.vector_z,
                 embedding: contributionsTable.embedding,
+                registered: contributionsTable.registered,
+                registration_date: contributionsTable.registration_date,
+                registration_tx_hash: contributionsTable.registration_tx_hash,
+                stripe_payment_id: contributionsTable.stripe_payment_id,
                 created_at: contributionsTable.created_at,
             })
             .from(contributionsTable)
             .orderBy(contributionsTable.created_at)
+        
+        // Get all allocations to check which PoCs are allocated
+        const allAllocations = await db
+            .select({
+                submission_hash: allocationsTable.submission_hash,
+            })
+            .from(allocationsTable)
+        
+        const allocatedHashes = new Set(allAllocations.map(a => a.submission_hash))
         
         // Generate nodes from ALL contributions (include both vectorized and non-vectorized)
         // Non-vectorized submissions will be positioned at origin (0,0,0) or based on scores if available
@@ -75,6 +89,9 @@ export async function GET(request: NextRequest) {
                     pod_score: metadata.pod_score,
                     redundancy: metadata.redundancy,
                 },
+                // Registration and allocation status
+                registered: contrib.registered || false,
+                allocated: allocatedHashes.has(contrib.submission_hash),
                 created_at: contrib.created_at?.toISOString(),
             }
         })

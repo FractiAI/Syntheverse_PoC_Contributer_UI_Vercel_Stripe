@@ -7,9 +7,14 @@ A production-ready web application for the Syntheverse Proof of Contribution sys
 - **Hydrogen-Holographic Evaluation**: AI-powered contribution scoring across novelty, density, coherence, and alignment dimensions
 - **Metallic Amplifications**: Combination-based amplifications (Gold+Silver+Copper: 1.5×, Gold+Silver: 1.25×, Gold+Copper: 1.2×, Silver+Copper: 1.15×)
 - **SYNTH Token Rewards**: Blockchain-anchored token allocations based on PoC scores and available tokens at registration time
+- **3D Vectorized Sandbox Map**: Interactive Three.js visualization with nested fractal layers, visual encoding, and full interactivity
+  - **Visual Encoding**: Size (density), Color (novelty), Shape (metals), Transparency (coherence)
+  - **Interactive Features**: Click nodes to view details, allocate tokens, register PoCs
+  - **Token Allocation**: Dynamic projected allocation display and one-click token allocation
+  - **PoC Registration**: Blockchain registration via Stripe checkout ($200 fee)
 - **Secure Authentication**: Supabase-powered auth with Google/GitHub OAuth and email/password
 - **Real-time Dashboard**: Live evaluation status and ecosystem impact visualization
-- **Stripe Integration**: Subscription management and payment processing
+- **Stripe Integration**: Subscription management, payment processing, and PoC registration
 - **Dark UI Theme**: Minimal, futuristic design inspired by Syntheverse aesthetics
 - **Archive-First Storage**: All contributions stored immediately for redundancy detection
 
@@ -17,6 +22,7 @@ A production-ready web application for the Syntheverse Proof of Contribution sys
 
 - **Framework**: Next.js 14 (App Router)
 - **Styling**: Tailwind CSS + shadcn/ui
+- **3D Visualization**: Three.js + React Three Fiber + Drei
 - **Authentication**: Supabase Auth
 - **Database**: PostgreSQL (Supabase) + Drizzle ORM
 - **Payments**: Stripe Checkout + Customer Portal
@@ -104,6 +110,8 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 Comprehensive documentation is available in the [`docs/`](docs/) directory:
 
 - **[Deployment Guide](docs/deployment/VERCEL_DEPLOYMENT_GUIDE.md)** - Complete Vercel deployment walkthrough
+- **[3D Map Upgrade Plan](docs/3D_MAP_UPGRADE_PLAN.md)** - Comprehensive 3D map upgrade documentation
+- **[3D Map Implementation Status](docs/3D_MAP_IMPLEMENTATION_STATUS.md)** - Current implementation progress
 - **[OAuth Setup](docs/oauth/OAUTH_QUICK_SETUP.md)** - Google and GitHub OAuth configuration
 - **[Stripe Setup](docs/stripe/STRIPE_WEBHOOK_SETUP.md)** - Payment and webhook configuration
 - **[Testing Guide](docs/testing/TESTING_PLAN.md)** - Testing strategies and debugging
@@ -173,6 +181,10 @@ PoC submission archive with 3D vectorization for redundancy detection.
 | `vector_z` | numeric(20,10) | Z coordinate in 3D HHF space (Coherence dimension) |
 | `embedding_model` | text | Embedding model used (e.g., `text-embedding-3-small`) |
 | `vector_generated_at` | timestamp | When vector was generated |
+| `registered` | boolean | Whether PoC is registered on blockchain (via Stripe payment) |
+| `registration_date` | timestamp | When PoC was registered |
+| `registration_tx_hash` | text | Blockchain transaction hash for registration |
+| `stripe_payment_id` | text | Stripe payment ID for registration ($200 fee) |
 | `created_at` | timestamp | Submission timestamp |
 | `updated_at` | timestamp | Last update timestamp |
 
@@ -275,11 +287,29 @@ Contributions are mapped to 3D coordinates in the HHF space:
 - **Distance calculation**: Euclidean distance between vectors for redundancy detection
 - **Similarity**: Cosine similarity and distance-based similarity for redundancy percentage
 
+**Interactive 3D Visualization** (Upgraded):
+- **Three.js Rendering**: True 3D visualization with WebGL acceleration
+- **Visual Encoding**:
+  - **Size**: Proportional to density score (0.3x to 3.0x base size)
+  - **Color**: Novelty gradient (blue → green → red based on score)
+  - **Shape**: Metal-based geometry (Icosahedron for Gold, Octahedron for Silver, Tetrahedron for Copper)
+  - **Transparency**: Coherence-based opacity (0.3 to 1.0)
+- **Interactive Features**:
+  - Click nodes to view detailed PoC information
+  - Projected token allocation display (for contributors)
+  - One-click token allocation (for qualified, registered PoCs)
+  - PoC registration via Stripe checkout ($200 fee)
+- **Status Indicators**:
+  - Glow effect for qualified PoCs
+  - Border highlights for allocated/registered PoCs
+  - Dimmed appearance for non-qualified PoCs
+
 This enables:
 - Visual representation of contributions in 3D space
 - Vector-based redundancy calculation
 - Spatial clustering of related contributions
 - Holographic visualization on the dashboard
+- Interactive token allocation and registration workflow
 
 ## 🔧 Available Scripts
 

@@ -253,7 +253,7 @@ export function SandboxMap3D() {
     useEffect(() => {
         if (data && canvasRef.current) {
             render3D()
-        }
+    }
     }, [data, camera, selectedNode, render3D])
 
     function handleMouseDown(e: React.MouseEvent<HTMLCanvasElement>) {
