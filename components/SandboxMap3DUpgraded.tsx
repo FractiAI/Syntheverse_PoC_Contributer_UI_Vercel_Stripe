@@ -67,7 +67,6 @@ export function SandboxMap3DUpgraded() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [selectedNode, setSelectedNode] = useState<string | null>(null)
-    const [cameraPosition, setCameraPosition] = useState<[number, number, number]>([0, 0, 100])
     
     useEffect(() => {
         fetchMapData()
@@ -127,18 +126,6 @@ export function SandboxMap3DUpgraded() {
         }
     }, [data])
     
-    // Set initial camera position to view all nodes
-    useEffect(() => {
-        if (bounds.range && bounds.range > 0) {
-            const distance = bounds.range * 1.5
-            setCameraPosition([
-                bounds.center[0],
-                bounds.center[1] + distance * 0.5,
-                bounds.center[2] + distance
-            ])
-        }
-    }, [bounds])
-    
     if (loading) {
         return (
             <Card>
@@ -182,9 +169,7 @@ export function SandboxMap3DUpgraded() {
     
     return (
         <div className="relative w-full h-[800px]">
-            <Canvas
-                camera={{ position: cameraPosition, fov: 75 }}
-            >
+            <Canvas>
                 <Suspense fallback={null}>
                     <ambientLight intensity={0.5} />
                     <pointLight position={[10, 10, 10]} intensity={1} />
