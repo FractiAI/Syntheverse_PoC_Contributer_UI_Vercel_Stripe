@@ -1,14 +1,11 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { FileText } from "lucide-react"
 import { db } from '@/utils/db/db'
 import { usersTable } from '@/utils/db/schema'
 import { eq } from "drizzle-orm"
-import { PoCDashboardStats } from '@/components/PoCDashboardStats'
 import { PoCArchive } from '@/components/PoCArchive'
 
 export default async function Dashboard() {
@@ -49,9 +46,6 @@ export default async function Dashboard() {
                     </Button>
                 </Link>
             </div>
-
-            {/* PoC Evaluation Statistics - Client Component for API calls */}
-            <PoCDashboardStats />
 
             {/* PoC Submissions Archive */}
             <PoCArchive userEmail={user.email!} />
