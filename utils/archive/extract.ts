@@ -161,8 +161,8 @@ export function extractConstants(textContent: string): string[] {
         })
     }
     
-    // Remove duplicates and limit to top 20 constants
-    return [...new Set(constants)].slice(0, 20)
+    // Remove duplicates and limit to top 20 constants (use Array.from for ES2015 compatibility)
+    return Array.from(new Set(constants)).slice(0, 20)
 }
 
 /**
