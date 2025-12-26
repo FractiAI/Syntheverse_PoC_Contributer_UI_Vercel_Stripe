@@ -109,8 +109,8 @@ export function extractFormulas(textContent: string): string[] {
         })
     }
     
-    // Remove duplicates and limit to top 20 formulas
-    return [...new Set(formulas)].slice(0, 20)
+    // Remove duplicates and limit to top 20 formulas (use Array.from for ES2015 compatibility)
+    return Array.from(new Set(formulas)).slice(0, 20)
 }
 
 /**
