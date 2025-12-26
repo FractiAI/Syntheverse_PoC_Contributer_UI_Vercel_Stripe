@@ -22,23 +22,21 @@ const REGISTRATION_FEE = 20000 // $200.00 in cents
 
 export async function POST(
     request: NextRequest,
-    { params }: { params: Promise<{ hash: string }> | { hash: string } }
+    { params }: { params: { hash: string } }
 ) {
-    // Handle both Next.js 14 and 15 params format
-    const resolvedParams = params instanceof Promise ? await params : params
-    const submissionHash = resolvedParams.hash
-    
-    if (!submissionHash) {
-        debugError('RegisterPoC', 'Missing submission hash in params', { params })
-        return NextResponse.json(
-            { error: 'Missing submission hash' },
-            { status: 400 }
-        )
-    }
-    
-    debug('RegisterPoC', 'Initiating PoC registration', { submissionHash })
-    
     try {
+        // Safely extract hash from params
+        const submissionHash = params?.hash
+        
+        if (!submissionHash) {
+            debugError('RegisterPoC', 'Missing submission hash in params', { params })
+            return NextResponse.json(
+                { error: 'Missing submission hash' },
+                { status: 400 }
+            )
+        }
+        
+        debug('RegisterPoC', 'Initiating PoC registration', { submissionHash })
         // Verify user is authenticated
         const supabase = createClient()
         const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -214,6 +212,7 @@ export async function POST(
             { 
                 error: 'Registration failed',
                 message: errorMessage,
+                submission_hash: submissionHash,
                 ...(process.env.NODE_ENV === 'development' ? errorDetails : {})
             },
             { status: 500 }
