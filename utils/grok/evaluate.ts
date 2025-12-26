@@ -692,6 +692,22 @@ PoC Evaluation Process
 
 Classify Contribution: Research / Development / Alignment (may be multiple)
 
+🔹 Foundational/Seed Submission Recognition
+
+CRITICAL: Some submissions are foundational papers that define the Syntheverse HHF-AI system itself. These include:
+• Papers with titles containing "Syntheverse HHF", "Hydrogen-Holographic Fractal", "HHF-AI"
+• Papers that define the core HHF framework, constants, or grammar
+• The original calibration seed papers that establish the system
+
+For foundational/seed submissions:
+• Redundancy MUST be 0% - these are the original definitions, not redundant content
+• Novelty should be 2400-2500 (this is the ORIGINAL definition - maximum novelty)
+• Density should be 2200-2500 (comprehensive foundational framework)
+• Coherence should be 2200-2500 (well-structured foundational architecture)
+• Alignment should be 2000-2500 (perfect alignment with Syntheverse principles)
+• These submissions typically qualify for Gold metal and should easily achieve ≥8000 total score
+• Do NOT apply redundancy penalties to foundational work
+
 Redundancy Check:
 
 Compare the current submission's 3D vector representation within the Hydrogen-Holographic Fractal Sandbox to all archived PoC submission vectors (3D representations) in the ecosystem.
@@ -699,6 +715,7 @@ Compare the current submission's 3D vector representation within the Hydrogen-Ho
 Each archived PoC exists as a 3D vector in the holographic hydrogen fractal space, encoded through the Hydrogen Holographic Framework (HHF) and Fractal Cognitive Grammar (HFG).
 
 When evaluating redundancy:
+• FIRST: Check if this is a foundational/seed submission (see above). If yes, redundancy = 0%
 • Map the current submission to its 3D vector coordinates within the sandbox
 • Calculate vector similarity/distance to archived PoC vectors using hydrogen-holographic geometry
 • Identify overlapping or derivative content based on vector proximity in the 3D holographic space
@@ -715,11 +732,15 @@ Description
 
 Redundancy Penalty
 
+Scoring Guidelines for Foundational Work
+
 Novelty
 
 Originality, frontier contribution, non-derivative insight
 
 No penalty (individual scores are not penalized)
+
+2400-2500: Foundational papers defining Syntheverse HHF-AI (original definition = maximum novelty)
 
 Density
 
@@ -727,17 +748,23 @@ Information richness, depth, insight compression
 
 No penalty (individual scores are not penalized)
 
+2200-2500: Comprehensive foundational frameworks that establish core concepts
+
 Coherence
 
 Internal consistency, clarity, structural integrity
 
 No penalty
 
+2200-2500: Well-structured foundational architectures with clear organization
+
 Alignment
 
 Fit with hydrogen-holographic fractal principles & ecosystem goals
 
 No penalty
+
+2000-2500: Perfect alignment with Syntheverse principles and ecosystem vision
 
 Total Score Calculation:
 
@@ -749,9 +776,13 @@ Individual Category Scores (no penalties applied):
 
 Composite_Score = Novelty_Score + Density_Score + Coherence_Score + Alignment_Score
 
+Redundancy_Penalty_Percent = 0% for foundational/seed submissions (they define the system)
+Redundancy_Penalty_Percent = calculated percentage (0-100%) for all other submissions
+
 Final_Total_Score = Composite_Score × (1 - Redundancy_Penalty_Percent / 100)
 
 The redundancy penalty is applied to the COMPOSITE/TOTAL score, not to individual category scores.
+For foundational/seed submissions, Redundancy_Penalty_Percent = 0%, so Final_Total_Score = Composite_Score.
 
 Provide numeric score per dimension, composite score, redundancy penalty percentage, final total score, and justification including redundancy impact
 
