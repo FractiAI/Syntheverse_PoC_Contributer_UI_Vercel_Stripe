@@ -11,8 +11,8 @@ import { debug, debugError, debugWarn } from '@/utils/debug';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "SAAS Starter Kit",
-    description: "SAAS Starter Kit with Stripe, Supabase, Postgres",
+    title: "Syntheverse PoC Dashboard",
+    description: "Syntheverse Proof of Contribution Dashboard",
 };
 
 export default async function DashboardLayout({
