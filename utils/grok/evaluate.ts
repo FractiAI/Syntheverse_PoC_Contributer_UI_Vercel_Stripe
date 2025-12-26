@@ -1117,30 +1117,100 @@ Return your complete evaluation as a valid JSON object matching the specified st
             fullResponse: answer // Log full response for debugging
         })
         
-        // Extract JSON from response (might be wrapped in markdown)
-        let jsonMatch = answer.match(/\{[\s\S]*\}/)
-        if (!jsonMatch) {
-            // Try to parse entire response as JSON
-            jsonMatch = [answer]
+        // IMPROVED: Multi-strategy JSON parsing for better data capture
+        // Try multiple parsing strategies to handle various Grok response formats
+        let evaluation: any = null
+        const parseStrategies = [
+            // Strategy 1: Direct JSON parse
+            () => {
+                try {
+                    return JSON.parse(answer.trim())
+                } catch {
+                    return null
+                }
+            },
+            // Strategy 2: Extract from ```json ... ``` code blocks
+            () => {
+                const jsonBlockMatch = answer.match(/```json\s*([\s\S]*?)\s*```/i)
+                if (jsonBlockMatch) {
+                    try {
+                        return JSON.parse(jsonBlockMatch[1].trim())
+                    } catch {
+                        return null
+                    }
+                }
+                return null
+            },
+            // Strategy 3: Extract from generic ``` ... ``` code blocks
+            () => {
+                const codeBlockMatch = answer.match(/```\s*([\s\S]*?)\s*```/)
+                if (codeBlockMatch) {
+                    try {
+                        return JSON.parse(codeBlockMatch[1].trim())
+                    } catch {
+                        return null
+                    }
+                }
+                return null
+            },
+            // Strategy 4: Find first JSON object in text
+            () => {
+                const jsonMatch = answer.match(/\{[\s\S]*\}/)
+                if (jsonMatch) {
+                    try {
+                        return JSON.parse(jsonMatch[0])
+                    } catch {
+                        return null
+                    }
+                }
+                return null
+            },
+            // Strategy 5: Find JSON between first { and last }
+            () => {
+                const startMarker = answer.indexOf('{')
+                const endMarker = answer.lastIndexOf('}')
+                if (startMarker !== -1 && endMarker !== -1 && endMarker > startMarker) {
+                    try {
+                        return JSON.parse(answer.substring(startMarker, endMarker + 1))
+                    } catch {
+                        return null
+                    }
+                }
+                return null
+            }
+        ]
+        
+        // Try each parsing strategy until one succeeds
+        for (let i = 0; i < parseStrategies.length; i++) {
+            const strategy = parseStrategies[i]
+            try {
+                const result = strategy()
+                if (result && typeof result === 'object') {
+                    evaluation = result
+                    debug('EvaluateWithGrok', `JSON parsed successfully using strategy ${i + 1}`, {
+                        strategy: i + 1,
+                        hasScoring: !!evaluation.scoring,
+                        hasDensity: !!evaluation.density,
+                        hasScoringDensity: !!evaluation.scoring?.density,
+                        evaluationKeys: Object.keys(evaluation),
+                        evaluationString: JSON.stringify(evaluation, null, 2).substring(0, 2000)
+                    })
+                    break
+                }
+            } catch (strategyError) {
+                // Continue to next strategy
+                continue
+            }
         }
         
-        let evaluation: any
-        try {
-            evaluation = JSON.parse(jsonMatch[0])
-            debug('EvaluateWithGrok', 'JSON parsed successfully', {
-                hasScoring: !!evaluation.scoring,
-                hasDensity: !!evaluation.density,
-                hasScoringDensity: !!evaluation.scoring?.density,
-                evaluationKeys: Object.keys(evaluation),
-                evaluationString: JSON.stringify(evaluation, null, 2).substring(0, 2000)
+        // If all strategies failed, throw error with full context
+        if (!evaluation) {
+            debugError('EvaluateWithGrok', 'Failed to parse JSON from Grok response using all strategies', {
+                responseLength: answer.length,
+                responsePreview: answer.substring(0, 1000),
+                responseEnd: answer.substring(Math.max(0, answer.length - 500))
             })
-        } catch (parseError) {
-            debugError('EvaluateWithGrok', 'Failed to parse JSON from Grok response', parseError)
-            debug('EvaluateWithGrok', 'Raw response that failed to parse', {
-                response: answer,
-                jsonMatch: jsonMatch?.[0]?.substring(0, 1000)
-            })
-            throw new Error(`Failed to parse Grok response as JSON: ${parseError instanceof Error ? parseError.message : String(parseError)}`)
+            throw new Error(`Failed to parse Grok response as JSON after trying ${parseStrategies.length} different parsing strategies. Response length: ${answer.length} chars. Preview: ${answer.substring(0, 200)}...`)
         }
         
         // Debug: Log the full evaluation structure to understand Grok's response format
@@ -1172,17 +1242,83 @@ Return your complete evaluation as a valid JSON object matching the specified st
             (typeof evaluation.scoring?.density === 'object' ? (evaluation.scoring.density.base_score ?? evaluation.scoring.density.final_score ?? evaluation.scoring.density.score ?? 0) : 0) ||
             0
         
-        const coherenceScore = 
+        // Extract coherence score with extensive fallback (same as density)
+        let finalCoherenceScore = 
             (typeof coherence === 'object' && coherence !== null ? (coherence.score ?? coherence.final_score ?? coherence.base_score ?? 0) : 0) ||
             (typeof evaluation.coherence === 'number' ? evaluation.coherence : 0) ||
             (typeof evaluation.scoring?.coherence === 'object' ? (evaluation.scoring.coherence.score ?? evaluation.scoring.coherence.final_score ?? evaluation.scoring.coherence.base_score ?? 0) : 0) ||
             0
         
-        const alignmentScore = 
+        // If still 0, try more locations for coherence
+        if (finalCoherenceScore === 0) {
+            finalCoherenceScore = evaluation.scoring?.coherence?.score ?? 
+                                 evaluation.scoring?.coherence?.final_score ?? 
+                                 evaluation.scoring?.coherence?.base_score ??
+                                 evaluation.scoring?.coherence?.value ??
+                                 evaluation.coherence_score ??
+                                 evaluation.scores?.coherence ??
+                                 0
+        }
+        
+        // If still 0, try parsing as number from string
+        if (finalCoherenceScore === 0 && typeof evaluation.coherence === 'string') {
+            const parsed = parseFloat(evaluation.coherence)
+            if (!isNaN(parsed)) {
+                finalCoherenceScore = parsed
+            }
+        }
+        
+        // If still 0, try nested structures
+        if (finalCoherenceScore === 0) {
+            if (evaluation.evaluation?.coherence) {
+                finalCoherenceScore = typeof evaluation.evaluation.coherence === 'number' ? evaluation.evaluation.coherence : 0
+            } else if (evaluation.evaluation?.scoring?.coherence?.score) {
+                finalCoherenceScore = evaluation.evaluation.scoring.coherence.score
+            } else if (evaluation.evaluation?.scoring?.coherence?.final_score) {
+                finalCoherenceScore = evaluation.evaluation.scoring.coherence.final_score
+            }
+        }
+        
+        const coherenceScore = finalCoherenceScore
+        
+        // Extract alignment score with extensive fallback (same as density)
+        let finalAlignmentScore = 
             (typeof alignment === 'object' && alignment !== null ? (alignment.score ?? alignment.final_score ?? alignment.base_score ?? 0) : 0) ||
             (typeof evaluation.alignment === 'number' ? evaluation.alignment : 0) ||
             (typeof evaluation.scoring?.alignment === 'object' ? (evaluation.scoring.alignment.score ?? evaluation.scoring.alignment.final_score ?? evaluation.scoring.alignment.base_score ?? 0) : 0) ||
             0
+        
+        // If still 0, try more locations for alignment
+        if (finalAlignmentScore === 0) {
+            finalAlignmentScore = evaluation.scoring?.alignment?.score ?? 
+                                 evaluation.scoring?.alignment?.final_score ?? 
+                                 evaluation.scoring?.alignment?.base_score ??
+                                 evaluation.scoring?.alignment?.value ??
+                                 evaluation.alignment_score ??
+                                 evaluation.scores?.alignment ??
+                                 0
+        }
+        
+        // If still 0, try parsing as number from string
+        if (finalAlignmentScore === 0 && typeof evaluation.alignment === 'string') {
+            const parsed = parseFloat(evaluation.alignment)
+            if (!isNaN(parsed)) {
+                finalAlignmentScore = parsed
+            }
+        }
+        
+        // If still 0, try nested structures
+        if (finalAlignmentScore === 0) {
+            if (evaluation.evaluation?.alignment) {
+                finalAlignmentScore = typeof evaluation.evaluation.alignment === 'number' ? evaluation.evaluation.alignment : 0
+            } else if (evaluation.evaluation?.scoring?.alignment?.score) {
+                finalAlignmentScore = evaluation.evaluation.scoring.alignment.score
+            } else if (evaluation.evaluation?.scoring?.alignment?.final_score) {
+                finalAlignmentScore = evaluation.evaluation.scoring.alignment.final_score
+            }
+        }
+        
+        const alignmentScore = finalAlignmentScore
         
         // Debug logging for score extraction - comprehensive
         debug('EvaluateWithGrok', 'Score extraction - initial values', {

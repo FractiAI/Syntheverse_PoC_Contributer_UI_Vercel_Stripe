@@ -32,6 +32,7 @@ interface PoCSubmission {
     density: number | null
     coherence: number | null
     alignment: number | null
+    redundancy: number | null // Redundancy percentage (0-100)
     qualified: boolean | null
     registered: boolean | null
     allocated: boolean | null
@@ -118,6 +119,11 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
         return score.toLocaleString()
     }
 
+    const formatRedundancy = (redundancy: number | null) => {
+        if (redundancy === null || redundancy === undefined) return '—'
+        return `${redundancy.toFixed(1)}%`
+    }
+
     const getStatusBadge = (submission: PoCSubmission) => {
         if (submission.allocated) {
             return <Badge variant="default" className="bg-green-500">Allocated</Badge>
@@ -181,6 +187,7 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                                     <th className="text-right p-2 font-semibold">Novelty</th>
                                     <th className="text-right p-2 font-semibold">Density</th>
                                     <th className="text-right p-2 font-semibold">Coherence</th>
+                                    <th className="text-right p-2 font-semibold">Redundancy</th>
                                     <th className="text-left p-2 font-semibold">Date</th>
                                 </tr>
                             </thead>
@@ -216,6 +223,11 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                                         </td>
                                         <td className="p-2 text-right font-mono text-sm">
                                             {formatScore(submission.coherence)}
+                                        </td>
+                                        <td className="p-2 text-right font-mono text-sm">
+                                            <span className={submission.redundancy !== null && submission.redundancy > 50 ? 'text-orange-600' : submission.redundancy !== null && submission.redundancy > 25 ? 'text-yellow-600' : ''}>
+                                                {formatRedundancy(submission.redundancy)}
+                                            </span>
                                         </td>
                                         <td className="p-2 text-sm text-muted-foreground">
                                             {new Date(submission.created_at).toLocaleDateString()}
@@ -398,6 +410,14 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                                         <div>
                                             <div className="text-xs text-muted-foreground">Alignment</div>
                                             <div className="font-mono">{formatScore(selectedSubmission.alignment)}</div>
+                                        </div>
+                                    )}
+                                    {selectedSubmission.redundancy !== null && (
+                                        <div>
+                                            <div className="text-xs text-muted-foreground">Redundancy</div>
+                                            <div className={`font-mono ${selectedSubmission.redundancy > 50 ? 'text-orange-600' : selectedSubmission.redundancy > 25 ? 'text-yellow-600' : ''}`}>
+                                                {formatRedundancy(selectedSubmission.redundancy)}
+                                            </div>
                                         </div>
                                     )}
                                 </div>

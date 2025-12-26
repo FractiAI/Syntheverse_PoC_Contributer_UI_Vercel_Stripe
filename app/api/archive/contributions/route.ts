@@ -64,6 +64,7 @@ export async function GET(request: NextRequest) {
                 density: metadata.density ?? null,
                 coherence: metadata.coherence ?? null,
                 alignment: metadata.alignment ?? null,
+                redundancy: metadata.redundancy ?? null, // Redundancy percentage (0-100)
                 qualified: metadata.qualified_founder ?? null,
                 // Direct fields
                 registered: contrib.registered ?? false,
