@@ -1489,7 +1489,8 @@ Return your complete evaluation as a valid JSON object matching the specified st
             finalDensityScore,
             baseDensityScore,
             densityFinal,
-            densityObject: JSON.stringify(density),
+            densityRaw: densityRaw,
+            densityRawType: typeof densityRaw,
             evaluationDensity: evaluation.density,
         })
         
