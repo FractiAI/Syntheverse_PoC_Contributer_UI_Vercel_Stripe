@@ -1547,10 +1547,10 @@ Return your complete evaluation as a valid JSON object matching the specified st
                 evaluationFull: JSON.stringify(evaluation, null, 2),
                 rawAnswer: answer.substring(0, 2000),
                 scoring: scoring,
-                novelty: novelty,
-                density: density,
-                coherence: coherence,
-                alignment: alignment
+                noveltyRaw: noveltyRaw,
+                densityRaw: densityRaw,
+                coherenceRaw: coherenceRaw,
+                alignmentRaw: alignmentRaw
             })
             // Don't throw - return zeros but log the issue so we can debug
         }
