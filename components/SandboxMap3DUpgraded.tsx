@@ -9,7 +9,7 @@
 
 import { Suspense, useState, useEffect, useMemo } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { OrbitControls, Grid, AxesHelper } from '@react-three/drei'
+import { OrbitControls, Grid } from '@react-three/drei'
 import * as THREE from 'three'
 import { PoCNode } from './3d/PoCNode'
 import { PoCDetailPanel } from './3d/PoCDetailPanel'
@@ -167,6 +167,9 @@ export function SandboxMap3DUpgraded() {
     
     const vectorizedNodes = data.nodes.filter(n => n.vector !== null)
     
+    // Create axes helper once
+    const axesHelper = useMemo(() => new THREE.AxesHelper(50), [])
+    
     return (
         <div className="relative w-full h-[800px]">
             <Canvas>
@@ -179,7 +182,7 @@ export function SandboxMap3DUpgraded() {
                     <Grid args={[100, 100]} cellColor="#6b7280" sectionColor="#9ca3af" />
                     
                     {/* Axes helper */}
-                    <AxesHelper args={[50]} />
+                    <primitive object={axesHelper} />
                     
                     {/* Render PoC nodes */}
                     {vectorizedNodes.map((node) => {
