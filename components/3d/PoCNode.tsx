@@ -55,32 +55,47 @@ export function PoCNode({
     
     // Create geometry based on shape
     const geometry = useMemo(() => {
+        let geom: THREE.BufferGeometry
         switch (encoding.shape) {
             case 'icosahedron':
-                return new THREE.IcosahedronGeometry(1, 0)
+                geom = new THREE.IcosahedronGeometry(1, 0)
+                break
             case 'octahedron':
-                return new THREE.OctahedronGeometry(1, 0)
+                geom = new THREE.OctahedronGeometry(1, 0)
+                break
             case 'tetrahedron':
-                return new THREE.TetrahedronGeometry(1, 0)
+                geom = new THREE.TetrahedronGeometry(1, 0)
+                break
             case 'combined':
                 // Use dodecahedron as combined shape
-                return new THREE.DodecahedronGeometry(1, 0)
+                geom = new THREE.DodecahedronGeometry(1, 0)
+                break
             default:
-                return new THREE.TetrahedronGeometry(1, 0)
+                geom = new THREE.TetrahedronGeometry(1, 0)
         }
+        return geom
     }, [encoding.shape])
     
     // Material with color and opacity
     const material = useMemo(() => {
-        const color = hexToThreeColor(encoding.color)
-        
-        return new THREE.MeshStandardMaterial({
-            color,
-            opacity: encoding.opacity,
-            transparent: encoding.opacity < 1.0,
-            emissive: encoding.glow ? color : new THREE.Color(0x000000),
-            emissiveIntensity: encoding.glow ? 0.3 : 0,
-        })
+        try {
+            const color = new THREE.Color(encoding.color)
+            
+            return new THREE.MeshStandardMaterial({
+                color,
+                opacity: encoding.opacity,
+                transparent: encoding.opacity < 1.0,
+                emissive: encoding.glow ? color.clone() : new THREE.Color(0x000000),
+                emissiveIntensity: encoding.glow ? 0.3 : 0,
+            })
+        } catch (error) {
+            console.error('Error creating material:', error, 'Color:', encoding.color)
+            return new THREE.MeshStandardMaterial({
+                color: 0x888888,
+                opacity: encoding.opacity,
+                transparent: encoding.opacity < 1.0,
+            })
+        }
     }, [encoding.color, encoding.opacity, encoding.glow])
     
     // Border/outline material for allocated/registered nodes

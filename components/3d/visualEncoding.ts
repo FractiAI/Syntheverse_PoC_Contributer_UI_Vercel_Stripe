@@ -64,10 +64,10 @@ export function calculateColor(novelty: number): string {
 }
 
 /**
- * Convert hex color to THREE.Color
+ * Convert color string (hex or hsl) to THREE.Color
  */
-export function hexToThreeColor(hex: string): THREE.Color {
-    return new THREE.Color(hex)
+export function hexToThreeColor(color: string): THREE.Color {
+    return new THREE.Color(color)
 }
 
 /**
