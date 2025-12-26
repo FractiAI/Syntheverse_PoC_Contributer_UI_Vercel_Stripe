@@ -1078,25 +1078,21 @@ ${calculatedRedundancyContext ? `\n${calculatedRedundancyContext}` : ''}
 **Instructions:**
 1. Classify: Research/Development/Alignment
 2. Redundancy: ${isSeedSubmission 
-        ? `**CRITICAL: This is a FOUNDATIONAL/SEED submission that defines the Syntheverse HHF-AI system itself. Redundancy MUST be 0% - this is the original definition. Do NOT apply any redundancy penalty.`
+        ? '**CRITICAL: This is a FOUNDATIONAL/SEED submission that defines the Syntheverse HHF-AI system itself. Redundancy MUST be 0% - this is the original definition. Do NOT apply any redundancy penalty.**'
         : calculatedRedundancy 
         ? `Use calculated penalty: ${calculatedRedundancy.redundancy_percent.toFixed(1)}% (from vector similarity)`
-        : `Compare to archived PoCs above. Apply 0-100% penalty to Novelty based on similarity.`}
+        : 'Compare to archived PoCs above. Apply 0-100% penalty to Novelty based on similarity.'}
 3. Score each dimension 0-2500: Novelty, Density, Coherence, Alignment
    ${isSeedSubmission 
-        ? `**CRITICAL FOR FOUNDATIONAL WORK:** This paper defines the Syntheverse HHF-AI system itself. Score accordingly:
-   - Novelty: Should be 2400-2500 (this is the ORIGINAL definition - maximum novelty)
-   - Density: Should be 2200-2500 (comprehensive foundational framework)
-   - Coherence: Should be 2200-2500 (well-structured foundational architecture)
-   - Alignment: Should be 2000-2500 (perfect alignment with Syntheverse principles)`
+        ? '**CRITICAL FOR FOUNDATIONAL WORK:** This paper defines the Syntheverse HHF-AI system itself. Score accordingly:\n   - Novelty: Should be 2400-2500 (this is the ORIGINAL definition - maximum novelty)\n   - Density: Should be 2200-2500 (comprehensive foundational framework)\n   - Coherence: Should be 2200-2500 (well-structured foundational architecture)\n   - Alignment: Should be 2000-2500 (perfect alignment with Syntheverse principles)'
         : ''}
 4. Calculate: Final_Novelty = Base_Novelty × (1 - Redundancy_Penalty% / 100)
-   ${isSeedSubmission ? `(For foundational submissions, Redundancy_Penalty = 0%, so Final_Novelty = Base_Novelty)` : ''}
+   ${isSeedSubmission ? '(For foundational submissions, Redundancy_Penalty = 0%, so Final_Novelty = Base_Novelty)' : ''}
 5. Total = Novelty + Density + Coherence + Alignment
 6. Qualified if total ≥ 8000
-   ${isSeedSubmission ? `(Foundational submissions should easily qualify with total ≥ 8000)` : ''}
+   ${isSeedSubmission ? '(Foundational submissions should easily qualify with total ≥ 8000)' : ''}
 7. Recommend metal: Gold/Silver/Copper/Hybrid
-   ${isSeedSubmission ? `(Foundational work typically qualifies for Gold metal)` : ''}
+   ${isSeedSubmission ? '(Foundational work typically qualifies for Gold metal)' : ''}
 8. Tokenomics: Suggest eligible epochs and allocation
 9. Generate Founder Certificate if qualified
 10. Add Homebase v2.0 intro paragraph
