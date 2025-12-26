@@ -7,12 +7,10 @@
 
 'use client'
 
-import { Suspense, useState, useEffect, useMemo } from 'react'
-import { Canvas } from '@react-three/fiber'
-import { OrbitControls, Grid } from '@react-three/drei'
-import * as THREE from 'three'
+import { useState, useEffect, useMemo } from 'react'
 import { PoCNode } from './3d/PoCNode'
 import { PoCDetailPanel } from './3d/PoCDetailPanel'
+import { Map3DCanvas } from './3d/Map3DCanvas'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Loader2, RefreshCw, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react'
@@ -194,49 +192,29 @@ export function SandboxMap3DUpgraded() {
     
     return (
         <div className="relative w-full h-[800px]">
-            <Canvas
-                gl={{ antialias: true, alpha: true }}
-                dpr={[1, 2]}
-            >
-                <Suspense fallback={null}>
-                    <ambientLight intensity={0.5} />
-                    <pointLight position={[10, 10, 10]} intensity={1} />
-                    <pointLight position={[-10, -10, -10]} intensity={0.5} />
-                    
-                    {/* Grid helper */}
-                    <Grid args={[100, 100]} cellColor="#6b7280" sectionColor="#9ca3af" />
-                    
-                    {/* Render PoC nodes */}
-                    {vectorizedNodes.map((node) => {
-                        const vector = node.vector as Vector3D
-                        return (
-                            <PoCNode
-                                key={node.submission_hash}
-                                position={[vector.x, vector.y, vector.z]}
-                                submissionHash={node.submission_hash}
-                                title={node.title}
-                                density={node.scores?.density || 0}
-                                novelty={node.scores?.novelty || 0}
-                                coherence={node.scores?.coherence || 0}
-                                metals={node.metals}
-                                qualified={(node.scores?.pod_score || 0) >= 8000}
-                                allocated={node.allocated || false}
-                                registered={node.registered || false}
-                                onClick={setSelectedNode}
-                                selected={selectedNode === node.submission_hash}
-                            />
-                        )
-                    })}
-                    
-                    <OrbitControls
-                        enableDamping
-                        dampingFactor={0.05}
-                        minDistance={(bounds.range || 100) * 0.3}
-                        maxDistance={(bounds.range || 100) * 5}
-                        target={[bounds.center[0], bounds.center[1], bounds.center[2]]}
-                    />
-                </Suspense>
-            </Canvas>
+            <Map3DCanvas bounds={bounds}>
+                {/* Render PoC nodes */}
+                {vectorizedNodes.map((node) => {
+                    const vector = node.vector as Vector3D
+                    return (
+                        <PoCNode
+                            key={node.submission_hash}
+                            position={[vector.x, vector.y, vector.z]}
+                            submissionHash={node.submission_hash}
+                            title={node.title}
+                            density={node.scores?.density || 0}
+                            novelty={node.scores?.novelty || 0}
+                            coherence={node.scores?.coherence || 0}
+                            metals={node.metals}
+                            qualified={(node.scores?.pod_score || 0) >= 8000}
+                            allocated={node.allocated || false}
+                            registered={node.registered || false}
+                            onClick={setSelectedNode}
+                            selected={selectedNode === node.submission_hash}
+                        />
+                    )
+                })}
+            </Map3DCanvas>
             
             {/* Controls */}
             <div className="absolute top-4 left-4 flex gap-2">
