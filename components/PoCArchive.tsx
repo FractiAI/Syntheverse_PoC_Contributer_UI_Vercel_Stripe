@@ -34,6 +34,7 @@ interface PoCSubmission {
     alignment: number | null
     redundancy: number | null // Redundancy percentage (0-100)
     qualified: boolean | null
+    qualified_epoch: string | null
     registered: boolean | null
     allocated: boolean | null
     created_at: string
@@ -468,6 +469,14 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                                     <div className="text-sm font-semibold mb-2">Metals</div>
                                     {getMetalBadges(selectedSubmission.metals)}
                                 </div>
+                                {selectedSubmission.qualified_epoch && (
+                                    <div>
+                                        <div className="text-sm font-semibold mb-2">Qualified Epoch</div>
+                                        <Badge variant="default" className="bg-purple-500 capitalize">
+                                            {selectedSubmission.qualified_epoch}
+                                        </Badge>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Scores */}

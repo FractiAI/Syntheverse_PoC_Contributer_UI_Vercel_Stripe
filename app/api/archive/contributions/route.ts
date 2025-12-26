@@ -66,6 +66,7 @@ export async function GET(request: NextRequest) {
                 alignment: metadata.alignment ?? null,
                 redundancy: metadata.redundancy ?? null, // Redundancy percentage (0-100)
                 qualified: metadata.qualified_founder ?? null,
+                qualified_epoch: metadata.qualified_epoch ?? null,
                 // Direct fields
                 registered: contrib.registered ?? false,
                 allocated: allocatedHashes.has(contrib.submission_hash),
