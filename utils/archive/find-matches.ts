@@ -8,7 +8,7 @@
 import { debug, debugError } from '@/utils/debug'
 import { db } from '@/utils/db/db'
 import { pocLogTable, contributionsTable } from '@/utils/db/schema'
-import { ne, sql, desc, and, or, isNotNull, eq } from 'drizzle-orm'
+import { ne, sql, desc, and, or, isNotNull, eq, inArray } from 'drizzle-orm'
 import { distance3D, similarityFromDistance, Vector3D } from '@/utils/vectors/hhf-3d-mapping'
 
 export interface ArchivedPoCMatch {
@@ -69,15 +69,24 @@ export async function findTop9Matches(
         
         // Get unique submission hashes and fetch vector data from contributions
         const uniqueHashes = [...new Set(archivedPoCsWithLogs.map(p => p.submission_hash))]
-        const contributions = await db
-            .select({
-                submission_hash: contributionsTable.submission_hash,
-                vector_x: contributionsTable.vector_x,
-                vector_y: contributionsTable.vector_y,
-                vector_z: contributionsTable.vector_z,
-            })
-            .from(contributionsTable)
-            .where(sql`${contributionsTable.submission_hash} = ANY(${uniqueHashes})`)
+        let contributions: Array<{
+            submission_hash: string
+            vector_x: number | null
+            vector_y: number | null
+            vector_z: number | null
+        }> = []
+        
+        if (uniqueHashes.length > 0) {
+            contributions = await db
+                .select({
+                    submission_hash: contributionsTable.submission_hash,
+                    vector_x: contributionsTable.vector_x,
+                    vector_y: contributionsTable.vector_y,
+                    vector_z: contributionsTable.vector_z,
+                })
+                .from(contributionsTable)
+                .where(inArray(contributionsTable.submission_hash, uniqueHashes))
+        }
         
         // Combine log data with vector data
         const archivedPoCs = archivedPoCsWithLogs.map(log => {
