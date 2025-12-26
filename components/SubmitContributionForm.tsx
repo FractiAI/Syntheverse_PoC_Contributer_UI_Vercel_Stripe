@@ -355,9 +355,9 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                                             <div className="space-y-4">
                                                 <div className="text-lg font-semibold text-green-700">✅ Evaluation Complete</div>
                                                 
-                                                {/* Pod Score */}
+                                                {/* PoC Score */}
                                                 <div className="p-4 bg-primary/10 border border-primary/20 rounded-lg">
-                                                    <div className="text-sm text-muted-foreground mb-1">Pod Score</div>
+                                                    <div className="text-sm text-muted-foreground mb-1">PoC Score</div>
                                                     <div className="text-3xl font-bold text-primary">
                                                         {evaluationStatus.podScore.toLocaleString()} / 10,000
                                                     </div>

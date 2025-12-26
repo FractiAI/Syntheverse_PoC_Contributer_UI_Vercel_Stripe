@@ -395,7 +395,7 @@ export function SandboxMap3D() {
                                             <span className="text-muted-foreground">Z (Coherence):</span> {selectedNode.vector.z.toFixed(2)}
                                         </div>
                                         <div>
-                                            <span className="text-muted-foreground">Pod Score:</span> {selectedNode.scores?.pod_score || 'N/A'}
+                                            <span className="text-muted-foreground">PoC Score:</span> {selectedNode.scores?.pod_score || 'N/A'}
                                         </div>
                                     </>
                                 )}

@@ -184,7 +184,7 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                                     <th className="text-left p-2 font-semibold">Title</th>
                                     <th className="text-left p-2 font-semibold">Status</th>
                                     <th className="text-left p-2 font-semibold">Metals</th>
-                                    <th className="text-right p-2 font-semibold">Pod Score</th>
+                                    <th className="text-right p-2 font-semibold">PoC Score</th>
                                     <th className="text-right p-2 font-semibold">Novelty</th>
                                     <th className="text-right p-2 font-semibold">Density</th>
                                     <th className="text-right p-2 font-semibold">Coherence</th>
@@ -300,7 +300,7 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                                                 <th className="text-left p-2 font-semibold">Contributor</th>
                                                 <th className="text-left p-2 font-semibold">Status</th>
                                                 <th className="text-left p-2 font-semibold">Metals</th>
-                                                <th className="text-right p-2 font-semibold">Pod Score</th>
+                                                <th className="text-right p-2 font-semibold">PoC Score</th>
                                                 <th className="text-left p-2 font-semibold">Date</th>
                                             </tr>
                                         </thead>
@@ -392,7 +392,7 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                                 <div className="text-sm font-semibold mb-2">Scores</div>
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                     <div>
-                                        <div className="text-xs text-muted-foreground">Pod Score</div>
+                                        <div className="text-xs text-muted-foreground">PoC Score</div>
                                         <div className="font-mono font-semibold">{formatScore(selectedSubmission.pod_score)}</div>
                                     </div>
                                     <div>

@@ -1600,9 +1600,9 @@ Return your complete evaluation as a valid JSON object matching the specified st
         }
         
         // Determine qualification (≥8,000 for Founder)
-        const qualified = evaluation.qualified_founder !== undefined 
-            ? evaluation.qualified_founder 
-            : (pod_score >= 8000)
+        // IMPORTANT: Always use the discounted pod_score, not evaluation.qualified_founder
+        // because Grok's qualified_founder is based on pre-discount score
+        const qualified = pod_score >= 8000
         
         // Final validation: If all scores are 0, this indicates a problem with Grok's response
         const allScoresZero = finalNoveltyScore === 0 && densityFinal === 0 && coherenceScore === 0 && alignmentScore === 0

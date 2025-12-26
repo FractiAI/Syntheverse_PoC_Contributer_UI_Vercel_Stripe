@@ -233,10 +233,9 @@ export async function POST(request: NextRequest) {
                 evaluation = await evaluateWithGrok(textContent, title.trim(), category || undefined, submission_hash)
                 
                 // Use qualified status from evaluation
-                // Check qualification based on current open epoch and thresholds
-                const qualified = evaluation.qualified !== undefined
-                    ? evaluation.qualified
-                    : await isQualifiedForOpenEpoch(evaluation.pod_score, evaluation.density)
+                // evaluation.qualified is already calculated with discounted pod_score in evaluateWithGrok
+                // Always use it directly - no fallback needed since evaluateWithGrok always returns qualified
+                const qualified = evaluation.qualified
             
                 // Generate vector embedding and 3D coordinates using evaluation scores
                 let vectorizationResult: { embedding: number[], vector: { x: number, y: number, z: number }, embeddingModel: string } | null = null
