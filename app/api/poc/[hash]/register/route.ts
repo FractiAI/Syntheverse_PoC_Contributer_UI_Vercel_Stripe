@@ -21,6 +21,15 @@ export async function POST(
     { params }: { params: { hash: string } }
 ) {
     const submissionHash = params.hash
+    
+    if (!submissionHash) {
+        debugError('RegisterPoC', 'Missing submission hash in params', { params })
+        return NextResponse.json(
+            { error: 'Missing submission hash' },
+            { status: 400 }
+        )
+    }
+    
     debug('RegisterPoC', 'Initiating PoC registration', { submissionHash })
     
     try {
@@ -29,6 +38,10 @@ export async function POST(
         const { data: { user }, error: authError } = await supabase.auth.getUser()
         
         if (authError || !user) {
+            debugError('RegisterPoC', 'Authentication failed', { 
+                authError: authError?.message,
+                hasUser: !!user 
+            })
             return NextResponse.json(
                 { error: 'Unauthorized' },
                 { status: 401 }
@@ -36,13 +49,26 @@ export async function POST(
         }
         
         // Get contribution
-        const contributions = await db
-            .select()
-            .from(contributionsTable)
-            .where(eq(contributionsTable.submission_hash, submissionHash))
-            .limit(1)
+        let contributions
+        try {
+            contributions = await db
+                .select()
+                .from(contributionsTable)
+                .where(eq(contributionsTable.submission_hash, submissionHash))
+                .limit(1)
+        } catch (dbError) {
+            debugError('RegisterPoC', 'Database query error', dbError)
+            return NextResponse.json(
+                { 
+                    error: 'Database error',
+                    message: dbError instanceof Error ? dbError.message : 'Unknown database error'
+                },
+                { status: 500 }
+            )
+        }
         
         if (!contributions || contributions.length === 0) {
+            debugError('RegisterPoC', 'Contribution not found', { submissionHash })
             return NextResponse.json(
                 { error: 'Contribution not found' },
                 { status: 404 }
@@ -53,6 +79,10 @@ export async function POST(
         
         // Verify user is the contributor
         if (contrib.contributor !== user.email) {
+            debugError('RegisterPoC', 'User is not the contributor', {
+                contributor: contrib.contributor,
+                userEmail: user.email
+            })
             return NextResponse.json(
                 { error: 'Forbidden: You can only register your own PoCs' },
                 { status: 403 }
@@ -61,6 +91,7 @@ export async function POST(
         
         // Check if already registered
         if (contrib.registered) {
+            debug('RegisterPoC', 'PoC already registered', { submissionHash })
             return NextResponse.json(
                 { error: 'PoC is already registered' },
                 { status: 400 }
@@ -92,32 +123,63 @@ export async function POST(
         
         // Create Stripe checkout session
         const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_WEBSITE_URL || 'http://localhost:3000'
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            line_items: [
-                {
-                    price_data: {
-                        currency: 'usd',
-                        product_data: {
-                            name: `PoC Registration: ${contrib.title}`,
-                            description: `Register PoC submission ${submissionHash.substring(0, 8)}... on Hard Hat L1 blockchain`,
-                        },
-                        unit_amount: REGISTRATION_FEE,
-                    },
-                    quantity: 1,
-                },
-            ],
-            mode: 'payment',
-            success_url: `${baseUrl}/dashboard?registration=success&hash=${submissionHash}`,
-            cancel_url: `${baseUrl}/dashboard?registration=cancelled&hash=${submissionHash}`,
-            client_reference_id: submissionHash,
-            metadata: {
-                submission_hash: submissionHash,
-                contributor: contrib.contributor,
-                title: contrib.title,
-                type: 'poc_registration',
-            },
+        
+        // Sanitize title for Stripe (max 500 chars, no special characters that might cause issues)
+        const sanitizedTitle = (contrib.title || 'PoC Registration').substring(0, 500).replace(/[^\w\s-]/g, '')
+        const productName = `PoC Registration: ${sanitizedTitle}`
+        const productDescription = `Register PoC submission ${submissionHash.substring(0, 8)}... on Hard Hat L1 blockchain`
+        
+        debug('RegisterPoC', 'Creating Stripe checkout session', {
+            baseUrl,
+            productName: productName.substring(0, 100),
+            submissionHash
         })
+        
+        let session
+        try {
+            session = await stripe.checkout.sessions.create({
+                payment_method_types: ['card'],
+                line_items: [
+                    {
+                        price_data: {
+                            currency: 'usd',
+                            product_data: {
+                                name: productName,
+                                description: productDescription,
+                            },
+                            unit_amount: REGISTRATION_FEE,
+                        },
+                        quantity: 1,
+                    },
+                ],
+                mode: 'payment',
+                success_url: `${baseUrl}/dashboard?registration=success&hash=${submissionHash}`,
+                cancel_url: `${baseUrl}/dashboard?registration=cancelled&hash=${submissionHash}`,
+                client_reference_id: submissionHash,
+                metadata: {
+                    submission_hash: submissionHash,
+                    contributor: contrib.contributor,
+                    title: sanitizedTitle,
+                    type: 'poc_registration',
+                },
+            })
+        } catch (stripeError: any) {
+            debugError('RegisterPoC', 'Stripe API error', {
+                error: stripeError,
+                type: stripeError?.type,
+                code: stripeError?.code,
+                message: stripeError?.message,
+                param: stripeError?.param
+            })
+            return NextResponse.json(
+                { 
+                    error: 'Stripe checkout error',
+                    message: stripeError?.message || 'Failed to create checkout session',
+                    details: stripeError?.type || 'unknown_error'
+                },
+                { status: 500 }
+            )
+        }
         
         debug('RegisterPoC', 'Stripe checkout session created', { 
             sessionId: session.id,
@@ -129,9 +191,25 @@ export async function POST(
             session_id: session.id
         })
     } catch (error) {
-        debugError('RegisterPoC', 'Error creating registration checkout', error)
+        debugError('RegisterPoC', 'Unexpected error in registration endpoint', {
+            error,
+            message: error instanceof Error ? error.message : 'Unknown error',
+            stack: error instanceof Error ? error.stack : undefined,
+            submissionHash
+        })
+        
+        // Return detailed error for debugging
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+        const errorDetails = error instanceof Error && error.stack 
+            ? { stack: error.stack.substring(0, 500) } 
+            : {}
+        
         return NextResponse.json(
-            { error: error instanceof Error ? error.message : 'Unknown error' },
+            { 
+                error: 'Registration failed',
+                message: errorMessage,
+                ...(process.env.NODE_ENV === 'development' ? errorDetails : {})
+            },
             { status: 500 }
         )
     }
