@@ -46,12 +46,12 @@ export async function findTop9Matches(
     
     try {
         // Fetch archived PoCs from poc_log table (where archive data is permanently stored)
-        // Join with contributions table to get vector coordinates
+        // Select metadata and extract archive_data in JavaScript instead of SQL
         const archivedPoCsWithLogs = await db
             .select({
                 submission_hash: pocLogTable.submission_hash,
                 title: pocLogTable.title,
-                archive_data: sql<{ abstract?: string; formulas?: string[]; constants?: string[] } | null>`${pocLogTable.metadata}->'archive_data'`,
+                metadata: pocLogTable.metadata,
                 created_at: pocLogTable.created_at,
             })
             .from(pocLogTable)
@@ -89,21 +89,27 @@ export async function findTop9Matches(
         }
         
         // Combine log data with vector data
-        const archivedPoCs = archivedPoCsWithLogs.map(log => {
-            const contrib = contributions.find(c => c.submission_hash === log.submission_hash)
-            const archiveData = log.archive_data as { abstract?: string; formulas?: string[]; constants?: string[] } | null
-            return {
-                submission_hash: log.submission_hash,
-                title: log.title || '',
-                abstract: archiveData?.abstract || null,
-                formulas: archiveData?.formulas || null,
-                constants: archiveData?.constants || null,
-                vector_x: contrib?.vector_x ? Number(contrib.vector_x) : null,
-                vector_y: contrib?.vector_y ? Number(contrib.vector_y) : null,
-                vector_z: contrib?.vector_z ? Number(contrib.vector_z) : null,
-                created_at: log.created_at
-            }
-        })
+        // Extract archive_data from metadata JSONB field
+        const archivedPoCs = archivedPoCsWithLogs
+            .map(log => {
+                const metadata = log.metadata as any
+                const archiveData = metadata?.archive_data as { abstract?: string; formulas?: string[]; constants?: string[] } | undefined
+                if (!archiveData) return null
+                
+                const contrib = contributions.find(c => c.submission_hash === log.submission_hash)
+                return {
+                    submission_hash: log.submission_hash,
+                    title: log.title || '',
+                    abstract: archiveData.abstract || null,
+                    formulas: archiveData.formulas || null,
+                    constants: archiveData.constants || null,
+                    vector_x: contrib?.vector_x ? Number(contrib.vector_x) : null,
+                    vector_y: contrib?.vector_y ? Number(contrib.vector_y) : null,
+                    vector_z: contrib?.vector_z ? Number(contrib.vector_z) : null,
+                    created_at: log.created_at
+                }
+            })
+            .filter((poc): poc is NonNullable<typeof poc> => poc !== null)
         
         if (archivedPoCs.length === 0) {
             debug('FindTop9Matches', 'No archived PoCs found')
