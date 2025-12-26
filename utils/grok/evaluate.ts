@@ -1097,8 +1097,8 @@ Return ONLY the JSON object, no markdown, no code blocks, no explanations outsid
         ? `**Top ${top9Matches.length} Matching Archived PoCs (for redundancy check and context):**
 
 ${top9Matches.map((match, idx) => {
-            const vectorCoords = match.vector_x !== null && match.vector_y !== null && match.vector_z !== null
-                ? `(${match.vector_x.toFixed(2)}, ${match.vector_y.toFixed(2)}, ${match.vector_z.toFixed(2)})`
+            const vectorCoords = match.vector_x != null && match.vector_y != null && match.vector_z != null
+                ? `(${Number(match.vector_x).toFixed(2)}, ${Number(match.vector_y).toFixed(2)}, ${Number(match.vector_z).toFixed(2)})`
                 : 'Not vectorized'
             
             const formulasText = match.formulas && match.formulas.length > 0

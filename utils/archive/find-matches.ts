@@ -75,7 +75,7 @@ export async function findTop9Matches(
         }> = []
         
         if (uniqueHashes.length > 0) {
-            contributions = await db
+            const contributionsRaw = await db
                 .select({
                     submission_hash: contributionsTable.submission_hash,
                     vector_x: contributionsTable.vector_x,
@@ -84,6 +84,14 @@ export async function findTop9Matches(
                 })
                 .from(contributionsTable)
                 .where(inArray(contributionsTable.submission_hash, uniqueHashes))
+            
+            // Convert numeric strings to numbers (Drizzle numeric type returns strings)
+            contributions = contributionsRaw.map(c => ({
+                submission_hash: c.submission_hash,
+                vector_x: c.vector_x ? parseFloat(c.vector_x) : null,
+                vector_y: c.vector_y ? parseFloat(c.vector_y) : null,
+                vector_z: c.vector_z ? parseFloat(c.vector_z) : null,
+            }))
         }
         
         // Combine log data with vector data
@@ -101,9 +109,9 @@ export async function findTop9Matches(
                     abstract: archiveData.abstract || null,
                     formulas: archiveData.formulas || null,
                     constants: archiveData.constants || null,
-                    vector_x: contrib?.vector_x ? Number(contrib.vector_x) : null,
-                    vector_y: contrib?.vector_y ? Number(contrib.vector_y) : null,
-                    vector_z: contrib?.vector_z ? Number(contrib.vector_z) : null,
+                    vector_x: contrib?.vector_x ?? null,
+                    vector_y: contrib?.vector_y ?? null,
+                    vector_z: contrib?.vector_z ?? null,
                     created_at: log.created_at
                 }
             })
