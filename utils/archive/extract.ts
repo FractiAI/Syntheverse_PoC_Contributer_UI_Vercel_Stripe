@@ -24,16 +24,16 @@ export function extractAbstract(textContent: string, title: string): string {
 
     const content = textContent.trim()
     
-    // Look for explicit "Abstract:" section
-    const abstractMatch = content.match(/abstract[:\s]+(.*?)(?:\n\n|\n1\.|introduction|background|$)/is)
+    // Look for explicit "Abstract:" section (use [\s\S] instead of . with s flag for ES2015 compatibility)
+    const abstractMatch = content.match(/abstract[:\s]+([\s\S]*?)(?:\n\n|\n1\.|introduction|background|$)/i)
     if (abstractMatch && abstractMatch[1]) {
         const abstract = abstractMatch[1].trim()
         // Limit to 1000 characters
         return abstract.length > 1000 ? abstract.substring(0, 1000) + '...' : abstract
     }
     
-    // Look for "Summary:" section
-    const summaryMatch = content.match(/summary[:\s]+(.*?)(?:\n\n|\n1\.|introduction|background|$)/is)
+    // Look for "Summary:" section (use [\s\S] instead of . with s flag for ES2015 compatibility)
+    const summaryMatch = content.match(/summary[:\s]+([\s\S]*?)(?:\n\n|\n1\.|introduction|background|$)/i)
     if (summaryMatch && summaryMatch[1]) {
         const summary = summaryMatch[1].trim()
         return summary.length > 1000 ? summary.substring(0, 1000) + '...' : summary
