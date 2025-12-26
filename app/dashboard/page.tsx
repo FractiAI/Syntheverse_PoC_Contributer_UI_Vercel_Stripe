@@ -9,22 +9,6 @@ import { db } from '@/utils/db/db'
 import { usersTable } from '@/utils/db/schema'
 import { eq } from "drizzle-orm"
 import { PoCDashboardStats } from '@/components/PoCDashboardStats'
-import dynamic from 'next/dynamic'
-
-// Dynamically import 3D map component to avoid SSR issues with Three.js
-const SandboxMap3DUpgraded = dynamic(
-    () => import('@/components/SandboxMap3DUpgraded').then(mod => ({ default: mod.SandboxMap3DUpgraded })),
-    { 
-        ssr: false,
-        loading: () => (
-            <Card>
-                <CardContent className="flex items-center justify-center h-[800px]">
-                    <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-                </CardContent>
-            </Card>
-        )
-    }
-)
 
 export default async function Dashboard() {
     const supabase = createClient()
@@ -67,11 +51,6 @@ export default async function Dashboard() {
 
             {/* PoC Evaluation Statistics - Client Component for API calls */}
             <PoCDashboardStats />
-
-            {/* 3D Sandbox Map Visualization */}
-            <div className="mt-8">
-                <SandboxMap3DUpgraded />
-            </div>
 
             {/* Status Overview */}
             <div className="grid gap-4 md:grid-cols-2">
