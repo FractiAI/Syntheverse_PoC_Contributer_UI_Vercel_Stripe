@@ -85,7 +85,8 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                 method: 'POST'
             })
             if (!response.ok) {
-                throw new Error('Failed to initiate registration')
+                const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
+                throw new Error(errorData.error || errorData.message || `Failed to initiate registration (${response.status})`)
             }
             const data = await response.json()
             if (data.checkout_url) {

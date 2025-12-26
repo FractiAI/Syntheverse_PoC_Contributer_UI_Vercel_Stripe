@@ -18,9 +18,11 @@ const REGISTRATION_FEE = 20000 // $200.00 in cents
 
 export async function POST(
     request: NextRequest,
-    { params }: { params: { hash: string } }
+    { params }: { params: Promise<{ hash: string }> | { hash: string } }
 ) {
-    const submissionHash = params.hash
+    // Handle both Next.js 14 and 15 params format
+    const resolvedParams = params instanceof Promise ? await params : params
+    const submissionHash = resolvedParams.hash
     
     if (!submissionHash) {
         debugError('RegisterPoC', 'Missing submission hash in params', { params })
