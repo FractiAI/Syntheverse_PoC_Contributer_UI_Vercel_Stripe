@@ -51,7 +51,7 @@ export async function findTop9Matches(
             .select({
                 submission_hash: pocLogTable.submission_hash,
                 title: pocLogTable.title,
-                archive_data: sql<{ abstract?: string; formulas?: string[]; constants?: string[] }>`${pocLogTable.metadata}->'archive_data'`,
+                archive_data: sql<{ abstract?: string; formulas?: string[]; constants?: string[] } | null>`${pocLogTable.metadata}->'archive_data'`,
                 created_at: pocLogTable.created_at,
             })
             .from(pocLogTable)
