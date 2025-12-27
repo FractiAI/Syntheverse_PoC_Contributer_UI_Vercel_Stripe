@@ -88,6 +88,10 @@ export async function POST(
             ? evaluation.qualified 
             : qualifiedByEpoch
         
+        // Store the open epoch that was used to qualify (capture the epoch at qualification time)
+        // This should be the current open epoch, not just which epoch it qualifies for based on density
+        const openEpochUsed = qualified ? epochInfo.current_epoch : null
+        
         // Generate vector embedding and 3D coordinates using evaluation scores
         let vectorizationResult: { embedding: number[], vector: { x: number, y: number, z: number }, embeddingModel: string } | null = null
         try {
@@ -132,7 +136,7 @@ export async function POST(
                     homebase_intro: evaluation.homebase_intro,
                     tokenomics_recommendation: evaluation.tokenomics_recommendation,
                     qualified_founder: qualified,
-                    qualified_epoch: evaluation.qualified_epoch || null,
+                    qualified_epoch: openEpochUsed || evaluation.qualified_epoch || null, // Store the open epoch used to qualify
                     allocation_status: qualified ? 'pending_admin_approval' : 'not_qualified' // Token allocation requires admin approval
                 },
                 // Store vector embedding and 3D coordinates if available

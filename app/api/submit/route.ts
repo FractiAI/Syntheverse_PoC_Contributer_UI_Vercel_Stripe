@@ -7,7 +7,7 @@ import { debug, debugError } from '@/utils/debug'
 import { evaluateWithGrok } from '@/utils/grok/evaluate'
 import { vectorizeSubmission } from '@/utils/vectors'
 import { sendApprovalRequestEmail } from '@/utils/email/send-approval-request'
-import { isQualifiedForOpenEpoch } from '@/utils/epochs/qualification'
+import { isQualifiedForOpenEpoch, getOpenEpochInfo } from '@/utils/epochs/qualification'
 import * as crypto from 'crypto'
 
 export async function POST(request: NextRequest) {
@@ -236,6 +236,23 @@ export async function POST(request: NextRequest) {
                 // evaluation.qualified is already calculated with discounted pod_score in evaluateWithGrok
                 // Always use it directly - no fallback needed since evaluateWithGrok always returns qualified
                 const qualified = evaluation.qualified
+                
+                // Get the open epoch that was used to qualify (capture the epoch at qualification time)
+                let openEpochUsed: string | null = null
+                if (qualified) {
+                    try {
+                        const epochInfo = await getOpenEpochInfo()
+                        openEpochUsed = epochInfo.current_epoch
+                        debug('SubmitContribution', 'Captured open epoch for qualification', {
+                            submission_hash,
+                            open_epoch: openEpochUsed
+                        })
+                    } catch (epochError) {
+                        debugError('SubmitContribution', 'Error getting open epoch info', epochError)
+                        // Fallback to evaluation.qualified_epoch if available
+                        openEpochUsed = evaluation.qualified_epoch || null
+                    }
+                }
             
                 // Generate vector embedding and 3D coordinates using evaluation scores
                 let vectorizationResult: { embedding: number[], vector: { x: number, y: number, z: number }, embeddingModel: string } | null = null
@@ -279,7 +296,7 @@ export async function POST(request: NextRequest) {
                                 homebase_intro: evaluation.homebase_intro,
                                 tokenomics_recommendation: evaluation.tokenomics_recommendation,
                                 qualified_founder: qualified,
-                                qualified_epoch: evaluation.qualified_epoch || null,
+                                qualified_epoch: openEpochUsed || evaluation.qualified_epoch || null, // Store the open epoch used to qualify
                                 allocation_status: 'pending_admin_approval' // Token allocation requires admin approval
                             },
                             // Store vector embedding and 3D coordinates if available

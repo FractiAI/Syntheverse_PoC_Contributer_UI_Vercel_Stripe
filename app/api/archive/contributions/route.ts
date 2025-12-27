@@ -4,7 +4,6 @@ import { contributionsTable, pocLogTable, allocationsTable } from '@/utils/db/sc
 import { eq, and, or, like, ilike } from 'drizzle-orm'
 import { debug, debugError } from '@/utils/debug'
 import { createClient } from '@/utils/supabase/server'
-import { qualifyEpoch } from '@/utils/epochs/qualification'
 
 export async function GET(request: NextRequest) {
     debug('ArchiveContributions', 'Fetching contributions')
@@ -51,26 +50,12 @@ export async function GET(request: NextRequest) {
         const formattedContributions = contributions.map(contrib => {
             const metadata = contrib.metadata as any || {}
             const qualified = metadata.qualified_founder ?? false
-            const density = metadata.density ?? null
             
-            // Calculate qualified_epoch if missing but submission is qualified and has density
-            let qualified_epoch = metadata.qualified_epoch ?? null
-            if (!qualified_epoch && qualified && density !== null && density !== undefined) {
-                try {
-                    qualified_epoch = qualifyEpoch(density)
-                    debug('ArchiveContributions', 'Calculated qualified_epoch', {
-                        submission_hash: contrib.submission_hash,
-                        density,
-                        qualified_epoch
-                    })
-                } catch (error) {
-                    debugError('ArchiveContributions', 'Error calculating qualified_epoch', {
-                        error,
-                        submission_hash: contrib.submission_hash,
-                        density
-                    })
-                }
-            }
+            // Use the stored qualified_epoch from metadata
+            // This should have been set to the open epoch that was used to qualify the submission
+            // If missing, we can't reliably determine which epoch was open at qualification time,
+            // so we'll return null rather than calculating based on density (which doesn't reflect historical epoch state)
+            const qualified_epoch = metadata.qualified_epoch ?? null
             
             return {
                 submission_hash: contrib.submission_hash,
