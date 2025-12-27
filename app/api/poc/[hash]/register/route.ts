@@ -160,7 +160,7 @@ export async function POST(
         
         // Create Stripe checkout session
         // Get base URL - must be a valid absolute URL for Stripe
-        let baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_WEBSITE_URL
+        let baseUrl: string | undefined = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_WEBSITE_URL
         
         // If no env var, try to get from request headers (for production)
         if (!baseUrl) {
@@ -173,7 +173,7 @@ export async function POST(
         
         // Fallback to localhost only in development
         if (!baseUrl) {
-            baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : null
+            baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : undefined
         }
         
         // Validate baseUrl is a valid absolute URL
