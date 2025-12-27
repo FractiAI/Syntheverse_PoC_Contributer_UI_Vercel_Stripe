@@ -123,10 +123,10 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                 throw new Error(`${errorMessage}${errorType}`)
             }
             const data = await response.json()
-            if (data.checkout_url) {
+            if (data.checkout_url && typeof data.checkout_url === 'string' && data.checkout_url.startsWith('http')) {
                 window.location.href = data.checkout_url
             } else {
-                throw new Error('No checkout URL received from server')
+                throw new Error(data.message || data.error || 'No valid checkout URL received from server')
             }
         } catch (err) {
             console.error('Registration error:', err)

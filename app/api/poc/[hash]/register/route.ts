@@ -281,8 +281,25 @@ export async function POST(
             )
         }
         
+        // Ensure session.url is a valid URL string
+        const checkoutUrl = session.url
+        if (!checkoutUrl || typeof checkoutUrl !== 'string' || !checkoutUrl.startsWith('http')) {
+            debugError('RegisterPoC', 'Invalid checkout URL format from Stripe', {
+                sessionId: session.id,
+                urlType: typeof checkoutUrl,
+                urlValue: checkoutUrl
+            })
+            return NextResponse.json(
+                { 
+                    error: 'Stripe checkout error',
+                    message: 'Invalid checkout URL format received from Stripe'
+                },
+                { status: 500 }
+            )
+        }
+        
         return NextResponse.json({
-            checkout_url: session.url,
+            checkout_url: checkoutUrl,
             session_id: session.id
         })
     } catch (error) {
