@@ -95,6 +95,20 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
 
     useEffect(() => {
         fetchSubmissions()
+        
+        // Check if we're returning from a successful registration
+        const params = new URLSearchParams(window.location.search)
+        const registrationStatus = params.get('registration')
+        const registrationHash = params.get('hash')
+        
+        if (registrationStatus === 'success' && registrationHash) {
+            // Webhook may take a few seconds to process, so wait and then refresh
+            setTimeout(() => {
+                fetchSubmissions()
+                // Clean up URL params
+                window.history.replaceState({}, '', window.location.pathname)
+            }, 3000) // Wait 3 seconds for webhook to process
+        }
     }, [])
 
     async function fetchSubmissions() {

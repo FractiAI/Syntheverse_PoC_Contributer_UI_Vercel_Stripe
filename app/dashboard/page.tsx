@@ -7,6 +7,7 @@ import { db } from '@/utils/db/db'
 import { usersTable } from '@/utils/db/schema'
 import { eq } from "drizzle-orm"
 import { PoCArchive } from '@/components/PoCArchive'
+import { EpochTokenDisplay } from '@/components/EpochTokenDisplay'
 
 export default async function Dashboard() {
     const supabase = createClient()
@@ -46,6 +47,9 @@ export default async function Dashboard() {
                     </Button>
                 </Link>
             </div>
+
+            {/* Epoch and Token Display */}
+            <EpochTokenDisplay />
 
             {/* PoC Submissions Archive */}
             <PoCArchive userEmail={user.email!} />
