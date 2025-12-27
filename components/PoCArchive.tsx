@@ -220,6 +220,7 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                                 <tr className="border-b">
                                     <th className="text-left p-2 font-semibold">Title</th>
                                     <th className="text-left p-2 font-semibold">Status</th>
+                                    <th className="text-left p-2 font-semibold">Epoch</th>
                                     <th className="text-left p-2 font-semibold">Metals</th>
                                     <th className="text-right p-2 font-semibold">PoC Score</th>
                                     <th className="text-right p-2 font-semibold">Novelty</th>
@@ -246,6 +247,15 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                                         </td>
                                         <td className="p-2">
                                             {getStatusBadge(submission)}
+                                        </td>
+                                        <td className="p-2">
+                                            {submission.qualified_epoch ? (
+                                                <Badge variant="default" className="bg-purple-500 capitalize">
+                                                    {submission.qualified_epoch}
+                                                </Badge>
+                                            ) : (
+                                                <span className="text-muted-foreground text-sm">—</span>
+                                            )}
                                         </td>
                                         <td className="p-2">
                                             {getMetalBadges(submission.metals)}
