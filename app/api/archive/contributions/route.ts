@@ -4,6 +4,7 @@ import { contributionsTable, pocLogTable, allocationsTable } from '@/utils/db/sc
 import { eq, and, or, like, ilike } from 'drizzle-orm'
 import { debug, debugError } from '@/utils/debug'
 import { createClient } from '@/utils/supabase/server'
+import { qualifyEpoch } from '@/utils/epochs/qualification'
 
 export async function GET(request: NextRequest) {
     debug('ArchiveContributions', 'Fetching contributions')
@@ -49,6 +50,28 @@ export async function GET(request: NextRequest) {
         // Format contributions to match expected API response
         const formattedContributions = contributions.map(contrib => {
             const metadata = contrib.metadata as any || {}
+            const qualified = metadata.qualified_founder ?? false
+            const density = metadata.density ?? null
+            
+            // Calculate qualified_epoch if missing but submission is qualified and has density
+            let qualified_epoch = metadata.qualified_epoch ?? null
+            if (!qualified_epoch && qualified && density !== null && density !== undefined) {
+                try {
+                    qualified_epoch = qualifyEpoch(density)
+                    debug('ArchiveContributions', 'Calculated qualified_epoch', {
+                        submission_hash: contrib.submission_hash,
+                        density,
+                        qualified_epoch
+                    })
+                } catch (error) {
+                    debugError('ArchiveContributions', 'Error calculating qualified_epoch', {
+                        error,
+                        submission_hash: contrib.submission_hash,
+                        density
+                    })
+                }
+            }
+            
             return {
                 submission_hash: contrib.submission_hash,
                 title: contrib.title,
@@ -61,12 +84,12 @@ export async function GET(request: NextRequest) {
                 // Extract scores from metadata
                 pod_score: metadata.pod_score ?? null,
                 novelty: metadata.novelty ?? null,
-                density: metadata.density ?? null,
+                density: density,
                 coherence: metadata.coherence ?? null,
                 alignment: metadata.alignment ?? null,
                 redundancy: metadata.redundancy ?? null, // Redundancy percentage (0-100)
-                qualified: metadata.qualified_founder ?? null,
-                qualified_epoch: metadata.qualified_epoch ?? null,
+                qualified: qualified,
+                qualified_epoch: qualified_epoch,
                 // Direct fields
                 registered: contrib.registered ?? false,
                 allocated: allocatedHashes.has(contrib.submission_hash),
