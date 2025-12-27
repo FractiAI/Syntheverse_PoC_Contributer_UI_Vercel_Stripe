@@ -226,12 +226,13 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
         if (submission.qualified) {
             return <Badge variant="default" className="bg-purple-500">Qualified</Badge>
         }
-        if (submission.status === 'evaluated') {
-            return <Badge variant="secondary">Evaluated</Badge>
+        if (submission.status === 'evaluating') {
+            return <Badge variant="secondary">Evaluating</Badge>
         }
-        if (submission.status === 'pending') {
-            return <Badge variant="outline">Pending</Badge>
+        if (submission.status === 'unqualified') {
+            return <Badge variant="outline" className="bg-gray-500 text-white">Unqualified</Badge>
         }
+        // Fallback for any other status
         return <Badge variant="outline">{submission.status}</Badge>
     }
 

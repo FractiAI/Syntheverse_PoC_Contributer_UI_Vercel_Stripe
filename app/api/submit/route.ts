@@ -120,6 +120,7 @@ export async function POST(request: NextRequest) {
             })
             
             // Prepare values for insert - handle JSONB fields carefully
+            // Status starts as 'evaluating' - will be updated to 'qualified' or 'unqualified' after evaluation
             const insertValues: any = {
                 submission_hash,
                 title: title.trim(),
@@ -127,7 +128,7 @@ export async function POST(request: NextRequest) {
                 content_hash,
                 text_content: text_content?.trim() || null,
                 pdf_path: pdf_path || null,
-                status: 'draft',
+                status: 'evaluating', // No drafts - submissions are immediately evaluated
                 category: category || 'scientific',
                 metals: [] as string[], // Empty array for metals
                 metadata: {} as Record<string, any> // Empty object for metadata
@@ -382,12 +383,12 @@ export async function POST(request: NextRequest) {
                 evaluationError = error instanceof Error ? error : new Error(String(error))
                 debugError('SubmitContribution', 'Evaluation failed', evaluationError)
             
-                // Update status to indicate evaluation error
+                // Update status to unqualified if evaluation fails (no drafts)
                 try {
                     await db
                         .update(contributionsTable)
                         .set({
-                            status: 'draft', // Keep as draft if evaluation fails
+                            status: 'unqualified', // Set to unqualified if evaluation fails (no drafts)
                             updated_at: new Date()
                         })
                         .where(eq(contributionsTable.submission_hash, submission_hash))
@@ -451,13 +452,13 @@ export async function POST(request: NextRequest) {
                 base_novelty: evaluation.base_novelty
             } : null,
             evaluation_error: evaluationError ? evaluationError.message : null,
-            status: evaluation ? (evaluation.qualified ? 'qualified' : 'unqualified') : 'draft',
+            status: evaluation ? (evaluation.qualified ? 'qualified' : 'unqualified') : 'unqualified', // No drafts - default to unqualified if evaluation skipped
             allocation_status: evaluation ? 'pending_admin_approval' : undefined,
             message: evaluation 
                 ? 'Contribution submitted and evaluated successfully'
                 : evaluationError 
-                    ? `Contribution submitted successfully. Evaluation skipped: ${evaluationError.message}`
-                    : 'Contribution submitted successfully'
+                    ? `Contribution submitted but evaluation failed: ${evaluationError.message}. Status set to unqualified.`
+                    : 'Contribution submitted successfully (evaluation pending)'
         })
     } catch (error) {
         debugError('SubmitContribution', 'Error submitting contribution', error)

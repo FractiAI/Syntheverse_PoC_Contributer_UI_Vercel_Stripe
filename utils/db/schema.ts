@@ -19,7 +19,7 @@ export const contributionsTable = pgTable('contributions', {
     content_hash: text('content_hash').notNull(),
     text_content: text('text_content'),
     pdf_path: text('pdf_path'),
-    status: text('status').notNull().default('draft'), // draft, submitted, evaluating, qualified, unqualified, archived, superseded
+    status: text('status').notNull().default('evaluating'), // evaluating, qualified, unqualified, archived, superseded (no drafts - submissions are immediately evaluated)
     category: text('category'), // scientific, tech, alignment
     metals: jsonb('metals').$type<string[]>(), // Array of metal types: gold, silver, copper
     metadata: jsonb('metadata').$type<{
