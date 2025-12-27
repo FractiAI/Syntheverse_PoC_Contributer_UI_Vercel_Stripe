@@ -17,8 +17,9 @@ import {
     DialogHeader, 
     DialogTitle 
 } from '@/components/ui/dialog'
-import { Loader2, RefreshCw, FileText, CheckCircle2, XCircle, Clock, CreditCard } from 'lucide-react'
+import { Loader2, RefreshCw, FileText, CheckCircle2, XCircle, Clock, CreditCard, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react'
 import Link from 'next/link'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 
 interface PoCSubmission {
     submission_hash: string
@@ -36,6 +37,9 @@ interface PoCSubmission {
     qualified: boolean | null
     qualified_epoch: string | null
     registered: boolean | null
+    registration_date: string | null
+    registration_tx_hash: string | null
+    stripe_payment_id: string | null
     allocated: boolean | null
     created_at: string
     updated_at: string
@@ -166,12 +170,20 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
     }
 
     async function handleRowClick(submission: PoCSubmission) {
-        // Fetch full details
+        // Fetch full details including registration info
         try {
             const response = await fetch(`/api/archive/contributions/${submission.submission_hash}`)
             if (response.ok) {
                 const details = await response.json()
-                setSelectedSubmission({ ...submission, ...details })
+                // Merge submission with fetched details, ensuring registration fields are included
+                setSelectedSubmission({ 
+                    ...submission, 
+                    ...details,
+                    registration_date: details.registration_date || submission.registration_date || null,
+                    registration_tx_hash: details.registration_tx_hash || submission.registration_tx_hash || null,
+                    stripe_payment_id: details.stripe_payment_id || submission.stripe_payment_id || null,
+                    registered: details.registered !== undefined ? details.registered : submission.registered
+                })
             } else {
                 setSelectedSubmission(submission)
             }
@@ -603,6 +615,45 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                                     <div className="text-sm text-muted-foreground max-h-40 overflow-y-auto p-3 bg-muted rounded">
                                         {selectedSubmission.text_content.substring(0, 500)}
                                         {selectedSubmission.text_content.length > 500 && '...'}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Blockchain Registration Certificate */}
+                            {selectedSubmission.registered && (
+                                <div className="pt-4 border-t">
+                                    <div className="text-sm font-semibold mb-3">Blockchain Registration</div>
+                                    <div className="space-y-2 text-sm">
+                                        {selectedSubmission.registration_tx_hash && (
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-muted-foreground">Transaction Hash:</span>
+                                                <code className="text-xs bg-muted px-2 py-1 rounded break-all">
+                                                    {selectedSubmission.registration_tx_hash}
+                                                </code>
+                                            </div>
+                                        )}
+                                        {selectedSubmission.registration_date && (
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-muted-foreground">Registered:</span>
+                                                <span>{new Date(selectedSubmission.registration_date).toLocaleString()}</span>
+                                            </div>
+                                        )}
+                                        {selectedSubmission.stripe_payment_id && (
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-muted-foreground">Payment ID:</span>
+                                                <code className="text-xs bg-muted px-2 py-1 rounded">
+                                                    {selectedSubmission.stripe_payment_id}
+                                                </code>
+                                            </div>
+                                        )}
+                                        <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
+                                            <div className="text-xs font-semibold text-blue-900 dark:text-blue-100 mb-1">
+                                                ✓ Registered on Hard Hat L1 Blockchain
+                                            </div>
+                                            <div className="text-xs text-blue-700 dark:text-blue-300">
+                                                This PoC has been registered in the Syntheverse SYNTH90T Motherlode Blockmine on the Hard Hat blockchain.
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             )}

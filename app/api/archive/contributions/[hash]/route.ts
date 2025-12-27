@@ -38,6 +38,10 @@ export async function GET(
             category: contrib.category,
             metals: contrib.metals as string[] || [],
             metadata: contrib.metadata || {},
+            registered: contrib.registered ?? false,
+            registration_date: contrib.registration_date?.toISOString() || null,
+            registration_tx_hash: contrib.registration_tx_hash || null,
+            stripe_payment_id: contrib.stripe_payment_id || null,
             created_at: contrib.created_at?.toISOString() || '',
             updated_at: contrib.updated_at?.toISOString() || ''
         }
