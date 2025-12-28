@@ -261,7 +261,7 @@ export async function evaluateWithGrok(
             )
             debug('EvaluateWithGrok', 'Calculated redundancy by comparing to sandbox + prior submissions', {
                 comparisonTargets: archivedVectors.length,
-                note: 'Includes Syntheverse sandbox definition (first submission) + all prior submissions'
+                note: 'Includes Syntheverse sandbox definition (first submission) + all prior submissions',
                 redundancy_percent: calculatedRedundancy.redundancy_percent,
                 similarity_score: calculatedRedundancy.similarity_score,
                 closest_count: calculatedRedundancy.closest_vectors.length,
