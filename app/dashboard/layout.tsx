@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from "next/navigation"
+import { cookies } from "next/headers"
 import { db } from '@/utils/db/db'
 import { usersTable } from '@/utils/db/schema'
 import { eq } from "drizzle-orm";
@@ -30,9 +31,8 @@ export default async function DashboardLayout({
         debug('DashboardLayout', 'Supabase client created');
 
         // Get cookies for debugging
-        const { cookies: cookieStore } = await import('next/headers')
-        const cookieStoreInstance = cookieStore()
-        const allCookies = cookieStoreInstance.getAll()
+        const cookieStore = cookies()
+        const allCookies = cookieStore.getAll()
         const authCookies = allCookies.filter(c => c.name.includes('auth-token'))
         debug('DashboardLayout', 'Cookies check', { 
             totalCookies: allCookies.length,
