@@ -150,6 +150,7 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
                 .update(contributionsTable)
                 .set({
                     registered: true,
+                    status: 'registered', // Set status to registered so UI displays correctly
                     registration_date: new Date(),
                     stripe_payment_id: session.payment_intent as string,
                     registration_tx_hash: blockchainTxHash, // Hard Hat L1 transaction hash
