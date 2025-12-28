@@ -29,20 +29,36 @@ export default async function DashboardLayout({
         const supabase = createClient()
         debug('DashboardLayout', 'Supabase client created');
 
+        // Get cookies for debugging
+        const cookieStore = await import('next/headers').then(m => m.cookies())
+        const allCookies = cookieStore.getAll()
+        const authCookies = allCookies.filter(c => c.name.includes('auth-token'))
+        debug('DashboardLayout', 'Cookies check', { 
+            totalCookies: allCookies.length,
+            authCookies: authCookies.length,
+            authCookieNames: authCookies.map(c => c.name)
+        });
+
         const {
-            data: { user },
+            data: { user, session },
             error: authError,
         } = await supabase.auth.getUser()
         
         debug('DashboardLayout', 'Auth getUser completed', { 
             hasUser: !!user, 
             hasEmail: !!user?.email,
-            authError: authError?.message 
+            hasSession: !!session,
+            authError: authError?.message,
+            errorCode: authError?.status
         });
 
         // If no user, redirect to login
         if (authError || !user || !user.email) {
-            debugWarn('DashboardLayout', 'No user or auth error, redirecting to login', { authError });
+            debugWarn('DashboardLayout', 'No user or auth error, redirecting to login', { 
+                authError: authError?.message,
+                errorCode: authError?.status,
+                hasCookies: authCookies.length > 0
+            });
             redirect('/login')
         }
 

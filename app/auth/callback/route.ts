@@ -48,6 +48,7 @@ export async function GET(request: NextRequest) {
                 setAll(cookiesToSet) {
                     // Set cookies directly on the redirect response
                     // Preserve Supabase's options (especially maxAge/expires) and merge with defaults
+                    console.log('OAuth callback: Setting cookies', { count: cookiesToSet.length })
                     cookiesToSet.forEach(({ name, value, options }) => {
                         // Merge Supabase options with our defaults, preserving expiration settings
                         const mergedOptions = {
@@ -59,6 +60,13 @@ export async function GET(request: NextRequest) {
                             ...(options || {}),
                         }
                         redirectResponse.cookies.set(name, value, mergedOptions)
+                        console.log('OAuth callback: Set cookie', { 
+                            name, 
+                            hasValue: !!value, 
+                            valueLength: value?.length,
+                            maxAge: options?.maxAge,
+                            expires: options?.expires
+                        })
                     })
                 },
             },
@@ -88,16 +96,24 @@ export async function GET(request: NextRequest) {
     }
 
     // Double-check: verify session exists in the response cookies
-    const sessionCookie = redirectResponse.cookies.get('sb-access-token') || redirectResponse.cookies.get('sb-refresh-token')
-    if (!sessionCookie) {
-        console.warn('OAuth callback: Session cookies may not be set properly')
+    // Supabase uses cookies like: sb-<project-ref>-auth-token
+    const allSetCookies = redirectResponse.cookies.getAll()
+    const authCookies = allSetCookies.filter(c => c.name.includes('auth-token'))
+    console.log('OAuth callback: All cookies set on response', {
+        total: allSetCookies.length,
+        authCookies: authCookies.map(c => ({ name: c.name, hasValue: !!c.value }))
+    })
+
+    if (authCookies.length === 0) {
+        console.error('OAuth callback: No auth cookies found on response!')
     }
 
     console.log('OAuth callback success:', { 
         userId: user.id, 
         email: user.email,
         hasSession: !!sessionData.session,
-        hasCookies: !!sessionCookie
+        sessionExpires: sessionData.session?.expires_at,
+        authCookiesCount: authCookies.length
     })
 
     // Handle database operations
