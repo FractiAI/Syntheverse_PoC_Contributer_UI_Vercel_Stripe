@@ -30,7 +30,6 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
     
     const [formData, setFormData] = useState({
         title: '',
-        text_content: '',
         category: 'scientific',
         file: null as File | null
     })
@@ -49,8 +48,8 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
             return
         }
 
-        if (!formData.text_content.trim() && !formData.file) {
-            setError('Please provide either text content or upload a file')
+        if (!formData.file) {
+            setError('Please select a file to upload')
             setLoading(false)
             return
         }
@@ -58,13 +57,12 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
         try {
             const submitFormData = new FormData()
             submitFormData.append('title', formData.title)
-            submitFormData.append('text_content', formData.text_content)
+            submitFormData.append('text_content', '') // Empty string since we only accept files
             submitFormData.append('category', formData.category)
             submitFormData.append('contributor', userEmail)
             
-            if (formData.file) {
-                submitFormData.append('file', formData.file)
-            }
+            // File is required - validation already checked above
+            submitFormData.append('file', formData.file!)
 
             // Create an AbortController for timeout handling
             const controller = new AbortController()
@@ -632,38 +630,61 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="text_content">Content *</Label>
-                            <textarea
-                                id="text_content"
-                                value={formData.text_content}
-                                onChange={(e) => setFormData({ ...formData, text_content: e.target.value })}
-                                placeholder="Enter your contribution content, research findings, or description..."
-                                className="flex min-h-[200px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                required={!formData.file}
-                                disabled={loading}
-                            />
-                            <p className="text-xs text-muted-foreground">
-                                Provide the text content of your contribution. This will be evaluated by the Syntheverse PoC Evaluation Engine.
-                            </p>
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="file">File Upload (Optional)</Label>
-                            <Input
-                                id="file"
-                                type="file"
-                                accept=".pdf,.txt,.md"
-                                onChange={handleFileChange}
-                                disabled={loading}
-                            />
-                            <p className="text-xs text-muted-foreground">
-                                Upload a PDF, text file, or markdown file. File name will be stored for reference.
-                            </p>
+                            <Label htmlFor="file" className="text-base font-semibold">
+                                <FileText className="inline-block h-4 w-4 mr-2" />
+                                Select File to Upload *
+                            </Label>
+                            <div className="border-2 border-dashed border-primary/30 rounded-lg p-6 hover:border-primary/50 transition-colors">
+                                <Input
+                                    id="file"
+                                    type="file"
+                                    accept=".pdf,.txt,.md,.doc,.docx"
+                                    onChange={handleFileChange}
+                                    disabled={loading}
+                                    className="cursor-pointer"
+                                    required
+                                />
+                                {!formData.file && (
+                                    <div className="mt-4 text-center">
+                                        <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-2" />
+                                        <p className="text-sm font-medium text-foreground mb-1">
+                                            Click to select a file or drag and drop
+                                        </p>
+                                        <p className="text-xs text-muted-foreground">
+                                            Supported formats: PDF, TXT, MD, DOC, DOCX
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
                             {formData.file && (
-                                <p className="text-sm text-muted-foreground">
-                                    Selected: {formData.file.name} ({(formData.file.size / 1024).toFixed(2)} KB)
-                                </p>
+                                <div className="mt-2 p-3 bg-primary/10 border border-primary/20 rounded-md">
+                                    <div className="flex items-center gap-2">
+                                        <FileText className="h-5 w-5 text-primary" />
+                                        <div className="flex-1">
+                                            <p className="text-sm font-medium text-foreground">
+                                                {formData.file.name}
+                                            </p>
+                                            <p className="text-xs text-muted-foreground">
+                                                {(formData.file.size / 1024).toFixed(2)} KB
+                                            </p>
+                                        </div>
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => setFormData({ ...formData, file: null })}
+                                            disabled={loading}
+                                            className="text-xs"
+                                        >
+                                            Remove
+                                        </Button>
+                                    </div>
+                                </div>
                             )}
+                            <p className="text-xs text-muted-foreground">
+                                Upload your contribution document (PDF, text, markdown, or Word document). 
+                                The file content will be evaluated for PoC scoring.
+                            </p>
                         </div>
 
                         <div className="flex gap-4">
@@ -672,7 +693,7 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                                     Cancel
                                 </Button>
                             </Link>
-                            <Button type="submit" className="flex-1" disabled={loading || (!formData.text_content.trim() && !formData.file)}>
+                            <Button type="submit" className="flex-1" disabled={loading || !formData.file}>
                                 {loading ? (
                                     <>
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />

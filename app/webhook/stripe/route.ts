@@ -268,17 +268,23 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
                                     .where(eq(tokenomicsTable.id, 'main'))
                             }
                             
-                            // Check and transition epoch if balance is exhausted (fully allocated)
-                            if (newBalance <= 1000) { // Threshold for "fully allocated"
+                            // Check and transition epoch if allocatable portion (50%) is exhausted
+                            // Note: Only 50% of epoch balance is allocatable, so transition happens
+                            // when the allocatable portion is exhausted (leaving the reserved 50% untouched)
+                            const reservedBalance = currentBalance - allocatableBalance  // The 50% reserved portion
+                            if (newBalance <= (reservedBalance + 1000)) { // Threshold: when allocatable portion is exhausted
                                 const { getOpenEpochInfo } = await import('@/utils/epochs/qualification')
                                 // This will check and transition epoch automatically
                                 await getOpenEpochInfo()
                                 
-                                debug('StripeWebhook', 'Epoch balance exhausted, triggering epoch transition', {
+                                debug('StripeWebhook', 'Allocatable portion (50%) of epoch balance exhausted, triggering epoch transition', {
                                     epoch: qualifiedEpoch,
                                     balanceBefore: currentBalance,
+                                    allocatablePortion: allocatableBalance,
+                                    reservedPortion: reservedBalance,
                                     balanceAfter: newBalance,
-                                    allocated: finalAllocation
+                                    allocated: finalAllocation,
+                                    note: 'Reserved 50% remains untouched for future founder-level contributions'
                                 })
                             }
                             

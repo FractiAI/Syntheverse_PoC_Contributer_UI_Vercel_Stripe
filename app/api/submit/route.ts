@@ -40,13 +40,12 @@ export async function POST(request: NextRequest) {
             )
         }
         
-        if (!text_content || !text_content.trim()) {
-            if (!file) {
-                return NextResponse.json(
-                    { error: 'Either text content or a file is required' },
-                    { status: 400 }
-                )
-            }
+        // File upload is required - text content is no longer accepted
+        if (!file) {
+            return NextResponse.json(
+                { error: 'File upload is required. Please select a file to upload.' },
+                { status: 400 }
+            )
         }
         
         // Check database connection
@@ -91,21 +90,40 @@ export async function POST(request: NextRequest) {
             )
         }
         
+        // Extract text content from uploaded file
+        let fileTextContent = ''
+        let pdf_path: string | null = null
+        
+        if (file) {
+            pdf_path = file.name
+            debug('SubmitContribution', 'File received', { fileName: file.name, size: file.size, type: file.type })
+            
+            try {
+                // Read file content as text
+                const fileBuffer = await file.arrayBuffer()
+                const fileText = Buffer.from(fileBuffer).toString('utf-8')
+                fileTextContent = fileText
+                debug('SubmitContribution', 'File content extracted', { contentLength: fileTextContent.length })
+            } catch (fileError) {
+                debugError('SubmitContribution', 'Failed to read file content', fileError)
+                return NextResponse.json(
+                    { error: 'Failed to read file content. Please ensure the file is a valid text-based format.' },
+                    { status: 400 }
+                )
+            }
+        }
+        
+        // Use file content if available, otherwise fallback to title
+        // (Note: file is required, so fileTextContent should always be present)
+        const textContentForEvaluation = fileTextContent.trim() || title.trim()
+        const textContentForStorage = fileTextContent.trim() || null
+        
         // Calculate content hash
-        const contentToHash = text_content || title
+        const contentToHash = textContentForEvaluation
         const content_hash = crypto
             .createHash('sha256')
             .update(contentToHash.toLowerCase().trim())
             .digest('hex')
-        
-        // Handle file upload if present
-        let pdf_path: string | null = null
-        if (file) {
-            // In production, you'd upload to Supabase Storage or S3
-            // For now, we'll store the file name
-            pdf_path = file.name
-            debug('SubmitContribution', 'File received', { fileName: file.name, size: file.size })
-        }
         
         const startTime = Date.now()
         
@@ -115,7 +133,9 @@ export async function POST(request: NextRequest) {
                 submission_hash,
                 title: title.trim(),
                 contributor: contributor || user.email,
-                has_text_content: !!text_content,
+                has_file: !!file,
+                file_name: file?.name,
+                content_length: textContentForStorage?.length || 0,
                 category: category || 'scientific'
             })
             
@@ -126,7 +146,7 @@ export async function POST(request: NextRequest) {
                 title: title.trim(),
                 contributor: contributor || user.email,
                 content_hash,
-                text_content: text_content?.trim() || null,
+                text_content: textContentForStorage,
                 pdf_path: pdf_path || null,
                 status: 'evaluating', // No drafts - submissions are immediately evaluated
                 category: category || 'scientific',
@@ -193,10 +213,10 @@ export async function POST(request: NextRequest) {
                     title: title.trim(),
                     contributor: contributor || user.email,
                     category: category || 'scientific',
-                    has_text_content: !!text_content,
                     has_file: !!file,
                     file_name: file?.name,
-                    file_size: file?.size
+                    file_size: file?.size,
+                    content_length: textContentForStorage?.length || 0
                 },
                 response_data: {
                     success: true,
@@ -226,10 +246,12 @@ export async function POST(request: NextRequest) {
             evaluationError = new Error('GROK_API_KEY not configured. Evaluation skipped.')
         } else {
             try {
-                const textContent = text_content?.trim() || title.trim()
+                // Use extracted file content for evaluation
+                const textContent = textContentForEvaluation
                 debug('SubmitContribution', 'Starting Grok API evaluation', {
                     textLength: textContent.length,
-                    title: title.trim()
+                    title: title.trim(),
+                    source: 'file_upload'
                 })
                 evaluation = await evaluateWithGrok(textContent, title.trim(), category || undefined, submission_hash)
                 
@@ -317,7 +339,7 @@ export async function POST(request: NextRequest) {
             
                 // Extract archive data (abstract, formulas, constants) for permanent storage in log
                 const { extractArchiveData } = await import('@/utils/archive/extract')
-                const archiveData = extractArchiveData(text_content || '', title.trim())
+                const archiveData = extractArchiveData(textContentForStorage || '', title.trim())
                 
                 // Log evaluation completion with archive data in metadata
                 try {
