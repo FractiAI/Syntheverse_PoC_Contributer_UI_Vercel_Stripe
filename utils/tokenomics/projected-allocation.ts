@@ -22,6 +22,8 @@ export interface ProjectedAllocationResult {
         metal_multiplier: number
         metal_combination: string
         epoch_availability: number
+        allocatable_balance?: number  // 50% of epoch balance available for allocation
+        reserved_balance?: number      // 50% reserved for future contributions
         tier_multiplier: number
         final_amount: number
     }
