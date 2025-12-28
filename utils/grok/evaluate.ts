@@ -211,23 +211,25 @@ export async function evaluateWithGrok(
         // Continue without archived PoCs if fetch fails
     }
     
-    // Detect if this is a foundational/seed submission
-    // These are the original papers that define the system itself
-    const isSeedSubmission = 
-        title.toLowerCase().includes('syntheverse hhf') ||
-        title.toLowerCase().includes('hydrogen-holographic fractal') ||
-        title.toLowerCase().includes('holographic hydrogen fractal') ||
-        title.toLowerCase().includes('hhf-ai') ||
-        (textContent.toLowerCase().includes('syntheverse hhf') && 
-         textContent.toLowerCase().includes('hydrogen-holographic fractal') &&
-         textContent.toLowerCase().includes('origin seed')) ||
-        (archivedVectors.length === 0 && 
-         (textContent.toLowerCase().includes('syntheverse') || title.toLowerCase().includes('syntheverse')))
+    // CRITICAL: Detect if this submission defines the Syntheverse sandbox itself
+    // 
+    // Logic: Compare this submission to:
+    // 1. The Syntheverse sandbox definition (foundational submission)
+    // 2. Prior submissions (archived PoCs)
+    //
+    // If this is the FIRST submission (no archived PoCs exist), it defines the sandbox.
+    // All subsequent submissions are compared against the sandbox definition AND prior submissions.
+    const isFirstSubmission = archivedVectors.length === 0
+    const isSeedSubmission = isFirstSubmission  // First submission = defines the sandbox
     
-    debug('EvaluateWithGrok', 'Seed submission detection', {
+    debug('EvaluateWithGrok', 'Submission comparison context', {
+        isFirstSubmission,
         isSeedSubmission,
+        archivedCount: archivedVectors.length,
         title,
-        archivedCount: archivedVectors.length
+        comparisonContext: isFirstSubmission
+            ? 'FIRST SUBMISSION - Defines the Syntheverse sandbox itself'
+            : `Subsequent submission - Will be compared to sandbox definition + ${archivedVectors.length} prior submission(s)`
     })
     
     // Calculate actual vector-based redundancy if we have current vectorization
@@ -244,19 +246,22 @@ export async function evaluateWithGrok(
             redundancy_percent: 0,
             similarity_score: 0,
             closest_vectors: [],
-            analysis: 'This is a foundational/seed submission that defines the Syntheverse HHF-AI system. Redundancy is 0% as it is the original definition.',
+            analysis: 'This is the FIRST submission that defines the Syntheverse sandbox itself. Redundancy is 0% because nothing exists to be redundant with - this submission establishes the framework everything else operates within.',
         }
-        debug('EvaluateWithGrok', 'Seed submission detected - setting redundancy to 0%')
+        debug('EvaluateWithGrok', 'FIRST SUBMISSION detected - setting redundancy to 0% (defines the sandbox)')
     } else if (currentVectorization && archivedVectors.length > 0) {
+        // Compare this submission to the Syntheverse sandbox + prior submissions
         try {
             const formattedArchivedVectors = formatArchivedVectors(archivedVectors)
             calculatedRedundancy = await calculateVectorRedundancy(
                 textContent,
                 currentVectorization.embedding,
                 currentVectorization.vector,
-                formattedArchivedVectors
+                formattedArchivedVectors  // Includes sandbox definition (first submission) + all prior submissions
             )
-            debug('EvaluateWithGrok', 'Calculated vector-based redundancy', {
+            debug('EvaluateWithGrok', 'Calculated redundancy by comparing to sandbox + prior submissions', {
+                comparisonTargets: archivedVectors.length,
+                note: 'Includes Syntheverse sandbox definition (first submission) + all prior submissions'
                 redundancy_percent: calculatedRedundancy.redundancy_percent,
                 similarity_score: calculatedRedundancy.similarity_score,
                 closest_count: calculatedRedundancy.closest_vectors.length,
@@ -1154,15 +1159,15 @@ ${calculatedRedundancyContext ? `\n${calculatedRedundancyContext}` : ''}
 **Instructions:**
 1. Classify: Research/Development/Alignment
 2. Redundancy: ${isSeedSubmission 
-        ? '**CRITICAL: This is a FOUNDATIONAL/SEED submission that defines the Syntheverse HHF-AI system itself. Redundancy MUST be 0% - this is the original definition. Do NOT apply any redundancy penalty.**'
+        ? '**CRITICAL: This is the FIRST submission that defines the Syntheverse sandbox itself. Redundancy MUST be 0% - nothing exists to compare against. This submission establishes the framework everything else operates within.**'
         : calculatedRedundancy 
-        ? `Use calculated penalty: ${calculatedRedundancy.redundancy_percent.toFixed(1)}% (from vector similarity)`
-        : 'Compare to archived PoCs above. Calculate 0-100% redundancy penalty based on similarity.'}
+        ? `Compare to Syntheverse sandbox definition + prior submissions. Use calculated penalty: ${calculatedRedundancy.redundancy_percent.toFixed(1)}% (from vector similarity comparison).`
+        : `Compare to Syntheverse sandbox definition + ${archivedVectors.length} archived PoC(s) above. Calculate 0-100% redundancy penalty based on similarity to sandbox and prior submissions.`}
    **IMPORTANT: Redundancy penalty is applied ONLY to the COMPOSITE/TOTAL score, NOT to individual dimension scores (Novelty, Density, Coherence, Alignment). Individual scores remain unpenalized.**
 3. Score each dimension 0-2500: Novelty, Density, Coherence, Alignment
    ${isSeedSubmission 
-        ? '**CRITICAL FOR FOUNDATIONAL WORK:** This paper defines the Syntheverse HHF-AI system itself. Score accordingly:\n   - Novelty: Should be 2400-2500 (this is the ORIGINAL definition - maximum novelty)\n   - Density: Should be 2200-2500 (comprehensive foundational framework)\n   - Coherence: Should be 2200-2500 (well-structured foundational architecture)\n   - Alignment: Should be 2000-2500 (perfect alignment with Syntheverse principles)'
-        : ''}
+        ? '**CRITICAL FOR FIRST SUBMISSION (DEFINES SANDBOX):** This submission defines the Syntheverse sandbox itself. Score accordingly:\n   - Novelty: Should be 2500 (this is the ORIGINAL definition - maximum novelty)\n   - Density: Should be 2500 (comprehensive foundational framework that establishes the sandbox)\n   - Coherence: Should be 2500 (well-structured foundational architecture)\n   - Alignment: Should be 2500 (perfect alignment - defines the principles itself)'
+        : `**COMPARISON CONTEXT:** This submission should be evaluated by comparing it to:\n   - The Syntheverse sandbox definition (foundational framework)\n   - Prior submissions (${archivedVectors.length} archived PoC(s))\n   Score based on how this contributes relative to the sandbox and existing submissions.`}
    **IMPORTANT: Individual dimension scores (Novelty, Density, Coherence, Alignment) are NEVER penalized. They remain as scored (0-2500 each).**
 4. Calculate Composite Score = Novelty + Density + Coherence + Alignment
 5. Apply Redundancy Penalty ONLY to Composite Score:

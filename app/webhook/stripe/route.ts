@@ -187,10 +187,12 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
                         const epochBalance = epochBalances[0]
                         const currentBalance = Number(epochBalance.balance)
                         
-                        // Calculate allocation: (pod_score / 10000) * available_epoch_balance
-                        // For 10,000 score = 100% of available tokens
+                        // Calculate allocation: (pod_score / 10000) * (available_epoch_balance / 2)
+                        // For 10,000 score = 50% of available tokens (half reserved for future founder-level contributions)
+                        // This ensures room for further research, development, and alignment work throughout each epoch
                         const scorePercentage = podScore / 10000.0
-                        const baseAllocation = scorePercentage * currentBalance
+                        const allocatableBalance = currentBalance / 2.0  // Only allocate from 50% of available tokens
+                        const baseAllocation = scorePercentage * allocatableBalance
                         
                         // Calculate metal amplification
                         const amplification = calculateMetalAmplification(metals)
@@ -199,14 +201,18 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
                         // Apply metal amplification
                         const amplifiedAllocation = baseAllocation * metalMultiplier
                         
-                        // Final allocation (ensure we don't exceed available balance)
-                        const finalAllocation = Math.min(Math.floor(amplifiedAllocation), currentBalance)
+                        // Final allocation (ensure we don't exceed the allocatable 50% of balance)
+                        // The other 50% remains reserved for future founder-level contributions
+                        const finalAllocation = Math.min(Math.floor(amplifiedAllocation), allocatableBalance)
                         
                         debug('StripeWebhook', 'Allocation calculation', {
                             submissionHash,
                             podScore,
                             scorePercentage: scorePercentage * 100,
                             currentBalance,
+                            allocatableBalance: allocatableBalance,
+                            reservedBalance: currentBalance - allocatableBalance,
+                            note: '50% of epoch balance reserved for future founder-level contributions',
                             baseAllocation,
                             metalMultiplier,
                             amplifiedAllocation,

@@ -133,12 +133,15 @@ export async function calculateProjectedAllocation(
         const amplification = calculateMetalAmplification(metals)
         const metalMultiplier = amplification.multiplier
         
-        // Tokenomics formula: (score/10000) * Available tokens
-        // Convert pod_score (0-10000) to percentage (0-1)
+        // Tokenomics formula: (score/10000) * (Available tokens / 2)
+        // Only 50% of available tokens are allocatable - the other 50% is reserved
+        // for future founder-level contributions (research, development, alignment)
+        // This ensures room for continued development throughout each epoch
         const scorePercentage = podScore / 10000.0
+        const allocatableBalance = epochBalance / 2.0  // Only allocate from 50% of available tokens
         
-        // Base allocation as percentage of available epoch balance
-        const baseAllocation = scorePercentage * epochBalance
+        // Base allocation as percentage of allocatable epoch balance (50% of total)
+        const baseAllocation = scorePercentage * allocatableBalance
         
         // Apply metal amplification
         const amplifiedAllocation = baseAllocation * metalMultiplier
@@ -147,9 +150,9 @@ export async function calculateProjectedAllocation(
         const tierMultiplier = metadata.tokenomics_recommendation?.tier_multiplier || 1.0
         
         // Calculate final allocation with tier multiplier
-        // Cap at epoch availability
+        // Cap at allocatable balance (50% of epoch balance - other 50% reserved for future contributions)
         let finalAmount = Math.floor(amplifiedAllocation * tierMultiplier)
-        finalAmount = Math.min(finalAmount, epochBalance)
+        finalAmount = Math.min(finalAmount, allocatableBalance)
         finalAmount = Math.max(0, finalAmount) // Ensure non-negative
         
         return {
@@ -163,6 +166,8 @@ export async function calculateProjectedAllocation(
                 metal_multiplier: metalMultiplier,
                 metal_combination: amplification.combination,
                 epoch_availability: epochBalance,
+                allocatable_balance: allocatableBalance, // 50% of epoch balance available for allocation
+                reserved_balance: epochBalance - allocatableBalance, // 50% reserved for future contributions
                 tier_multiplier: tierMultiplier,
                 final_amount: finalAmount
             }
