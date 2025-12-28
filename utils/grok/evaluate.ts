@@ -806,7 +806,7 @@ Mark Founder-Eligible
 
 Recommend metal alignment (Gold / Silver / Copper / Hybrid)
 
-Confirm PoC eligible for on-chain registration and token allocation (pending admin approval)
+Confirm PoC eligible for optional on-chain anchoring ($200, pending human approval)
 
 🔹 
 
@@ -978,9 +978,7 @@ Treat all scoring as simulated but rigorous
 
 All redundancy references must be drawn from conversation history only.
 
-🔹 Output Format - CRITICAL: JSON Structure Requirements
-
-**IMPORTANT:** You MUST return a valid JSON object with the EXACT structure below. All numeric scores must be NUMBERS (not strings, not null, not undefined). The JSON must be parseable without any markdown code blocks.
+You MUST include a valid JSON object with the EXACT structure below embedded in your narrative response (you may include it in a markdown code block). All numeric scores must be NUMBERS (not strings, not null, not undefined). The JSON must be parseable.
 
 **Required JSON Structure:**
 {
@@ -1036,26 +1034,8 @@ All redundancy references must be drawn from conversation history only.
 4. **If density has no redundancy penalty, set "redundancy_penalty_percent" to 0** (not null, not undefined)
 5. **All dimension scores (novelty, density, coherence, alignment) must be present** and be numbers
 6. **Total score (total_score and pod_score) must equal the sum of all four dimension final scores**
-7. **Do NOT wrap the JSON in markdown code blocks** - return raw JSON only
-8. **Do NOT include any text before or after the JSON** - only the JSON object
 
-**Example of correct density scoring:**
-"density": {
-    "base_score": 2200,
-    "redundancy_penalty_percent": 0,
-    "final_score": 2200,
-    "score": 2200,
-    "justification": "High information density with comprehensive coverage of the topic"
-}
-
-**Example of INCORRECT density scoring (DO NOT DO THIS):**
-"density": {
-    "base_score": "2200",  // WRONG: string instead of number
-    "final_score": null,    // WRONG: null instead of number
-    "score": undefined      // WRONG: undefined instead of number
-}
-
-Return ONLY the JSON object, no markdown, no code blocks, no explanations outside the JSON.`
+Provide your complete narrative evaluation including the JSON structure for parsing.`
 
     // Format top 3 matching archived PoCs for context (using abstract, formulas, constants)
     // These are the most relevant matches based on similarity
