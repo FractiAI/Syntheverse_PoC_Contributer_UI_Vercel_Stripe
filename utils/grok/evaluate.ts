@@ -68,6 +68,7 @@ export async function evaluateWithGrok(
     base_density?: number
     redundancy_penalty_percent?: number
     density_penalty_percent?: number
+    raw_grok_response?: string
 }> {
     const grokApiKey = process.env.NEXT_PUBLIC_GROK_API_KEY
     if (!grokApiKey) {
