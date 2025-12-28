@@ -732,10 +732,10 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                                          selectedSubmission.metadata.grok_evaluation_details.raw_grok_response.trim().length > 0 && (
                                             <details className="mt-3">
                                                 <summary className="cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground">
-                                                    View Full Grok API Response
+                                                    View Full Response
                                                 </summary>
-                                                <div className="mt-3 p-4 bg-background border rounded-lg">
-                                                    <pre className="whitespace-pre-wrap text-sm overflow-auto max-h-96 font-mono">
+                                                <div className="mt-3 p-4 bg-muted border rounded-lg">
+                                                    <pre className="whitespace-pre-wrap text-sm overflow-auto max-h-96 font-mono text-foreground">
                                                         {selectedSubmission.metadata.grok_evaluation_details.raw_grok_response}
                                                     </pre>
                                                 </div>
@@ -747,7 +747,7 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                                          selectedSubmission.metadata.grok_evaluation_details?.full_evaluation && (
                                             <details className="mt-3">
                                                 <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground">
-                                                    View Full Grok API Response (JSON)
+                                                    View Full Response (JSON)
                                                 </summary>
                                                 <pre className="mt-2 p-3 bg-slate-900 text-slate-100 rounded text-xs overflow-auto max-h-96">
                                                     {JSON.stringify(selectedSubmission.metadata.grok_evaluation_details.full_evaluation, null, 2)}
