@@ -12,7 +12,7 @@ A production-ready web application for the Syntheverse Proof of Contribution sys
   - **Interactive Features**: Click nodes to view details, allocate tokens, register PoCs
   - **Token Allocation**: Dynamic projected allocation display and one-click token allocation
   - **PoC Registration**: Blockchain registration via Stripe checkout ($200 fee)
-- **Secure Authentication**: Supabase-powered auth with Google/GitHub OAuth and email/password
+- **Secure Authentication**: Supabase-powered auth with Google OAuth and email/password
 - **Real-time Dashboard**: Live evaluation status and ecosystem impact visualization
 - **Stripe Integration**: Subscription management, payment processing, and PoC registration
 - **Dark UI Theme**: Minimal, futuristic design inspired by Syntheverse aesthetics
@@ -77,8 +77,6 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 # OAuth (Optional)
 GOOGLE_CLIENT_ID=...
 GOOGLE_CLIENT_SECRET=...
-GITHUB_CLIENT_ID=...
-GITHUB_CLIENT_SECRET=...
 ```
 
 See [docs/deployment/VERCEL_ENV_SETUP.md](docs/deployment/VERCEL_ENV_SETUP.md) for detailed setup instructions.
@@ -112,7 +110,7 @@ Comprehensive documentation is available in the [`docs/`](docs/) directory:
 - **[Deployment Guide](docs/deployment/VERCEL_DEPLOYMENT_GUIDE.md)** - Complete Vercel deployment walkthrough
 - **[3D Map Upgrade Plan](docs/3D_MAP_UPGRADE_PLAN.md)** - Comprehensive 3D map upgrade documentation
 - **[3D Map Implementation Status](docs/3D_MAP_IMPLEMENTATION_STATUS.md)** - Current implementation progress
-- **[OAuth Setup](docs/oauth/OAUTH_QUICK_SETUP.md)** - Google and GitHub OAuth configuration
+- **[OAuth Setup](docs/oauth/OAUTH_QUICK_SETUP.md)** - Google OAuth configuration
 - **[Stripe Setup](docs/stripe/STRIPE_WEBHOOK_SETUP.md)** - Payment and webhook configuration
 - **[Testing Guide](docs/testing/TESTING_PLAN.md)** - Testing strategies and debugging
 - **[Supabase Setup](docs/supabase/)** - Database and authentication configuration

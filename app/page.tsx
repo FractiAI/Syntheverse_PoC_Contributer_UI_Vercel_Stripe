@@ -148,7 +148,7 @@ export default async function LandingPage() {
                   </div>
                   <h3 className="text-xl font-bold">Secure Authentication</h3>
                   <p className="text-muted-foreground text-center">
-                    Supabase-powered auth with Google, GitHub OAuth and email/password options
+                    Supabase-powered auth with Google OAuth and email/password options
                   </p>
                 </div>
               </CardContent>

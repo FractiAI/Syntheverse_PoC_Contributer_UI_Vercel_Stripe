@@ -170,23 +170,5 @@ export async function signInWithGoogle() {
 }
 
 
-export async function signInWithGithub() {
-    const supabase = createClient()
-    const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'github',
-        options: {
-            redirectTo: `${PUBLIC_URL}/auth/callback`,
-        },
-    })
-
-    if (error) {
-        console.error("GitHub OAuth error:", error)
-        redirect(`/login?error=${encodeURIComponent(error.message)}`)
-    }
-
-    if (data.url) {
-        redirect(data.url)
-    }
-    
-    redirect('/login?error=oauth_failed')
-}
+// GitHub OAuth has been disabled - function removed
+// export async function signInWithGithub() { ... }
