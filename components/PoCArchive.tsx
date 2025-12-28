@@ -827,8 +827,16 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                             {/* Blockchain Registration Certificate */}
                             {selectedSubmission.registered && (
                                 <div className="pt-4 border-t">
-                                    <div className="text-sm font-semibold mb-3">Blockchain Registration</div>
+                                    <div className="text-sm font-semibold mb-3">Registration & Allocation</div>
                                     <div className="space-y-2 text-sm">
+                                        {selectedSubmission.allocation_amount !== null && selectedSubmission.allocation_amount > 0 && (
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-muted-foreground">SYNTH Token Allocation:</span>
+                                                <span className="font-mono font-semibold text-foreground">
+                                                    {formatAllocation(selectedSubmission.allocation_amount)}
+                                                </span>
+                                            </div>
+                                        )}
                                         {selectedSubmission.registration_tx_hash && (
                                             <div className="flex items-center justify-between">
                                                 <span className="text-muted-foreground">Transaction Hash:</span>
