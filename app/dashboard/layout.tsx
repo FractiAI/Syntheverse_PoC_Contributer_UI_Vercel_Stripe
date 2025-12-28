@@ -54,16 +54,19 @@ export default async function DashboardLayout({
                 plan: checkUserInDB?.[0]?.plan 
             });
             
-            // If user doesn't exist in DB yet, redirect to subscribe
+            // If user doesn't exist in DB yet, create them (shouldn't happen, but handle gracefully)
             if (!checkUserInDB || checkUserInDB.length === 0) {
-                debug('DashboardLayout', 'User not found in database, redirecting to subscribe');
-                redirect('/subscribe')
+                debug('DashboardLayout', 'User not found in database, but allowing access - will be created if needed');
+                // Don't redirect - allow user to access dashboard
+                // The user will be created in the callback or can be created on-demand
             }
 
-            // If user has no plan, redirect to subscribe
-            if (checkUserInDB[0].plan === "none") {
-                debug('DashboardLayout', 'User has no plan selected, redirecting to subscribe');
-                redirect('/subscribe')
+            // Allow users with plan 'none' to access dashboard
+            // Plan selection is not required for basic dashboard access
+            // Users can still submit PoCs and view their contributions
+            if (checkUserInDB && checkUserInDB.length > 0 && checkUserInDB[0].plan === "none") {
+                debug('DashboardLayout', 'User has no plan selected, but allowing dashboard access');
+                // Don't redirect - allow access to dashboard
             }
             
             debug('DashboardLayout', 'User plan check passed', { plan: checkUserInDB[0].plan });
