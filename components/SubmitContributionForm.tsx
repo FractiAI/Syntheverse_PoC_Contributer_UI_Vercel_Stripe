@@ -548,44 +548,114 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                                                             </div>
                                                         )}
 
-                                                        {/* Full Grok Evaluation Details */}
-                                                        {evaluationStatus.evaluation.grok_evaluation_details && (
+                                                        {/* Detailed Evaluation Report - Review and Scoring */}
+                                                        {evaluationStatus.evaluation && (
                                                             <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg">
                                                                 <div className="text-sm font-semibold text-slate-800 mb-3">Detailed Evaluation Report</div>
-                                                                <div className="space-y-3 text-sm">
-                                                                    {evaluationStatus.evaluation.grok_evaluation_details.base_novelty !== undefined && (
-                                                                        <div className="flex justify-between items-center p-2 bg-white rounded border">
-                                                                            <span className="text-muted-foreground">Base Novelty Score:</span>
-                                                                            <span className="font-semibold">{evaluationStatus.evaluation.grok_evaluation_details.base_novelty.toLocaleString()} / 2,500</span>
+                                                                <div className="space-y-4 text-sm">
+                                                                    {/* Evaluation Review */}
+                                                                    {evaluationStatus.evaluation.redundancy_analysis && (
+                                                                        <div className="p-3 bg-white rounded-lg border">
+                                                                            <div className="font-semibold mb-2 text-slate-700">Evaluation Review</div>
+                                                                            <div className="text-slate-800 whitespace-pre-wrap">
+                                                                                {evaluationStatus.evaluation.redundancy_analysis}
+                                                                            </div>
                                                                         </div>
                                                                     )}
-                                                                    {evaluationStatus.evaluation.grok_evaluation_details.base_density !== undefined && (
-                                                                        <div className="flex justify-between items-center p-2 bg-white rounded border">
-                                                                            <span className="text-muted-foreground">Base Density Score:</span>
-                                                                            <span className="font-semibold">{evaluationStatus.evaluation.grok_evaluation_details.base_density.toLocaleString()} / 2,500</span>
+                                                                    
+                                                                    {/* Metal Justification */}
+                                                                    {evaluationStatus.evaluation.metal_justification && (
+                                                                        <div className="p-3 bg-white rounded-lg border">
+                                                                            <div className="font-semibold mb-2 text-slate-700">Metal Assignment</div>
+                                                                            <div className="text-slate-800 whitespace-pre-wrap">
+                                                                                {evaluationStatus.evaluation.metal_justification}
+                                                                            </div>
                                                                         </div>
                                                                     )}
-                                                                    {evaluationStatus.evaluation.grok_evaluation_details.redundancy_penalty_percent !== undefined && (
-                                                                        <div className="flex justify-between items-center p-2 bg-white rounded border">
-                                                                            <span className="text-muted-foreground">Redundancy Penalty:</span>
-                                                                            <span className="font-semibold text-orange-600">{evaluationStatus.evaluation.grok_evaluation_details.redundancy_penalty_percent.toFixed(1)}%</span>
+                                                                    
+                                                                    {/* Scoring Breakdown */}
+                                                                    {evaluationStatus.evaluation.grok_evaluation_details && (
+                                                                        <div className="p-3 bg-white rounded-lg border">
+                                                                            <div className="font-semibold mb-3 text-slate-700">Scoring Breakdown</div>
+                                                                            <div className="space-y-2 text-sm">
+                                                                                {/* Base Scores */}
+                                                                                <div className="grid grid-cols-2 gap-3">
+                                                                                    {evaluationStatus.evaluation.grok_evaluation_details.base_novelty !== undefined && (
+                                                                                        <div className="p-2 bg-slate-50 rounded border">
+                                                                                            <div className="text-xs text-slate-600 mb-1">Base Novelty</div>
+                                                                                            <div className="font-semibold">{evaluationStatus.evaluation.grok_evaluation_details.base_novelty.toLocaleString()} / 2,500</div>
+                                                                                            <div className="text-xs text-slate-600 mt-1">Final: {evaluationStatus.evaluation.novelty?.toLocaleString() || 'N/A'} / 2,500</div>
+                                                                                        </div>
+                                                                                    )}
+                                                                                    {evaluationStatus.evaluation.grok_evaluation_details.base_density !== undefined && (
+                                                                                        <div className="p-2 bg-slate-50 rounded border">
+                                                                                            <div className="text-xs text-slate-600 mb-1">Base Density</div>
+                                                                                            <div className="font-semibold">{evaluationStatus.evaluation.grok_evaluation_details.base_density.toLocaleString()} / 2,500</div>
+                                                                                            <div className="text-xs text-slate-600 mt-1">Final: {evaluationStatus.evaluation.density?.toLocaleString() || 'N/A'} / 2,500</div>
+                                                                                        </div>
+                                                                                    )}
+                                                                                </div>
+                                                                                
+                                                                                {/* Coherence and Alignment */}
+                                                                                <div className="grid grid-cols-2 gap-3">
+                                                                                    <div className="p-2 bg-slate-50 rounded border">
+                                                                                        <div className="text-xs text-slate-600 mb-1">Coherence</div>
+                                                                                        <div className="font-semibold">{evaluationStatus.evaluation.coherence?.toLocaleString() || 'N/A'} / 2,500</div>
+                                                                                    </div>
+                                                                                    <div className="p-2 bg-slate-50 rounded border">
+                                                                                        <div className="text-xs text-slate-600 mb-1">Alignment</div>
+                                                                                        <div className="font-semibold">{evaluationStatus.evaluation.alignment?.toLocaleString() || 'N/A'} / 2,500</div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                
+                                                                                {/* Penalties Applied */}
+                                                                                {(evaluationStatus.evaluation.grok_evaluation_details.redundancy_penalty_percent !== undefined || 
+                                                                                  evaluationStatus.evaluation.grok_evaluation_details.density_penalty_percent !== undefined) && (
+                                                                                    <div className="pt-2 border-t">
+                                                                                        <div className="text-xs text-slate-600 mb-2">Penalties Applied</div>
+                                                                                        <div className="space-y-1">
+                                                                                            {evaluationStatus.evaluation.grok_evaluation_details.redundancy_penalty_percent !== undefined && (
+                                                                                                <div className="flex justify-between items-center text-xs">
+                                                                                                    <span className="text-slate-600">Redundancy Penalty:</span>
+                                                                                                    <span className="font-semibold text-orange-600">
+                                                                                                        {evaluationStatus.evaluation.grok_evaluation_details.redundancy_penalty_percent.toFixed(1)}%
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                            )}
+                                                                                            {evaluationStatus.evaluation.grok_evaluation_details.density_penalty_percent !== undefined && (
+                                                                                                <div className="flex justify-between items-center text-xs">
+                                                                                                    <span className="text-slate-600">Density Penalty:</span>
+                                                                                                    <span className="font-semibold text-orange-600">
+                                                                                                        {evaluationStatus.evaluation.grok_evaluation_details.density_penalty_percent.toFixed(1)}%
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                            )}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                )}
+                                                                                
+                                                                                {/* Final PoD Score */}
+                                                                                <div className="pt-2 border-t">
+                                                                                    <div className="flex justify-between items-center">
+                                                                                        <span className="text-slate-700 font-medium">Final PoD Score</span>
+                                                                                        <span className="font-bold text-lg">{evaluationStatus.podScore?.toLocaleString() || 'N/A'} / 10,000</span>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     )}
-                                                                    {evaluationStatus.evaluation.grok_evaluation_details.density_penalty_percent !== undefined && (
-                                                                        <div className="flex justify-between items-center p-2 bg-white rounded border">
-                                                                            <span className="text-muted-foreground">Density Penalty:</span>
-                                                                            <span className="font-semibold text-orange-600">{evaluationStatus.evaluation.grok_evaluation_details.density_penalty_percent.toFixed(1)}%</span>
-                                                                        </div>
+                                                                    
+                                                                    {/* Full JSON Response - Collapsible */}
+                                                                    {evaluationStatus.evaluation.grok_evaluation_details?.full_evaluation && (
+                                                                        <details className="mt-3">
+                                                                            <summary className="cursor-pointer text-xs text-slate-600 hover:text-slate-800">
+                                                                                View Full Grok API Response (JSON)
+                                                                            </summary>
+                                                                            <pre className="mt-2 p-3 bg-slate-900 text-slate-100 rounded text-xs overflow-auto max-h-96">
+                                                                                {JSON.stringify(evaluationStatus.evaluation.grok_evaluation_details.full_evaluation, null, 2)}
+                                                                            </pre>
+                                                                        </details>
                                                                     )}
-                                                                    {/* Full evaluation object for debugging/inspection */}
-                                                                    <details className="mt-3">
-                                                                        <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground">
-                                                                            View Full Grok API Response (JSON)
-                                                                        </summary>
-                                                                        <pre className="mt-2 p-3 bg-slate-900 text-slate-100 rounded text-xs overflow-auto max-h-96">
-                                                                            {JSON.stringify(evaluationStatus.evaluation.grok_evaluation_details.full_evaluation || evaluationStatus.evaluation, null, 2)}
-                                                                        </pre>
-                                                                    </details>
                                                                 </div>
                                                             </div>
                                                         )}

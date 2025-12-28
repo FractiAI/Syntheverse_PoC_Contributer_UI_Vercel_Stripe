@@ -609,51 +609,134 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                                 </div>
                             </div>
 
-                            {/* Detailed Evaluation Report */}
-                            {(selectedSubmission.metadata?.grok_evaluation_details || selectedSubmission.grok_evaluation_details) && (
+                            {/* Detailed Evaluation Report - Review and Scoring */}
+                            {selectedSubmission.metadata && (
                                 <div className="pt-4 border-t">
                                     <div className="text-sm font-semibold mb-3">Detailed Evaluation Report</div>
-                                    <div className="space-y-3 text-sm">
-                                        {(() => {
-                                            const details = selectedSubmission.metadata?.grok_evaluation_details || selectedSubmission.grok_evaluation_details
-                                            return (
-                                                <>
-                                                    {details.base_novelty !== undefined && (
-                                                        <div className="flex justify-between items-center p-2 bg-muted rounded border">
-                                                            <span className="text-muted-foreground">Base Novelty Score:</span>
-                                                            <span className="font-semibold">{details.base_novelty.toLocaleString()} / 2,500</span>
+                                    <div className="space-y-4 text-sm">
+                                        {/* Evaluation Review Text */}
+                                        {selectedSubmission.metadata.redundancy_analysis && (
+                                            <div className="p-3 bg-muted rounded-lg">
+                                                <div className="font-semibold mb-2 text-muted-foreground">Evaluation Review</div>
+                                                <div className="text-foreground whitespace-pre-wrap">
+                                                    {selectedSubmission.metadata.redundancy_analysis}
+                                                </div>
+                                            </div>
+                                        )}
+                                        
+                                        {/* Metal Justification */}
+                                        {selectedSubmission.metadata.metal_justification && (
+                                            <div className="p-3 bg-muted rounded-lg">
+                                                <div className="font-semibold mb-2 text-muted-foreground">Metal Assignment</div>
+                                                <div className="text-foreground whitespace-pre-wrap">
+                                                    {selectedSubmission.metadata.metal_justification}
+                                                </div>
+                                            </div>
+                                        )}
+                                        
+                                        {/* Scoring Breakdown */}
+                                        {selectedSubmission.metadata.grok_evaluation_details && (
+                                            <div className="p-3 bg-muted rounded-lg">
+                                                <div className="font-semibold mb-3 text-muted-foreground">Scoring Breakdown</div>
+                                                <div className="space-y-2 text-sm">
+                                                    {/* Base Scores */}
+                                                    <div className="grid grid-cols-2 gap-3">
+                                                        {selectedSubmission.metadata.grok_evaluation_details.base_novelty !== undefined && (
+                                                            <div className="p-2 bg-background rounded border">
+                                                                <div className="text-xs text-muted-foreground mb-1">Base Novelty</div>
+                                                                <div className="font-semibold">{selectedSubmission.metadata.grok_evaluation_details.base_novelty.toLocaleString()} / 2,500</div>
+                                                                <div className="text-xs text-muted-foreground mt-1">Final: {selectedSubmission.novelty?.toLocaleString() || 'N/A'} / 2,500</div>
+                                                            </div>
+                                                        )}
+                                                        {selectedSubmission.metadata.grok_evaluation_details.base_density !== undefined && (
+                                                            <div className="p-2 bg-background rounded border">
+                                                                <div className="text-xs text-muted-foreground mb-1">Base Density</div>
+                                                                <div className="font-semibold">{selectedSubmission.metadata.grok_evaluation_details.base_density.toLocaleString()} / 2,500</div>
+                                                                <div className="text-xs text-muted-foreground mt-1">Final: {selectedSubmission.density?.toLocaleString() || 'N/A'} / 2,500</div>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    
+                                                    {/* Coherence and Alignment */}
+                                                    <div className="grid grid-cols-2 gap-3">
+                                                        <div className="p-2 bg-background rounded border">
+                                                            <div className="text-xs text-muted-foreground mb-1">Coherence</div>
+                                                            <div className="font-semibold">{selectedSubmission.coherence?.toLocaleString() || 'N/A'} / 2,500</div>
+                                                        </div>
+                                                        <div className="p-2 bg-background rounded border">
+                                                            <div className="text-xs text-muted-foreground mb-1">Alignment</div>
+                                                            <div className="font-semibold">{selectedSubmission.alignment?.toLocaleString() || 'N/A'} / 2,500</div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    {/* Penalties Applied */}
+                                                    {(selectedSubmission.metadata.grok_evaluation_details.redundancy_penalty_percent !== undefined || 
+                                                      selectedSubmission.metadata.grok_evaluation_details.density_penalty_percent !== undefined) && (
+                                                        <div className="pt-2 border-t">
+                                                            <div className="text-xs text-muted-foreground mb-2">Penalties Applied</div>
+                                                            <div className="space-y-1">
+                                                                {selectedSubmission.metadata.grok_evaluation_details.redundancy_penalty_percent !== undefined && (
+                                                                    <div className="flex justify-between items-center text-xs">
+                                                                        <span className="text-muted-foreground">Redundancy Penalty:</span>
+                                                                        <span className="font-semibold text-orange-600">
+                                                                            {selectedSubmission.metadata.grok_evaluation_details.redundancy_penalty_percent.toFixed(1)}%
+                                                                        </span>
+                                                                    </div>
+                                                                )}
+                                                                {selectedSubmission.metadata.grok_evaluation_details.density_penalty_percent !== undefined && (
+                                                                    <div className="flex justify-between items-center text-xs">
+                                                                        <span className="text-muted-foreground">Density Penalty:</span>
+                                                                        <span className="font-semibold text-orange-600">
+                                                                            {selectedSubmission.metadata.grok_evaluation_details.density_penalty_percent.toFixed(1)}%
+                                                                        </span>
+                                                                    </div>
+                                                                )}
+                                                            </div>
                                                         </div>
                                                     )}
-                                                    {details.base_density !== undefined && (
-                                                        <div className="flex justify-between items-center p-2 bg-muted rounded border">
-                                                            <span className="text-muted-foreground">Base Density Score:</span>
-                                                            <span className="font-semibold">{details.base_density.toLocaleString()} / 2,500</span>
+                                                    
+                                                    {/* Final PoD Score */}
+                                                    <div className="pt-2 border-t">
+                                                        <div className="flex justify-between items-center">
+                                                            <span className="text-muted-foreground font-medium">Final PoD Score</span>
+                                                            <span className="font-bold text-lg">{selectedSubmission.pod_score?.toLocaleString() || 'N/A'} / 10,000</span>
                                                         </div>
-                                                    )}
-                                                    {details.redundancy_penalty_percent !== undefined && (
-                                                        <div className="flex justify-between items-center p-2 bg-muted rounded border">
-                                                            <span className="text-muted-foreground">Redundancy Penalty:</span>
-                                                            <span className="font-semibold text-orange-600">{details.redundancy_penalty_percent.toFixed(1)}%</span>
-                                                        </div>
-                                                    )}
-                                                    {details.density_penalty_percent !== undefined && (
-                                                        <div className="flex justify-between items-center p-2 bg-muted rounded border">
-                                                            <span className="text-muted-foreground">Density Penalty:</span>
-                                                            <span className="font-semibold text-orange-600">{details.density_penalty_percent.toFixed(1)}%</span>
-                                                        </div>
-                                                    )}
-                                                    {/* Full evaluation object for debugging/inspection */}
-                                                    <details className="mt-3">
-                                                        <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground">
-                                                            View Full Grok API Response (JSON)
-                                                        </summary>
-                                                        <pre className="mt-2 p-3 bg-slate-900 text-slate-100 rounded text-xs overflow-auto max-h-96">
-                                                            {JSON.stringify(details.full_evaluation || selectedSubmission.metadata, null, 2)}
-                                                        </pre>
-                                                    </details>
-                                                </>
-                                            )
-                                        })()}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+                                        
+                                        {/* Tokenomics Recommendation */}
+                                        {selectedSubmission.metadata.tokenomics_recommendation?.allocation_notes && (
+                                            <div className="p-3 bg-muted rounded-lg">
+                                                <div className="font-semibold mb-2 text-muted-foreground">Allocation Recommendation</div>
+                                                <div className="text-foreground whitespace-pre-wrap">
+                                                    {selectedSubmission.metadata.tokenomics_recommendation.allocation_notes}
+                                                </div>
+                                            </div>
+                                        )}
+                                        
+                                        {/* Founder Certificate */}
+                                        {selectedSubmission.metadata.founder_certificate && (
+                                            <div className="p-3 bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+                                                <div className="font-semibold mb-2 text-yellow-800 dark:text-yellow-200">Founder Certificate</div>
+                                                <div className="text-yellow-900 dark:text-yellow-100 whitespace-pre-wrap">
+                                                    {selectedSubmission.metadata.founder_certificate}
+                                                </div>
+                                            </div>
+                                        )}
+                                        
+                                        {/* Full JSON Response - Collapsible */}
+                                        {selectedSubmission.metadata.grok_evaluation_details?.full_evaluation && (
+                                            <details className="mt-3">
+                                                <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground">
+                                                    View Full Grok API Response (JSON)
+                                                </summary>
+                                                <pre className="mt-2 p-3 bg-slate-900 text-slate-100 rounded text-xs overflow-auto max-h-96">
+                                                    {JSON.stringify(selectedSubmission.metadata.grok_evaluation_details.full_evaluation, null, 2)}
+                                                </pre>
+                                            </details>
+                                        )}
                                     </div>
                                 </div>
                             )}
