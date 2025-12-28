@@ -30,8 +30,9 @@ export default async function DashboardLayout({
         debug('DashboardLayout', 'Supabase client created');
 
         // Get cookies for debugging
-        const cookieStore = await import('next/headers').then(m => m.cookies())
-        const allCookies = cookieStore.getAll()
+        const { cookies: cookieStore } = await import('next/headers')
+        const cookieStoreInstance = cookieStore()
+        const allCookies = cookieStoreInstance.getAll()
         const authCookies = allCookies.filter(c => c.name.includes('auth-token'))
         debug('DashboardLayout', 'Cookies check', { 
             totalCookies: allCookies.length,
