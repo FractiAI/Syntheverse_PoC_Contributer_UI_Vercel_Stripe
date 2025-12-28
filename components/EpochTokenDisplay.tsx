@@ -35,14 +35,25 @@ export function EpochTokenDisplay() {
         
         if (registrationStatus === 'success') {
             // Poll for updated epoch balances (webhook may take a few seconds)
+            let pollCount = 0
+            const maxPolls = 15 // Poll for up to 15 seconds
+            
             const pollInterval = setInterval(() => {
+                pollCount++
+                console.log(`[EpochInfo Poll ${pollCount}/${maxPolls}] Refreshing epoch info`)
                 fetchEpochInfo()
+                
+                // Stop polling after max attempts
+                if (pollCount >= maxPolls) {
+                    console.log('[EpochInfo Poll] Stopped polling after max attempts')
+                    clearInterval(pollInterval)
+                }
             }, 1000)
             
-            // Stop polling after 10 seconds
-            setTimeout(() => {
+            // Cleanup function to clear interval if component unmounts
+            return () => {
                 clearInterval(pollInterval)
-            }, 10000)
+            }
         }
     }, [])
 
@@ -201,7 +212,7 @@ export function EpochTokenDisplay() {
                                             {formatTokens(epochData.balance)}
                                         </div>
                                         <div className="text-xs text-muted-foreground mt-1">
-                                            {epochData.distribution_percent}% of total supply
+                                            {epochData.distribution_percent.toFixed(1)}% of total supply
                                         </div>
                                     </div>
                                 )
@@ -210,12 +221,10 @@ export function EpochTokenDisplay() {
                     </div>
 
                     {/* Total Available */}
-                    <div className="pt-2 border-t">
+                    <div className="pt-4 border-t">
                         <div className="flex items-center justify-between">
                             <span className="text-sm font-semibold">Total Available for Allocation</span>
-                            <span className="text-xl font-bold text-green-600 dark:text-green-400">
-                                {formatTokens(totalAvailable)} SYNTH
-                            </span>
+                            <span className="text-2xl font-bold">{formatTokens(totalAvailable)} SYNTH</span>
                         </div>
                     </div>
                 </div>
@@ -223,4 +232,3 @@ export function EpochTokenDisplay() {
         </Card>
     )
 }
-
