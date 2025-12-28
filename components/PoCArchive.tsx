@@ -44,6 +44,13 @@ interface PoCSubmission {
     updated_at: string
     text_content?: string
     metadata?: any
+    grok_evaluation_details?: {
+        base_novelty?: number
+        base_density?: number
+        redundancy_penalty_percent?: number
+        density_penalty_percent?: number
+        full_evaluation?: any
+    }
 }
 
 interface PoCArchiveProps {
@@ -601,6 +608,55 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                                     )}
                                 </div>
                             </div>
+
+                            {/* Detailed Evaluation Report */}
+                            {(selectedSubmission.metadata?.grok_evaluation_details || selectedSubmission.grok_evaluation_details) && (
+                                <div className="pt-4 border-t">
+                                    <div className="text-sm font-semibold mb-3">Detailed Evaluation Report</div>
+                                    <div className="space-y-3 text-sm">
+                                        {(() => {
+                                            const details = selectedSubmission.metadata?.grok_evaluation_details || selectedSubmission.grok_evaluation_details
+                                            return (
+                                                <>
+                                                    {details.base_novelty !== undefined && (
+                                                        <div className="flex justify-between items-center p-2 bg-muted rounded border">
+                                                            <span className="text-muted-foreground">Base Novelty Score:</span>
+                                                            <span className="font-semibold">{details.base_novelty.toLocaleString()} / 2,500</span>
+                                                        </div>
+                                                    )}
+                                                    {details.base_density !== undefined && (
+                                                        <div className="flex justify-between items-center p-2 bg-muted rounded border">
+                                                            <span className="text-muted-foreground">Base Density Score:</span>
+                                                            <span className="font-semibold">{details.base_density.toLocaleString()} / 2,500</span>
+                                                        </div>
+                                                    )}
+                                                    {details.redundancy_penalty_percent !== undefined && (
+                                                        <div className="flex justify-between items-center p-2 bg-muted rounded border">
+                                                            <span className="text-muted-foreground">Redundancy Penalty:</span>
+                                                            <span className="font-semibold text-orange-600">{details.redundancy_penalty_percent.toFixed(1)}%</span>
+                                                        </div>
+                                                    )}
+                                                    {details.density_penalty_percent !== undefined && (
+                                                        <div className="flex justify-between items-center p-2 bg-muted rounded border">
+                                                            <span className="text-muted-foreground">Density Penalty:</span>
+                                                            <span className="font-semibold text-orange-600">{details.density_penalty_percent.toFixed(1)}%</span>
+                                                        </div>
+                                                    )}
+                                                    {/* Full evaluation object for debugging/inspection */}
+                                                    <details className="mt-3">
+                                                        <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground">
+                                                            View Full Grok API Response (JSON)
+                                                        </summary>
+                                                        <pre className="mt-2 p-3 bg-slate-900 text-slate-100 rounded text-xs overflow-auto max-h-96">
+                                                            {JSON.stringify(details.full_evaluation || selectedSubmission.metadata, null, 2)}
+                                                        </pre>
+                                                    </details>
+                                                </>
+                                            )
+                                        })()}
+                                    </div>
+                                </div>
+                            )}
 
                             {/* Metadata */}
                             <div className="grid grid-cols-2 gap-4 text-sm">

@@ -138,7 +138,15 @@ export async function POST(
                     tokenomics_recommendation: evaluation.tokenomics_recommendation,
                     qualified_founder: qualified,
                     qualified_epoch: openEpochUsed || evaluation.qualified_epoch || null, // Store the open epoch used to qualify
-                    allocation_status: qualified ? 'pending_admin_approval' : 'not_qualified' // Token allocation requires admin approval
+                    allocation_status: qualified ? 'pending_admin_approval' : 'not_qualified', // Token allocation requires admin approval
+                    // Store detailed Grok evaluation details for detailed report
+                    grok_evaluation_details: {
+                        base_novelty: evaluation.base_novelty,
+                        base_density: evaluation.base_density,
+                        redundancy_penalty_percent: evaluation.redundancy_penalty_percent,
+                        density_penalty_percent: evaluation.density_penalty_percent,
+                        full_evaluation: evaluation // Store full evaluation object
+                    }
                 },
                 // Store vector embedding and 3D coordinates if available
                 embedding: vectorizationResult ? vectorizationResult.embedding : undefined,
