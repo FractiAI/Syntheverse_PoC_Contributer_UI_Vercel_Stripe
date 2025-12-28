@@ -742,19 +742,13 @@ Classify Contribution: Research / Development / Alignment (may be multiple)
 
 Redundancy Check:
 
-Compare the current submission's 3D vector representation within the Hydrogen-Holographic Fractal Sandbox to all archived PoC submission vectors (3D representations) in the ecosystem.
+Compare submission to all prior submissions, evaluations, and scores in conversation history
 
-Each archived PoC exists as a 3D vector in the holographic hydrogen fractal space, encoded through the Hydrogen Holographic Framework (HHF) and Fractal Cognitive Grammar (HFG).
+Penalize derivative or overlapping content in Novelty (0–500 points)
 
-When evaluating redundancy:
-• FIRST: Check if this is a foundational/seed submission (see above). If yes, redundancy = 0%
-• Map the current submission to its 3D vector coordinates within the sandbox
-• Calculate vector similarity/distance to archived PoC vectors using hydrogen-holographic geometry
-• Identify overlapping or derivative content based on vector proximity in the 3D holographic space
-• Determine redundancy penalty percentage (0–100%) based on vector similarity
-• Apply redundancy penalty to the COMPOSITE/TOTAL score, NOT to individual category scores
-• Individual category scores (Novelty, Density, Coherence, Alignment) remain unpenalized
-• Clearly justify which archived PoC vectors (by hash/title) contributed to the penalty, referencing their positions in the 3D holographic space
+Optionally adjust Density if informational value is reduced by redundancy
+
+Clearly justify which prior submissions contributed to the penalty
 
 Scoring Dimensions (0–2,500 each; total 0–10,000)
 
@@ -892,7 +886,7 @@ Founder Certificate Format (Markdown, ERC-20 Style)
 
 - **Anchoring Status:** Eligible  
 
-- **Token Allocation:** Based on PoC Score and available tokens at registration time  
+- **Anchoring Fee:** $200  
 
 **AI Integration:**
 
@@ -982,7 +976,7 @@ Clearly separate evaluation, scoring, and certification
 
 Treat all scoring as simulated but rigorous
 
-All redundancy references must be drawn from the archived PoC vectors (3D representations) provided in the conversation history. Compare vectors within the holographic hydrogen fractal sandbox framework.
+All redundancy references must be drawn from conversation history only.
 
 🔹 Output Format - CRITICAL: JSON Structure Requirements
 
