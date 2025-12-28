@@ -95,13 +95,54 @@ export async function GET(request: NextRequest) {
         // Format epoch data
         const epochs: Record<string, any> = {}
         epochBalances.forEach(epoch => {
+            // Convert numeric strings to numbers, handling null/undefined
+            // Drizzle returns numeric as strings, so we need to parse them
+            let balance = 0
+            let threshold = 0
+            let distributionAmount = 0
+            let distributionPercent = 0
+            
+            try {
+                // Convert to string first, then parse as float
+                balance = epoch.balance ? parseFloat(String(epoch.balance)) : 0
+                threshold = epoch.threshold ? parseFloat(String(epoch.threshold)) : 0
+                distributionAmount = epoch.distribution_amount ? parseFloat(String(epoch.distribution_amount)) : 0
+                distributionPercent = epoch.distribution_percent ? parseFloat(String(epoch.distribution_percent)) : 0
+                
+                // Verify conversion worked (check for NaN)
+                if (isNaN(balance)) {
+                    debug('EpochInfo', 'Failed to parse balance', { 
+                        epoch: epoch.epoch, 
+                        rawBalance: epoch.balance,
+                        balanceType: typeof epoch.balance 
+                    })
+                    balance = 0
+                }
+            } catch (error) {
+                debug('EpochInfo', 'Error parsing epoch balance', { 
+                    epoch: epoch.epoch, 
+                    error,
+                    rawBalance: epoch.balance 
+                })
+            }
+            
             epochs[epoch.epoch] = {
-                balance: Number(epoch.balance),
-                threshold: Number(epoch.threshold),
-                distribution_amount: Number(epoch.distribution_amount),
-                distribution_percent: Number(epoch.distribution_percent),
+                balance: balance,
+                threshold: threshold,
+                distribution_amount: distributionAmount,
+                distribution_percent: distributionPercent,
                 available_tiers: [] // Can be populated later
             }
+        })
+        
+        // Debug: Log the balances being returned
+        debug('EpochInfo', 'Formatted epoch balances', {
+            epochCount: epochBalances.length,
+            epochs: Object.keys(epochs),
+            balances: Object.fromEntries(
+                Object.entries(epochs).map(([key, value]) => [key, value.balance])
+            ),
+            rawBalances: epochBalances.map(e => ({ epoch: e.epoch, balance: e.balance, balanceType: typeof e.balance }))
         })
         
         const epochInfo = {
