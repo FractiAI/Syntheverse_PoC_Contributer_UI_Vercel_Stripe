@@ -726,8 +726,23 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                                             </div>
                                         )}
                                         
-                                        {/* Full JSON Response - Collapsible */}
-                                        {selectedSubmission.metadata.grok_evaluation_details?.full_evaluation && (
+                                        {/* Full Grok API Response - Markdown/Text */}
+                                        {selectedSubmission.metadata.grok_evaluation_details?.raw_grok_response && (
+                                            <details className="mt-3">
+                                                <summary className="cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground">
+                                                    View Full Grok API Response
+                                                </summary>
+                                                <div className="mt-3 p-4 bg-background border rounded-lg">
+                                                    <pre className="whitespace-pre-wrap text-sm overflow-auto max-h-96 font-mono">
+                                                        {selectedSubmission.metadata.grok_evaluation_details.raw_grok_response}
+                                                    </pre>
+                                                </div>
+                                            </details>
+                                        )}
+                                        
+                                        {/* Fallback to JSON if raw response not available */}
+                                        {!selectedSubmission.metadata.grok_evaluation_details?.raw_grok_response && 
+                                         selectedSubmission.metadata.grok_evaluation_details?.full_evaluation && (
                                             <details className="mt-3">
                                                 <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground">
                                                     View Full Grok API Response (JSON)

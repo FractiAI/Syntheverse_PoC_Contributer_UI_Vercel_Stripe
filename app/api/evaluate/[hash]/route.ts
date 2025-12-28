@@ -146,7 +146,8 @@ export async function POST(
                         base_density: evaluation.base_density,
                         redundancy_penalty_percent: evaluation.redundancy_penalty_percent,
                         density_penalty_percent: evaluation.density_penalty_percent,
-                        full_evaluation: evaluation // Store full evaluation object
+                        full_evaluation: evaluation, // Store full evaluation object
+                        raw_grok_response: (evaluation as any).raw_grok_response || null // Store raw Grok API response text/markdown
                     }
                 },
                 // Store vector embedding and 3D coordinates if available
@@ -284,7 +285,8 @@ export async function POST(
                     base_density: evaluation.base_density,
                     redundancy_penalty_percent: evaluation.redundancy_penalty_percent,
                     density_penalty_percent: evaluation.density_penalty_percent,
-                    full_evaluation: evaluation // Include full evaluation object
+                    full_evaluation: evaluation, // Include full evaluation object
+                    raw_grok_response: (evaluation as any).raw_grok_response || null // Include raw Grok API response text/markdown
                 }
             },
             status: qualified ? 'qualified' : 'unqualified',

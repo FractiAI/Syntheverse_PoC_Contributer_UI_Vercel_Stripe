@@ -645,8 +645,23 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                                                                         </div>
                                                                     )}
                                                                     
-                                                                    {/* Full JSON Response - Collapsible */}
-                                                                    {evaluationStatus.evaluation.grok_evaluation_details?.full_evaluation && (
+                                                                    {/* Full Grok API Response - Markdown/Text */}
+                                                                    {evaluationStatus.evaluation.grok_evaluation_details?.raw_grok_response && (
+                                                                        <details className="mt-3">
+                                                                            <summary className="cursor-pointer text-sm font-medium text-slate-600 hover:text-slate-800">
+                                                                                View Full Grok API Response
+                                                                            </summary>
+                                                                            <div className="mt-3 p-4 bg-white border rounded-lg">
+                                                                                <pre className="whitespace-pre-wrap text-sm overflow-auto max-h-96 font-mono">
+                                                                                    {evaluationStatus.evaluation.grok_evaluation_details.raw_grok_response}
+                                                                                </pre>
+                                                                            </div>
+                                                                        </details>
+                                                                    )}
+                                                                    
+                                                                    {/* Fallback to JSON if raw response not available */}
+                                                                    {!evaluationStatus.evaluation.grok_evaluation_details?.raw_grok_response && 
+                                                                     evaluationStatus.evaluation.grok_evaluation_details?.full_evaluation && (
                                                                         <details className="mt-3">
                                                                             <summary className="cursor-pointer text-xs text-slate-600 hover:text-slate-800">
                                                                                 View Full Grok API Response (JSON)

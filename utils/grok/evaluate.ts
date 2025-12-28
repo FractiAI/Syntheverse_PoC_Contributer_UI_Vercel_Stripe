@@ -1720,7 +1720,9 @@ Return your complete evaluation as a valid JSON object matching the specified st
             // Store base scores and penalty percentages for transparency
             base_novelty: baseNoveltyScore,
             base_density: baseDensityScore,
-            redundancy_penalty_percent: redundancy // Applied to composite score, not individual scores
+            redundancy_penalty_percent: redundancy, // Applied to composite score, not individual scores
+            // Store raw Grok API response for display
+            raw_grok_response: answer // Store the raw markdown/text response from Grok
         }
     } catch (error) {
         debugError('EvaluateWithGrok', 'Grok API call failed', error)
