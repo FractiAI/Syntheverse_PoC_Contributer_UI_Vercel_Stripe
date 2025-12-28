@@ -50,6 +50,7 @@ interface PoCSubmission {
         redundancy_penalty_percent?: number
         density_penalty_percent?: number
         full_evaluation?: any
+        raw_grok_response?: string // Raw Grok API response text/markdown
     }
 }
 
