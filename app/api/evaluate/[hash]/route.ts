@@ -91,7 +91,8 @@ export async function POST(
         // Store the open epoch that was used to qualify (capture the epoch at qualification time)
         // This should be the current open epoch, not just which epoch it qualifies for based on density
         // For display purposes, use the current open epoch if qualified, otherwise use the density-based epoch
-        const displayEpoch = qualified ? epochInfo.current_epoch : evaluation.qualified_epoch || null
+        const openEpochUsed = qualified ? epochInfo.current_epoch : evaluation.qualified_epoch || null
+        const displayEpoch = openEpochUsed // Alias for consistency with API response
         
         // Generate vector embedding and 3D coordinates using evaluation scores
         let vectorizationResult: { embedding: number[], vector: { x: number, y: number, z: number }, embeddingModel: string } | null = null
