@@ -119,27 +119,35 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                 pollCount++
                 
                 try {
-                    // Fetch fresh submission data
-                    await fetchSubmissions()
-                    
-                    // Also check registration status endpoint
-                    const statusResponse = await fetch(`/api/poc/${registrationHash}/registration-status`)
+                    // Check registration status endpoint first (faster than fetching all submissions)
+                    const statusResponse = await fetch(`/api/poc/${registrationHash}/registration-status?t=${Date.now()}`)
                     if (statusResponse.ok) {
                         const statusData = await statusResponse.json()
+                        console.log(`[Poll ${pollCount}/${maxPolls}] Registration status:`, statusData)
                         if (statusData.registered) {
                             // Registration confirmed, stop polling and refresh
                             if (pollInterval) {
                                 clearInterval(pollInterval)
                                 pollInterval = null
                             }
-                            await fetchSubmissions()
+                            // Fetch fresh submission data with cache bust
+                            await fetch(`/api/archive/contributions?t=${Date.now()}`).then(r => r.json()).then(data => {
+                                setAllSubmissions(data.contributions || [])
+                            })
                             // Clean up URL params
                             window.history.replaceState({}, '', window.location.pathname)
                             return true // Signal that registration was confirmed
                         }
+                    } else {
+                        console.error(`[Poll ${pollCount}] Status check failed:`, statusResponse.status, statusResponse.statusText)
+                    }
+                    
+                    // Only fetch all submissions every 3 polls to reduce load (still check status every time)
+                    if (pollCount % 3 === 0) {
+                        await fetchSubmissions()
                     }
                 } catch (err) {
-                    console.error('Error polling for registration status:', err)
+                    console.error(`[Poll ${pollCount}] Error polling for registration status:`, err)
                 }
                 
                 // Stop polling after max attempts
@@ -148,8 +156,11 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                         clearInterval(pollInterval)
                         pollInterval = null
                     }
-                    // Final refresh attempt
-                    fetchSubmissions()
+                    console.warn(`[Poll] Stopped polling after ${maxPolls} attempts. Registration may still be processing.`)
+                    // Final refresh attempt with cache bust
+                    await fetch(`/api/archive/contributions?t=${Date.now()}`).then(r => r.json()).then(data => {
+                        setAllSubmissions(data.contributions || [])
+                    })
                     // Clean up URL params even if registration not confirmed yet
                     window.history.replaceState({}, '', window.location.pathname)
                     return true // Signal that polling should stop
@@ -181,7 +192,8 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
         setLoading(true)
         setError(null)
         try {
-            const response = await fetch('/api/archive/contributions')
+            // Add cache bust parameter to ensure fresh data
+            const response = await fetch(`/api/archive/contributions?t=${Date.now()}`)
             if (!response.ok) {
                 throw new Error(`Failed to fetch: ${response.statusText}`)
             }

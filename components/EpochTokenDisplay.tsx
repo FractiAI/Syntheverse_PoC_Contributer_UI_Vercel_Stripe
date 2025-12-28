@@ -50,7 +50,8 @@ export function EpochTokenDisplay() {
         setLoading(true)
         setError(null)
         try {
-            const response = await fetch('/api/tokenomics/epoch-info')
+            // Add cache bust parameter to ensure fresh data
+            const response = await fetch(`/api/tokenomics/epoch-info?t=${Date.now()}`)
             if (!response.ok) {
                 throw new Error(`Failed to fetch: ${response.statusText}`)
             }
