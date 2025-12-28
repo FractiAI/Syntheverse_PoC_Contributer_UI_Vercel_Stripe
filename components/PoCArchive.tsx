@@ -204,7 +204,8 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                     registration_date: details.registration_date || submission.registration_date || null,
                     registration_tx_hash: details.registration_tx_hash || submission.registration_tx_hash || null,
                     stripe_payment_id: details.stripe_payment_id || submission.stripe_payment_id || null,
-                    registered: details.registered !== undefined ? details.registered : submission.registered
+                    registered: details.registered !== undefined ? details.registered : submission.registered,
+                    allocation_amount: details.allocation_amount !== undefined ? details.allocation_amount : submission.allocation_amount
                 })
             } else {
                 setSelectedSubmission(submission)
@@ -336,6 +337,7 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                                     <th className="text-right p-2 font-semibold">Density</th>
                                     <th className="text-right p-2 font-semibold">Coherence</th>
                                     <th className="text-right p-2 font-semibold">Redundancy</th>
+                                    <th className="text-right p-2 font-semibold">SYNTH Allocation</th>
                                     <th className="text-left p-2 font-semibold">Date</th>
                                 </tr>
                             </thead>

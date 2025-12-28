@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/utils/db/db'
-import { contributionsTable, pocLogTable } from '@/utils/db/schema'
+import { contributionsTable, pocLogTable, allocationsTable } from '@/utils/db/schema'
 import { eq } from 'drizzle-orm'
 import { debug, debugError } from '@/utils/debug'
 import { createClient } from '@/utils/supabase/server'
@@ -28,6 +28,15 @@ export async function GET(
         }
         
         const contrib = contribution[0]
+        
+        // Get allocation amount for this submission
+        const allocations = await db
+            .select()
+            .from(allocationsTable)
+            .where(eq(allocationsTable.submission_hash, submissionHash))
+        
+        const allocationAmount = allocations.reduce((sum, a) => sum + Number(a.reward), 0)
+        
         const formatted = {
             submission_hash: contrib.submission_hash,
             title: contrib.title,
@@ -42,6 +51,7 @@ export async function GET(
             registration_date: contrib.registration_date?.toISOString() || null,
             registration_tx_hash: contrib.registration_tx_hash || null,
             stripe_payment_id: contrib.stripe_payment_id || null,
+            allocation_amount: allocationAmount > 0 ? allocationAmount : null,
             created_at: contrib.created_at?.toISOString() || '',
             updated_at: contrib.updated_at?.toISOString() || ''
         }
