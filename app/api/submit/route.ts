@@ -40,10 +40,20 @@ export async function POST(request: NextRequest) {
             )
         }
         
-        // File upload is required - text content is no longer accepted
+        // PDF file upload is required
         if (!file) {
             return NextResponse.json(
-                { error: 'File upload is required. Please select a file to upload.' },
+                { error: 'PDF file upload is required. Please select a PDF file to upload.' },
+                { status: 400 }
+            )
+        }
+        
+        // Validate that the file is a PDF
+        const fileName = file.name.toLowerCase()
+        const fileType = file.type.toLowerCase()
+        if (!fileName.endsWith('.pdf') && fileType !== 'application/pdf') {
+            return NextResponse.json(
+                { error: 'Only PDF files are accepted. Please upload a PDF file.' },
                 { status: 400 }
             )
         }

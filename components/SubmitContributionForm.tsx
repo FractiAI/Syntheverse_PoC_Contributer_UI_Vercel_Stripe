@@ -49,7 +49,14 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
         }
 
         if (!formData.file) {
-            setError('Please select a file to upload')
+            setError('Please select a PDF file to upload')
+            setLoading(false)
+            return
+        }
+        
+        // Validate that the file is a PDF
+        if (!formData.file.name.toLowerCase().endsWith('.pdf') && formData.file.type !== 'application/pdf') {
+            setError('Only PDF files are accepted. Please select a PDF file.')
             setLoading(false)
             return
         }
@@ -632,13 +639,13 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                         <div className="space-y-2">
                             <Label htmlFor="file" className="text-base font-semibold">
                                 <FileText className="inline-block h-4 w-4 mr-2" />
-                                Select File to Upload *
+                                Select PDF File to Upload *
                             </Label>
                             <div className="border-2 border-dashed border-primary/30 rounded-lg p-6 hover:border-primary/50 transition-colors">
                                 <Input
                                     id="file"
                                     type="file"
-                                    accept=".pdf,.txt,.md,.doc,.docx"
+                                    accept=".pdf,application/pdf"
                                     onChange={handleFileChange}
                                     disabled={loading}
                                     className="cursor-pointer"
@@ -648,10 +655,10 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                                     <div className="mt-4 text-center">
                                         <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-2" />
                                         <p className="text-sm font-medium text-foreground mb-1">
-                                            Click to select a file or drag and drop
+                                            Click to select a PDF file or drag and drop
                                         </p>
                                         <p className="text-xs text-muted-foreground">
-                                            Supported formats: PDF, TXT, MD, DOC, DOCX
+                                            PDF format required (.pdf)
                                         </p>
                                     </div>
                                 )}
@@ -666,6 +673,9 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                                             </p>
                                             <p className="text-xs text-muted-foreground">
                                                 {(formData.file.size / 1024).toFixed(2)} KB
+                                                {!formData.file.name.toLowerCase().endsWith('.pdf') && (
+                                                    <span className="text-destructive ml-2">⚠ Must be a PDF file</span>
+                                                )}
                                             </p>
                                         </div>
                                         <Button
@@ -682,8 +692,8 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                                 </div>
                             )}
                             <p className="text-xs text-muted-foreground">
-                                Upload your contribution document (PDF, text, markdown, or Word document). 
-                                The file content will be evaluated for PoC scoring.
+                                Upload your contribution as a PDF document. 
+                                The PDF content will be extracted and evaluated for PoC scoring.
                             </p>
                         </div>
 
