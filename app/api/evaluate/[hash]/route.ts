@@ -90,7 +90,8 @@ export async function POST(
         
         // Store the open epoch that was used to qualify (capture the epoch at qualification time)
         // This should be the current open epoch, not just which epoch it qualifies for based on density
-        const openEpochUsed = qualified ? epochInfo.current_epoch : null
+        // For display purposes, use the current open epoch if qualified, otherwise use the density-based epoch
+        const displayEpoch = qualified ? epochInfo.current_epoch : evaluation.qualified_epoch || null
         
         // Generate vector embedding and 3D coordinates using evaluation scores
         let vectorizationResult: { embedding: number[], vector: { x: number, y: number, z: number }, embeddingModel: string } | null = null
@@ -259,6 +260,7 @@ export async function POST(
                 pod_score: evaluation.pod_score,
                 status: qualified ? 'qualified' : 'unqualified',
                 qualified_founder: qualified,
+                qualified_epoch: displayEpoch, // Use current open epoch if qualified, otherwise density-based epoch
                 classification: evaluation.classification,
                 redundancy_analysis: evaluation.redundancy_analysis,
                 metal_justification: evaluation.metal_justification,
@@ -266,7 +268,15 @@ export async function POST(
                 homebase_intro: evaluation.homebase_intro,
                 tokenomics_recommendation: evaluation.tokenomics_recommendation,
                 allocation_status: (contrib.metadata as any)?.allocation_status || 'pending_admin_approval',
-                allocations: allocations.length > 0 ? allocations : undefined
+                allocations: allocations.length > 0 ? allocations : undefined,
+                // Include full Grok evaluation details for detailed report
+                grok_evaluation_details: {
+                    base_novelty: evaluation.base_novelty,
+                    base_density: evaluation.base_density,
+                    redundancy_penalty_percent: evaluation.redundancy_penalty_percent,
+                    density_penalty_percent: evaluation.density_penalty_percent,
+                    full_evaluation: evaluation // Include full evaluation object
+                }
             },
             status: qualified ? 'qualified' : 'unqualified',
             qualified,

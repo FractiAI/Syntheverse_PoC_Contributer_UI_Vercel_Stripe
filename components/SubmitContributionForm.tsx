@@ -31,8 +31,10 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
     const [formData, setFormData] = useState({
         title: '',
         category: 'scientific',
-        file: null as File | null
+        file: null as File | null,
+        extractedText: '' as string // Extracted PDF text content
     })
+    const [extractingText, setExtractingText] = useState(false)
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -64,7 +66,8 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
         try {
             const submitFormData = new FormData()
             submitFormData.append('title', formData.title)
-            submitFormData.append('text_content', '') // Empty string since we only accept files
+            // Include extracted PDF text content for evaluation
+            submitFormData.append('text_content', formData.extractedText || '')
             submitFormData.append('category', formData.category)
             submitFormData.append('contributor', userEmail)
             
@@ -171,9 +174,50 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
         }
     }
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
-            setFormData({ ...formData, file: e.target.files[0] })
+            const file = e.target.files[0]
+            setFormData({ ...formData, file, extractedText: '' })
+            
+            // Extract text from PDF on client side
+            if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+                setExtractingText(true)
+                try {
+                    // Dynamically import pdfjs-dist for client-side PDF text extraction
+                    const pdfjsLib = await import('pdfjs-dist')
+                    
+                    // Set worker source for pdfjs (use CDN worker that matches the installed version)
+                    pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`
+                    
+                    // Read file as array buffer
+                    const arrayBuffer = await file.arrayBuffer()
+                    
+                    // Load PDF document
+                    const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer })
+                    const pdf = await loadingTask.promise
+                    
+                    // Extract text from all pages
+                    let fullText = ''
+                    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                        const page = await pdf.getPage(pageNum)
+                        const textContent = await page.getTextContent()
+                        const pageText = textContent.items
+                            .map((item: any) => item.str)
+                            .join(' ')
+                        fullText += pageText + '\n\n'
+                    }
+                    
+                    // Update form data with extracted text
+                    setFormData(prev => ({ ...prev, extractedText: fullText.trim() }))
+                    console.log(`Extracted ${fullText.length} characters from PDF (${pdf.numPages} pages)`)
+                } catch (error) {
+                    console.error('Error extracting PDF text:', error)
+                    // Continue without extracted text - will fall back to title
+                    setFormData(prev => ({ ...prev, extractedText: '' }))
+                } finally {
+                    setExtractingText(false)
+                }
+            }
         }
     }
 
@@ -504,6 +548,48 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                                                             </div>
                                                         )}
 
+                                                        {/* Full Grok Evaluation Details */}
+                                                        {evaluationStatus.evaluation.grok_evaluation_details && (
+                                                            <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg">
+                                                                <div className="text-sm font-semibold text-slate-800 mb-3">Detailed Evaluation Report</div>
+                                                                <div className="space-y-3 text-sm">
+                                                                    {evaluationStatus.evaluation.grok_evaluation_details.base_novelty !== undefined && (
+                                                                        <div className="flex justify-between items-center p-2 bg-white rounded border">
+                                                                            <span className="text-muted-foreground">Base Novelty Score:</span>
+                                                                            <span className="font-semibold">{evaluationStatus.evaluation.grok_evaluation_details.base_novelty.toLocaleString()} / 2,500</span>
+                                                                        </div>
+                                                                    )}
+                                                                    {evaluationStatus.evaluation.grok_evaluation_details.base_density !== undefined && (
+                                                                        <div className="flex justify-between items-center p-2 bg-white rounded border">
+                                                                            <span className="text-muted-foreground">Base Density Score:</span>
+                                                                            <span className="font-semibold">{evaluationStatus.evaluation.grok_evaluation_details.base_density.toLocaleString()} / 2,500</span>
+                                                                        </div>
+                                                                    )}
+                                                                    {evaluationStatus.evaluation.grok_evaluation_details.redundancy_penalty_percent !== undefined && (
+                                                                        <div className="flex justify-between items-center p-2 bg-white rounded border">
+                                                                            <span className="text-muted-foreground">Redundancy Penalty:</span>
+                                                                            <span className="font-semibold text-orange-600">{evaluationStatus.evaluation.grok_evaluation_details.redundancy_penalty_percent.toFixed(1)}%</span>
+                                                                        </div>
+                                                                    )}
+                                                                    {evaluationStatus.evaluation.grok_evaluation_details.density_penalty_percent !== undefined && (
+                                                                        <div className="flex justify-between items-center p-2 bg-white rounded border">
+                                                                            <span className="text-muted-foreground">Density Penalty:</span>
+                                                                            <span className="font-semibold text-orange-600">{evaluationStatus.evaluation.grok_evaluation_details.density_penalty_percent.toFixed(1)}%</span>
+                                                                        </div>
+                                                                    )}
+                                                                    {/* Full evaluation object for debugging/inspection */}
+                                                                    <details className="mt-3">
+                                                                        <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground">
+                                                                            View Full Grok API Response (JSON)
+                                                                        </summary>
+                                                                        <pre className="mt-2 p-3 bg-slate-900 text-slate-100 rounded text-xs overflow-auto max-h-96">
+                                                                            {JSON.stringify(evaluationStatus.evaluation.grok_evaluation_details.full_evaluation || evaluationStatus.evaluation, null, 2)}
+                                                                        </pre>
+                                                                    </details>
+                                                                </div>
+                                                            </div>
+                                                        )}
+
                                                     </div>
                                                 )}
                                             </div>
@@ -663,7 +749,13 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                                     </div>
                                 )}
                             </div>
-                            {formData.file && (
+                            {extractingText && (
+                                <div className="mt-2 text-sm text-primary flex items-center gap-2">
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                    Extracting text from PDF...
+                                </div>
+                            )}
+                            {formData.file && !extractingText && (
                                 <div className="mt-2 p-3 bg-primary/10 border border-primary/20 rounded-md">
                                     <div className="flex items-center gap-2">
                                         <FileText className="h-5 w-5 text-primary" />
@@ -677,12 +769,17 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                                                     <span className="text-destructive ml-2">⚠ Must be a PDF file</span>
                                                 )}
                                             </p>
+                                            {formData.extractedText && (
+                                                <p className="text-xs text-green-600 mt-1">
+                                                    ✓ Extracted {formData.extractedText.length.toLocaleString()} characters for evaluation
+                                                </p>
+                                            )}
                                         </div>
                                         <Button
                                             type="button"
                                             variant="ghost"
                                             size="sm"
-                                            onClick={() => setFormData({ ...formData, file: null })}
+                                            onClick={() => setFormData({ ...formData, file: null, extractedText: '' })}
                                             disabled={loading}
                                             className="text-xs"
                                         >

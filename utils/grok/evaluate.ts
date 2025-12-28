@@ -1140,17 +1140,15 @@ ${calculatedRedundancy.analysis}
         : ''
 
     // Evaluation query with contribution details, archived PoCs, and tokenomics
-    // Truncate content more aggressively to reduce token usage (max 5000 chars)
-    const maxContentLength = 5000
-    const truncatedContent = textContent.substring(0, maxContentLength)
-    
+    // Use full content - no truncation to ensure complete evaluation
+    // Note: If content is very large, the API may truncate, but we send the full content
     const evaluationQuery = `Evaluate this Proof-of-Contribution:
 
 **Title:** ${title}
 **Category:** ${category || 'scientific'}
 
 **Content:**
-${truncatedContent}${textContent.length > maxContentLength ? '\n[Content truncated...]' : ''}
+${textContent}
 
 **Archived PoCs for Redundancy:**
 ${archivedPoCsContext}

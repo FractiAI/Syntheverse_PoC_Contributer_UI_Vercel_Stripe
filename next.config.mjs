@@ -44,6 +44,14 @@ const nextConfig = {
       });
     }
     
+    // Configure pdfjs-dist for client-side usage
+    if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'pdfjs-dist/build/pdf.worker.entry': 'pdfjs-dist/build/pdf.worker.min.mjs',
+      };
+    }
+    
     return config;
   },
   // Exclude syntheverse-ui from page discovery

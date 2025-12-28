@@ -118,10 +118,17 @@ export async function POST(request: NextRequest) {
             extractedPdfText = ''
         }
         
-        // Use text_content from form if available, otherwise use title for evaluation
-        // Note: PDF text extraction is not available in serverless - text_content should be provided
+        // Use text_content from form (extracted from PDF on client side) if available, otherwise use title for evaluation
         const textContentForEvaluation = text_content?.trim() || title.trim()
         const textContentForStorage = text_content?.trim() || null
+        
+        debug('SubmitContribution', 'Text content prepared for evaluation', {
+            hasTextContent: !!text_content,
+            textContentLength: text_content?.length || 0,
+            titleLength: title.trim().length,
+            willUseForEvaluation: textContentForEvaluation.length,
+            source: text_content ? 'extracted_pdf_text' : 'title_only'
+        })
         
         // Calculate content hash from the full content
         const contentToHash = textContentForEvaluation
