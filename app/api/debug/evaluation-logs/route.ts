@@ -9,6 +9,8 @@ import { pocLogTable } from '@/utils/db/schema'
 import { desc, eq } from 'drizzle-orm'
 import { debug, debugError } from '@/utils/debug'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
     debug('DebugEvaluationLogs', 'Fetching recent evaluation logs')
     

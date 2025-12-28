@@ -75,13 +75,25 @@ export async function GET(request: NextRequest) {
             metalCountsMap[metal] = (metalCountsMap[metal] || 0) + Number(row.count)
         })
         
+        // Handle last updated date - convert to Date if needed
+        let lastUpdatedDate: string
+        const maxDate = lastUpdated[0]?.max
+        if (maxDate instanceof Date) {
+            lastUpdatedDate = maxDate.toISOString()
+        } else if (maxDate) {
+            // If it's a string or other type, try to convert it
+            lastUpdatedDate = new Date(maxDate).toISOString()
+        } else {
+            lastUpdatedDate = new Date().toISOString()
+        }
+        
         const statistics = {
             total_contributions: Number(totalContributions[0]?.count || 0),
             status_counts: statusCountsMap,
             metal_counts: metalCountsMap,
             unique_contributors: Number(uniqueContributors[0]?.count || 0),
             unique_content_hashes: Number(uniqueContentHashes[0]?.count || 0),
-            last_updated: lastUpdated[0]?.max?.toISOString() || new Date().toISOString()
+            last_updated: lastUpdatedDate
         }
         
         debug('ArchiveStatistics', 'Statistics fetched successfully', statistics)

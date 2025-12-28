@@ -5,6 +5,8 @@ import { eq, desc, and, gte, lte } from 'drizzle-orm'
 import { createClient } from '@/utils/supabase/server'
 import { debug, debugError } from '@/utils/debug'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
     debug('PocLog', 'Fetching PoC log entries')
     

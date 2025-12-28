@@ -41,14 +41,13 @@ export default async function DashboardLayout({
         });
 
         const {
-            data: { user, session },
+            data: { user },
             error: authError,
         } = await supabase.auth.getUser()
         
         debug('DashboardLayout', 'Auth getUser completed', { 
             hasUser: !!user, 
             hasEmail: !!user?.email,
-            hasSession: !!session,
             authError: authError?.message,
             errorCode: authError?.status
         });
