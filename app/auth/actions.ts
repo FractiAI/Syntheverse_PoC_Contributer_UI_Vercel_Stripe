@@ -86,6 +86,21 @@ export async function signup(currentState: { message: string }, formData: FormDa
         return { message: "Failed to create user" }
     }
 
+    // Check if email confirmation is required
+    // In production, Supabase requires email confirmation by default
+    // The user will receive a confirmation email from Supabase
+    const requiresEmailConfirmation = process.env.NODE_ENV === 'production'
+    const isEmailConfirmed = signUpData.user.email_confirmed_at !== null
+    const hasConfirmationEmail = signUpData.user.confirmation_sent_at !== null
+
+    console.log('Signup result:', {
+        userId: signUpData.user.id,
+        email: signUpData.user.email,
+        requiresConfirmation: requiresEmailConfirmation,
+        isConfirmed: isEmailConfirmed,
+        confirmationSent: hasConfirmationEmail
+    })
+
     try {
         // Stripe is only used when registering a PoC (paying the $200 registration fee)
         // Use a placeholder value - Stripe customer will be created on-demand when user registers a PoC
@@ -116,7 +131,14 @@ export async function signup(currentState: { message: string }, formData: FormDa
     }
 
     revalidatePath("/", "layout")
-    redirect("/subscribe")
+    
+    // If email confirmation is required and not confirmed, redirect to check email page
+    if (requiresEmailConfirmation && !isEmailConfirmed) {
+        redirect("/signup/check-email")
+    }
+    
+    // Otherwise, redirect to dashboard (user is confirmed or in dev mode)
+    redirect("/dashboard")
 }
 
 
