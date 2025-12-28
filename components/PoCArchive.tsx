@@ -102,7 +102,21 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
     }
 
     useEffect(() => {
-        fetchSubmissions()
+        let isMounted = true
+        
+        async function loadData() {
+            try {
+                await fetchSubmissions()
+            } catch (err) {
+                console.error('Error loading PoC archive:', err)
+                if (isMounted) {
+                    setError(err instanceof Error ? err.message : 'Failed to load submissions')
+                    setLoading(false)
+                }
+            }
+        }
+        
+        loadData()
         
         // Check if we're returning from a successful registration
         const params = new URLSearchParams(window.location.search)
@@ -200,25 +214,51 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
             
             // Cleanup function to clear interval if component unmounts
             return () => {
+                isMounted = false
                 if (pollInterval) {
                     clearInterval(pollInterval)
                 }
             }
+        } else {
+            // Cleanup function when not polling
+            return () => {
+                isMounted = false
+            }
         }
-    }, [])
+    }, [userEmail])
 
     async function fetchSubmissions() {
         setLoading(true)
         setError(null)
         try {
             // Add cache bust parameter to ensure fresh data
-            const response = await fetch(`/api/archive/contributions?t=${Date.now()}`)
+            const response = await fetch(`/api/archive/contributions?t=${Date.now()}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            
             if (!response.ok) {
-                throw new Error(`Failed to fetch: ${response.statusText}`)
+                const errorText = await response.text()
+                console.error('Archive API error:', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    body: errorText
+                })
+                throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`)
             }
+            
             const data = await response.json()
+            
+            if (!data || !Array.isArray(data.contributions)) {
+                console.error('Invalid API response:', data)
+                throw new Error('Invalid response format from server')
+            }
+            
             setAllSubmissions(data.contributions || [])
         } catch (err) {
+            console.error('Error fetching submissions:', err)
             setError(err instanceof Error ? err.message : 'Failed to load submissions')
         } finally {
             setLoading(false)
