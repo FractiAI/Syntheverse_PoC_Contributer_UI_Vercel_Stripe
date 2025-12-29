@@ -98,7 +98,7 @@ export function OnboardingNavigator() {
                                 <ul className="space-y-2 cockpit-text text-sm">
                                     <li>• Approved PoCs can be registered on-chain for $200</li>
                                     <li>• Registration anchors contributions permanently to the blockchain</li>
-                                    <li>• Establishes "I was here first" recognition and legacy</li>
+                                    <li>• Establishes &quot;I was here first&quot; recognition and legacy</li>
                                     <li>• Registered PoCs train and evolve the Syntheverse AI</li>
                                 </ul>
                             </div>
@@ -150,7 +150,7 @@ export function OnboardingNavigator() {
                                 <div className="cockpit-label mb-2">Blockchain Properties</div>
                                 <p className="cockpit-text text-sm">
                                     Built on <strong>Base (Ethereum L2)</strong> for secure, fast, and cost-effective transactions. 
-                                    All registered contributions are permanently verifiable and contribute to the ecosystem's 
+                                    All registered contributions are permanently verifiable and contribute to the ecosystem&apos;s 
                                     regenerative intelligence.
                                 </p>
                             </div>
