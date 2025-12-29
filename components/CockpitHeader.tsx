@@ -20,7 +20,7 @@ export default function CockpitHeader() {
                                  style={{ backgroundColor: '#ffb84d', boxShadow: '0 0 10px #ffb84d' }}></div>
                         </div>
                         <div>
-                            <div className="cockpit-title text-2xl">SYNTHVERSE</div>
+                            <div className="cockpit-title text-2xl">SYNTHEVERSE</div>
                             <div className="cockpit-label mt-0.5">MOTHERLODE BLOCKMINE</div>
                         </div>
                     </div>
