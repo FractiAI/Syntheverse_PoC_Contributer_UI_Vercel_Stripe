@@ -187,19 +187,25 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
                 setExtractingText(true)
                 try {
                     // Dynamically import pdfjs-dist for client-side PDF text extraction
-                    // Handle both default and named exports
-                    const pdfjsModule = await import('pdfjs-dist')
-                    const pdfjsLib = pdfjsModule.default || pdfjsModule
+                    // pdfjs-dist v5.x uses named exports
+                    const pdfjsLib = await import('pdfjs-dist')
                     
                     // Verify pdfjsLib has required methods
                     if (!pdfjsLib || typeof pdfjsLib.getDocument !== 'function') {
-                        throw new Error('PDF.js library not loaded correctly')
+                        throw new Error('PDF.js library not loaded correctly - getDocument not found. Make sure pdfjs-dist is installed.')
                     }
                     
-                    // Set worker source for pdfjs (use CDN worker that matches the installed version)
+                    // Set worker source for pdfjs v5.x
+                    // Use CDN worker that matches the installed version
                     if (pdfjsLib.GlobalWorkerOptions) {
-                        const version = pdfjsLib.version || '4.0.379'
-                        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${version}/pdf.worker.min.js`
+                        const version = '5.4.449' // Match package.json version
+                        // Try .mjs first (v5.x format), fallback to .js if that doesn't work
+                        try {
+                            pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${version}/pdf.worker.min.mjs`
+                        } catch (workerError) {
+                            // Fallback to .js format if .mjs fails
+                            pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${version}/pdf.worker.min.js`
+                        }
                     }
                     
                     // Read file as array buffer
@@ -208,7 +214,9 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
                     // Load PDF document with error handling
                     const loadingTask = pdfjsLib.getDocument({ 
                         data: arrayBuffer,
-                        verbosity: 0 // Suppress console warnings
+                        verbosity: 0, // Suppress console warnings
+                        useSystemFonts: true,
+                        disableFontFace: false
                     })
                     
                     const pdf = await loadingTask.promise
