@@ -187,44 +187,61 @@ export function FinancialAlignmentButton() {
                             scrollbarColor: 'var(--hydrogen-amber) var(--cockpit-carbon)'
                         }}
                     >
-                        {products.map((product) => (
-                            <div key={product.id} className="border-b border-[var(--keyline-primary)] last:border-b-0">
-                                <div className="p-3 hover:bg-[var(--cockpit-carbon)]">
-                                    <div className="flex items-center justify-between mb-2">
-                                        <div className="flex-1">
-                                            <div className="font-medium cockpit-text">{product.name}</div>
-                                            {product.description && (
-                                                <div className="text-xs text-muted-foreground mt-1">{product.description}</div>
-                                            )}
-                                        </div>
-                                        <div className="ml-4">
-                                            {processing === product.id ? (
-                                                <Loader2 className="h-4 w-4 animate-spin" />
-                                            ) : (
-                                                <span className="cockpit-number text-sm">{formatAmount(product.amount)}</span>
-                                            )}
+                        {products.map((product) => {
+                            // Shorten description - extract tier name (Copper, Silver, Gold) or first meaningful word
+                            let shortDescription = ''
+                            
+                            // Try to extract tier from name or description
+                            const textToSearch = `${product.name} ${product.description || ''}`.toLowerCase()
+                            if (textToSearch.includes('copper')) {
+                                shortDescription = 'Copper'
+                            } else if (textToSearch.includes('silver')) {
+                                shortDescription = 'Silver'
+                            } else if (textToSearch.includes('gold')) {
+                                shortDescription = 'Gold'
+                            } else {
+                                // Fallback: use first word of name or first 15 chars of description
+                                shortDescription = product.name.split(' ')[0] || product.description?.substring(0, 15) || 'Contribution'
+                            }
+                            
+                            return (
+                                <div key={product.id} className="border-b border-[var(--keyline-primary)] last:border-b-0">
+                                    <div className="p-3 hover:bg-[var(--cockpit-carbon)]">
+                                        <div className="flex items-center gap-3">
+                                            <div className="flex-1 min-w-0">
+                                                <div className="font-medium cockpit-text text-sm">{shortDescription}</div>
+                                            </div>
+                                            <div className="flex-shrink-0">
+                                                {processing === product.id ? (
+                                                    <Loader2 className="h-4 w-4 animate-spin text-[var(--hydrogen-amber)]" />
+                                                ) : (
+                                                    <span className="cockpit-number text-sm whitespace-nowrap">{formatAmount(product.amount)}</span>
+                                                )}
+                                            </div>
+                                            <div className="flex-shrink-0">
+                                                <button
+                                                    onClick={() => handleRegister(product)}
+                                                    disabled={processing === product.id || !product.price_id}
+                                                    className="cockpit-lever text-xs py-1.5 px-3 whitespace-nowrap"
+                                                >
+                                                    {processing === product.id ? (
+                                                        <>
+                                                            <Loader2 className="inline h-3 w-3 mr-1 animate-spin" />
+                                                            Processing
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <CreditCard className="inline h-3 w-3 mr-1" />
+                                                            Register
+                                                        </>
+                                                    )}
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                    <button
-                                        onClick={() => handleRegister(product)}
-                                        disabled={processing === product.id || !product.price_id}
-                                        className="cockpit-lever w-full text-sm py-2 mt-2"
-                                    >
-                                        {processing === product.id ? (
-                                            <>
-                                                <Loader2 className="inline h-4 w-4 mr-2 animate-spin" />
-                                                Processing...
-                                            </>
-                                        ) : (
-                                            <>
-                                                <CreditCard className="inline h-4 w-4 mr-2" />
-                                                Register on Blockchain Now
-                                            </>
-                                        )}
-                                    </button>
                                 </div>
-                            </div>
-                        ))}
+                            )
+                        })}
                     </div>
                 </DropdownMenuContent>
             </DropdownMenu>
