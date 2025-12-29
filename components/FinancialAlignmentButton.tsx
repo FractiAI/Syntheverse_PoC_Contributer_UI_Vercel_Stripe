@@ -140,6 +140,32 @@ export function FinancialAlignmentButton() {
         }).format(amount)
     }
 
+    const formatSynthAmount = (tokens: number): string => {
+        if (tokens >= 1_000_000_000) {
+            // Billions
+            const billions = tokens / 1_000_000_000
+            return billions % 1 === 0 ? `${billions}B` : `${billions.toFixed(1)}B`
+        } else if (tokens >= 1_000_000) {
+            // Millions
+            const millions = tokens / 1_000_000
+            return millions % 1 === 0 ? `${millions}M` : `${millions.toFixed(1)}M`
+        } else if (tokens >= 1_000) {
+            // Thousands
+            const thousands = tokens / 1_000
+            return `${thousands.toFixed(0)}K`
+        }
+        return tokens.toString()
+    }
+
+    // SYNTH token allocations for each contribution level
+    const SYNTH_ALLOCATIONS: Record<number, { tokens: number, tier: string }> = {
+        10000: { tokens: 18_000_000, tier: 'Copper' },           // 18M SYNTH
+        25000: { tokens: 90_000_000, tier: 'Copper' },           // 90M SYNTH
+        50000: { tokens: 450_000_000, tier: 'Silver' },          // 450M SYNTH
+        100000: { tokens: 1_200_000_000, tier: 'Silver' },       // 1.2B SYNTH
+        250000: { tokens: 4_500_000_000, tier: 'Gold' },         // 4.5B SYNTH
+    }
+
     if (loading) {
         return (
             <button className="cockpit-lever" disabled>
@@ -188,28 +214,23 @@ export function FinancialAlignmentButton() {
                         }}
                     >
                         {products.map((product) => {
-                            // Shorten description - extract tier name (Copper, Silver, Gold) or first meaningful word
-                            let shortDescription = ''
+                            // Get SYNTH allocation for this contribution amount
+                            const allocation = SYNTH_ALLOCATIONS[product.amount]
+                            const tier = allocation?.tier || 'Contribution'
+                            const synthTokens = allocation?.tokens || 0
+                            const synthFormatted = synthTokens > 0 ? formatSynthAmount(synthTokens) : ''
                             
-                            // Try to extract tier from name or description
-                            const textToSearch = `${product.name} ${product.description || ''}`.toLowerCase()
-                            if (textToSearch.includes('copper')) {
-                                shortDescription = 'Copper'
-                            } else if (textToSearch.includes('silver')) {
-                                shortDescription = 'Silver'
-                            } else if (textToSearch.includes('gold')) {
-                                shortDescription = 'Gold'
-                            } else {
-                                // Fallback: use first word of name or first 15 chars of description
-                                shortDescription = product.name.split(' ')[0] || product.description?.substring(0, 15) || 'Contribution'
-                            }
+                            // Build description with tier and SYNTH allocation
+                            const description = synthFormatted 
+                                ? `${tier} - ${synthFormatted} SYNTH`
+                                : tier
                             
                             return (
                                 <div key={product.id} className="border-b border-[var(--keyline-primary)] last:border-b-0">
                                     <div className="p-3 hover:bg-[var(--cockpit-carbon)]">
                                         <div className="flex items-center gap-3">
                                             <div className="flex-1 min-w-0">
-                                                <div className="font-medium cockpit-text text-sm">{shortDescription}</div>
+                                                <div className="font-medium cockpit-text text-sm">{description}</div>
                                             </div>
                                             <div className="flex-shrink-0">
                                                 {processing === product.id ? (
