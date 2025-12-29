@@ -211,18 +211,21 @@ export function FinancialAlignmentButton() {
 
             {/* ERC-20 Alignment Confirmation Dialog */}
             <Dialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
-                <DialogContent className="bg-[var(--cockpit-obsidian)] border-[var(--keyline-primary)] max-w-2xl">
-                    <DialogHeader>
-                        <DialogTitle className="cockpit-title text-xl flex items-center gap-2">
-                            <AlertTriangle className="h-5 w-5 text-[var(--hydrogen-amber)]" />
-                            ERC-20 Financial Alignment PoC Contribution
-                        </DialogTitle>
-                        <DialogDescription className="cockpit-text">
-                            Important: Please read and acknowledge the following terms before proceeding
-                        </DialogDescription>
-                    </DialogHeader>
+                <DialogContent className="bg-[var(--cockpit-obsidian)] border-[var(--keyline-primary)] max-w-2xl max-h-[90vh] flex flex-col p-0">
+                    <div className="p-6 pb-4">
+                        <DialogHeader>
+                            <DialogTitle className="cockpit-title text-xl flex items-center gap-2">
+                                <AlertTriangle className="h-5 w-5 text-[var(--hydrogen-amber)]" />
+                                ERC-20 Financial Alignment PoC Contribution
+                            </DialogTitle>
+                            <DialogDescription className="cockpit-text">
+                                Important: Please read and acknowledge the following terms before proceeding
+                            </DialogDescription>
+                        </DialogHeader>
+                    </div>
                     
-                    <div className="space-y-4 mt-4">
+                    {/* Scrollable content area */}
+                    <div className="flex-1 overflow-y-auto px-6 pb-4 space-y-4">
                         {selectedProduct && (
                             <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] rounded">
                                 <div className="cockpit-label mb-2">Contribution Level</div>
@@ -266,19 +269,30 @@ export function FinancialAlignmentButton() {
                         </div>
                     </div>
 
-                    <DialogFooter className="flex gap-2 mt-6">
+                    {/* Sticky footer with action buttons */}
+                    <DialogFooter className="flex flex-row gap-3 px-6 py-4 border-t border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
                         <button
                             onClick={cancelRegister}
-                            className="cockpit-lever"
+                            className="cockpit-lever flex-1 sm:flex-initial"
                         >
                             Cancel
                         </button>
                         <button
                             onClick={confirmRegister}
-                            className="cockpit-lever bg-[var(--hydrogen-amber)] text-black hover:bg-[var(--hydrogen-amber)]/90"
+                            disabled={processing === selectedProduct?.id}
+                            className="cockpit-lever bg-[var(--hydrogen-amber)] text-black hover:bg-[var(--hydrogen-amber)]/90 flex-1 sm:flex-initial font-semibold"
                         >
-                            <CreditCard className="inline h-4 w-4 mr-2" />
-                            Proceed to Payment
+                            {processing === selectedProduct?.id ? (
+                                <>
+                                    <Loader2 className="inline h-4 w-4 mr-2 animate-spin" />
+                                    Processing...
+                                </>
+                            ) : (
+                                <>
+                                    <CreditCard className="inline h-4 w-4 mr-2" />
+                                    Proceed to Payment
+                                </>
+                            )}
                         </button>
                     </DialogFooter>
                 </DialogContent>
