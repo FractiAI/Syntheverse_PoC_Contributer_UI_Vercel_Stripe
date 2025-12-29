@@ -6,7 +6,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Bell, ReceiptText, User, Settings, HelpCircle, LogOut } from "lucide-react"
+import { User, LogOut } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { } from "@supabase/supabase-js"
@@ -36,10 +36,6 @@ export default async function DashboardHeaderProfileDropdown() {
         
         return (
         <nav className="flex items-center">
-            <Button variant="ghost" size="icon" className="mr-2">
-                <Bell className="h-4 w-4" />
-                <span className="sr-only">Notifications</span>
-            </Button>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon">
@@ -50,28 +46,10 @@ export default async function DashboardHeaderProfileDropdown() {
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <Link href="#">
+                    <Link href="/account">
                         <DropdownMenuItem>
                             <User className="mr-2 h-4 w-4" />
                             <span>Profile</span>
-                        </DropdownMenuItem>
-                    </Link>
-                    <Link href="#">
-                        <DropdownMenuItem>
-                            <Settings className="mr-2 h-4 w-4" />
-                            <span>Settings</span>
-                        </DropdownMenuItem>
-                    </Link>
-                    <DropdownMenuItem asChild>
-                        <Link href="/billing-portal">
-                            <ReceiptText className="mr-2 h-4 w-4" />
-                            <span>Billing</span>
-                        </Link>
-                    </DropdownMenuItem>
-                    <Link href="#">
-                        <DropdownMenuItem>
-                            <HelpCircle className="mr-2 h-4 w-4" />
-                            <span>Help</span>
                         </DropdownMenuItem>
                     </Link>
                     <DropdownMenuSeparator />
@@ -92,10 +70,6 @@ export default async function DashboardHeaderProfileDropdown() {
         // Return a minimal fallback UI
         return (
             <nav className="flex items-center">
-                <Button variant="ghost" size="icon" className="mr-2">
-                    <Bell className="h-4 w-4" />
-                    <span className="sr-only">Notifications</span>
-                </Button>
                 <Button variant="ghost" size="icon">
                     <User className="h-4 w-4" />
                     <span className="sr-only">Open user menu</span>

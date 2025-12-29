@@ -17,7 +17,7 @@ import {
     DialogHeader, 
     DialogTitle 
 } from '@/components/ui/dialog'
-import { Loader2, RefreshCw, CreditCard, ExternalLink } from 'lucide-react'
+import { Loader2, RefreshCw, CreditCard, ExternalLink, FileText } from 'lucide-react'
 import Link from 'next/link'
 
 interface PoCSubmission {
@@ -45,6 +45,14 @@ interface PoCSubmission {
     updated_at: string
     text_content?: string
     metadata?: any
+    grok_evaluation_details?: {
+        base_novelty?: number
+        base_density?: number
+        redundancy_penalty_percent?: number
+        density_penalty_percent?: number
+        full_evaluation?: any
+        raw_grok_response?: string
+    }
 }
 
 interface FrontierModuleProps {
@@ -61,6 +69,7 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
     const [error, setError] = useState<string | null>(null)
     const [registering, setRegistering] = useState<string | null>(null)
     const [viewMode, setViewMode] = useState<ViewMode>('my')
+    const [showFullReport, setShowFullReport] = useState(false)
 
     const mySubmissions = allSubmissions.filter(s => s.contributor === userEmail)
     const qualifiedSubmissions = allSubmissions.filter(s => s.qualified === true)
@@ -241,6 +250,7 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
     }
 
     async function handleRowClick(submission: PoCSubmission) {
+        setShowFullReport(false) // Reset full report view when opening a new submission
         try {
             const response = await fetch(`/api/archive/contributions/${submission.submission_hash}`)
             if (response.ok) {
@@ -266,6 +276,11 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
     const formatScore = (score: number | null) => {
         if (score === null) return '—'
         return score.toLocaleString()
+    }
+
+    const formatRedundancy = (redundancy: number | null) => {
+        if (redundancy === null || redundancy === undefined) return '—'
+        return `${redundancy.toFixed(1)}%`
     }
 
     const formatAllocation = (amount: number | null) => {
@@ -479,6 +494,12 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
                                         ))}
                                     </div>
                                 </div>
+                                {selectedSubmission.qualified_epoch && (
+                                    <div>
+                                        <div className="cockpit-label mb-2">Qualified Epoch</div>
+                                        <div className="uppercase text-sm">{selectedSubmission.qualified_epoch}</div>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Scores */}
@@ -488,37 +509,272 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
                                     <div>
                                         <div className="cockpit-text text-xs mb-1">PoC Score</div>
                                         <div className="cockpit-number cockpit-number-medium">{formatScore(selectedSubmission.pod_score)}</div>
+                                        <div className="cockpit-text text-xs mt-1">/ 10,000</div>
                                     </div>
                                     <div>
                                         <div className="cockpit-text text-xs mb-1">Novelty</div>
                                         <div className="cockpit-number">{formatScore(selectedSubmission.novelty)}</div>
+                                        <div className="cockpit-text text-xs mt-1">/ 2,500</div>
                                     </div>
                                     <div>
                                         <div className="cockpit-text text-xs mb-1">Density</div>
                                         <div className="cockpit-number">{formatScore(selectedSubmission.density)}</div>
+                                        <div className="cockpit-text text-xs mt-1">/ 2,500</div>
                                     </div>
                                     <div>
                                         <div className="cockpit-text text-xs mb-1">Coherence</div>
                                         <div className="cockpit-number">{formatScore(selectedSubmission.coherence)}</div>
+                                        <div className="cockpit-text text-xs mt-1">/ 2,500</div>
                                     </div>
+                                    {selectedSubmission.alignment !== null && (
+                                        <div>
+                                            <div className="cockpit-text text-xs mb-1">Alignment</div>
+                                            <div className="cockpit-number">{formatScore(selectedSubmission.alignment)}</div>
+                                            <div className="cockpit-text text-xs mt-1">/ 2,500</div>
+                                        </div>
+                                    )}
+                                    {selectedSubmission.redundancy !== null && (
+                                        <div>
+                                            <div className="cockpit-text text-xs mb-1">Redundancy</div>
+                                            <div className={`cockpit-number ${selectedSubmission.redundancy > 50 ? 'text-orange-400' : selectedSubmission.redundancy > 25 ? 'text-yellow-400' : ''}`}>
+                                                {formatRedundancy(selectedSubmission.redundancy)}
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 
-                            {/* Registration Status */}
+                            {/* Detailed Evaluation Report */}
+                            {selectedSubmission.metadata && (
+                                <div className="pt-4 border-t border-[var(--keyline-primary)]">
+                                    <div className="flex items-center justify-between mb-3">
+                                        <div className="cockpit-label">Detailed Evaluation Report</div>
+                                        {(selectedSubmission.metadata.grok_evaluation_details?.raw_grok_response || 
+                                          selectedSubmission.metadata.grok_evaluation_details?.full_evaluation) && (
+                                            <button
+                                                onClick={() => setShowFullReport(!showFullReport)}
+                                                className="cockpit-lever text-sm py-2 px-4"
+                                            >
+                                                <FileText className="inline h-4 w-4 mr-2" />
+                                                {showFullReport ? 'Hide Full Report' : 'View Full Report'}
+                                            </button>
+                                        )}
+                                    </div>
+                                    <div className="space-y-4 text-sm">
+                                        {/* Evaluation Review Text */}
+                                        {selectedSubmission.metadata.redundancy_analysis && (
+                                            <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] rounded">
+                                                <div className="cockpit-label mb-2">Evaluation Review</div>
+                                                <div className="cockpit-text whitespace-pre-wrap">
+                                                    {selectedSubmission.metadata.redundancy_analysis}
+                                                </div>
+                                            </div>
+                                        )}
+                                        
+                                        {/* Metal Justification */}
+                                        {selectedSubmission.metadata.metal_justification && (
+                                            <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] rounded">
+                                                <div className="cockpit-label mb-2">Metal Assignment</div>
+                                                <div className="cockpit-text whitespace-pre-wrap">
+                                                    {selectedSubmission.metadata.metal_justification}
+                                                </div>
+                                            </div>
+                                        )}
+                                        
+                                        {/* Scoring Breakdown */}
+                                        {selectedSubmission.metadata.grok_evaluation_details && (
+                                            <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] rounded">
+                                                <div className="cockpit-label mb-3">Scoring Breakdown</div>
+                                                <div className="space-y-3 text-sm">
+                                                    {/* Base Scores */}
+                                                    <div className="grid grid-cols-2 gap-3">
+                                                        {selectedSubmission.metadata.grok_evaluation_details.base_novelty !== undefined && (
+                                                            <div className="p-3 bg-[var(--cockpit-obsidian)] rounded border border-[var(--keyline-primary)]">
+                                                                <div className="cockpit-text text-xs mb-1">Base Novelty</div>
+                                                                <div className="cockpit-number">{selectedSubmission.metadata.grok_evaluation_details.base_novelty.toLocaleString()} / 2,500</div>
+                                                                <div className="cockpit-text text-xs mt-1">Final: {selectedSubmission.novelty?.toLocaleString() || 'N/A'} / 2,500</div>
+                                                            </div>
+                                                        )}
+                                                        {selectedSubmission.metadata.grok_evaluation_details.base_density !== undefined && (
+                                                            <div className="p-3 bg-[var(--cockpit-obsidian)] rounded border border-[var(--keyline-primary)]">
+                                                                <div className="cockpit-text text-xs mb-1">Base Density</div>
+                                                                <div className="cockpit-number">{selectedSubmission.metadata.grok_evaluation_details.base_density.toLocaleString()} / 2,500</div>
+                                                                <div className="cockpit-text text-xs mt-1">Final: {selectedSubmission.density?.toLocaleString() || 'N/A'} / 2,500</div>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    
+                                                    {/* Coherence and Alignment */}
+                                                    <div className="grid grid-cols-2 gap-3">
+                                                        <div className="p-3 bg-[var(--cockpit-obsidian)] rounded border border-[var(--keyline-primary)]">
+                                                            <div className="cockpit-text text-xs mb-1">Coherence</div>
+                                                            <div className="cockpit-number">{selectedSubmission.coherence?.toLocaleString() || 'N/A'} / 2,500</div>
+                                                        </div>
+                                                        <div className="p-3 bg-[var(--cockpit-obsidian)] rounded border border-[var(--keyline-primary)]">
+                                                            <div className="cockpit-text text-xs mb-1">Alignment</div>
+                                                            <div className="cockpit-number">{selectedSubmission.alignment?.toLocaleString() || 'N/A'} / 2,500</div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    {/* Penalties Applied */}
+                                                    {(selectedSubmission.metadata.grok_evaluation_details.redundancy_penalty_percent !== undefined || 
+                                                      selectedSubmission.metadata.grok_evaluation_details.density_penalty_percent !== undefined) && (
+                                                        <div className="pt-3 border-t border-[var(--keyline-primary)]">
+                                                            <div className="cockpit-text text-xs mb-2">Penalties Applied</div>
+                                                            <div className="space-y-1">
+                                                                {selectedSubmission.metadata.grok_evaluation_details.redundancy_penalty_percent !== undefined && (
+                                                                    <div className="flex justify-between items-center text-xs">
+                                                                        <span className="cockpit-text">Redundancy Penalty:</span>
+                                                                        <span className="cockpit-number text-orange-400">
+                                                                            {selectedSubmission.metadata.grok_evaluation_details.redundancy_penalty_percent.toFixed(1)}%
+                                                                        </span>
+                                                                    </div>
+                                                                )}
+                                                                {selectedSubmission.metadata.grok_evaluation_details.density_penalty_percent !== undefined && (
+                                                                    <div className="flex justify-between items-center text-xs">
+                                                                        <span className="cockpit-text">Density Penalty:</span>
+                                                                        <span className="cockpit-number text-orange-400">
+                                                                            {selectedSubmission.metadata.grok_evaluation_details.density_penalty_percent.toFixed(1)}%
+                                                                        </span>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                    
+                                                    {/* Final PoD Score */}
+                                                    <div className="pt-3 border-t border-[var(--keyline-primary)]">
+                                                        <div className="flex justify-between items-center">
+                                                            <span className="cockpit-text font-medium">Final PoD Score</span>
+                                                            <span className="cockpit-number cockpit-number-medium">{selectedSubmission.pod_score?.toLocaleString() || 'N/A'} / 10,000</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+                                        
+                                        {/* Tokenomics Recommendation */}
+                                        {selectedSubmission.metadata.tokenomics_recommendation?.allocation_notes && (
+                                            <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] rounded">
+                                                <div className="cockpit-label mb-2">Allocation Recommendation</div>
+                                                <div className="cockpit-text whitespace-pre-wrap">
+                                                    {selectedSubmission.metadata.tokenomics_recommendation.allocation_notes}
+                                                </div>
+                                            </div>
+                                        )}
+                                        
+                                        {/* Founder Certificate */}
+                                        {selectedSubmission.metadata.founder_certificate && (
+                                            <div className="p-4 border border-[var(--hydrogen-amber)] bg-[rgba(255,215,0,0.1)] rounded">
+                                                <div className="cockpit-label mb-2 text-[var(--hydrogen-amber)]">Founder Certificate</div>
+                                                <div className="cockpit-text whitespace-pre-wrap">
+                                                    {selectedSubmission.metadata.founder_certificate}
+                                                </div>
+                                            </div>
+                                        )}
+                                        
+                                        {/* Full Grok API Response - Toggleable */}
+                                        {showFullReport && (
+                                            <div className="mt-3 pt-3 border-t border-[var(--keyline-primary)]">
+                                                {selectedSubmission.metadata.grok_evaluation_details?.raw_grok_response && 
+                                                 selectedSubmission.metadata.grok_evaluation_details.raw_grok_response.trim().length > 0 ? (
+                                                    <div>
+                                                        <div className="cockpit-label mb-2">Full Grok API Response</div>
+                                                        <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-obsidian)] rounded">
+                                                            <pre className="whitespace-pre-wrap text-xs overflow-auto max-h-96 font-mono cockpit-text">
+                                                                {selectedSubmission.metadata.grok_evaluation_details.raw_grok_response}
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                ) : selectedSubmission.metadata.grok_evaluation_details?.full_evaluation ? (
+                                                    <div>
+                                                        <div className="cockpit-label mb-2">Full Grok API Response (JSON)</div>
+                                                        <pre className="p-3 bg-[var(--cockpit-obsidian)] border border-[var(--keyline-primary)] rounded text-xs overflow-auto max-h-96 font-mono cockpit-text">
+                                                            {JSON.stringify(selectedSubmission.metadata.grok_evaluation_details.full_evaluation, null, 2)}
+                                                        </pre>
+                                                    </div>
+                                                ) : null}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Metadata */}
+                            <div className="grid grid-cols-2 gap-4 text-sm border-t border-[var(--keyline-primary)] pt-4">
+                                <div>
+                                    <div className="cockpit-label mb-1">Contributor</div>
+                                    <div className="cockpit-text">{selectedSubmission.contributor}</div>
+                                </div>
+                                <div>
+                                    <div className="cockpit-label mb-1">Category</div>
+                                    <div className="cockpit-text capitalize">{selectedSubmission.category || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <div className="cockpit-label mb-1">Submitted</div>
+                                    <div className="cockpit-text">{new Date(selectedSubmission.created_at).toLocaleString()}</div>
+                                </div>
+                                <div>
+                                    <div className="cockpit-label mb-1">Hash</div>
+                                    <div className="cockpit-text text-xs font-mono break-all">{selectedSubmission.submission_hash}</div>
+                                </div>
+                            </div>
+
+                            {/* Content Preview */}
+                            {selectedSubmission.text_content && (
+                                <div className="border-t border-[var(--keyline-primary)] pt-4">
+                                    <div className="cockpit-label mb-2">Content Preview</div>
+                                    <div className="cockpit-text text-sm max-h-40 overflow-y-auto p-3 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] rounded">
+                                        {selectedSubmission.text_content.substring(0, 500)}
+                                        {selectedSubmission.text_content.length > 500 && '...'}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Blockchain Registration Certificate */}
                             {selectedSubmission.registered && (
-                                <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
-                                    <div className="cockpit-label mb-2">Blockchain Registration</div>
-                                    {selectedSubmission.allocation_amount && (
-                                        <div className="flex justify-between items-center mb-2">
-                                            <span className="cockpit-text">SYNTH Allocation:</span>
-                                            <span className="cockpit-number">{formatAllocation(selectedSubmission.allocation_amount)}</span>
+                                <div className="pt-4 border-t border-[var(--keyline-primary)]">
+                                    <div className="cockpit-label mb-3">Registration & Allocation</div>
+                                    <div className="space-y-2 text-sm p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] rounded">
+                                        {selectedSubmission.allocation_amount !== null && selectedSubmission.allocation_amount > 0 && (
+                                            <div className="flex items-center justify-between">
+                                                <span className="cockpit-text">SYNTH Token Allocation:</span>
+                                                <span className="cockpit-number">
+                                                    {formatAllocation(selectedSubmission.allocation_amount)}
+                                                </span>
+                                            </div>
+                                        )}
+                                        {selectedSubmission.registration_tx_hash && (
+                                            <div>
+                                                <div className="cockpit-text mb-1">Transaction Hash:</div>
+                                                <div className="cockpit-text text-xs font-mono break-all">
+                                                    {selectedSubmission.registration_tx_hash}
+                                                </div>
+                                            </div>
+                                        )}
+                                        {selectedSubmission.registration_date && (
+                                            <div className="flex items-center justify-between">
+                                                <span className="cockpit-text">Registered:</span>
+                                                <span className="cockpit-text">{new Date(selectedSubmission.registration_date).toLocaleString()}</span>
+                                            </div>
+                                        )}
+                                        {selectedSubmission.stripe_payment_id && (
+                                            <div className="flex items-center justify-between">
+                                                <span className="cockpit-text">Payment ID:</span>
+                                                <span className="cockpit-text text-xs font-mono">
+                                                    {selectedSubmission.stripe_payment_id}
+                                                </span>
+                                            </div>
+                                        )}
+                                        <div className="mt-3 p-3 border border-[var(--keyline-primary)] bg-[var(--cockpit-obsidian)] rounded">
+                                            <div className="text-xs cockpit-label mb-1">
+                                                ✓ Registered on Hard Hat L1 Blockchain
+                                            </div>
+                                            <div className="text-xs cockpit-text">
+                                                This PoC has been registered in the Syntheverse SYNTH90T Motherlode Blockmine on the Hard Hat blockchain.
+                                            </div>
                                         </div>
-                                    )}
-                                    {selectedSubmission.registration_tx_hash && (
-                                        <div className="cockpit-text text-xs font-mono break-all mt-2">
-                                            TX: {selectedSubmission.registration_tx_hash}
-                                        </div>
-                                    )}
+                                    </div>
                                 </div>
                             )}
 
@@ -543,6 +799,16 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
                                                 </>
                                             )}
                                         </button>
+                                    )}
+                                    {selectedSubmission.registered && !selectedSubmission.allocated && (
+                                        <div className="cockpit-text text-sm">
+                                            PoC is registered. Allocation can be processed.
+                                        </div>
+                                    )}
+                                    {selectedSubmission.allocated && (
+                                        <div className="cockpit-text text-sm text-green-400">
+                                            Tokens allocated
+                                        </div>
                                     )}
                                 </div>
                             )}
