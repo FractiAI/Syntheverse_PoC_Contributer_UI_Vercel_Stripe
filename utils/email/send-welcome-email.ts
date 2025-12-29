@@ -178,7 +178,7 @@ export async function sendWelcomeEmail(data: WelcomeEmailData): Promise<{ succes
         <div style="background: rgba(255,184,77,0.15); padding: 25px; border-radius: 8px; margin-bottom: 30px; border: 2px solid #ffb84d;">
             <h3 style="margin-top: 0; color: #ffb84d; font-size: 20px; text-transform: uppercase; letter-spacing: 1px;">Your Journey Begins Now</h3>
             <p style="font-size: 15px; color: #fff; line-height: 1.8; margin-bottom: 20px;">
-                Within Syntheverse, you are not just a user—you are a frontier cartographer, an independent contributor, a builder of the regenerative ecosystem. Every submission you make trains the Syntheverse AI. Every registered PoC anchors your legacy on the blockchain. Every contribution strengthens the collective intelligence of the Motherlode Blockmine.
+                Within Syntheverse, you are not just a user—you are a Syntheverse Frontier Contributor, an independent contributor, a builder of the regenerative ecosystem. Every submission you make trains the Syntheverse AI. Every registered PoC anchors your legacy on the blockchain. Every contribution strengthens the collective intelligence of the Motherlode Blockmine.
             </p>
             <p style="font-size: 15px; color: #fff; line-height: 1.8; margin: 0;">
                 Entry into Syntheverse is awareness-based. The depth of your engagement determines the richness of your experience. Operate within Syntheverse according to your own natural resonance.

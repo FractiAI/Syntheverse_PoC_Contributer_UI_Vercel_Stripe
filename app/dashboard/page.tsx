@@ -43,7 +43,7 @@ export default async function Dashboard() {
                 <div className="cockpit-panel p-6">
                     <div className="flex items-center justify-between">
                         <div>
-                            <div className="cockpit-label">FRONTIER CARTOGRAPHER</div>
+                            <div className="cockpit-label">SYNTHVERSE FRONTIER CONTRIBUTOR</div>
                             <div className="cockpit-title text-2xl mt-1">{displayName.toUpperCase()}</div>
                             <div className="cockpit-text mt-2">Recording truth into the chain</div>
                         </div>

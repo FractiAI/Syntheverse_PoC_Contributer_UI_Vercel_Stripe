@@ -163,49 +163,54 @@ export function FinancialAlignmentButton() {
                     <ChevronDown className="inline h-4 w-4 ml-2" />
                 </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="bg-[var(--cockpit-obsidian)] border-[var(--keyline-primary)] min-w-[320px] p-0">
-                    <div className="p-3 border-b border-[var(--keyline-primary)]">
+                <DropdownMenuContent 
+                    align="end" 
+                    className="bg-[var(--cockpit-obsidian)] border-[var(--keyline-primary)] min-w-[320px] max-h-[80vh] overflow-y-auto p-0"
+                >
+                    <div className="p-3 border-b border-[var(--keyline-primary)] sticky top-0 bg-[var(--cockpit-obsidian)] z-10">
                         <div className="cockpit-label text-xs mb-1">Select Contribution Level</div>
                         <div className="cockpit-text text-xs">Choose your level and register on blockchain</div>
                     </div>
-                    {products.map((product) => (
-                        <div key={product.id} className="border-b border-[var(--keyline-primary)] last:border-b-0">
-                            <div className="p-3 hover:bg-[var(--cockpit-carbon)]">
-                                <div className="flex items-center justify-between mb-2">
-                                    <div className="flex-1">
-                                        <div className="font-medium cockpit-text">{product.name}</div>
-                                        {product.description && (
-                                            <div className="text-xs text-muted-foreground mt-1">{product.description}</div>
-                                        )}
+                    <div className="max-h-[calc(80vh-80px)] overflow-y-auto">
+                        {products.map((product) => (
+                            <div key={product.id} className="border-b border-[var(--keyline-primary)] last:border-b-0">
+                                <div className="p-3 hover:bg-[var(--cockpit-carbon)]">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <div className="flex-1">
+                                            <div className="font-medium cockpit-text">{product.name}</div>
+                                            {product.description && (
+                                                <div className="text-xs text-muted-foreground mt-1">{product.description}</div>
+                                            )}
+                                        </div>
+                                        <div className="ml-4">
+                                            {processing === product.id ? (
+                                                <Loader2 className="h-4 w-4 animate-spin" />
+                                            ) : (
+                                                <span className="cockpit-number text-sm">{formatAmount(product.amount)}</span>
+                                            )}
+                                        </div>
                                     </div>
-                                    <div className="ml-4">
+                                    <button
+                                        onClick={() => handleRegister(product)}
+                                        disabled={processing === product.id || !product.price_id}
+                                        className="cockpit-lever w-full text-sm py-2 mt-2"
+                                    >
                                         {processing === product.id ? (
-                                            <Loader2 className="h-4 w-4 animate-spin" />
+                                            <>
+                                                <Loader2 className="inline h-4 w-4 mr-2 animate-spin" />
+                                                Processing...
+                                            </>
                                         ) : (
-                                            <span className="cockpit-number text-sm">{formatAmount(product.amount)}</span>
+                                            <>
+                                                <CreditCard className="inline h-4 w-4 mr-2" />
+                                                Register on Blockchain Now
+                                            </>
                                         )}
-                                    </div>
+                                    </button>
                                 </div>
-                                <button
-                                    onClick={() => handleRegister(product)}
-                                    disabled={processing === product.id || !product.price_id}
-                                    className="cockpit-lever w-full text-sm py-2 mt-2"
-                                >
-                                    {processing === product.id ? (
-                                        <>
-                                            <Loader2 className="inline h-4 w-4 mr-2 animate-spin" />
-                                            Processing...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <CreditCard className="inline h-4 w-4 mr-2" />
-                                            Register on Blockchain Now
-                                        </>
-                                    )}
-                                </button>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </DropdownMenuContent>
             </DropdownMenu>
 
