@@ -47,17 +47,13 @@ export default async function Dashboard() {
                             <div className="cockpit-text mt-2">Recording truth into the chain</div>
                         </div>
                         <div className="flex gap-3">
-                            <Link href="/">
-                                <button className="cockpit-lever">
-                                    <BookOpen className="inline h-4 w-4 mr-2" />
-                                    Onboarding Navigator
-                                </button>
+                            <Link href="/onboarding" className="cockpit-lever inline-block">
+                                <BookOpen className="inline h-4 w-4 mr-2" />
+                                Onboarding Navigator
                             </Link>
-                            <Link href="/submit">
-                                <button className="cockpit-lever">
-                                    <span className="mr-2">◎</span>
-                                    Submit Contribution
-                                </button>
+                            <Link href="/submit" className="cockpit-lever inline-block">
+                                <span className="mr-2">◎</span>
+                                Submit Contribution
                             </Link>
                         </div>
                     </div>

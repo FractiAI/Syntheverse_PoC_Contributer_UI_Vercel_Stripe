@@ -57,13 +57,14 @@ export async function updateSession(request: NextRequest) {
         !request.nextUrl.pathname.startsWith('/login') &&
         !request.nextUrl.pathname.startsWith('/signup') &&
         !request.nextUrl.pathname.startsWith('/forgot-password') &&
-        !(request.nextUrl.pathname === '/')
+        !(request.nextUrl.pathname === '/') &&
+        !request.nextUrl.pathname.startsWith('/onboarding')
     ) {
         // no user, potentially respond by redirecting the user to the login page
         url.pathname = '/login'
         return NextResponse.redirect(url)
     }
-    // // If user is logged in, redirect to dashboard
+    // // If user is logged in, redirect to dashboard (but allow onboarding)
     if (user && request.nextUrl.pathname === '/') {
         url.pathname = '/dashboard'
         return NextResponse.redirect(url)
