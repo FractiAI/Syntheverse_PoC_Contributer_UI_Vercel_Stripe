@@ -79,6 +79,15 @@ export function ReactorCore() {
                 }
                 const data = await response.json()
                 setEpochInfo(data)
+                
+                // Debug log to verify balance updates
+                if (data.epochs?.founder) {
+                    console.log('ReactorCore: Epoch info updated', {
+                        founderBalance: data.epochs.founder.balance,
+                        totalAvailable: data.epochs ? Object.values(data.epochs).reduce((sum: number, epoch: any) => sum + (epoch.balance || 0), 0) : 0,
+                        timestamp: new Date().toISOString()
+                    })
+                }
             } catch (fetchErr) {
                 clearTimeout(timeoutId)
                 if (fetchErr instanceof Error && fetchErr.name === 'AbortError') {

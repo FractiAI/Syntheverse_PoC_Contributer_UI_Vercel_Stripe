@@ -172,7 +172,14 @@ export async function GET(request: NextRequest) {
             balances: Object.fromEntries(
                 Object.entries(epochs).map(([key, value]) => [key, value.balance])
             ),
-            rawBalances: epochBalances.map(e => ({ epoch: e.epoch, balance: e.balance, balanceType: typeof e.balance }))
+            rawBalances: epochBalances.map(e => ({ 
+                epoch: e.epoch, 
+                balance: e.balance, 
+                balanceType: typeof e.balance,
+                id: e.id
+            })),
+            founderBalance: epochs.founder?.balance,
+            founderRaw: epochBalances.find(e => e.epoch === 'founder')?.balance
         })
         
         const epochInfo = {

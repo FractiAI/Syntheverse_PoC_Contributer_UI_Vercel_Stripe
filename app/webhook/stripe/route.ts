@@ -618,13 +618,31 @@ async function handleFinancialAlignmentPayment(session: Stripe.Checkout.Session)
             })
             
             // Update Founder epoch balance
-            await db
+            const updateResult = await db
                 .update(epochBalancesTable)
                 .set({
                     balance: newBalance.toString(),
                     updated_at: new Date()
                 })
                 .where(eq(epochBalancesTable.epoch, founderEpoch))
+                .returning()
+            
+            // Verify the update was successful
+            const verifyBalance = await db
+                .select()
+                .from(epochBalancesTable)
+                .where(eq(epochBalancesTable.epoch, founderEpoch))
+                .limit(1)
+            
+            const verifiedBalance = verifyBalance[0] ? Number(verifyBalance[0].balance) : null
+            
+            debug('StripeWebhook', 'Founder epoch balance update verification', {
+                submissionHash,
+                expectedNewBalance: newBalance,
+                verifiedBalance: verifiedBalance,
+                updateMatches: verifiedBalance === newBalance,
+                updateResultCount: updateResult.length
+            })
             
             // Update tokenomics total_distributed
             const tokenomicsState = await db
@@ -650,7 +668,21 @@ async function handleFinancialAlignmentPayment(session: Stripe.Checkout.Session)
                 synthAllocation,
                 epoch: founderEpoch,
                 balanceBefore: currentBalance,
-                balanceAfter: newBalance
+                balanceAfter: newBalance,
+                verifiedBalance: verifiedBalance,
+                allocationRecordId: allocationId
+            })
+            
+            // Log allocation summary for debugging
+            console.log('✅ Financial Alignment Allocation Complete:', {
+                contributorEmail,
+                amount: amount,
+                tier,
+                synthAllocation: synthAllocation.toLocaleString(),
+                founderBalanceBefore: currentBalance.toLocaleString(),
+                founderBalanceAfter: newBalance.toLocaleString(),
+                founderBalanceVerified: verifiedBalance?.toLocaleString(),
+                submissionHash
             })
         } catch (allocationError) {
             // Log allocation error but don't fail the webhook (payment is complete)
