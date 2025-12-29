@@ -66,6 +66,9 @@ export function FinancialAlignmentButton() {
             return
         }
 
+        // Close dropdown menu first
+        setIsOpen(false)
+        
         // Show confirmation dialog with ERC-20 alignment language
         setSelectedProduct(product)
         setConfirmDialogOpen(true)
@@ -123,12 +126,14 @@ export function FinancialAlignmentButton() {
             const errorMessage = err instanceof Error ? err.message : 'Failed to register Financial Alignment PoC'
             alert(`Registration Error: ${errorMessage}`)
             setProcessing(null)
+            // Don't close dialog on error so user can try again
         }
     }
 
     function cancelRegister() {
         setConfirmDialogOpen(false)
         setSelectedProduct(null)
+        setProcessing(null) // Reset processing state
     }
 
     const formatAmount = (amount: number) => {
@@ -268,7 +273,17 @@ export function FinancialAlignmentButton() {
             </DropdownMenu>
 
             {/* ERC-20 Alignment Confirmation Dialog */}
-            <Dialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
+            <Dialog 
+                open={confirmDialogOpen} 
+                onOpenChange={(open) => {
+                    setConfirmDialogOpen(open)
+                    if (!open) {
+                        // Reset state when dialog closes
+                        setSelectedProduct(null)
+                        setProcessing(null)
+                    }
+                }}
+            >
                 <DialogContent className="bg-[var(--cockpit-obsidian)] border-[var(--keyline-primary)] max-w-2xl max-h-[90vh] flex flex-col p-0">
                     <div className="p-6 pb-4">
                         <DialogHeader>
