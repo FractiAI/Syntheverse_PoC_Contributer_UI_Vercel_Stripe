@@ -1,5 +1,19 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
+import { requireEnvironmentVariables } from '@/utils/env-validation';
+
+// Validate all required environment variables at startup
+try {
+    requireEnvironmentVariables();
+} catch (error) {
+    console.error('Environment validation failed:', error instanceof Error ? error.message : error);
+    // In production, fail fast. In development, warn but continue.
+    if (process.env.NODE_ENV === 'production') {
+        throw error;
+    } else {
+        console.warn('Continuing in development mode despite validation failures');
+    }
+}
 
 // Validate DATABASE_URL before creating connection
 if (!process.env.DATABASE_URL) {

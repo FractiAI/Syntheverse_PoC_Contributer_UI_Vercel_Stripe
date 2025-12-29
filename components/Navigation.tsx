@@ -12,6 +12,12 @@ const navItems = [
 
 export function Navigation() {
   const pathname = usePathname()
+  const isDashboard = pathname?.startsWith('/dashboard')
+
+  // Don't render on dashboard - dashboard has its own header
+  if (isDashboard) {
+    return null
+  }
 
   return (
     <nav className="border-b bg-card">
