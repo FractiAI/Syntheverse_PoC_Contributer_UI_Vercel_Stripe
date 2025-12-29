@@ -30,8 +30,10 @@ export function ReactorCore() {
         
         const params = new URLSearchParams(window.location.search)
         const registrationStatus = params.get('registration')
+        const financialAlignmentStatus = params.get('financial_alignment')
         
-        if (registrationStatus === 'success') {
+        // Poll for updates after successful registration or financial alignment payment
+        if (registrationStatus === 'success' || financialAlignmentStatus === 'success') {
             let pollCount = 0
             const maxPolls = 20
             
@@ -42,6 +44,12 @@ export function ReactorCore() {
                 if (pollCount >= maxPolls) {
                     clearInterval(pollInterval)
                     fetchEpochInfo(false)
+                    // Clean up URL parameters after polling completes
+                    const newUrl = new URL(window.location.href)
+                    newUrl.searchParams.delete('registration')
+                    newUrl.searchParams.delete('financial_alignment')
+                    newUrl.searchParams.delete('product_id')
+                    window.history.replaceState({}, '', newUrl.toString())
                 }
             }, 1000)
             

@@ -17,20 +17,26 @@ export async function GET(request: NextRequest) {
     headers.set('Pragma', 'no-cache')
     headers.set('Expires', '0')
     
-    try {
-        // Check if DATABASE_URL is configured
-        if (!process.env.DATABASE_URL) {
-            debug('EpochInfo', 'DATABASE_URL not configured, returning default epoch info')
-            return NextResponse.json({
-                current_epoch: 'founder',
-                epochs: {
-                    founder: { balance: 45000000000000, threshold: 0, distribution_amount: 0, distribution_percent: 50.0, available_tiers: [] },
-                    pioneer: { balance: 22500000000000, threshold: 0, distribution_amount: 0, distribution_percent: 25.0, available_tiers: [] },
-                    community: { balance: 11250000000000, threshold: 0, distribution_amount: 0, distribution_percent: 12.5, available_tiers: [] },
-                    ecosystem: { balance: 11250000000000, threshold: 0, distribution_amount: 0, distribution_percent: 12.5, available_tiers: [] }
+    // Set a timeout for the entire operation (8 seconds to be safe, client times out at 10s)
+    const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Epoch info fetch timed out')), 8000)
+    })
+    
+    const fetchOperation = async () => {
+        try {
+            // Check if DATABASE_URL is configured
+            if (!process.env.DATABASE_URL) {
+                debug('EpochInfo', 'DATABASE_URL not configured, returning default epoch info')
+                return {
+                    current_epoch: 'founder',
+                    epochs: {
+                        founder: { balance: 45000000000000, threshold: 0, distribution_amount: 0, distribution_percent: 50.0, available_tiers: [] },
+                        pioneer: { balance: 22500000000000, threshold: 0, distribution_amount: 0, distribution_percent: 25.0, available_tiers: [] },
+                        community: { balance: 11250000000000, threshold: 0, distribution_amount: 0, distribution_percent: 12.5, available_tiers: [] },
+                        ecosystem: { balance: 11250000000000, threshold: 0, distribution_amount: 0, distribution_percent: 12.5, available_tiers: [] }
+                    }
                 }
-            }, { headers })
-        }
+            }
 
         // Get current epoch from tokenomics
         const tokenomics = await db
@@ -97,14 +103,14 @@ export async function GET(request: NextRequest) {
                     }
                 })
                 
-                return NextResponse.json({
+                return {
                     current_epoch: currentEpoch,
                     epochs
-                }, { headers })
+                }
             } catch (insertError) {
                 // Table might not exist, return default values
                 debug('EpochInfo', 'Could not insert default epochs, returning defaults', insertError)
-                return NextResponse.json({
+                return {
                     current_epoch: 'founder',
                     epochs: {
                         founder: { balance: 45000000000000, threshold: 0, distribution_amount: 0, distribution_percent: 50.0, available_tiers: [] },
@@ -112,7 +118,7 @@ export async function GET(request: NextRequest) {
                         community: { balance: 11250000000000, threshold: 0, distribution_amount: 0, distribution_percent: 12.5, available_tiers: [] },
                         ecosystem: { balance: 11250000000000, threshold: 0, distribution_amount: 0, distribution_percent: 12.5, available_tiers: [] }
                     }
-                }, { headers })
+                }
             }
         }
         
@@ -176,7 +182,17 @@ export async function GET(request: NextRequest) {
         
         debug('EpochInfo', 'Epoch information fetched successfully', epochInfo)
         
-        return NextResponse.json(epochInfo, { headers })
+        return epochInfo
+        } catch (error) {
+            debugError('EpochInfo', 'Error in fetch operation', error)
+            throw error
+        }
+    }
+    
+    try {
+        // Race between fetch operation and timeout
+        const result = await Promise.race([fetchOperation(), timeoutPromise])
+        return NextResponse.json(result, { headers })
     } catch (error) {
         debugError('EpochInfo', 'Error fetching epoch information', error)
         // Return default epoch info instead of 500 error to prevent UI crashes

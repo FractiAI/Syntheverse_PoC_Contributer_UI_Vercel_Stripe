@@ -4,6 +4,13 @@
  * GET /api/financial-alignment/products
  * 
  * Returns list of active Stripe products that are Financial Alignment contributions
+ * 
+ * Expected Financial Alignment Products:
+ * - $10,000: prod_ThCg591XcQWl8v
+ * - $25,000: prod_ThCivl88RobmOP
+ * - $50,000: prod_ThCjft1qMQNBVo
+ * - $100,000: prod_ThCkM2ilGNZ1mo
+ * - $250,000: prod_ThCn3TWm8mrVqT
  */
 
 import { NextRequest, NextResponse } from 'next/server'
@@ -31,10 +38,25 @@ export async function GET(request: NextRequest) {
             expand: ['data.default_price']
         })
 
+        // Known Financial Alignment product IDs
+        const knownProductIds = [
+            'prod_ThCg591XcQWl8v', // $10,000
+            'prod_ThCivl88RobmOP', // $25,000
+            'prod_ThCjft1qMQNBVo', // $50,000
+            'prod_ThCkM2ilGNZ1mo', // $100,000
+            'prod_ThCn3TWm8mrVqT', // $250,000
+        ]
+
         // Filter for Financial Alignment products
         // Products should have metadata.type === 'financial_alignment' or name contains "Contribution"
+        // OR match known product IDs
         const financialAlignmentProducts = products.data
             .filter(product => {
+                // Always include known product IDs
+                if (knownProductIds.includes(product.id)) {
+                    return true
+                }
+                
                 const name = product.name.toLowerCase()
                 const metadataType = product.metadata?.type?.toLowerCase()
                 const hasContributionKeyword = name.includes('contribution')

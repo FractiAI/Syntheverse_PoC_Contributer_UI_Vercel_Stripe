@@ -119,6 +119,12 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
         metadata: session.metadata 
     })
     
+    // Check if this is a Financial Alignment contribution
+    if (session.metadata?.type === 'financial_alignment_poc') {
+        await handleFinancialAlignmentPayment(session)
+        return
+    }
+    
     // Check if this is a PoC registration payment
     if (session.metadata?.type === 'poc_registration') {
         const submissionHash = session.metadata.submission_hash
@@ -409,5 +415,107 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
             debugError('StripeWebhook', 'Error updating PoC registration', error)
             throw error
         }
+    }
+}
+
+async function handleFinancialAlignmentPayment(session: Stripe.Checkout.Session) {
+    debug('StripeWebhook', 'Processing Financial Alignment payment', {
+        sessionId: session.id,
+        metadata: session.metadata,
+        customerEmail: session.customer_email || session.customer_details?.email
+    })
+    
+    try {
+        const contributorEmail = session.metadata?.contributor || session.customer_email || session.customer_details?.email
+        
+        if (!contributorEmail) {
+            debugError('StripeWebhook', 'No contributor email found for Financial Alignment payment', {
+                sessionId: session.id,
+                metadata: session.metadata
+            })
+            return
+        }
+        
+        // Get user from database
+        const users = await db
+            .select()
+            .from(usersTable)
+            .where(eq(usersTable.email, contributorEmail))
+            .limit(1)
+        
+        if (users.length === 0) {
+            debugError('StripeWebhook', 'User not found for Financial Alignment payment', {
+                email: contributorEmail,
+                sessionId: session.id
+            })
+            return
+        }
+        
+        const user = users[0]
+        const productId = session.metadata?.product_id || ''
+        const productName = session.metadata?.product_name || 'Financial Alignment Contribution'
+        const amount = session.amount_total ? Number(session.amount_total) / 100 : 0 // Convert from cents
+        
+        // Create a record in the contributions table for financial alignment
+        // Use a hash based on session ID + timestamp for submission_hash
+        const submissionHash = `financial_alignment_${session.id.replace('cs_', '')}`
+        
+        // Check if already exists
+        const existing = await db
+            .select()
+            .from(contributionsTable)
+            .where(eq(contributionsTable.submission_hash, submissionHash))
+            .limit(1)
+        
+        if (existing.length > 0) {
+            debug('StripeWebhook', 'Financial Alignment contribution already recorded', {
+                submissionHash,
+                sessionId: session.id
+            })
+            return
+        }
+        
+        // Insert financial alignment contribution record
+        await db.insert(contributionsTable).values({
+            submission_hash: submissionHash,
+            title: productName,
+            contributor: contributorEmail,
+            content_hash: submissionHash, // Use same hash as submission_hash for financial alignment
+            status: 'registered', // Financial alignment contributions are immediately registered
+            category: 'alignment',
+            metals: ['copper'], // Default metal for financial alignment
+            metadata: {
+                type: 'financial_alignment_poc',
+                product_id: productId,
+                product_name: productName,
+                amount: amount,
+                erc20_alignment_only: true,
+                no_ownership: true,
+                no_external_trading: true
+            },
+            registered: true,
+            registration_date: new Date(),
+            stripe_payment_id: session.payment_intent as string,
+            registration_tx_hash: null, // No blockchain registration for financial alignment (just payment)
+            created_at: new Date(),
+            updated_at: new Date()
+        })
+        
+        debug('StripeWebhook', 'Financial Alignment contribution recorded', {
+            submissionHash,
+            sessionId: session.id,
+            contributorEmail,
+            productName,
+            amount,
+            stripePaymentId: session.payment_intent
+        })
+        
+        // TODO: Allocate tokens for financial alignment if needed
+        // Financial alignment contributors get tokens based on their contribution level
+        // This should be handled separately from PoC allocations
+        
+    } catch (error) {
+        debugError('StripeWebhook', 'Error processing Financial Alignment payment', error)
+        // Don't throw - payment is complete, we don't want to retry the webhook
     }
 }
