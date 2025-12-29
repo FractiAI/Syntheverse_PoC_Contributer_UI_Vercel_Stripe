@@ -155,11 +155,11 @@ export function FinancialAlignmentButton() {
         <>
             <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
                 <DropdownMenuTrigger asChild>
-                    <button className="cockpit-lever">
-                        <CreditCard className="inline h-4 w-4 mr-2" />
-                        Financial Alignment PoC
-                        <ChevronDown className="inline h-4 w-4 ml-2" />
-                    </button>
+                <button className="cockpit-lever">
+                    <CreditCard className="inline h-4 w-4 mr-2" />
+                    Financial Alignment Contribution
+                    <ChevronDown className="inline h-4 w-4 ml-2" />
+                </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="bg-[var(--cockpit-obsidian)] border-[var(--keyline-primary)] min-w-[280px]">
                     {products.map((product) => (

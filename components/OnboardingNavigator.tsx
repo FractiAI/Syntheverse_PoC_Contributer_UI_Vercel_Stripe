@@ -69,14 +69,16 @@ export function OnboardingNavigator() {
                                 <div className="cockpit-label mb-2">Regenerative PoC-Based Ecosystem</div>
                                 <p className="cockpit-text text-sm mb-3">
                                     Syntheverse operates through a <strong>regenerative Proof-of-Contribution system</strong> where every PoC submission 
-                                    strengthens and improves the ecosystem. As contributors submit, evaluate, and register PoCs, the system learns, 
-                                    evolves, and becomes more capable.
+                                    is evaluated using the new <strong>Holographic Hydrogen Fractal Syntheverse Lens and Sandbox</strong>, providing detailed 
+                                    images and vectors for submissions, and providing consistent tools for measuring contribution—whether scientific, 
+                                    technological, or alignment—to the Holographic Hydrogen Fractal Syntheverse Sandbox and Ecosystem.
                                 </p>
                                 <ul className="space-y-2 cockpit-text text-sm">
-                                    <li>• <strong>PoC Submissions:</strong> Scientific, technological, and alignment contributions are evaluated and scored</li>
-                                    <li>• <strong>AI Evaluation:</strong> Advanced evaluation improves with each contribution</li>
-                                    <li>• <strong>Ecosystem Learning:</strong> Every PoC trains and enhances the Syntheverse intelligence</li>
-                                    <li>• <strong>Continuous Improvement:</strong> The system regenerates and improves itself through participation</li>
+                                    <li>• <strong>Holographic Hydrogen Fractal Lens:</strong> Advanced evaluation system providing detailed visual and vector analysis</li>
+                                    <li>• <strong>Consistent Measurement Tools:</strong> Unified framework for evaluating scientific, technological, and alignment contributions</li>
+                                    <li>• <strong>Image & Vector Analysis:</strong> Detailed visual representations and vector data for each submission</li>
+                                    <li>• <strong>Ecosystem Learning:</strong> Every PoC trains and enhances the Syntheverse intelligence through the sandbox</li>
+                                    <li>• <strong>Continuous Improvement:</strong> The system regenerates and improves itself through participation and evaluation</li>
                                 </ul>
                             </div>
                             <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
@@ -86,13 +88,48 @@ export function OnboardingNavigator() {
                                     by the 90 Trillion SYNTH token Motherlode Blockmine. This ecosystem rewards contribution, tracks alignment, and 
                                     provides a self-contained economic system.
                                 </p>
-                                <ul className="space-y-2 cockpit-text text-sm">
+                                <ul className="space-y-2 cockpit-text text-sm mb-4">
                                     <li>• <strong>ERC-20 SYNTH Tokens:</strong> Internal cryptocurrency for alignment and participation</li>
                                     <li>• <strong>Token Distribution:</strong> Rewards based on PoC scores, epochs, and contribution tiers</li>
                                     <li>• <strong>Blockchain Anchored:</strong> All transactions and allocations recorded permanently on-chain</li>
                                     <li>• <strong>Internal Economy:</strong> Self-contained ecosystem that grows and regenerates through participation</li>
-                                    <li>• <strong>Alignment Purpose:</strong> Tokens for ecosystem participation, not external trading or ownership</li>
                                 </ul>
+                            </div>
+                            <div className="p-4 border border-[var(--hydrogen-amber)] bg-[rgba(255,215,0,0.05)]">
+                                <div className="cockpit-label mb-3 text-[var(--hydrogen-amber)]">
+                                    ERC-20 Token Alignment Purpose & Restrictions
+                                </div>
+                                <div className="cockpit-text space-y-3 text-sm">
+                                    <div>
+                                        <p className="mb-2">
+                                            <strong>ALIGNMENT PURPOSE ONLY:</strong> ERC-20 tokens (SYNTH) on the Hard Hat L1 blockchain are issued 
+                                            for the sole purpose of <strong>alignment with the Syntheverse ecosystem</strong> and participation in 
+                                            the Motherlode Blockmine collective intelligence network.
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p className="mb-2">
+                                            <strong>NOT FOR OWNERSHIP:</strong> These ERC-20 tokens do <strong>NOT</strong> represent equity, ownership, 
+                                            shares, or any form of financial interest in any entity, organization, or project. They are utility tokens 
+                                            for alignment and participation purposes only.
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p className="mb-2">
+                                            <strong>NO EXTERNAL TRADING:</strong> These ERC-20 tokens are <strong>NON-TRANSFERABLE</strong> and 
+                                            <strong> NON-TRADEABLE</strong> on external exchanges, marketplaces, or trading platforms. They cannot be 
+                                            sold, transferred, or exchanged for other cryptocurrencies, fiat currency, or any other assets outside 
+                                            the Syntheverse ecosystem.
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p className="mb-2">
+                                            <strong>ECOSYSTEM UTILITY ONLY:</strong> These tokens function exclusively within the Syntheverse ecosystem 
+                                            for participation, governance (if applicable), and alignment tracking within the Motherlode Blockmine network. 
+                                            They have no external monetary value.
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                             <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
                                 <div className="cockpit-label mb-2">The Mission</div>
