@@ -115,6 +115,8 @@ export function FinancialAlignmentButton() {
                 throw new Error(`Invalid checkout URL format`)
             }
 
+            // Redirect to Stripe checkout for payment
+            console.log('Redirecting to Stripe checkout:', data.checkout_url)
             window.location.href = data.checkout_url
         } catch (err) {
             console.error('Registration error:', err)
