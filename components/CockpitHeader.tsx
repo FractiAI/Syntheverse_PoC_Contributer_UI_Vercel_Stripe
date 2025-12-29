@@ -16,8 +16,8 @@ export default function CockpitHeader() {
                         <div className="relative">
                             {/* Symbol: Spiral / Origin / Hydrogen Lattice */}
                             <div className="cockpit-symbol">🌀</div>
-                            <div className="absolute -top-1 -right-1 w-2 h-2 bg-[var(--hydrogen-amber)] rounded-full animate-pulse" 
-                                 style={{ boxShadow: '0 0 10px var(--hydrogen-amber)' }}></div>
+                            <div className="absolute -top-1 -right-1 w-2 h-2 rounded-full animate-pulse" 
+                                 style={{ backgroundColor: '#ffb84d', boxShadow: '0 0 10px #ffb84d' }}></div>
                         </div>
                         <div>
                             <div className="cockpit-title text-2xl">SYNTHVERSE</div>
@@ -30,7 +30,7 @@ export default function CockpitHeader() {
                         {/* Current Epoch Status - Will be populated dynamically */}
                         <div className="hidden md:flex items-center gap-2">
                             <div className="cockpit-badge">
-                                <span className="text-[var(--hydrogen-amber)]">◎</span>
+                                <span style={{ color: '#ffb84d' }}>◎</span>
                                 <span className="ml-2">FOUNDER</span>
                             </div>
                         </div>
