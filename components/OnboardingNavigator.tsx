@@ -442,6 +442,11 @@ export function OnboardingNavigator() {
                             <div className="cockpit-label">ONBOARDING NAVIGATOR</div>
                             <div className="cockpit-title text-3xl mt-2">SYNTHEVERSE TRAINING MODULES</div>
                             <div className="cockpit-text mt-2">
+                                <strong>A new way to collaborate independently</strong> while building a <strong>regenerative PoC-based internal ERC-20 crypto ecosystem</strong> on the blockchain
+                            </div>
+                            <div className="cockpit-text mt-3" style={{ opacity: 0.8 }}>
+                                Master the Motherlode Blockmine, Holographic Hydrogen, and the Fractal Frontier
+                            </div>
                                 Master the Motherlode Blockmine, Holographic Hydrogen, and the Fractal Frontier
                             </div>
                         </div>
