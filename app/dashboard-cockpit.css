@@ -421,6 +421,142 @@
   display: block;
 }
 
+/* Form Controls - Cockpit Styling */
+.cockpit-input {
+  font-family: var(--font-cockpit);
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: var(--cockpit-carbon);
+  border: var(--keyline-medium) solid var(--keyline-primary);
+  color: #ffffff;
+  font-size: 0.875rem;
+  transition: all var(--animation-fast) var(--easing-deliberate);
+}
+
+.cockpit-input:focus {
+  outline: none;
+  border-color: var(--hydrogen-amber);
+  box-shadow: 0 0 10px var(--hydrogen-glow);
+  background: var(--cockpit-obsidian);
+}
+
+.cockpit-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.cockpit-select {
+  font-family: var(--font-cockpit);
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: var(--cockpit-carbon);
+  border: var(--keyline-medium) solid var(--keyline-primary);
+  color: #ffffff;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all var(--animation-fast) var(--easing-deliberate);
+}
+
+.cockpit-select:focus {
+  outline: none;
+  border-color: var(--hydrogen-amber);
+  box-shadow: 0 0 10px var(--hydrogen-glow);
+}
+
+.cockpit-file-input {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.cockpit-file-input input[type="file"] {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.cockpit-file-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: var(--cockpit-carbon);
+  border: var(--keyline-medium) dashed var(--keyline-primary);
+  cursor: pointer;
+  transition: all var(--animation-fast) var(--easing-deliberate);
+  font-family: var(--font-cockpit);
+  text-align: center;
+}
+
+.cockpit-file-label:hover {
+  border-color: var(--hydrogen-amber);
+  background: var(--cockpit-obsidian);
+  box-shadow: 0 0 15px var(--hydrogen-glow);
+}
+
+.cockpit-file-label.has-file {
+  border-style: solid;
+  border-color: var(--hydrogen-amber);
+  background: rgba(255, 184, 77, 0.05);
+}
+
+/* Transmission Button - Engaging System */
+.cockpit-transmission {
+  font-family: var(--font-cockpit);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 1.25rem 2.5rem;
+  background: var(--cockpit-near-black);
+  border: var(--keyline-thick) solid var(--hydrogen-amber);
+  color: var(--hydrogen-amber);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--animation-fast) var(--easing-deliberate);
+  box-shadow: 0 0 20px var(--hydrogen-glow);
+}
+
+.cockpit-transmission::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 184, 77, 0.3),
+    transparent
+  );
+  transition: left var(--animation-medium) var(--easing-deliberate);
+}
+
+.cockpit-transmission:hover {
+  background: rgba(255, 184, 77, 0.1);
+  box-shadow: 0 0 30px var(--hydrogen-glow);
+  transform: translateY(-2px);
+}
+
+.cockpit-transmission:hover::before {
+  left: 100%;
+}
+
+.cockpit-transmission:active {
+  transform: translateY(0);
+  box-shadow: 0 0 15px var(--hydrogen-glow);
+}
+
+.cockpit-transmission:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: var(--keyline-primary);
+  color: rgba(255, 255, 255, 0.5);
+}
+
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .cockpit-title {

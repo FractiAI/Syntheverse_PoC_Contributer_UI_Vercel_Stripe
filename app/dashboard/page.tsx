@@ -6,6 +6,7 @@ import { usersTable } from '@/utils/db/schema'
 import { eq } from "drizzle-orm"
 import { FrontierModule } from '@/components/FrontierModule'
 import { ReactorCore } from '@/components/ReactorCore'
+import { BookOpen } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
@@ -45,12 +46,20 @@ export default async function Dashboard() {
                             <div className="cockpit-title text-2xl mt-1">{displayName.toUpperCase()}</div>
                             <div className="cockpit-text mt-2">Recording truth into the chain</div>
                         </div>
-                        <Link href="/submit">
-                            <button className="cockpit-lever">
-                                <span className="mr-2">◎</span>
-                                Submit Contribution
-                            </button>
-                        </Link>
+                        <div className="flex gap-3">
+                            <Link href="/">
+                                <button className="cockpit-lever">
+                                    <BookOpen className="inline h-4 w-4 mr-2" />
+                                    Onboarding Navigator
+                                </button>
+                            </Link>
+                            <Link href="/submit">
+                                <button className="cockpit-lever">
+                                    <span className="mr-2">◎</span>
+                                    Submit Contribution
+                                </button>
+                            </Link>
+                        </div>
                     </div>
                 </div>
 

@@ -268,18 +268,11 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
         <div className="space-y-6">
             {/* Contribution Process Overview */}
             <div className="grid gap-6 md:grid-cols-2">
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <FileText className="h-5 w-5" />
-                            Step 1: Prepare Your Work
-                        </CardTitle>
-                        <CardDescription>
-                            Create or identify your contribution for evaluation
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-2">
-                        <p className="text-sm text-muted-foreground">
+                <div className="cockpit-module cockpit-panel p-6">
+                    <div className="cockpit-label mb-3">PROCESS MODULE 01</div>
+                    <div className="cockpit-title text-xl mb-2">Prepare Your Work</div>
+                    <div className="cockpit-text space-y-2">
+                        <p className="text-sm">
                             Scientific papers, technical documentation, research findings,
                             or any intellectual contribution that advances human knowledge.
                         </p>
@@ -288,22 +281,15 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                             <li>• Include metadata and context</li>
                             <li>• Ensure original work</li>
                         </ul>
-                    </CardContent>
-                </Card>
+                    </div>
+                </div>
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <Brain className="h-5 w-5" />
-                            Step 2: AI Evaluation
-                        </CardTitle>
-                        <CardDescription>
-                            Hydrogen-holographic fractal scoring
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-2">
-                        <p className="text-sm text-muted-foreground">
-                            Your contribution is evaluated across four dimensions:
+                <div className="cockpit-module cockpit-panel p-6">
+                    <div className="cockpit-label mb-3">PROCESS MODULE 02</div>
+                    <div className="cockpit-title text-xl mb-2">AI Evaluation</div>
+                    <div className="cockpit-text space-y-2">
+                        <p className="text-sm mb-2">
+                            Hydrogen-holographic fractal scoring across four dimensions:
                         </p>
                         <ul className="text-sm space-y-1 ml-4">
                             <li>• <strong>Novelty:</strong> Originality and innovation (0-2,500)</li>
@@ -311,14 +297,14 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                             <li>• <strong>Coherence:</strong> Logical consistency (0-2,500)</li>
                             <li>• <strong>Alignment:</strong> Syntheverse objectives (0-2,500)</li>
                         </ul>
-                        <p className="text-xs text-muted-foreground mt-2">
+                        <p className="text-xs mt-3 pt-3 border-t border-[var(--keyline-primary)]">
                             Total score: 0-10,000. Founder qualification: ≥8,000
                         </p>
-                        <p className="text-xs text-muted-foreground mt-2 pt-2 border-t border-border">
-                            <strong>Redundancy Penalty:</strong> A penalty is applied to the total score based on 3D vector similarity to existing archived contributions, ensuring unique contributions are prioritized.
+                        <p className="text-xs mt-2 pt-2 border-t border-[var(--keyline-primary)]">
+                            <strong>Redundancy Penalty:</strong> Applied based on 3D vector similarity to archived contributions.
                         </p>
-                    </CardContent>
-                </Card>
+                    </div>
+                </div>
 
                 <Card>
                     <CardHeader>
@@ -387,14 +373,15 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
             </div>
 
             {/* Submission Form */}
-            <Card>
-                <CardHeader>
-                    <CardTitle>Submit Your Contribution</CardTitle>
-                    <CardDescription>
-                        Fill in the details below to submit your work for evaluation
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
+            <div className="cockpit-module cockpit-panel p-8">
+                <div className="mb-6 border-b border-[var(--keyline-primary)] pb-4">
+                    <div className="cockpit-label">TRANSMISSION PROTOCOL</div>
+                    <div className="cockpit-title text-2xl mt-2">Submit Your Contribution</div>
+                    <div className="cockpit-text mt-2">
+                        Fill in the details below to transmit your work for evaluation
+                    </div>
+                </div>
+                <div>
                     {error && (
                         <Alert variant="destructive" className="mb-4">
                             <AlertTriangle className="h-4 w-4" />
@@ -845,9 +832,11 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-2">
-                            <Label htmlFor="title">Title *</Label>
-                            <Input
+                            <Label htmlFor="title" className="cockpit-label">Title *</Label>
+                            <input
                                 id="title"
+                                type="text"
+                                className="cockpit-input"
                                 value={formData.title}
                                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                 placeholder="Enter contribution title"
@@ -857,12 +846,12 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="category">Category *</Label>
+                            <Label htmlFor="category" className="cockpit-label">Category *</Label>
                             <select
                                 id="category"
+                                className="cockpit-select"
                                 value={formData.category}
                                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                 required
                                 disabled={loading}
                             >
@@ -873,29 +862,34 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="file" className="text-base font-semibold">
+                            <Label htmlFor="file" className="cockpit-label">
                                 <FileText className="inline-block h-4 w-4 mr-2" />
                                 Select PDF File to Upload *
                             </Label>
-                            <div className="border-2 border-dashed border-primary/30 rounded-lg p-6 hover:border-primary/50 transition-colors">
-                                <Input
+                            <div className={`cockpit-file-label ${formData.file ? 'has-file' : ''}`}>
+                                <input
                                     id="file"
                                     type="file"
                                     accept=".pdf,application/pdf"
                                     onChange={handleFileChange}
                                     disabled={loading}
-                                    className="cursor-pointer"
                                     required
                                 />
                                 {!formData.file && (
-                                    <div className="mt-4 text-center">
-                                        <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-2" />
-                                        <p className="text-sm font-medium text-foreground mb-1">
+                                    <div className="text-center">
+                                        <FileText className="h-12 w-12 mx-auto mb-3" style={{ color: '#ffb84d' }} />
+                                        <p className="cockpit-text font-medium mb-1">
                                             Click to select a PDF file or drag and drop
                                         </p>
-                                        <p className="text-xs text-muted-foreground">
+                                        <p className="cockpit-text text-xs">
                                             PDF format required (.pdf)
                                         </p>
+                                    </div>
+                                )}
+                                {formData.file && (
+                                    <div className="w-full">
+                                        <FileText className="h-8 w-8 mx-auto mb-2" style={{ color: '#ffb84d' }} />
+                                        <p className="cockpit-text font-medium">{formData.file.name}</p>
                                     </div>
                                 )}
                             </div>
@@ -954,29 +948,29 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                             </p>
                         </div>
 
-                        <div className="flex gap-4">
+                        <div className="flex gap-4 pt-4 border-t border-[var(--keyline-primary)]">
                             <Link href="/dashboard" className="flex-1">
-                                <Button type="button" variant="outline" className="w-full" disabled={loading}>
+                                <button type="button" className="cockpit-lever w-full" disabled={loading}>
                                     Cancel
-                                </Button>
+                                </button>
                             </Link>
-                            <Button type="submit" className="flex-1" disabled={loading || !formData.file}>
+                            <button type="submit" className="cockpit-transmission flex-1" disabled={loading || !formData.file}>
                                 {loading ? (
                                     <>
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                        Submitting...
+                                        Transmitting...
                                     </>
                                 ) : (
                                     <>
-                                        <FileText className="mr-2 h-4 w-4" />
-                                        Submit Contribution
+                                        <span className="mr-2">◎</span>
+                                        Transmit Contribution
                                     </>
                                 )}
-                            </Button>
+                            </button>
                         </div>
                     </form>
-                </CardContent>
-            </Card>
+                </div>
+            </div>
         </div>
     )
 }

@@ -1,0 +1,482 @@
+/**
+ * Onboarding Navigator Component
+ * Comprehensive training on Syntheverse, SYNTH 90T Motherlode Blockmine,
+ * Blockchain, Holographic Hydrogen, and Fractals
+ * Holographic Hydrogen Fractal Frontier Noir styling
+ */
+
+'use client'
+
+import { useState } from 'react'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { 
+    Brain, 
+    Coins, 
+    Database, 
+    Network, 
+    Zap, 
+    ChevronRight, 
+    ChevronLeft,
+    Award,
+    TrendingUp,
+    Link as LinkIcon
+} from "lucide-react"
+import Link from "next/link"
+import '../app/dashboard-cockpit.css'
+
+interface TrainingModule {
+    id: string
+    title: string
+    label: string
+    icon: React.ReactNode
+    content: React.ReactNode
+}
+
+export function OnboardingNavigator() {
+    const [currentModule, setCurrentModule] = useState(0)
+
+    const modules: TrainingModule[] = [
+        {
+            id: 'syntheverse',
+            title: 'Syntheverse',
+            label: 'MODULE 01',
+            icon: <Brain className="h-6 w-6" />,
+            content: (
+                <div className="space-y-4">
+                    <div className="cockpit-text">
+                        <p className="text-lg mb-4">
+                            <strong className="cockpit-number">Syntheverse</strong> is a regenerative ecosystem where 
+                            independent researchers, developers, and alignment contributors collaborate within a 
+                            hydrogen-holographic fractal sandbox.
+                        </p>
+                        <div className="space-y-3">
+                            <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
+                                <div className="cockpit-label mb-2">Core Principles</div>
+                                <ul className="space-y-2 cockpit-text text-sm">
+                                    <li>• <strong>Beyond Linear Systems:</strong> Operating in a closed, hydrogen holographic fractal environment</li>
+                                    <li>• <strong>Independent Collaboration:</strong> Transcending traditional publication and institutional silos</li>
+                                    <li>• <strong>Regenerative Economy:</strong> ERC-20 SYNTH tokens reward contribution, alignment, and ecosystem impact</li>
+                                    <li>• <strong>Living Ecosystem:</strong> Participants embedded in a recursive, evolving system</li>
+                                </ul>
+                            </div>
+                            <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
+                                <div className="cockpit-label mb-2">The Mission</div>
+                                <p className="cockpit-text text-sm">
+                                    Create a parallel regenerative system enabling innovation and alignment without linear constraints. 
+                                    Your contributions become part of the training data for the next generation of intelligent systems.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )
+        },
+        {
+            id: 'motherlode',
+            title: 'SYNTH 90T Motherlode Blockmine',
+            label: 'MODULE 02',
+            icon: <Database className="h-6 w-6" />,
+            content: (
+                <div className="space-y-4">
+                    <div className="cockpit-text">
+                        <p className="text-lg mb-4">
+                            The <strong className="cockpit-number">90 Trillion SYNTH Motherlode Blockmine</strong> is the 
+                            economic and mythic substrate of the Syntheverse colony—an ERC-20 token property forming 
+                            the blockchain-anchored foundation.
+                        </p>
+                        <div className="space-y-3">
+                            <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
+                                <div className="cockpit-label mb-2">Total Supply</div>
+                                <div className="cockpit-number cockpit-number-large mb-2" style={{ color: '#ffb84d' }}>90T SYNTH</div>
+                                <p className="cockpit-text text-sm">
+                                    The complete token supply distributed across epochs and contributors
+                                </p>
+                            </div>
+                            <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
+                                <div className="cockpit-label mb-2">Blockchain Registration</div>
+                                <ul className="space-y-2 cockpit-text text-sm">
+                                    <li>• Approved PoCs can be registered on-chain for $200</li>
+                                    <li>• Registration anchors contributions permanently to the blockchain</li>
+                                    <li>• Establishes "I was here first" recognition and legacy</li>
+                                    <li>• Registered PoCs train and evolve the Syntheverse AI</li>
+                                </ul>
+                            </div>
+                            <div className="p-4 border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)]">
+                                <div className="cockpit-label mb-2" style={{ color: '#ffb84d' }}>Homebase</div>
+                                <p className="cockpit-text text-sm">
+                                    The <strong>Motherlode Blockmine</strong> serves as the new homebase of Syntheverse on the blockchain—a 
+                                    permanent, immutable record of all contributions and their impact on the ecosystem.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )
+        },
+        {
+            id: 'blockchain',
+            title: 'Blockchain Architecture',
+            label: 'MODULE 03',
+            icon: <Network className="h-6 w-6" />,
+            content: (
+                <div className="space-y-4">
+                    <div className="cockpit-text">
+                        <p className="text-lg mb-4">
+                            Syntheverse operates on a <strong className="cockpit-number">Layer 1 blockchain</strong> that 
+                            stores immutable records of all Proof-of-Contribution submissions and manages SYNTH token distribution.
+                        </p>
+                        <div className="space-y-3">
+                            <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
+                                <div className="cockpit-label mb-2">Blockchain Functions</div>
+                                <ul className="space-y-2 cockpit-text text-sm">
+                                    <li>• <strong>Immutable Records:</strong> All PoC submissions stored permanently</li>
+                                    <li>• <strong>Token Management:</strong> SYNTH distribution across 4 epochs</li>
+                                    <li>• <strong>Tier Rewards:</strong> Gold (1000x), Silver (100x), Copper (1x) multipliers</li>
+                                    <li>• <strong>Block Mining:</strong> Proof-of-Discovery consensus mechanism</li>
+                                    <li>• <strong>State Tracking:</strong> Contributor balances, reward history, epoch progression</li>
+                                </ul>
+                            </div>
+                            <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
+                                <div className="cockpit-label mb-2">Transaction Flow</div>
+                                <div className="cockpit-text text-sm space-y-2">
+                                    <div>1. Submit PoC → Stored on blockchain</div>
+                                    <div>2. Evaluate PoC → AI evaluation scores contribution</div>
+                                    <div>3. Register PoC → $200 payment anchors to blockchain</div>
+                                    <div>4. Allocate Tokens → SYNTH tokens distributed based on score, epoch, tier</div>
+                                </div>
+                            </div>
+                            <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
+                                <div className="cockpit-label mb-2">Blockchain Properties</div>
+                                <p className="cockpit-text text-sm">
+                                    Built on <strong>Base (Ethereum L2)</strong> for secure, fast, and cost-effective transactions. 
+                                    All registered contributions are permanently verifiable and contribute to the ecosystem's 
+                                    regenerative intelligence.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )
+        },
+        {
+            id: 'epochs',
+            title: 'Epoch System',
+            label: 'MODULE 04',
+            icon: <TrendingUp className="h-6 w-6" />,
+            content: (
+                <div className="space-y-4">
+                    <div className="cockpit-text">
+                        <p className="text-lg mb-4">
+                            The <strong className="cockpit-number">4-Epoch System</strong> progressively unlocks SYNTH tokens 
+                            based on coherence density and contribution quality.
+                        </p>
+                        <div className="grid gap-4 md:grid-cols-2">
+                            {[
+                                { name: 'Founder', supply: '45T (50%)', threshold: '≥8,000', desc: 'Highest quality contributions', color: '#ffb84d' },
+                                { name: 'Pioneer', supply: '9T (10%)', threshold: '≥6,000', desc: 'Early high-quality contributions', color: '#94a3b8' },
+                                { name: 'Community', supply: '18T (20%)', threshold: '≥4,000', desc: 'Community contributions', color: '#60a5fa' },
+                                { name: 'Ecosystem', supply: '18T (20%)', threshold: '<4,000', desc: 'All other contributions', color: '#34d399' }
+                            ].map((epoch) => (
+                                <div key={epoch.name} className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
+                                    <div className="cockpit-label mb-2 uppercase">{epoch.name}</div>
+                                    <div className="cockpit-number mb-1" style={{ color: epoch.color }}>{epoch.supply}</div>
+                                    <div className="cockpit-text text-xs mb-2">Threshold: {epoch.threshold}</div>
+                                    <div className="cockpit-text text-xs">{epoch.desc}</div>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] mt-4">
+                            <div className="cockpit-label mb-2">Epoch Progression</div>
+                            <ul className="space-y-2 cockpit-text text-sm">
+                                <li>• <strong>Founder:</strong> Starts immediately</li>
+                                <li>• <strong>Pioneer:</strong> Unlocks at 1M coherence density</li>
+                                <li>• <strong>Community:</strong> Unlocks at 2M coherence density</li>
+                                <li>• <strong>Ecosystem:</strong> Unlocks at 3M coherence density</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            )
+        },
+        {
+            id: 'hydrogen-fractals',
+            title: 'Holographic Hydrogen & Fractals',
+            label: 'MODULE 05',
+            icon: <Zap className="h-6 w-6" />,
+            content: (
+                <div className="space-y-4">
+                    <div className="cockpit-text">
+                        <p className="text-lg mb-4">
+                            <strong className="cockpit-number">Hydrogen-Holographic Fractal Evaluation</strong> is the 
+                            unique scoring system that measures contributions across multi-dimensional space.
+                        </p>
+                        <div className="space-y-3">
+                            <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
+                                <div className="cockpit-label mb-2">Holographic Principle</div>
+                                <p className="cockpit-text text-sm mb-3">
+                                    Just as a hologram contains the entire image in every fragment, hydrogen-holographic 
+                                    evaluation captures the complete value of a contribution in its fractal structure.
+                                </p>
+                                <div className="cockpit-symbol text-center text-4xl mb-2">🌀</div>
+                                <p className="cockpit-text text-xs text-center">
+                                    The spiral represents recursion, origin, and the hydrogen-lattice structure
+                                </p>
+                            </div>
+                            <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
+                                <div className="cockpit-label mb-2">Fractal Dimensions</div>
+                                <div className="grid grid-cols-2 gap-3">
+                                    {[
+                                        { name: 'Novelty', max: '2,500', desc: 'Originality & innovation' },
+                                        { name: 'Density', max: '2,500', desc: 'Information richness' },
+                                        { name: 'Coherence', max: '2,500', desc: 'Logical consistency' },
+                                        { name: 'Alignment', max: '2,500', desc: 'Syntheverse objectives' }
+                                    ].map((dim) => (
+                                        <div key={dim.name} className="p-3 border border-[var(--keyline-accent)]">
+                                            <div className="cockpit-text font-semibold text-sm">{dim.name}</div>
+                                            <div className="cockpit-text text-xs text-[var(--hydrogen-amber)]">{dim.max}</div>
+                                            <div className="cockpit-text text-xs mt-1">{dim.desc}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="mt-3 pt-3 border-t border-[var(--keyline-primary)]">
+                                    <div className="cockpit-text text-xs">
+                                        <strong>Total PoC Score:</strong> 0-10,000 (sum of all dimensions)
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
+                                <div className="cockpit-label mb-2">Hydrogen Lattice Structure</div>
+                                <p className="cockpit-text text-sm">
+                                    Hydrogen atoms form a unique lattice structure—similarly, contributions form connections 
+                                    in the Syntheverse ecosystem. The holographic fractal lens ensures each contribution is 
+                                    evaluated as part of the whole, not in isolation.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )
+        },
+        {
+            id: 'metals',
+            title: 'Metallic Amplifications',
+            label: 'MODULE 06',
+            icon: <Award className="h-6 w-6" />,
+            content: (
+                <div className="space-y-4">
+                    <div className="cockpit-text">
+                        <p className="text-lg mb-4">
+                            <strong className="cockpit-number">Metallic Qualifications</strong> (Gold, Silver, Copper) 
+                            amplify token allocations when combined, rewarding cross-disciplinary contributions.
+                        </p>
+                        <div className="space-y-3">
+                            <div className="grid gap-4 md:grid-cols-3">
+                                {[
+                                    { name: 'Gold', desc: 'Scientific/Research', multiplier: '1000x', color: '#ffb84d' },
+                                    { name: 'Silver', desc: 'Technology/Innovation', multiplier: '100x', color: '#94a3b8' },
+                                    { name: 'Copper', desc: 'Alignment/Community', multiplier: '1x', color: '#cd7f32' }
+                                ].map((metal) => (
+                                    <div key={metal.name} className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
+                                        <div className="cockpit-label mb-2" style={{ color: metal.color }}>
+                                            {metal.name}
+                                        </div>
+                                        <div className="cockpit-text text-sm mb-2">{metal.desc}</div>
+                                        <div className="cockpit-number text-lg" style={{ color: metal.color }}>
+                                            {metal.multiplier}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="p-4 border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)]">
+                                <div className="cockpit-label mb-2" style={{ color: '#ffb84d' }}>Combination Amplifications</div>
+                                <ul className="space-y-2 cockpit-text text-sm">
+                                    <li>• <strong>Gold + Silver + Copper:</strong> 1.5× total amplification</li>
+                                    <li>• <strong>Gold + Silver:</strong> 1.25× amplification</li>
+                                    <li>• <strong>Gold + Copper:</strong> 1.2× amplification</li>
+                                    <li>• <strong>Silver + Copper:</strong> 1.15× amplification</li>
+                                </ul>
+                                <p className="cockpit-text text-xs mt-3 pt-3 border-t border-[var(--keyline-primary)]">
+                                    Multiple metals in a single contribution create synergistic amplification, rewarding 
+                                    cross-disciplinary work that spans scientific, technological, and alignment domains.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )
+        },
+        {
+            id: 'how-it-works',
+            title: 'How It Works',
+            label: 'MODULE 07',
+            icon: <LinkIcon className="h-6 w-6" />,
+            content: (
+                <div className="space-y-4">
+                    <div className="cockpit-text">
+                        <p className="text-lg mb-4">
+                            The complete <strong className="cockpit-number">Syntheverse Journey</strong> from submission 
+                            to blockchain registration and token allocation.
+                        </p>
+                        <div className="space-y-4">
+                            {[
+                                {
+                                    step: '01',
+                                    title: 'Submit Contribution',
+                                    desc: 'Upload your PDF contribution (research, technical documentation, alignment work)'
+                                },
+                                {
+                                    step: '02',
+                                    title: 'AI Evaluation',
+                                    desc: 'Hydrogen-holographic fractal scoring across 4 dimensions (0-10,000 total)'
+                                },
+                                {
+                                    step: '03',
+                                    title: 'Qualification & Metals',
+                                    desc: 'Receive metallic qualifications (Gold/Silver/Copper) and epoch qualification'
+                                },
+                                {
+                                    step: '04',
+                                    title: 'Blockchain Registration',
+                                    desc: 'Register qualified PoCs on-chain for $200 to anchor permanently'
+                                },
+                                {
+                                    step: '05',
+                                    title: 'Token Allocation',
+                                    desc: 'Receive SYNTH tokens based on score, epoch, tier, and metal combinations'
+                                }
+                            ].map((item) => (
+                                <div key={item.step} className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
+                                    <div className="flex items-start gap-4">
+                                        <div className="cockpit-badge cockpit-badge-amber min-w-[3rem] text-center">
+                                            {item.step}
+                                        </div>
+                                        <div className="flex-1">
+                                            <div className="cockpit-title text-lg mb-1">{item.title}</div>
+                                            <div className="cockpit-text text-sm">{item.desc}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                            <div className="p-4 border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)] mt-6">
+                                <div className="cockpit-label mb-2" style={{ color: '#ffb84d' }}>Ready to Begin?</div>
+                                <p className="cockpit-text text-sm mb-4">
+                                    Join the Syntheverse colony and start contributing to the regenerative ecosystem. 
+                                    All evaluations are free—tokens are allocated when PoCs are registered on-chain.
+                                </p>
+                                <div className="flex gap-3">
+                                    <Link href="/signup">
+                                        <button className="cockpit-lever">
+                                            Create Account
+                                        </button>
+                                    </Link>
+                                    <Link href="/login">
+                                        <button className="cockpit-lever">
+                                            Sign In
+                                        </button>
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )
+        }
+    ]
+
+    const nextModule = () => {
+        setCurrentModule((prev) => (prev + 1) % modules.length)
+    }
+
+    const prevModule = () => {
+        setCurrentModule((prev) => (prev - 1 + modules.length) % modules.length)
+    }
+
+    const goToModule = (index: number) => {
+        setCurrentModule(index)
+    }
+
+    return (
+        <div className="cockpit-bg min-h-screen">
+            <div className="container mx-auto px-6 py-8">
+                {/* Header */}
+                <div className="cockpit-panel p-6 mb-8">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <div className="cockpit-label">ONBOARDING NAVIGATOR</div>
+                            <div className="cockpit-title text-3xl mt-2">SYNTHVERSE TRAINING MODULES</div>
+                            <div className="cockpit-text mt-2">
+                                Master the Motherlode Blockmine, Holographic Hydrogen, and the Fractal Frontier
+                            </div>
+                        </div>
+                        <div className="cockpit-symbol text-4xl">🌀</div>
+                    </div>
+                </div>
+
+                {/* Module Navigation */}
+                <div className="cockpit-module cockpit-panel p-6 mb-6">
+                    <div className="flex items-center justify-between mb-4">
+                        <div>
+                            <div className="cockpit-label">{modules[currentModule].label}</div>
+                            <div className="cockpit-title text-2xl mt-1">{modules[currentModule].title}</div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            {modules.map((_, idx) => (
+                                <button
+                                    key={idx}
+                                    onClick={() => goToModule(idx)}
+                                    className={`w-2 h-2 rounded-full transition-all ${
+                                        idx === currentModule
+                                            ? 'bg-[var(--hydrogen-amber)] w-8'
+                                            : 'bg-[var(--keyline-primary)] hover:bg-[var(--cockpit-carbon)]'
+                                    }`}
+                                    aria-label={`Go to module ${idx + 1}`}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Current Module Content */}
+                <div className="cockpit-module cockpit-panel p-8 mb-6">
+                    <div className="flex items-center gap-4 mb-6">
+                        <div style={{ color: '#ffb84d' }}>
+                            {modules[currentModule].icon}
+                        </div>
+                        <div className="flex-1 border-b border-[var(--keyline-primary)] pb-4">
+                            <div className="cockpit-label">{modules[currentModule].label}</div>
+                            <div className="cockpit-title text-2xl mt-1">{modules[currentModule].title}</div>
+                        </div>
+                    </div>
+                    <div className="min-h-[400px]">
+                        {modules[currentModule].content}
+                    </div>
+                </div>
+
+                {/* Navigation Controls */}
+                <div className="flex items-center justify-between">
+                    <button
+                        onClick={prevModule}
+                        className="cockpit-lever flex items-center gap-2"
+                    >
+                        <ChevronLeft className="h-4 w-4" />
+                        Previous
+                    </button>
+                    
+                    <div className="cockpit-text text-sm">
+                        Module {currentModule + 1} of {modules.length}
+                    </div>
+                    
+                    <button
+                        onClick={nextModule}
+                        className="cockpit-lever flex items-center gap-2"
+                    >
+                        Next
+                        <ChevronRight className="h-4 w-4" />
+                    </button>
+                </div>
+            </div>
+        </div>
+    )
+}
+
