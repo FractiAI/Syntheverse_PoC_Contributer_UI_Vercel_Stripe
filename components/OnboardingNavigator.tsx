@@ -46,25 +46,61 @@ export function OnboardingNavigator() {
                 <div className="space-y-4">
                     <div className="cockpit-text">
                         <p className="text-lg mb-4">
-                            <strong className="cockpit-number">Syntheverse</strong> is a regenerative ecosystem where 
-                            independent researchers, developers, and alignment contributors collaborate within a 
-                            hydrogen-holographic fractal sandbox.
+                            <strong className="cockpit-number">Syntheverse</strong> offers a <strong>new way to collaborate independently</strong> while 
+                            improving and building a <strong>regenerative Proof-of-Contribution (PoC) based internal ERC-20 crypto ecosystem</strong> 
+                            on the blockchain.
                         </p>
                         <div className="space-y-3">
-                            <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
-                                <div className="cockpit-label mb-2">Core Principles</div>
+                            <div className="p-4 border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)]">
+                                <div className="cockpit-label mb-2" style={{ color: '#ffb84d' }}>A New Way to Collaborate</div>
+                                <p className="cockpit-text text-sm mb-3">
+                                    Syntheverse enables <strong>independent collaboration</strong>—researchers, developers, and alignment 
+                                    contributors work together without traditional institutional constraints, publication silos, or linear 
+                                    hierarchies. Each contributor operates autonomously while contributing to a collective regenerative system.
+                                </p>
                                 <ul className="space-y-2 cockpit-text text-sm">
-                                    <li>• <strong>Beyond Linear Systems:</strong> Operating in a closed, hydrogen holographic fractal environment</li>
-                                    <li>• <strong>Independent Collaboration:</strong> Transcending traditional publication and institutional silos</li>
-                                    <li>• <strong>Regenerative Economy:</strong> ERC-20 SYNTH tokens reward contribution, alignment, and ecosystem impact</li>
-                                    <li>• <strong>Living Ecosystem:</strong> Participants embedded in a recursive, evolving system</li>
+                                    <li>• <strong>Independent Contributors:</strong> Work on your own timeline, in your own space</li>
+                                    <li>• <strong>Collaborative Network:</strong> Share and build upon each other&apos;s PoC contributions</li>
+                                    <li>• <strong>No Institutional Barriers:</strong> No need for traditional academic or corporate gatekeeping</li>
+                                    <li>• <strong>Blockchain-Anchored:</strong> Your contributions are permanently recorded and verifiable</li>
+                                </ul>
+                            </div>
+                            <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
+                                <div className="cockpit-label mb-2">Regenerative PoC-Based Ecosystem</div>
+                                <p className="cockpit-text text-sm mb-3">
+                                    Syntheverse operates through a <strong>regenerative Proof-of-Contribution system</strong> where every PoC submission 
+                                    strengthens and improves the ecosystem. As contributors submit, evaluate, and register PoCs, the system learns, 
+                                    evolves, and becomes more capable.
+                                </p>
+                                <ul className="space-y-2 cockpit-text text-sm">
+                                    <li>• <strong>PoC Submissions:</strong> Scientific, technological, and alignment contributions are evaluated and scored</li>
+                                    <li>• <strong>AI Evaluation:</strong> Advanced evaluation improves with each contribution</li>
+                                    <li>• <strong>Ecosystem Learning:</strong> Every PoC trains and enhances the Syntheverse intelligence</li>
+                                    <li>• <strong>Continuous Improvement:</strong> The system regenerates and improves itself through participation</li>
+                                </ul>
+                            </div>
+                            <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
+                                <div className="cockpit-label mb-2">Internal ERC-20 Crypto Ecosystem</div>
+                                <p className="cockpit-text text-sm mb-3">
+                                    Syntheverse operates a complete <strong>internal ERC-20 based crypto ecosystem</strong> on the blockchain, anchored 
+                                    by the 90 Trillion SYNTH token Motherlode Blockmine. This ecosystem rewards contribution, tracks alignment, and 
+                                    provides a self-contained economic system.
+                                </p>
+                                <ul className="space-y-2 cockpit-text text-sm">
+                                    <li>• <strong>ERC-20 SYNTH Tokens:</strong> Internal cryptocurrency for alignment and participation</li>
+                                    <li>• <strong>Token Distribution:</strong> Rewards based on PoC scores, epochs, and contribution tiers</li>
+                                    <li>• <strong>Blockchain Anchored:</strong> All transactions and allocations recorded permanently on-chain</li>
+                                    <li>• <strong>Internal Economy:</strong> Self-contained ecosystem that grows and regenerates through participation</li>
+                                    <li>• <strong>Alignment Purpose:</strong> Tokens for ecosystem participation, not external trading or ownership</li>
                                 </ul>
                             </div>
                             <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
                                 <div className="cockpit-label mb-2">The Mission</div>
                                 <p className="cockpit-text text-sm">
-                                    Create a parallel regenerative system enabling innovation and alignment without linear constraints. 
-                                    Your contributions become part of the training data for the next generation of intelligent systems.
+                                    Syntheverse creates a <strong>new paradigm for independent collaboration</strong> by combining blockchain technology, 
+                                    ERC-20 tokenomics, and regenerative PoC evaluation. Through this system, independent contributors collaborate, 
+                                    improve the ecosystem, and build a sustainable internal crypto economy that rewards innovation, alignment, and 
+                                    meaningful contribution. Your work directly improves the system while you build your legacy on the blockchain.
                                 </p>
                             </div>
                         </div>

@@ -12,9 +12,10 @@ import Link from "next/link"
 
 interface SubmitContributionFormProps {
     userEmail: string
+    defaultCategory?: string
 }
 
-export default function SubmitContributionForm({ userEmail }: SubmitContributionFormProps) {
+export default function SubmitContributionForm({ userEmail, defaultCategory = 'scientific' }: SubmitContributionFormProps) {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -30,7 +31,7 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
     
     const [formData, setFormData] = useState({
         title: '',
-        category: 'scientific',
+        category: defaultCategory,
         file: null as File | null,
         extractedText: '' as string, // Extracted PDF text content
         pdfExtractionError: '' as string // PDF extraction error message
