@@ -124,8 +124,6 @@ export async function POST(request: NextRequest) {
                 submission_hash,
                 title: title.trim(),
                 contributor: contributor || user.email,
-                has_file: !!file,
-                file_name: file?.name,
                 content_length: textContentForStorage?.length || 0,
                 category: category || 'scientific'
             })
@@ -204,9 +202,7 @@ export async function POST(request: NextRequest) {
                     title: title.trim(),
                     contributor: contributor || user.email,
                     category: category || 'scientific',
-                    has_file: !!file,
-                    file_name: file?.name,
-                    file_size: file?.size,
+                    has_file: false,
                     content_length: textContentForStorage?.length || 0
                 },
                 response_data: {
