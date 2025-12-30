@@ -66,25 +66,48 @@ export async function POST(request: NextRequest) {
             console.warn('[PDF Extract] Could not verify PDF header:', headerError)
         }
 
-        // Use pdfjs-dist on server - import and configure properly
+        // Polyfill DOMMatrix for Node.js (pdfjs-dist requires this)
+        if (typeof (globalThis as any).DOMMatrix === 'undefined') {
+            const { DOMMatrix } = await import('dommatrix')
+            ;(globalThis as any).DOMMatrix = DOMMatrix
+            console.log('[PDF Extract] DOMMatrix polyfill loaded')
+        }
+        
+        // Use pdfjs-dist - import standard build
         const pdfjs = await import('pdfjs-dist')
         
-        // In v5.x, getDocument is typically a named export
-        // Access it directly from the module
-        const getDocument = (pdfjs as any).getDocument || 
-                          pdfjs.default?.getDocument ||
-                          (pdfjs as any).default?.getDocument
+        // Get getDocument - try different access patterns
+        let getDocument: any = null
+        
+        // Try direct access
+        if (typeof (pdfjs as any).getDocument === 'function') {
+            getDocument = (pdfjs as any).getDocument
+        }
+        // Try default export
+        else if (pdfjs.default && typeof pdfjs.default.getDocument === 'function') {
+            getDocument = pdfjs.default.getDocument
+        }
+        // Try nested
+        else if ((pdfjs as any).default && typeof (pdfjs as any).default.getDocument === 'function') {
+            getDocument = (pdfjs as any).default.getDocument
+        }
         
         if (!getDocument || typeof getDocument !== 'function') {
-            console.error('[PDF Extract] getDocument not found. Module keys:', Object.keys(pdfjs).slice(0, 20))
+            console.error('[PDF Extract] getDocument not found. Module:', {
+                keys: Object.keys(pdfjs).slice(0, 20),
+                hasDefault: !!pdfjs.default
+            })
             throw new Error('PDF.js getDocument function not available')
         }
         
+        console.log('[PDF Extract] getDocument found successfully')
+        
         // Disable worker for server-side (not needed in Node.js)
-        if ((pdfjs as any).GlobalWorkerOptions) {
-            (pdfjs as any).GlobalWorkerOptions.workerSrc = ''
-        } else if (pdfjs.default?.GlobalWorkerOptions) {
-            pdfjs.default.GlobalWorkerOptions.workerSrc = ''
+        const GlobalWorkerOptions = (pdfjs as any).GlobalWorkerOptions || 
+                                   pdfjs.default?.GlobalWorkerOptions
+        if (GlobalWorkerOptions) {
+            GlobalWorkerOptions.workerSrc = ''
+            console.log('[PDF Extract] Worker disabled for server-side')
         }
 
         // Load PDF document
