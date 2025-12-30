@@ -50,6 +50,9 @@ export async function POST(request: NextRequest) {
 
         console.log(`[PDF Extract] Starting cloud-based extraction for file: ${file.name}, size: ${file.size} bytes`)
 
+        // Store file info for fallback use
+        let fileName = file.name
+
         // Convert file to buffer for pdfreader
         const buffer = Buffer.from(await file.arrayBuffer())
 
@@ -105,8 +108,8 @@ export async function POST(request: NextRequest) {
         const elapsed = Date.now() - startTime
         console.error(`[PDF Extract] Fatal error after ${elapsed}ms:`, error)
 
-        // Return fallback response
-        const fallbackText = file?.name?.replace(/\.pdf$/i, '').replace(/[_-]/g, ' ') || 'PDF content extraction failed'
+        // Return fallback response using stored filename
+        const fallbackText = fileName?.replace(/\.pdf$/i, '').replace(/[_-]/g, ' ') || 'PDF content extraction failed'
 
         return NextResponse.json({
             success: true, // Still return success with fallback
