@@ -7,7 +7,7 @@
 
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { 
@@ -35,6 +35,13 @@ interface TrainingModule {
 
 export function OnboardingNavigator() {
     const [currentModule, setCurrentModule] = useState(0)
+    const topRef = useRef<HTMLDivElement | null>(null)
+
+    useEffect(() => {
+        // Ensure the next/previous module starts at the top of the onboarding view (not mid-scroll).
+        // This avoids the confusing "land at bottom" behavior when navigating modules.
+        topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, [currentModule])
 
     const modules: TrainingModule[] = [
         {
@@ -484,7 +491,7 @@ export function OnboardingNavigator() {
 
     return (
         <div className="cockpit-bg min-h-screen">
-            <div className="container mx-auto px-6 py-8">
+            <div ref={topRef} className="container mx-auto px-6 py-8">
                 {/* Header */}
                 <div className="cockpit-panel p-6 mb-8">
                     <div className="flex items-center justify-between">
