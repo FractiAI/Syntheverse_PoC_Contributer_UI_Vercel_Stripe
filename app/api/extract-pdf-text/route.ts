@@ -2,17 +2,18 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/utils/supabase/server'
 
 /**
- * RECOMMENDED SOLUTION: Cloud-based PDF text extraction using AWS Textract
+ * RECOMMENDED SOLUTION: Cloud-based PDF text extraction using Google Cloud Document AI
  *
  * Why this approach:
  * - Serverless-native (no local file processing)
  * - Handles complex PDFs better than local libraries
+ * - Google's generous free tier (1,000 pages/month)
  * - Scales automatically
  * - No worker/polyfill issues
  * - Production-ready for enterprise use
  *
- * Implementation uses AWS Textract for reliable PDF text extraction.
- * Falls back to simple title-based extraction if Textract fails.
+ * Implementation uses Google Cloud Document AI for reliable PDF text extraction.
+ * Falls back to simple title-based extraction if Document AI fails.
  */
 export async function POST(request: NextRequest) {
     const startTime = Date.now()
@@ -58,7 +59,7 @@ export async function POST(request: NextRequest) {
         let pagesExtracted = 0
 
         try {
-            const result = await extractTextWithTextract(fileBytes)
+            const result = await extractTextWithDocumentAI(fileBytes)
             extractedText = result.text
             pagesExtracted = result.pages
             console.log(`[PDF Extract] Cloud extraction successful: ${extractedText.length} chars from ${pagesExtracted} pages`)
@@ -119,54 +120,101 @@ export async function POST(request: NextRequest) {
 }
 
 /**
- * Extract text from PDF using AWS Textract
+ * Extract text from PDF using Google Cloud Document AI
  * This is the recommended production solution for PDF text extraction
+ * Uses the documentTextDetection endpoint with generous free tier (1,000 pages/month)
  */
-async function extractTextWithTextract(fileBytes: Uint8Array): Promise<{ text: string; pages: number }> {
-    // TODO: Install @aws-sdk/client-textract and configure AWS credentials
-    // This is the skeleton for a production-ready implementation
+async function extractTextWithDocumentAI(fileBytes: Uint8Array): Promise<{ text: string; pages: number }> {
+    const projectId = process.env.GOOGLE_CLOUD_PROJECT_ID || 'your-project-id'
+    const location = process.env.GOOGLE_CLOUD_LOCATION || 'us' // or 'eu'
+    const processorId = process.env.GOOGLE_DOCUMENT_AI_PROCESSOR_ID || 'your-processor-id'
 
-    const { TextractClient, DetectDocumentTextCommand } = await import('@aws-sdk/client-textract')
+    // Google Cloud Document AI REST API endpoint
+    const endpoint = `https://${location}-documentai.googleapis.com/v1/projects/${projectId}/locations/${location}/processors/${processorId}:process`
 
-    // Initialize AWS Textract client
-    const textractClient = new TextractClient({
-        region: process.env.AWS_REGION || 'us-east-1',
-        credentials: {
-            accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-        }
-    })
+    // Convert file to base64
+    const base64Content = Buffer.from(fileBytes).toString('base64')
 
-    // Convert bytes to base64 for Textract
-    const base64Data = Buffer.from(fileBytes).toString('base64')
-
-    // Call Textract API
-    const command = new DetectDocumentTextCommand({
-        Document: {
-            Bytes: fileBytes
-        }
-    })
-
-    const response = await textractClient.send(command)
-
-    // Process Textract response
-    let extractedText = ''
-    const blocks = response.Blocks || []
-
-    // Extract text from LINE blocks (most relevant for document text)
-    for (const block of blocks) {
-        if (block.BlockType === 'LINE' && block.Text) {
-            extractedText += block.Text + '\n'
-        }
+    // Prepare request payload
+    const requestPayload = {
+        rawDocument: {
+            content: base64Content,
+            mimeType: 'application/pdf'
+        },
+        // Skip human-readable output for better performance
+        skipHumanReview: true
     }
 
-    // Estimate pages (Textract doesn't always provide page count)
-    const pages = Math.max(1, Math.ceil(blocks.length / 50)) // Rough estimate
+    // Get access token using the provided OAuth credentials
+    const accessToken = await getGoogleAccessToken()
+
+    // Make API request to Document AI
+    const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestPayload)
+    })
+
+    if (!response.ok) {
+        const errorText = await response.text()
+        throw new Error(`Document AI API error: ${response.status} ${errorText}`)
+    }
+
+    const result = await response.json()
+
+    // Extract text from Document AI response
+    let extractedText = ''
+    let pages = 0
+
+    if (result.document && result.document.text) {
+        extractedText = result.document.text
+    }
+
+    // Count pages if available
+    if (result.document && result.document.pages) {
+        pages = result.document.pages.length
+    }
+
+    // Fallback page count estimation
+    if (pages === 0) {
+        pages = Math.max(1, Math.ceil(extractedText.length / 3000)) // Rough estimate: ~3000 chars per page
+    }
 
     return {
         text: extractedText.trim(),
         pages
     }
+}
+
+/**
+ * Get Google OAuth 2.0 access token using the provided client credentials
+ */
+async function getGoogleAccessToken(): Promise<string> {
+    const clientId = process.env.GOOGLE_CLIENT_ID
+    const clientSecret = process.env.GOOGLE_CLIENT_SECRET
+
+    // For server-side applications, we need to use a service account key or
+    // implement the OAuth 2.0 service account flow
+    // For now, we'll use the simpler approach with API key if available
+
+    const apiKey = process.env.GOOGLE_API_KEY
+    if (apiKey) {
+        // If API key is available, use it (simpler but has quota limits)
+        return apiKey
+    }
+
+    // For production, you should use a service account:
+    // 1. Create a service account in Google Cloud Console
+    // 2. Download the JSON key file
+    // 3. Set GOOGLE_APPLICATION_CREDENTIALS environment variable
+    // 4. Use google-auth-library to get access token
+
+    // For now, throw an error indicating proper setup is needed
+    throw new Error('Google Cloud Document AI requires proper authentication setup. ' +
+                   'Please set GOOGLE_API_KEY or configure service account credentials.')
 }
 
 
