@@ -4,9 +4,11 @@ import { createClient } from '@/utils/supabase/server'
 /**
  * Server-side PDF text extraction API
  * Similar to the Python scraper's extract_text_from_pdf function
- * Uses pdf-parse (similar to Python's pypdf) - simpler and more reliable
+ * Uses pdfjs-dist on server (works better in serverless than pdf-parse)
  */
 export async function POST(request: NextRequest) {
+    const startTime = Date.now()
+    
     try {
         // Check authentication
         const supabase = createClient()
@@ -37,66 +39,118 @@ export async function POST(request: NextRequest) {
             )
         }
 
-        // Read file as buffer (pdf-parse needs Buffer)
-        const arrayBuffer = await file.arrayBuffer()
-        const buffer = Buffer.from(arrayBuffer)
+        console.log(`[PDF Extract] Starting extraction for file: ${file.name}, size: ${file.size} bytes`)
 
-        // Use pdf-parse (similar to Python's pypdf.PdfReader)
-        // Much simpler and more reliable than pdfjs-dist for server-side
-        let pdfData: any
+        // Read file as Uint8Array (pdfjs-dist prefers this)
+        const arrayBuffer = await file.arrayBuffer()
+        const uint8Array = new Uint8Array(arrayBuffer)
         
+        console.log(`[PDF Extract] File read, buffer size: ${uint8Array.length} bytes`)
+
+        // Use pdfjs-dist on server (more reliable in serverless than pdf-parse)
+        let pdfjsModule: any
         try {
-            // Dynamic import for pdf-parse
-            const pdfParseModule = await import('pdf-parse')
-            
-            // pdf-parse exports differently - try to get the function
-            let pdfParseFn: any = null
-            
-            // Try different export patterns
-            if (typeof pdfParseModule === 'function') {
-                pdfParseFn = pdfParseModule
-            } else if (typeof pdfParseModule.default === 'function') {
-                pdfParseFn = pdfParseModule.default
-            } else if ((pdfParseModule as any).default) {
-                // Sometimes default is an object with the function
-                const defaultExport = (pdfParseModule as any).default
-                pdfParseFn = typeof defaultExport === 'function' ? defaultExport : defaultExport.default
-            }
-            
-            if (!pdfParseFn || typeof pdfParseFn !== 'function') {
-                console.error('pdf-parse module structure:', {
-                    type: typeof pdfParseModule,
-                    hasDefault: 'default' in pdfParseModule,
-                    defaultType: typeof (pdfParseModule as any).default,
-                    keys: Object.keys(pdfParseModule)
-                })
-                throw new Error('pdf-parse function not found in module')
-            }
-            
-            // pdf-parse is a function that takes a buffer and returns a promise
-            pdfData = await pdfParseFn(buffer)
-        } catch (parseError) {
-            console.error('Error parsing PDF:', parseError)
-            const errorMessage = parseError instanceof Error ? parseError.message : String(parseError)
-            console.error('Full error details:', {
-                message: errorMessage,
-                stack: parseError instanceof Error ? parseError.stack : undefined,
-                name: parseError instanceof Error ? parseError.name : undefined
-            })
-            throw new Error(`Failed to parse PDF: ${errorMessage}`)
+            pdfjsModule = await import('pdfjs-dist')
+            console.log(`[PDF Extract] pdfjs-dist imported successfully`)
+        } catch (importError) {
+            console.error('[PDF Extract] Failed to import pdfjs-dist:', importError)
+            throw new Error(`Failed to load PDF.js library: ${importError instanceof Error ? importError.message : String(importError)}`)
+        }
+        
+        // Get getDocument - try multiple patterns
+        let getDocument: any = null
+        
+        // Pattern 1: Direct export
+        if (typeof (pdfjsModule as any).getDocument === 'function') {
+            getDocument = (pdfjsModule as any).getDocument
+            console.log('[PDF Extract] Found getDocument via direct export')
+        }
+        // Pattern 2: Default export
+        else if (pdfjsModule.default && typeof pdfjsModule.default.getDocument === 'function') {
+            getDocument = pdfjsModule.default.getDocument
+            console.log('[PDF Extract] Found getDocument via default.getDocument')
+        }
+        // Pattern 3: Nested default
+        else if ((pdfjsModule as any).default && typeof (pdfjsModule as any).default.getDocument === 'function') {
+            getDocument = (pdfjsModule as any).default.getDocument
+            console.log('[PDF Extract] Found getDocument via (any).default.getDocument')
         }
 
-        // Extract text - pdf-parse gives us all text at once
-        // Similar to Python: "\n\n".join([page.extract_text() for page in reader.pages])
-        let extractedText = pdfData.text || ''
+        if (!getDocument || typeof getDocument !== 'function') {
+            console.error('[PDF Extract] getDocument not found. Module structure:', {
+                hasGetDocument: 'getDocument' in pdfjsModule,
+                hasDefault: !!pdfjsModule.default,
+                moduleKeys: Object.keys(pdfjsModule).slice(0, 10),
+                defaultKeys: pdfjsModule.default ? Object.keys(pdfjsModule.default).slice(0, 10) : []
+            })
+            throw new Error('PDF.js getDocument function not found')
+        }
+
+        // Configure worker (disable for server-side)
+        const GlobalWorkerOptions = (pdfjsModule as any).GlobalWorkerOptions || 
+                                   pdfjsModule.default?.GlobalWorkerOptions
+        if (GlobalWorkerOptions) {
+            // Disable worker on server-side (not needed and can cause issues)
+            GlobalWorkerOptions.workerSrc = ''
+        }
+
+        // Load PDF document
+        let loadingTask: any
+        let pdf: any
         
+        try {
+            console.log('[PDF Extract] Calling getDocument...')
+            loadingTask = getDocument({ 
+                data: uint8Array,
+                verbosity: 0,
+                useSystemFonts: false,
+                disableFontFace: true
+            })
+            
+            pdf = await loadingTask.promise
+            console.log(`[PDF Extract] PDF loaded successfully, pages: ${pdf.numPages}`)
+        } catch (loadError) {
+            console.error('[PDF Extract] Error loading PDF:', loadError)
+            throw new Error(`Failed to load PDF: ${loadError instanceof Error ? loadError.message : String(loadError)}`)
+        }
+
+        // Extract text from each page (similar to Python: [page.extract_text() for page in reader.pages])
+        const textParts: string[] = []
+        const maxPages = Math.min(pdf.numPages, 50)
+        
+        console.log(`[PDF Extract] Extracting text from ${maxPages} pages...`)
+        
+        for (let pageNum = 1; pageNum <= maxPages; pageNum++) {
+            try {
+                const page = await pdf.getPage(pageNum)
+                const textContent = await page.getTextContent()
+                
+                if (textContent && textContent.items && Array.isArray(textContent.items)) {
+                    const pageText = textContent.items
+                        .map((item: any) => item.str || '')
+                        .filter((str: string) => str.trim().length > 0)
+                        .join(' ')
+                    
+                    if (pageText.trim()) {
+                        textParts.push(pageText)
+                    }
+                }
+            } catch (pageError) {
+                console.warn(`[PDF Extract] Error extracting text from page ${pageNum}:`, pageError)
+                // Continue with other pages
+            }
+        }
+
+        // Combine all pages with double newlines (similar to Python: "\n\n".join(text_parts))
+        let extractedText = textParts.join('\n\n')
+        
+        console.log(`[PDF Extract] Extracted ${extractedText.length} characters from ${textParts.length} pages`)
+
         // Clean up the text (similar to Python scraper's text cleaning)
         // Remove excessive whitespace
         extractedText = extractedText.replace(/\s+/g, ' ').trim()
         // Normalize line breaks
         extractedText = extractedText.replace(/\n\s*\n\s*\n+/g, '\n\n')
-        
-        const totalPages = pdfData.numpages || 0
 
         // Limit to reasonable length (equivalent to 50 pages)
         const maxLength = 500000 // ~50 pages of text
@@ -104,32 +158,38 @@ export async function POST(request: NextRequest) {
             extractedText = extractedText.substring(0, maxLength) + '\n\n[Content truncated - PDF text exceeds maximum length]'
         }
 
-        if (totalPages > 50) {
+        const elapsed = Date.now() - startTime
+        console.log(`[PDF Extract] Extraction completed in ${elapsed}ms`)
+
+        if (pdf.numPages > 50) {
             return NextResponse.json({
                 success: true,
                 text: extractedText + '\n\n[Content truncated - PDF has more than 50 pages]',
-                pagesExtracted: Math.min(totalPages, 50),
-                totalPages: totalPages
+                pagesExtracted: maxPages,
+                totalPages: pdf.numPages
             })
         }
 
         return NextResponse.json({
             success: true,
             text: extractedText,
-            pagesExtracted: totalPages,
-            totalPages: totalPages
+            pagesExtracted: maxPages,
+            totalPages: pdf.numPages
         })
 
     } catch (error) {
-        console.error('PDF extraction error:', error)
+        const elapsed = Date.now() - startTime
+        console.error(`[PDF Extract] Error after ${elapsed}ms:`, error)
+        
         const errorMessage = error instanceof Error ? error.message : String(error)
         const errorStack = error instanceof Error ? error.stack : undefined
         
         // Log full error details for debugging
-        console.error('Full error details:', {
+        console.error('[PDF Extract] Full error details:', {
             message: errorMessage,
             stack: errorStack,
-            name: error instanceof Error ? error.name : undefined
+            name: error instanceof Error ? error.name : undefined,
+            elapsed
         })
         
         return NextResponse.json(
