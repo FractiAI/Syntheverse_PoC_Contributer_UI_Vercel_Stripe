@@ -118,13 +118,44 @@ export async function POST(request: NextRequest) {
         } else {
             const GlobalWorkerOptions = pdfjs.GlobalWorkerOptions || pdfjs.default?.GlobalWorkerOptions
             if (GlobalWorkerOptions) {
-                // Set workerSrc to a data URL with minimal worker code
-                // This satisfies pdfjs-dist requirement without requiring file imports
-                if (!GlobalWorkerOptions.workerSrc) {
-                    GlobalWorkerOptions.workerSrc = 'data:application/javascript;base64,' +
-                        Buffer.from('self.onmessage=function(){};').toString('base64');
-                    console.log('[PDF Extract] Worker configured with data URL')
+                    // Completely disable workers for server-side
+                GlobalWorkerOptions.workerSrc = null
+                GlobalWorkerOptions.workerPort = null
+
+                // Try to disable worker loading entirely by patching PDFWorker
+                try {
+                    const PDFWorker = pdfjs.PDFWorker || pdfjs.default?.PDFWorker
+                    if (PDFWorker) {
+                        // Create a mock worker port to prevent actual worker loading
+                        const mockWorkerPort = {
+                            postMessage: () => {},
+                            addEventListener: () => {},
+                            removeEventListener: () => {},
+                            terminate: () => {},
+                            onmessage: null,
+                            onerror: null
+                        }
+
+                        GlobalWorkerOptions.workerPort = mockWorkerPort
+
+                        // Monkey patch PDFWorker.fromPort to return a mock worker
+                        const originalFromPort = PDFWorker.fromPort
+                        PDFWorker.fromPort = function(params) {
+                            // Return a mock PDFWorker that doesn't actually load workers
+                            return {
+                                destroy: () => {},
+                                promise: Promise.resolve(),
+                                port: mockWorkerPort,
+                                _isDestroyed: false
+                            }
+                        }
+                        console.log('[PDF Extract] PDFWorker patched with mock worker')
+                    }
+                } catch (patchError) {
+                    console.warn('[PDF Extract] Could not patch PDFWorker:', patchError)
                 }
+
+                console.log('[PDF Extract] Workers completely disabled for server-side')
             } else {
                 console.warn('[PDF Extract] GlobalWorkerOptions not found')
             }
@@ -153,7 +184,7 @@ export async function POST(request: NextRequest) {
         try {
             console.log('[PDF Extract] Calling getDocument...')
             // Load PDF with explicit synchronous processing
-            // disableWorker and disableRange options ensure no worker is used
+            // Multiple options to ensure no worker is used
             const loadingTask = getDocument({
                 data: uint8Array,
                 verbosity: 0, // 0 = errors only
@@ -161,9 +192,12 @@ export async function POST(request: NextRequest) {
                 disableFontFace: true,
                 // Explicitly disable worker for server-side
                 disableWorker: true,
-                disableRange: false,
-                disableStream: false,
-                disableAutoFetch: false
+                disableRange: true,
+                disableStream: true,
+                disableAutoFetch: true,
+                // Additional worker disabling options
+                isEvalSupported: false,
+                useWorkerFetch: false
             })
             
             pdf = await loadingTask.promise
