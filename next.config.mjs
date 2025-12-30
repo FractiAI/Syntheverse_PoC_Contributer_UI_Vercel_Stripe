@@ -28,7 +28,8 @@ const nextConfig = {
           filename: 'static/worker/[hash][ext][query]',
         },
       });
-    
+    }
+
     // Exclude syntheverse-ui from module resolution
     config.module = {
       ...config.module,
