@@ -187,32 +187,49 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
                 setExtractingText(true)
                 try {
                     // Dynamically import pdfjs-dist for client-side PDF text extraction
-                    // pdfjs-dist v5.x uses named exports
-                    const pdfjsLib = await import('pdfjs-dist')
+                    // pdfjs-dist v5.x uses ES modules - import as namespace
+                    const pdfjsModule = await import('pdfjs-dist')
                     
-                    // Verify pdfjsLib has required methods
-                    if (!pdfjsLib || typeof pdfjsLib.getDocument !== 'function') {
-                        throw new Error('PDF.js library not loaded correctly - getDocument not found. Make sure pdfjs-dist is installed.')
+                    // In v5.x, getDocument can be a named export or on default
+                    // Try multiple access patterns to handle different build configurations
+                    const getDocumentFn = 
+                        (typeof pdfjsModule.getDocument === 'function' ? pdfjsModule.getDocument : null) ||
+                        (pdfjsModule.default && typeof pdfjsModule.default.getDocument === 'function' ? pdfjsModule.default.getDocument : null) ||
+                        ((pdfjsModule as any).getDocument && typeof (pdfjsModule as any).getDocument === 'function' ? (pdfjsModule as any).getDocument : null)
+                    
+                    // Verify getDocument is available
+                    if (!getDocumentFn || typeof getDocumentFn !== 'function') {
+                        // Log detailed error for debugging
+                        const moduleInfo = {
+                            hasGetDocument: typeof pdfjsModule.getDocument,
+                            hasDefault: !!pdfjsModule.default,
+                            defaultType: typeof pdfjsModule.default,
+                            moduleKeys: Object.keys(pdfjsModule),
+                            defaultKeys: pdfjsModule.default ? Object.keys(pdfjsModule.default) : []
+                        }
+                        console.error('PDF.js import error - module structure:', moduleInfo)
+                        throw new Error(`PDF.js getDocument function not found. Module structure: ${JSON.stringify(moduleInfo)}`)
                     }
+                    
+                    // Get GlobalWorkerOptions
+                    const GlobalWorkerOptions = 
+                        pdfjsModule.GlobalWorkerOptions ||
+                        (pdfjsModule.default && pdfjsModule.default.GlobalWorkerOptions) ||
+                        ((pdfjsModule as any).GlobalWorkerOptions)
                     
                     // Set worker source for pdfjs v5.x
                     // Use CDN worker that matches the installed version
-                    if (pdfjsLib.GlobalWorkerOptions) {
-                        const version = '5.4.449' // Match package.json version
-                        // Try .mjs first (v5.x format), fallback to .js if that doesn't work
-                        try {
-                            pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${version}/pdf.worker.min.mjs`
-                        } catch (workerError) {
-                            // Fallback to .js format if .mjs fails
-                            pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${version}/pdf.worker.min.js`
-                        }
+                    if (GlobalWorkerOptions) {
+                        const version = '5.4.449'
+                        // Use .mjs for v5.x (ES module format)
+                        GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${version}/pdf.worker.min.mjs`
                     }
                     
                     // Read file as array buffer
                     const arrayBuffer = await file.arrayBuffer()
                     
                     // Load PDF document with error handling
-                    const loadingTask = pdfjsLib.getDocument({ 
+                    const loadingTask = getDocumentFn({ 
                         data: arrayBuffer,
                         verbosity: 0, // Suppress console warnings
                         useSystemFonts: true,
