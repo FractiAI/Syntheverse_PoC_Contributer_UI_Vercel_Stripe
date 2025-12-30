@@ -147,16 +147,16 @@ export function OnboardingNavigator() {
         },
         {
             id: 'motherlode',
-            title: 'SYNTH Metal Genesis (Gold / Silver / Copper)',
+            title: 'SYNTHG / SYNTHS / SYNTHC (Gold / Silver / Copper)',
             label: 'MODULE 02',
             icon: <Database className="h-6 w-6" />,
             content: (
                 <div className="space-y-4">
                     <div className="cockpit-text">
                         <p className="text-lg mb-4">
-                            The Motherlode Blockmine is a three-token ERC-20 genesis:
-                            <strong className="cockpit-number"> 45T SYNTH-GOLD</strong>, <strong className="cockpit-number">22.5T SYNTH-SILVER</strong>,
-                            and <strong className="cockpit-number">22.5T SYNTH-COPPER</strong>.
+                            The Motherlode Blockmine is a three-token ERC-20 supply:
+                            <strong className="cockpit-number"> 45T SYNTHG</strong>, <strong className="cockpit-number">22.5T SYNTHS</strong>,
+                            and <strong className="cockpit-number">22.5T SYNTHC</strong>.
                         </p>
                         <div className="space-y-3">
                             <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">

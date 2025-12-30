@@ -4,9 +4,9 @@
 -- Introduces per-metal genesis supplies and per-epoch balances per metal.
 --
 -- Genesis:
--- - 45T  SYNTH-GOLD
--- - 22.5T SYNTH-SILVER
--- - 22.5T SYNTH-COPPER
+-- - 45T  SYNTHG (Gold)
+-- - 22.5T SYNTHS (Silver)
+-- - 22.5T SYNTHC (Copper)
 --
 -- Epoch distribution (halving cadence):
 -- - Founder:   50.0%

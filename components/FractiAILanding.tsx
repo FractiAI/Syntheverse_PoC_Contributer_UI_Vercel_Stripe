@@ -282,12 +282,12 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
         </div>
 
         {/* New: Tokenomics */}
-        <ExpandablePanel label="TOKENOMICS" title="Metal Genesis + Epoch Halving" defaultOpen={true}>
+        <ExpandablePanel label="TOKENOMICS" title="Metal Supply + Epoch Halving" defaultOpen={true}>
           <div className="cockpit-text space-y-3">
             <p>
-              Genesis supply is split into three ERC‑20 tokens: <strong>45T Gold</strong>, <strong>22.5T Silver</strong>,
-              <strong>22.5T Copper</strong>. The four Outcast Hero epochs continue in halves (50% / 25% / 12.5% / 12.5%)
-              for each metal.
+              Supply is split into three ERC‑20 tokens: <strong>45T SYNTHG</strong> (Gold), <strong>22.5T SYNTHS</strong>{' '}
+              (Silver), and <strong>22.5T SYNTHC</strong> (Copper). The four Outcast Hero epochs continue in halves (50% /
+              25% / 12.5% / 12.5%) for each token pool.
             </p>
             <p>
               Allocation uses the same score scaling against the available balances, and multi‑metal PoCs allocate across
