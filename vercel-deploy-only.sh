@@ -4,7 +4,8 @@ echo "🌐 Deploying source code directly to Vercel..."
 echo "Vercel will handle building and dependencies"
 
 # Deploy source code only - Vercel builds it
-VERCEL_TOKEN="Fd9bCTAseZ8AhTwGMgEL1IbX" npx vercel --prod
+# Make sure VERCEL_TOKEN is set: export VERCEL_TOKEN=your_token_here
+npx vercel --prod
 
 echo ""
 echo "✅ Deployment initiated!"
