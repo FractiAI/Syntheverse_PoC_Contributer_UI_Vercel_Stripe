@@ -20,11 +20,6 @@ const nextConfig = {
     
     // Configure pdfjs-dist worker for client-side only
     if (!isServer) {
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        'pdfjs-dist': require.resolve('pdfjs-dist'),
-      };
-      
       // Handle pdfjs-dist worker files
       config.module.rules.push({
         test: /pdf\.worker\.(min\.)?(js|mjs)$/,
