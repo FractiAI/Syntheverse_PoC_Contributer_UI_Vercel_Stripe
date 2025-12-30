@@ -28,7 +28,6 @@ const nextConfig = {
           filename: 'static/worker/[hash][ext][query]',
         },
       });
-    }
     
     // Exclude syntheverse-ui from module resolution
     config.module = {
@@ -55,13 +54,6 @@ const nextConfig = {
         '@nomicfoundation/hardhat-ethers': 'commonjs @nomicfoundation/hardhat-ethers',
       });
 
-      // Exclude pdfjs-dist worker files from server bundle
-      config.externals.push({
-        'pdfjs-dist/build/pdf.worker.js': 'commonjs pdfjs-dist/build/pdf.worker.js',
-        'pdfjs-dist/build/pdf.worker.min.js': 'commonjs pdfjs-dist/build/pdf.worker.min.js',
-        'pdfjs-dist/legacy/build/pdf.worker.mjs': 'commonjs pdfjs-dist/legacy/build/pdf.worker.mjs',
-        'pdfjs-dist/legacy/build/pdf.worker.min.mjs': 'commonjs pdfjs-dist/legacy/build/pdf.worker.min.mjs',
-      });
     }
     
     return config;

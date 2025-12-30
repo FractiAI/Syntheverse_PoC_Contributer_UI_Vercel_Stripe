@@ -107,6 +107,8 @@ export async function POST(request: NextRequest) {
         
         // Use standard pdfjs-dist (more compatible with Next.js/Vercel serverless)
         // We'll configure it for server-side synchronous processing
+        // Set environment variable to disable workers
+        process.env.PDFJS_DISABLE_WORKER = 'true'
         const pdfjs = await import('pdfjs-dist')
         
         // Configure worker BEFORE getting getDocument (important!)
@@ -116,18 +118,12 @@ export async function POST(request: NextRequest) {
         } else {
             const GlobalWorkerOptions = pdfjs.GlobalWorkerOptions || pdfjs.default?.GlobalWorkerOptions
             if (GlobalWorkerOptions) {
-                // In Node.js/serverless environments, don't set workerSrc at all
-                // This is the same approach as pdf-parse library - it only sets workerSrc for browser environments
-                // pdfjs-dist will automatically use synchronous processing in Node.js
-                if (typeof process !== 'undefined' && process.versions && process.versions.node) {
-                    // We're in Node.js - don't set workerSrc to avoid bundling issues
-                    console.log('[PDF Extract] Running in Node.js, skipping workerSrc configuration')
-                } else {
-                    // Browser environment - set a valid workerSrc
-                    if (!GlobalWorkerOptions.workerSrc) {
-                        GlobalWorkerOptions.workerSrc = 'pdfjs-dist/build/pdf.worker.mjs'
-                        console.log('[PDF Extract] Worker configured for browser environment')
-                    }
+                // Set workerSrc to a data URL with minimal worker code
+                // This satisfies pdfjs-dist requirement without requiring file imports
+                if (!GlobalWorkerOptions.workerSrc) {
+                    GlobalWorkerOptions.workerSrc = 'data:application/javascript;base64,' +
+                        Buffer.from('self.onmessage=function(){};').toString('base64');
+                    console.log('[PDF Extract] Worker configured with data URL')
                 }
             } else {
                 console.warn('[PDF Extract] GlobalWorkerOptions not found')
