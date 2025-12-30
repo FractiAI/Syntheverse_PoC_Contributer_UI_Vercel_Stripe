@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, ChevronDown } from 'lucide-react'
 
 type FractiAILandingProps = {
   variant?: 'home' | 'fractiai'
@@ -12,8 +12,7 @@ type FractiAILandingProps = {
   }
 }
 
-function SectionLinkPanel({
-  href,
+function ExpandablePanel({
   label,
   title,
   children,
@@ -21,7 +20,6 @@ function SectionLinkPanel({
   titleClassName,
   paddingClassName,
 }: {
-  href: string
   label: string
   title: string
   children?: React.ReactNode
@@ -30,23 +28,20 @@ function SectionLinkPanel({
   paddingClassName?: string
 }) {
   return (
-    <Link
-      href={href}
-      className={['cockpit-panel block hover:opacity-[0.98] transition', className].filter(Boolean).join(' ')}
-    >
-      <div className={paddingClassName || 'p-6'}>
+    <details className={['cockpit-panel', className].filter(Boolean).join(' ')}>
+      <summary className={['cursor-pointer select-none list-none', paddingClassName || 'p-6'].join(' ')}>
         <div className="flex items-start justify-between gap-4">
           <div>
             <div className="cockpit-label">{label}</div>
             <div className={['cockpit-title mt-2', titleClassName || 'text-2xl'].join(' ')}>{title}</div>
           </div>
           <div className="mt-1">
-            <ArrowRight className="h-5 w-5 opacity-70" />
+            <ChevronDown className="h-5 w-5 opacity-70" />
           </div>
         </div>
-        {children ? <div className="mt-4">{children}</div> : null}
-      </div>
-    </Link>
+      </summary>
+      {children ? <div className="px-6 pb-6">{children}</div> : null}
+    </details>
   )
 }
 
@@ -105,8 +100,7 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
               </div>
 
               <div className="mt-6 grid gap-3 md:grid-cols-3">
-                <SectionLinkPanel
-                  href="/fractiai/launch"
+                <ExpandablePanel
                   className="cockpit-module"
                   paddingClassName="p-5"
                   titleClassName="text-xl"
@@ -115,11 +109,14 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
                 >
                   <div className="cockpit-text space-y-3 text-sm">
                     <p>Base‑chain prerelease: gameplay, lens, and sandbox operations begin.</p>
+                    <p>
+                      This is open tuning: contributors expand the map, the scoring lens stabilizes, and the economy
+                      calibrates via real usage.
+                    </p>
                   </div>
-                </SectionLinkPanel>
+                </ExpandablePanel>
 
-                <SectionLinkPanel
-                  href="/fractiai/primitives"
+                <ExpandablePanel
                   className="cockpit-module"
                   paddingClassName="p-5"
                   titleClassName="text-xl"
@@ -128,11 +125,14 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
                 >
                   <div className="cockpit-text space-y-3 text-sm">
                     <p>A holographic frontier explorer loop: discover → contribute → map → align → evolve.</p>
+                    <p>
+                      The lens scores coherence/novelty/density, the sandbox indexes the vector terrain, and the game
+                      turns contributions into on‑chain progression.
+                    </p>
                   </div>
-                </SectionLinkPanel>
+                </ExpandablePanel>
 
-                <SectionLinkPanel
-                  href="/fractiai/protocol"
+                <ExpandablePanel
                   className="cockpit-module"
                   paddingClassName="p-5"
                   titleClassName="text-xl"
@@ -141,14 +141,17 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
                 >
                   <div className="cockpit-text space-y-3 text-sm">
                     <p>Submissions are evaluated for novelty, density, coherence, and alignment to grow the living map.</p>
+                    <p>
+                      Rewards allocate from metal pools (Gold/Silver/Copper) using the PoC’s metal assay—auditable and
+                      composition-aware.
+                    </p>
                   </div>
-                </SectionLinkPanel>
+                </ExpandablePanel>
               </div>
             </div>
 
             <div className="space-y-4">
-              <SectionLinkPanel
-                href="/fractiai/vortex"
+              <ExpandablePanel
                 label="SIGNATURE"
                 title="THE VORTEX CARTOGRAPHER — THE 12D HOLOGRAPHIC HYDROGEN FRACTAL CARTOGRAPHER"
               >
@@ -157,13 +160,18 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
                     A “frontier noir” visual grammar: heavy keylines, negative space, carved structure, and gilded
                     discoveries—mapping the field as a living diagram.
                   </p>
+                  <p>
+                    Inspired by the “Genome as a 12D Holographic Hydrogen Vector Map” analog: recursive traversal from
+                    entry nodes reduces entropy and exposes routing invariants—exactly what a frontier economy needs to
+                    stay navigable.
+                  </p>
                 </div>
                 <div className="mt-4 relative aspect-[4/3]">
                   <Image src="/fractiai/vortex.svg" alt="Vortex cartography motif" fill className="object-contain" />
                 </div>
-              </SectionLinkPanel>
+              </ExpandablePanel>
 
-              <SectionLinkPanel href="/fractiai/contact" label="CONTACT" title="Channels">
+              <ExpandablePanel label="CONTACT" title="Channels">
                 <div className="cockpit-text space-y-2">
                   <div>
                     Media & partnerships:{' '}
@@ -178,15 +186,14 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
                     </a>
                   </div>
                 </div>
-              </SectionLinkPanel>
+              </ExpandablePanel>
             </div>
           </div>
         </div>
 
         {/* Press / Narrative */}
         <div className="grid gap-6 lg:grid-cols-2">
-          <SectionLinkPanel
-            href="/fractiai/press"
+          <ExpandablePanel
             label="FOR IMMEDIATE RELEASE"
             title="The Syntheverse Crypto Frontier Opens"
           >
@@ -199,14 +206,17 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
                 Each contribution expands coverage, resonance, and fractal density through Proof‑of‑Contribution (PoC)
                 protocols—forming a living map of the sandbox and its emergent economy.
               </p>
+              <p>
+                Beginning Jan 1, 2026 on Base: a game‑native ERC‑20 economy paired with a scoring lens that rewards
+                measurable signal.
+              </p>
             </div>
             <div className="mt-5 relative aspect-[4/3]">
               <Image src="/fractiai/press-release.svg" alt="Press release visual panel" fill className="object-contain" />
             </div>
-          </SectionLinkPanel>
+          </ExpandablePanel>
 
-          <SectionLinkPanel
-            href="/fractiai/validation"
+          <ExpandablePanel
             label="VALIDATION → ECOSYSTEM"
             title="From Blueprint to Base‑Chain Sandbox"
           >
@@ -225,12 +235,12 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
             <div className="mt-5 relative aspect-[16/9]">
               <Image src="/fractiai/base-lens.svg" alt="Base-chain lens + sandbox illustration" fill className="object-contain" />
             </div>
-          </SectionLinkPanel>
+          </ExpandablePanel>
         </div>
 
         {/* New: Game/Lens/Sandbox */}
         <div className="grid gap-6 lg:grid-cols-2">
-          <SectionLinkPanel href="/fractiai/primitives" label="PRIMITIVES" title="Game · Lens · Sandbox">
+          <ExpandablePanel label="PRIMITIVES" title="Game · Lens · Sandbox">
             <div className="cockpit-text space-y-3">
               <p>
                 Syntheverse operates as a frontier explorer loop: a game-native economy, a lens for coherence/novelty,
@@ -244,9 +254,9 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
             <div className="mt-5 relative aspect-[16/9]">
               <Image src="/fractiai/game-loop.svg" alt="Explorer game loop diagram" fill className="object-contain" />
             </div>
-          </SectionLinkPanel>
+          </ExpandablePanel>
 
-          <SectionLinkPanel href="/fractiai/protocol" label="PROTOCOL" title="Proof‑of‑Contribution (PoC)">
+          <ExpandablePanel label="PROTOCOL" title="Proof‑of‑Contribution (PoC)">
             <div className="cockpit-text space-y-3">
               <p>
                 PoC is the ingestion layer of the Motherlode: submit text, evaluate in HHF space, archive vectors, and
@@ -260,11 +270,11 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
             <div className="mt-5 relative aspect-[16/9]">
               <Image src="/fractiai/poc-protocol.svg" alt="Proof-of-Contribution pipeline panel" fill className="object-contain" />
             </div>
-          </SectionLinkPanel>
+          </ExpandablePanel>
         </div>
 
         {/* New: Tokenomics */}
-        <SectionLinkPanel href="/fractiai/tokenomics" label="TOKENOMICS" title="Metal Genesis + Epoch Halving">
+        <ExpandablePanel label="TOKENOMICS" title="Metal Genesis + Epoch Halving">
           <div className="cockpit-text space-y-3">
             <p>
               Genesis supply is split into three ERC‑20 tokens: <strong>45T Gold</strong>, <strong>22.5T Silver</strong>,
@@ -279,10 +289,10 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
           <div className="mt-5 relative aspect-[16/9]">
             <Image src="/fractiai/tokenomics-metals.svg" alt="Metal tokenomics panel" fill className="object-contain" />
           </div>
-        </SectionLinkPanel>
+        </ExpandablePanel>
 
         {/* About */}
-        <SectionLinkPanel href="/fractiai/about" label="ABOUT" title="FractiAI: the HHF Whole Brain Blueprint">
+        <ExpandablePanel label="ABOUT" title="FractiAI: the HHF Whole Brain Blueprint">
           <div className="cockpit-text space-y-3">
             <p>
               FractiAI is building a Hydrogen‑Holographic Fractal “Whole Brain” blueprint: a structural grammar for
@@ -296,10 +306,10 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
           <div className="mt-5 relative aspect-[16/9]">
             <Image src="/fractiai/about-blueprint.svg" alt="About FractiAI blueprint panel" fill className="object-contain" />
           </div>
-        </SectionLinkPanel>
+        </ExpandablePanel>
 
         {/* Resources */}
-        <SectionLinkPanel href="/fractiai/resources" label="RESOURCES" title="Links, Code, and Contact">
+        <ExpandablePanel label="RESOURCES" title="Links, Code, and Contact">
           <div className="cockpit-text">
             Validation suite (open source):{' '}
             <a
@@ -313,6 +323,18 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
           </div>
           <div className="cockpit-text mt-2">
             Join the frontier: email <a className="underline" href="mailto:info@fractiai.com">info@fractiai.com</a>
+          </div>
+          <div className="cockpit-text mt-2">
+            Whitepapers: <a className="underline" href="https://zenodo.org/records/17873279" target="_blank" rel="noreferrer">zenodo.org/records/17873279</a>
+          </div>
+          <div className="cockpit-text mt-2">
+            Presentations: <a className="underline" href="https://www.youtube.com/@FractiAI" target="_blank" rel="noreferrer">youtube.com/@FractiAI</a>
+          </div>
+          <div className="cockpit-text mt-2">
+            GitHub: <a className="underline" href="https://github.com/FractiAI" target="_blank" rel="noreferrer">github.com/FractiAI</a>
+          </div>
+          <div className="cockpit-text mt-2">
+            X: <a className="underline" href="https://x.com/FractiAi" target="_blank" rel="noreferrer">x.com/FractiAi</a>
           </div>
           <div className="mt-5 relative aspect-[16/9]">
             <Image src="/fractiai/resources-signal.svg" alt="Resources signal panel" fill className="object-contain" />
@@ -330,7 +352,7 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
               </Link>
             </div>
           ) : null}
-        </SectionLinkPanel>
+        </ExpandablePanel>
       </div>
     </div>
   )
