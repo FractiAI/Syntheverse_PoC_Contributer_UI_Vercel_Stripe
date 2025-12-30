@@ -224,7 +224,7 @@ export function ReactorCore() {
                 <div className="flex items-center justify-between">
                     <div>
                         <div className="cockpit-label">CORE INSTRUMENT PANEL</div>
-                        <div className="cockpit-title text-3xl mt-2">SYNTH REACTOR</div>
+                        <div className="cockpit-title text-3xl mt-2">SYNCH MINE</div>
                     </div>
                     <div className="text-right">
                         <div className="cockpit-label">Total Supply</div>
