@@ -156,7 +156,8 @@ async function extractTextWithPoppler(buffer: Buffer): Promise<{ text: string; p
         // Read the extracted text
         const extractedText = await fs.readFile(outputFilePath, 'utf8')
 
-        if (typeof extractedText !== 'string' || extractedText.length === 0) {
+        // GUARD: Check if Poppler actually returned valid text
+        if (!extractedText || typeof extractedText !== 'string' || extractedText.trim().length === 0) {
             throw new Error('Poppler produced no textual output (file may be image-only or encrypted)')
         }
 
@@ -168,6 +169,11 @@ async function extractTextWithPoppler(buffer: Buffer): Promise<{ text: string; p
 
         // Process the extracted text
         let cleanText = extractedText.trim()
+
+        // Additional guard after trim (in case trim returns something unexpected)
+        if (!cleanText || typeof cleanText !== 'string') {
+            throw new Error('Text processing failed - extracted content is invalid')
+        }
 
         // Remove excessive whitespace
         cleanText = cleanText.replace(/[ \t]+/g, ' ')  // Multiple spaces to single
