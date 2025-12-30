@@ -41,6 +41,41 @@ export async function POST(request: NextRequest) {
 
         console.log(`[PDF Extract] Starting extraction for file: ${file.name}, size: ${file.size} bytes, type: ${file.type}`)
 
+        // Polyfill DOMMatrix for pdfjs-dist (used internally by pdf-parse)
+        if (typeof (globalThis as any).DOMMatrix === 'undefined') {
+            // Minimal DOMMatrix polyfill for pdfjs-dist
+            class DOMMatrixPolyfill {
+                a: number = 1
+                b: number = 0
+                c: number = 0
+                d: number = 1
+                e: number = 0
+                f: number = 0
+                m11: number = 1
+                m12: number = 0
+                m21: number = 0
+                m22: number = 1
+                m41: number = 0
+                m42: number = 0
+                constructor(init?: string | number[] | any) {
+                    if (init) {
+                        // Handle initialization if needed
+                    }
+                }
+                static fromMatrix(other?: any) {
+                    return new DOMMatrixPolyfill()
+                }
+                static fromFloat32Array(array: Float32Array) {
+                    return new DOMMatrixPolyfill()
+                }
+                static fromFloat64Array(array: Float64Array) {
+                    return new DOMMatrixPolyfill()
+                }
+            }
+            ;(globalThis as any).DOMMatrix = DOMMatrixPolyfill
+            console.log('[PDF Extract] DOMMatrix polyfill created')
+        }
+
         // Read file as buffer for pdf-parse
         let buffer: Buffer
         try {
