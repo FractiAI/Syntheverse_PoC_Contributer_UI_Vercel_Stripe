@@ -10,9 +10,9 @@ npm install
 echo "🔨 Building application..."
 npm run build
 
-# Deploy to Vercel
+# Deploy to Vercel with provided token
 echo "🌐 Deploying to Vercel..."
-npx vercel --prod
+VERCEL_TOKEN="Fd9bCTAseZ8AhTwGMgEL1IbX" npx vercel --prod
 
 echo "✅ Deployment complete!"
 echo ""

@@ -18,9 +18,9 @@ npm run build
 if [ $? -eq 0 ]; then
     echo "✅ Build successful!"
     echo ""
-    echo "🚀 Ready to deploy:"
-    echo "npx vercel login  # Login to Vercel first"
-    echo "npx vercel --prod # Deploy to production"
+    echo "🚀 Deploying to Vercel..."
+    VERCEL_TOKEN="Fd9bCTAseZ8AhTwGMgEL1IbX" npx vercel --prod
+    echo "✅ Deployment complete!"
 else
     echo "❌ Build still failing. Try:"
     echo "npm run build --verbose"
