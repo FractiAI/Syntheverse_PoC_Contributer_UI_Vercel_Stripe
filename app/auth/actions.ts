@@ -164,7 +164,8 @@ export async function loginUser(currentState: { message: string }, formData: For
 export async function logout() {
     const supabase = createClient()
     const { error } = await supabase.auth.signOut()
-    redirect('/login')
+    // After logout, route to public FractiAI landing (with login/signup CTAs).
+    redirect('/fractiai')
 }
 
 // Alias for compatibility
