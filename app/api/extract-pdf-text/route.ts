@@ -156,6 +156,10 @@ async function extractTextWithPoppler(buffer: Buffer): Promise<{ text: string; p
         // Read the extracted text
         const extractedText = await fs.readFile(outputFilePath, 'utf8')
 
+        if (typeof extractedText !== 'string' || extractedText.length === 0) {
+            throw new Error('Poppler produced no textual output (file may be image-only or encrypted)')
+        }
+
         // Clean up temporary files
         await Promise.all([
             fs.unlink(tempFilePath),
