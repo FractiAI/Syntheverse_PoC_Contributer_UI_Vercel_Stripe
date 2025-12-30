@@ -3,8 +3,12 @@ import { createClient } from '@/utils/supabase/server'
 
 /**
  * Server-side PDF text extraction API
- * Similar to the Python scraper's extract_text_from_pdf function
- * Uses pdfjs-dist on server (works better in serverless than pdf-parse)
+ * Uses pdf-parse library approach (similar to modesty/pdf-parse) for better text extraction
+ * Based on the pdf-parse package's getPageText method which properly handles:
+ * - Viewport-based text positioning
+ * - Line break detection based on Y coordinates
+ * - Proper handling of hasEOL flags
+ * - Intelligent text item joining
  */
 export async function POST(request: NextRequest) {
     const startTime = Date.now()
@@ -41,7 +45,7 @@ export async function POST(request: NextRequest) {
 
         console.log(`[PDF Extract] Starting extraction for file: ${file.name}, size: ${file.size} bytes, type: ${file.type}`)
 
-        // Read file as Uint8Array (pdfjs-dist prefers this)
+        // Read file as Uint8Array
         let arrayBuffer: ArrayBuffer
         try {
             arrayBuffer = await file.arrayBuffer()
@@ -67,7 +71,6 @@ export async function POST(request: NextRequest) {
         }
 
         // Polyfill DOMMatrix for Node.js (pdfjs-dist requires this)
-        // Create minimal polyfill to avoid import issues
         if (typeof (globalThis as any).DOMMatrix === 'undefined') {
             // Minimal DOMMatrix polyfill for pdfjs-dist
             class DOMMatrixPolyfill {
@@ -102,52 +105,41 @@ export async function POST(request: NextRequest) {
             console.log('[PDF Extract] DOMMatrix polyfill created')
         }
         
-        // Use pdfjs-dist - import standard build
+        // Use pdfjs-dist (standard import - more compatible with Next.js)
         const pdfjs = await import('pdfjs-dist')
         
         // Get getDocument - try different access patterns
         let getDocument: any = null
-        
-        // Try direct access
         if (typeof (pdfjs as any).getDocument === 'function') {
             getDocument = (pdfjs as any).getDocument
-        }
-        // Try default export
-        else if (pdfjs.default && typeof pdfjs.default.getDocument === 'function') {
+        } else if (pdfjs.default && typeof pdfjs.default.getDocument === 'function') {
             getDocument = pdfjs.default.getDocument
-        }
-        // Try nested
-        else if ((pdfjs as any).default && typeof (pdfjs as any).default.getDocument === 'function') {
+        } else if ((pdfjs as any).default?.getDocument) {
             getDocument = (pdfjs as any).default.getDocument
         }
         
         if (!getDocument || typeof getDocument !== 'function') {
-            console.error('[PDF Extract] getDocument not found. Module:', {
-                keys: Object.keys(pdfjs).slice(0, 20),
-                hasDefault: !!pdfjs.default
-            })
+            console.error('[PDF Extract] getDocument not found. Module keys:', Object.keys(pdfjs).slice(0, 20))
             throw new Error('PDF.js getDocument function not available')
         }
         
         console.log('[PDF Extract] getDocument found successfully')
         
         // Disable worker for server-side (not needed in Node.js)
-        const GlobalWorkerOptions = (pdfjs as any).GlobalWorkerOptions || 
-                                   pdfjs.default?.GlobalWorkerOptions
+        const GlobalWorkerOptions = (pdfjs as any).GlobalWorkerOptions || pdfjs.default?.GlobalWorkerOptions
         if (GlobalWorkerOptions) {
             GlobalWorkerOptions.workerSrc = ''
             console.log('[PDF Extract] Worker disabled for server-side')
         }
 
         // Load PDF document
-        let loadingTask: any
         let pdf: any
         
         try {
             console.log('[PDF Extract] Calling getDocument...')
-            loadingTask = getDocument({ 
+            const loadingTask = getDocument({ 
                 data: uint8Array,
-                verbosity: 0,
+                verbosity: 0, // 0 = errors only
                 useSystemFonts: false,
                 disableFontFace: true
             })
@@ -159,27 +151,78 @@ export async function POST(request: NextRequest) {
             throw new Error(`Failed to load PDF: ${loadError instanceof Error ? loadError.message : String(loadError)}`)
         }
 
-        // Extract text from each page (similar to Python: [page.extract_text() for page in reader.pages])
+        // Extract text from each page using pdf-parse approach
         const textParts: string[] = []
         const maxPages = Math.min(pdf.numPages, 50)
         
         console.log(`[PDF Extract] Extracting text from ${maxPages} pages...`)
         
+        // Line threshold for detecting line breaks (similar to pdf-parse default)
+        const lineThreshold = 5
+        
         for (let pageNum = 1; pageNum <= maxPages; pageNum++) {
             try {
                 const page = await pdf.getPage(pageNum)
-                const textContent = await page.getTextContent()
+                const viewport = page.getViewport({ scale: 1 })
+                
+                // Get text content (similar to pdf-parse getPageText)
+                const textContent = await page.getTextContent({
+                    includeMarkedContent: false,
+                    disableNormalization: false,
+                })
                 
                 if (textContent && textContent.items && Array.isArray(textContent.items)) {
-                    const pageText = textContent.items
-                        .map((item: any) => item.str || '')
-                        .filter((str: string) => str.trim().length > 0)
-                        .join(' ')
+                    // Process text items using pdf-parse approach
+                    const strBuf: string[] = []
+                    let lastX: number | undefined
+                    let lastY: number | undefined
+                    let lineHeight = 0
                     
-                    if (pageText.trim()) {
+                    for (const item of textContent.items) {
+                        if (!('str' in item)) {
+                            continue
+                        }
+                        
+                        // Get transform matrix (position)
+                        const tm = item.transform || [1, 0, 0, 1, 0, 0]
+                        const [x, y] = viewport.convertToViewportPoint(tm[4], tm[5])
+                        
+                        // Handle line breaks based on Y position (pdf-parse approach)
+                        if (lastY !== undefined && Math.abs(lastY - y) > lineThreshold) {
+                            const lastItem = strBuf.length ? strBuf[strBuf.length - 1] : undefined
+                            const isCurrentItemHasNewLine = item.str.startsWith('\n') || (item.str.trim() === '' && item.hasEOL)
+                            if (lastItem?.endsWith('\n') === false && !isCurrentItemHasNewLine) {
+                                const ydiff = Math.abs(lastY - y)
+                                if (ydiff - 1 > lineHeight) {
+                                    strBuf.push('\n')
+                                    lineHeight = 0
+                                }
+                            }
+                        }
+                        
+                        strBuf.push(item.str)
+                        lastX = x + (item.width || 0)
+                        lastY = y
+                        lineHeight = Math.max(lineHeight, item.height || 0)
+                        
+                        // Handle end of line flags
+                        if (item.hasEOL) {
+                            strBuf.push('\n')
+                        }
+                        if (item.hasEOL || item.str.endsWith('\n')) {
+                            lineHeight = 0
+                        }
+                    }
+                    
+                    const pageText = strBuf.join('').trim()
+                    
+                    if (pageText) {
                         textParts.push(pageText)
                     }
                 }
+                
+                // Cleanup page resources
+                page.cleanup()
             } catch (pageError) {
                 console.warn(`[PDF Extract] Error extracting text from page ${pageNum}:`, pageError)
                 // Continue with other pages
@@ -192,10 +235,9 @@ export async function POST(request: NextRequest) {
         console.log(`[PDF Extract] Extracted ${extractedText.length} characters from ${textParts.length} pages`)
 
         // Clean up the text (similar to Python scraper's text cleaning)
-        // Remove excessive whitespace
-        extractedText = extractedText.replace(/\s+/g, ' ').trim()
-        // Normalize line breaks
-        extractedText = extractedText.replace(/\n\s*\n\s*\n+/g, '\n\n')
+        // Normalize excessive whitespace but preserve intentional line breaks
+        extractedText = extractedText.replace(/[ \t]+/g, ' ') // Replace multiple spaces/tabs with single space
+        extractedText = extractedText.replace(/\n\s*\n\s*\n+/g, '\n\n') // Normalize multiple newlines to double
 
         // Limit to reasonable length (equivalent to 50 pages)
         const maxLength = 500000 // ~50 pages of text
