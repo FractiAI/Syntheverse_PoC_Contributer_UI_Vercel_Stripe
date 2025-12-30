@@ -122,40 +122,20 @@ export async function POST(request: NextRequest) {
                 GlobalWorkerOptions.workerSrc = ''
                 GlobalWorkerOptions.workerPort = null
 
-                // Try to disable worker loading entirely by patching PDFWorker
-                try {
-                    const PDFWorker = pdfjs.PDFWorker || pdfjs.default?.PDFWorker
-                    if (PDFWorker) {
-                        // Create a mock worker port to prevent actual worker loading
-                        const mockWorkerPort = {
-                            postMessage: () => {},
-                            addEventListener: () => {},
-                            removeEventListener: () => {},
-                            terminate: () => {},
-                            dispatchEvent: () => {},
-                            onmessage: null,
-                            onerror: null,
-                            onmessageerror: null
-                        }
-
-                        GlobalWorkerOptions.workerPort = mockWorkerPort as any
-
-                        // Monkey patch PDFWorker.fromPort to return a mock worker
-                        const originalFromPort = PDFWorker.fromPort
-                        PDFWorker.fromPort = function(params) {
-                            // Return a mock PDFWorker that doesn't actually load workers
-                            return {
-                                destroy: () => {},
-                                promise: Promise.resolve(),
-                                port: mockWorkerPort,
-                                _isDestroyed: false
-                            }
-                        }
-                        console.log('[PDF Extract] PDFWorker patched with mock worker')
-                    }
-                } catch (patchError) {
-                    console.warn('[PDF Extract] Could not patch PDFWorker:', patchError)
+                // Set mock worker port to prevent actual worker loading
+                const mockWorkerPort = {
+                    postMessage: () => {},
+                    addEventListener: () => {},
+                    removeEventListener: () => {},
+                    terminate: () => {},
+                    dispatchEvent: () => {},
+                    onmessage: null,
+                    onerror: null,
+                    onmessageerror: null
                 }
+
+                GlobalWorkerOptions.workerPort = mockWorkerPort as any
+                console.log('[PDF Extract] Mock worker port configured')
 
                 console.log('[PDF Extract] Workers completely disabled for server-side')
             } else {
