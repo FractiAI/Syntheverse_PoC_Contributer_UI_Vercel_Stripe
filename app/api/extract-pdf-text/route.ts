@@ -41,6 +41,34 @@ export async function POST(request: NextRequest) {
 
         console.log(`[PDF Extract] Starting extraction for file: ${file.name}, size: ${file.size} bytes, type: ${file.type}`)
 
+        // Configure pdfjs-dist globally before any imports (affects pdf-parse)
+        if (typeof globalThis !== 'undefined') {
+            // Disable workers globally
+            if (!(globalThis as any).pdfjs) {
+                (globalThis as any).pdfjs = {}
+            }
+            if (!(globalThis as any).pdfjs.GlobalWorkerOptions) {
+                (globalThis as any).pdfjs.GlobalWorkerOptions = {}
+            }
+            (globalThis as any).pdfjs.GlobalWorkerOptions.workerSrc = null
+
+            console.log('[PDF Extract] Globally disabled pdfjs-dist workers')
+        }
+
+        // Set environment variable to disable workers
+        process.env.PDFJS_DISABLE_WORKER = 'true'
+
+        // Import and configure pdfjs-dist directly before pdf-parse uses it
+        try {
+            const pdfjs = await import('pdfjs-dist')
+            if (pdfjs.GlobalWorkerOptions) {
+                pdfjs.GlobalWorkerOptions.workerSrc = null
+                console.log('[PDF Extract] pdfjs-dist workers disabled before pdf-parse import')
+            }
+        } catch (pdfjsError) {
+            console.warn('[PDF Extract] Could not configure pdfjs-dist before pdf-parse:', pdfjsError)
+        }
+
         // Polyfill DOMMatrix for pdfjs-dist (used internally by pdf-parse)
         if (typeof (globalThis as any).DOMMatrix === 'undefined') {
             // Minimal DOMMatrix polyfill for pdfjs-dist
