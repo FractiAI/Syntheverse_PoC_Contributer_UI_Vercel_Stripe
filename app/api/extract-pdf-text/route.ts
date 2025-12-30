@@ -122,19 +122,8 @@ export async function POST(request: NextRequest) {
                 GlobalWorkerOptions.workerSrc = ''
                 GlobalWorkerOptions.workerPort = null
 
-                // Set mock worker port to prevent actual worker loading
-                const mockWorkerPort = {
-                    postMessage: () => {},
-                    addEventListener: () => {},
-                    removeEventListener: () => {},
-                    terminate: () => {},
-                    dispatchEvent: () => {},
-                    onmessage: null,
-                    onerror: null,
-                    onmessageerror: null
-                }
-
-                GlobalWorkerOptions.workerPort = mockWorkerPort as any
+                // Set workerPort to null to disable worker usage
+                GlobalWorkerOptions.workerPort = null
                 console.log('[PDF Extract] Mock worker port configured')
 
                 console.log('[PDF Extract] Workers completely disabled for server-side')
