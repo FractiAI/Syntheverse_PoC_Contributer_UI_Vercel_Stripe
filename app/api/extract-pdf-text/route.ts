@@ -18,6 +18,9 @@ import { createClient } from '@/utils/supabase/server'
 export async function POST(request: NextRequest) {
     const startTime = Date.now()
 
+    // Declare variables for error handling (accessible in catch block)
+    let fileName = ''
+
     try {
         // Check authentication
         const supabase = createClient()
@@ -48,10 +51,10 @@ export async function POST(request: NextRequest) {
             )
         }
 
-        console.log(`[PDF Extract] Starting cloud-based extraction for file: ${file.name}, size: ${file.size} bytes`)
-
         // Store file info for fallback use (accessible in catch block)
-        const fileName = file.name
+        fileName = file.name
+
+        console.log(`[PDF Extract] Starting cloud-based extraction for file: ${file.name}, size: ${file.size} bytes`)
 
         // Convert file to buffer for pdfreader
         const buffer = Buffer.from(await file.arrayBuffer())
