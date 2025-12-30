@@ -23,12 +23,14 @@ export interface BlockchainRegistrationResult {
  * - Contributor address
  * - PoC scores (novelty, density, coherence, alignment)
  * - Metal type
+ * - PDF file path (original submitted PDF)
  * - Registration timestamp
  * 
  * @param submissionHash - PoC submission hash
  * @param contributor - Contributor email/address
  * @param metadata - PoC metadata including scores
  * @param metals - Metal types (gold, silver, copper)
+ * @param pdfPath - Path to the original PDF file (if provided)
  * @returns Blockchain transaction result
  */
 export async function registerPoCOnBlockchain(
@@ -41,12 +43,14 @@ export async function registerPoCOnBlockchain(
         alignment?: number
         pod_score?: number
     },
-    metals: string[]
+    metals: string[],
+    pdfPath?: string | null
 ): Promise<BlockchainRegistrationResult> {
     debug('RegisterPoCBlockchain', 'Initiating blockchain registration', {
         submissionHash,
         contributor,
-        metals
+        metals,
+        pdfPath: pdfPath || 'none'
     })
     
     try {
@@ -73,13 +77,23 @@ export async function registerPoCOnBlockchain(
         // This would use ethers.js or web3.js to:
         // 1. Connect to Hard Hat L1 RPC endpoint
         // 2. Load POCRegistry contract
-        // 3. Call recordEvaluation or registerCertificate function
+        // 3. Call recordEvaluation or registerCertificate function with:
+        //    - submission_hash
+        //    - contributor address
+        //    - PoC scores (novelty, density, coherence, alignment, pod_score)
+        //    - metals array
+        //    - pdf_path (original PDF file path for permanent record)
         // 4. Wait for transaction confirmation
         // 5. Return transaction hash and block number
+        // 
+        // IMPORTANT: The PDF path must be included in the blockchain transaction
+        // to ensure the original document is part of the permanent record.
         
         debug('RegisterPoCBlockchain', 'Blockchain registration would be implemented here', {
             hardhatRpcUrl: hardhatRpcUrl.substring(0, 20) + '...',
-            submissionHash
+            submissionHash,
+            pdfPath: pdfPath || 'none',
+            note: 'PDF path will be included in blockchain transaction for permanent record'
         })
         
         // For now, return mock transaction
