@@ -197,8 +197,23 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
                     })
 
                     if (!response.ok) {
-                        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
-                        throw new Error(errorData.error || `Server error: ${response.status}`)
+                        let errorData: any
+                        try {
+                            const text = await response.text()
+                            errorData = text ? JSON.parse(text) : { error: 'Unknown error' }
+                        } catch {
+                            errorData = { error: `Server error: ${response.status} ${response.statusText}` }
+                        }
+                        
+                        // Include detailed error message if available
+                        const errorMessage = errorData.message || errorData.error || `Server error: ${response.status}`
+                        console.error('PDF extraction API error:', {
+                            status: response.status,
+                            statusText: response.statusText,
+                            error: errorData,
+                            message: errorMessage
+                        })
+                        throw new Error(errorMessage)
                     }
 
                     const result = await response.json()

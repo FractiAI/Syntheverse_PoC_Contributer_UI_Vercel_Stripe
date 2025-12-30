@@ -156,9 +156,78 @@ export async function POST(request: NextRequest) {
             // Note: PDF text extraction is done on client side
             // The text_content from form should contain extracted PDF text
             extractedPdfText = ''
+            
+            // FALLBACK: If client-side extraction failed (no text_content), try server-side extraction inline
+            if (!text_content || !text_content.trim()) {
+                debug('SubmitContribution', 'Client-side extraction failed or empty, attempting server-side extraction as fallback')
+                try {
+                    // Extract text directly using pdfjs-dist (same logic as extract-pdf-text route)
+                    const arrayBuffer = await file.arrayBuffer()
+                    const uint8Array = new Uint8Array(arrayBuffer)
+                    
+                    const pdfjsModule = await import('pdfjs-dist')
+                    let getDocument: any = null
+                    
+                    if (typeof (pdfjsModule as any).getDocument === 'function') {
+                        getDocument = (pdfjsModule as any).getDocument
+                    } else if (pdfjsModule.default && typeof pdfjsModule.default.getDocument === 'function') {
+                        getDocument = pdfjsModule.default.getDocument
+                    }
+                    
+                    if (getDocument && typeof getDocument === 'function') {
+                        const GlobalWorkerOptions = (pdfjsModule as any).GlobalWorkerOptions || pdfjsModule.default?.GlobalWorkerOptions
+                        if (GlobalWorkerOptions) {
+                            GlobalWorkerOptions.workerSrc = ''
+                        }
+                        
+                        const loadingTask = getDocument({ 
+                            data: uint8Array,
+                            verbosity: 0,
+                            useSystemFonts: false,
+                            disableFontFace: true
+                        })
+                        
+                        const pdf = await loadingTask.promise
+                        const textParts: string[] = []
+                        const maxPages = Math.min(pdf.numPages, 50)
+                        
+                        for (let pageNum = 1; pageNum <= maxPages; pageNum++) {
+                            try {
+                                const page = await pdf.getPage(pageNum)
+                                const textContent = await page.getTextContent()
+                                
+                                if (textContent && textContent.items && Array.isArray(textContent.items)) {
+                                    const pageText = textContent.items
+                                        .map((item: any) => item.str || '')
+                                        .filter((str: string) => str.trim().length > 0)
+                                        .join(' ')
+                                    
+                                    if (pageText.trim()) {
+                                        textParts.push(pageText)
+                                    }
+                                }
+                            } catch (pageError) {
+                                // Continue with other pages
+                            }
+                        }
+                        
+                        const extractedText = textParts.join('\n\n').trim()
+                        if (extractedText) {
+                            text_content = extractedText
+                            debug('SubmitContribution', 'Server-side PDF extraction succeeded', { 
+                                textLength: extractedText.length,
+                                pages: textParts.length 
+                            })
+                        }
+                    }
+                } catch (fallbackError) {
+                    debugError('SubmitContribution', 'Fallback server-side extraction failed', fallbackError)
+                    // Continue without extracted text - will use title
+                }
+            }
         }
         
-        // Use text_content from form (extracted from PDF on client side) if available, otherwise use title for evaluation
+        // Use text_content from form (extracted from PDF on client side or server fallback) if available, otherwise use title for evaluation
         const textContentForEvaluation = text_content?.trim() || title.trim()
         const textContentForStorage = text_content?.trim() || null
         
