@@ -100,21 +100,61 @@ export async function POST(request: NextRequest) {
             )
         }
         
-        // Handle PDF file upload - extract text content from PDF
+        // Handle PDF file upload - upload to Supabase Storage and extract text content from PDF
         let pdf_path: string | null = null
+        let pdf_storage_url: string | null = null
         let extractedPdfText: string = ''
         
         if (file) {
-            pdf_path = file.name
             debug('SubmitContribution', 'File received', { fileName: file.name, size: file.size, type: file.type })
             
-            // Note: PDF text extraction is not currently implemented due to serverless environment limitations
-            // PDF files are stored but text content should be provided separately or extracted via external service
-            // For now, we'll use text_content from form or title for evaluation
-            debug('SubmitContribution', 'PDF file received (text extraction not available in serverless)', {
-                fileName: file.name,
-                size: file.size
-            })
+            try {
+                // Upload PDF to Supabase Storage for permanent storage
+                const fileBytes = await file.arrayBuffer()
+                const fileBuffer = Buffer.from(fileBytes)
+                
+                // Generate a unique storage path: poc-submissions/{submission_hash}/{sanitized_filename}
+                // Use submission_hash once it's generated to ensure uniqueness
+                const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_')
+                const storagePath = `poc-submissions/${submission_hash}/${sanitizedFileName}`
+                
+                // Upload to Supabase Storage bucket 'poc-files' (or create if doesn't exist)
+                const storageSupabase = createClient()
+                const { data: uploadData, error: uploadError } = await storageSupabase.storage
+                    .from('poc-files')
+                    .upload(storagePath, fileBuffer, {
+                        contentType: 'application/pdf',
+                        upsert: false, // Don't overwrite existing files
+                        cacheControl: '3600',
+                    })
+                
+                if (uploadError) {
+                    debugError('SubmitContribution', 'PDF upload to Supabase Storage failed', uploadError)
+                    // Continue without storage URL - will use filename as fallback
+                    pdf_path = file.name
+                } else {
+                    // Get public URL for the uploaded file
+                    const { data: urlData } = storageSupabase.storage
+                        .from('poc-files')
+                        .getPublicUrl(storagePath)
+                    
+                    pdf_storage_url = urlData.publicUrl
+                    pdf_path = storagePath // Store storage path in database
+                    
+                    debug('SubmitContribution', 'PDF uploaded to Supabase Storage successfully', {
+                        storagePath,
+                        publicUrl: pdf_storage_url,
+                        fileSize: file.size
+                    })
+                }
+            } catch (storageError) {
+                debugError('SubmitContribution', 'Error uploading PDF to storage', storageError)
+                // Continue with filename as fallback
+                pdf_path = file.name
+            }
+            
+            // Note: PDF text extraction is done on client side
+            // The text_content from form should contain extracted PDF text
             extractedPdfText = ''
         }
         

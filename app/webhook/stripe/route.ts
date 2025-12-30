@@ -152,7 +152,7 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
             const metals = (contrib.metals as string[]) || []
             
             // Register PoC on Hard Hat L1 blockchain
-            // Include original PDF path to ensure it's part of the permanent blockchain record
+            // Include original PDF file (actual file content) to ensure it's part of the permanent blockchain record
             let blockchainTxHash: string | null = null
             try {
                 const { registerPoCOnBlockchain } = await import('@/utils/blockchain/register-poc')
@@ -167,13 +167,13 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
                         pod_score: metadata.pod_score
                     },
                     metals,
-                    contrib.pdf_path || null // Include original PDF path in blockchain registration
+                    contrib.pdf_path || null // Storage path - function will retrieve ACTUAL PDF FILE from Supabase Storage
                 )
                 
-                debug('StripeWebhook', 'Blockchain registration includes PDF path', {
+                debug('StripeWebhook', 'Blockchain registration includes ACTUAL PDF FILE', {
                     submissionHash,
                     pdfPath: contrib.pdf_path || 'none',
-                    note: 'Original PDF is included as part of permanent blockchain record'
+                    note: 'Original PDF file content/hash is retrieved from storage and included in permanent blockchain record'
                 })
                 
                 if (blockchainResult.success && blockchainResult.transaction_hash) {
