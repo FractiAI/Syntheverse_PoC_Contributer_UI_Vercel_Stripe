@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, ExternalLink, ChevronDown } from 'lucide-react'
+import { ArrowRight, ChevronDown } from 'lucide-react'
 
 type FractiAILandingProps = {
   variant?: 'home' | 'fractiai'
@@ -17,19 +17,25 @@ function ExpandablePanel({
   title,
   defaultOpen,
   children,
+  className,
+  titleClassName,
+  summaryPaddingClassName,
 }: {
   label: string
   title: string
   defaultOpen?: boolean
   children: React.ReactNode
+  className?: string
+  titleClassName?: string
+  summaryPaddingClassName?: string
 }) {
   return (
-    <details className="cockpit-panel" open={defaultOpen}>
-      <summary className="cursor-pointer select-none list-none p-6">
+    <details className={['cockpit-panel', className].filter(Boolean).join(' ')} open={defaultOpen}>
+      <summary className={['cursor-pointer select-none list-none', summaryPaddingClassName || 'p-6'].join(' ')}>
         <div className="flex items-start justify-between gap-4">
           <div>
             <div className="cockpit-label">{label}</div>
-            <div className="cockpit-title text-2xl mt-2">{title}</div>
+            <div className={['cockpit-title mt-2', titleClassName || 'text-2xl'].join(' ')}>{title}</div>
           </div>
           <div className="mt-1">
             <ChevronDown className="h-5 w-5 opacity-70" />
@@ -93,66 +99,99 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
                   Onboarding
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
-
-                {variant !== 'fractiai' ? (
-                  <a
-                    href="https://fractiai.com"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="cockpit-lever inline-flex items-center"
-                  >
-                    FractiAI.com
-                    <ExternalLink className="ml-2 h-4 w-4" />
-                  </a>
-                ) : null}
               </div>
 
               <div className="mt-6 grid gap-3 md:grid-cols-3">
-                <div className="cockpit-module cockpit-panel p-5">
-                  <div className="cockpit-label">LAUNCH WINDOW</div>
-                  <div className="cockpit-title text-xl mt-2">Jan 1, 2026</div>
-                  <div className="cockpit-text mt-2 text-sm">
-                    Base‑chain prerelease: gameplay, lens, and sandbox operations begin.
+                <ExpandablePanel
+                  className="cockpit-module"
+                  summaryPaddingClassName="p-5"
+                  titleClassName="text-xl"
+                  label="LAUNCH WINDOW"
+                  title="Jan 1, 2026"
+                  defaultOpen={false}
+                >
+                  <div className="cockpit-text space-y-3 text-sm">
+                    <p>Base‑chain prerelease: gameplay, lens, and sandbox operations begin.</p>
+                    <p>
+                      The map is built live by contributors; the economy and scoring cadence are tuned in the open as the
+                      frontier stabilizes.
+                    </p>
                   </div>
-                </div>
-                <div className="cockpit-module cockpit-panel p-5">
-                  <div className="cockpit-label">PRIMITIVES</div>
-                  <div className="cockpit-title text-xl mt-2">Game · Lens · Sandbox</div>
-                  <div className="cockpit-text mt-2 text-sm">
-                    A holographic frontier explorer loop: discover → contribute → map → align → evolve.
+                </ExpandablePanel>
+
+                <ExpandablePanel
+                  className="cockpit-module"
+                  summaryPaddingClassName="p-5"
+                  titleClassName="text-xl"
+                  label="PRIMITIVES"
+                  title="Game · Lens · Sandbox"
+                  defaultOpen={false}
+                >
+                  <div className="cockpit-text space-y-3 text-sm">
+                    <p>A holographic frontier explorer loop: discover → contribute → map → align → evolve.</p>
+                    <p>
+                      The <strong>lens</strong> scores coherence/novelty/density, the <strong>sandbox</strong> indexes the
+                      vector terrain, and the <strong>game</strong> turns contributions into on‑chain progression.
+                    </p>
                   </div>
-                </div>
-                <div className="cockpit-module cockpit-panel p-5">
-                  <div className="cockpit-label">PROTOCOL</div>
-                  <div className="cockpit-title text-xl mt-2">Proof‑of‑Contribution</div>
-                  <div className="cockpit-text mt-2 text-sm">
-                    Submissions are evaluated for novelty, density, coherence, and alignment to grow the living map.
+                </ExpandablePanel>
+
+                <ExpandablePanel
+                  className="cockpit-module"
+                  summaryPaddingClassName="p-5"
+                  titleClassName="text-xl"
+                  label="PROTOCOL"
+                  title="Proof‑of‑Contribution"
+                  defaultOpen={false}
+                >
+                  <div className="cockpit-text space-y-3 text-sm">
+                    <p>Submissions are evaluated for novelty, density, coherence, and alignment to grow the living map.</p>
+                    <p>
+                      Allocation is drawn from metal pools (Gold/Silver/Copper) using the PoC’s metal assay, keeping the
+                      Motherlode’s accounting physically‑themed and auditable.
+                    </p>
                   </div>
-                </div>
+                </ExpandablePanel>
               </div>
             </div>
 
             <div className="space-y-4">
-              <div className="cockpit-panel p-6">
-                <div className="cockpit-label">THE VORTEX CARTOGRAPHER — THE 12D HOLOGRAPHIC HYDROGEN FRACTAL CARTOGRAPHER</div>
-                <div className="cockpit-text mt-3">
-                  A “frontier noir” visual grammar: heavy keylines, negative space, carved structure, and gilded
-                  discoveries—mapping the field as a living diagram.
+              <ExpandablePanel
+                label="SIGNATURE"
+                title="THE VORTEX CARTOGRAPHER — THE 12D HOLOGRAPHIC HYDROGEN FRACTAL CARTOGRAPHER"
+                defaultOpen={false}
+              >
+                <div className="cockpit-text space-y-3">
+                  <p>
+                    A “frontier noir” visual grammar: heavy keylines, negative space, carved structure, and gilded
+                    discoveries—mapping the field as a living diagram.
+                  </p>
+                  <p>
+                    The Cartographer’s job: reveal structure without flattening it—keep the mystery, keep the signal, keep
+                    the economics legible.
+                  </p>
                 </div>
                 <div className="mt-4 relative aspect-[4/3]">
                   <Image src="/fractiai/vortex.svg" alt="Vortex cartography motif" fill className="object-contain" />
                 </div>
-              </div>
+              </ExpandablePanel>
 
-              <div className="cockpit-panel p-6">
-                <div className="cockpit-label">CONTACT</div>
-                <div className="cockpit-text mt-3">
-                  Media & partnerships: <a className="underline" href="mailto:info@fractiai.com">info@fractiai.com</a>
+              <ExpandablePanel label="CONTACT" title="Channels" defaultOpen={false}>
+                <div className="cockpit-text space-y-2">
+                  <div>
+                    Media & partnerships:{' '}
+                    <a className="underline" href="mailto:info@fractiai.com">
+                      info@fractiai.com
+                    </a>
+                  </div>
+                  <div>
+                    Investor relations:{' '}
+                    <a className="underline" href="mailto:invest@fractiai.com">
+                      invest@fractiai.com
+                    </a>
+                  </div>
                 </div>
-                <div className="cockpit-text mt-2">
-                  Investor relations: <a className="underline" href="mailto:invest@fractiai.com">invest@fractiai.com</a>
-                </div>
-              </div>
+              </ExpandablePanel>
             </div>
           </div>
         </div>
