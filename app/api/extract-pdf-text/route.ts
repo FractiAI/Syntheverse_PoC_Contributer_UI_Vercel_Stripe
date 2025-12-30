@@ -105,8 +105,38 @@ export async function POST(request: NextRequest) {
             console.log('[PDF Extract] DOMMatrix polyfill created')
         }
         
-        // Use pdfjs-dist (standard import - more compatible with Next.js)
-        const pdfjs = await import('pdfjs-dist')
+        // Use pdfjs-dist/legacy/build/pdf.mjs (same as pdf-parse package)
+        // This build handles server-side workers better
+        let pdfjs: any
+        try {
+            pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs')
+        } catch (legacyError) {
+            // Fallback to standard import if legacy path fails
+            console.warn('[PDF Extract] Legacy import failed, trying standard import:', legacyError)
+            pdfjs = await import('pdfjs-dist')
+        }
+        
+        // Configure worker BEFORE getting getDocument (important!)
+        // pdfjs-dist requires workerSrc to be set before any operations
+        // For server-side, we set it to the worker file path (even though it won't be used in Node.js)
+        if (pdfjs?.GlobalWorkerOptions === null) {
+            console.log('[PDF Extract] GlobalWorkerOptions is null, skipping worker configuration')
+        } else {
+            const GlobalWorkerOptions = pdfjs.GlobalWorkerOptions || pdfjs.default?.GlobalWorkerOptions
+            if (GlobalWorkerOptions) {
+                // Set workerSrc to satisfy pdfjs-dist requirement
+                // pdfjs-dist needs this set even for server-side (it will use sync processing in Node.js)
+                if (!GlobalWorkerOptions.workerSrc || GlobalWorkerOptions.workerSrc === '') {
+                    // Construct the worker path - pdfjs-dist will check this but use sync processing in Node.js
+                    const path = await import('path')
+                    const workerPath = path.join(process.cwd(), 'node_modules', 'pdfjs-dist', 'legacy', 'build', 'pdf.worker.mjs')
+                    GlobalWorkerOptions.workerSrc = workerPath
+                    console.log('[PDF Extract] Worker configured for server-side:', workerPath)
+                }
+            } else {
+                console.warn('[PDF Extract] GlobalWorkerOptions not found')
+            }
+        }
         
         // Get getDocument - try different access patterns
         let getDocument: any = null
@@ -124,19 +154,13 @@ export async function POST(request: NextRequest) {
         }
         
         console.log('[PDF Extract] getDocument found successfully')
-        
-        // Disable worker for server-side (not needed in Node.js)
-        const GlobalWorkerOptions = (pdfjs as any).GlobalWorkerOptions || pdfjs.default?.GlobalWorkerOptions
-        if (GlobalWorkerOptions) {
-            GlobalWorkerOptions.workerSrc = ''
-            console.log('[PDF Extract] Worker disabled for server-side')
-        }
 
         // Load PDF document
         let pdf: any
         
         try {
             console.log('[PDF Extract] Calling getDocument...')
+            // Load PDF - workerSrc is already configured above
             const loadingTask = getDocument({ 
                 data: uint8Array,
                 verbosity: 0, // 0 = errors only
