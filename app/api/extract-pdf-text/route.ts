@@ -50,8 +50,8 @@ export async function POST(request: NextRequest) {
 
         console.log(`[PDF Extract] Starting cloud-based extraction for file: ${file.name}, size: ${file.size} bytes`)
 
-        // Store file info for fallback use
-        let fileName = file.name
+        // Store file info for fallback use (accessible in catch block)
+        const fileName = file.name
 
         // Convert file to buffer for pdfreader
         const buffer = Buffer.from(await file.arrayBuffer())
