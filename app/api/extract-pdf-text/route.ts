@@ -39,13 +39,32 @@ export async function POST(request: NextRequest) {
             )
         }
 
-        console.log(`[PDF Extract] Starting extraction for file: ${file.name}, size: ${file.size} bytes`)
+        console.log(`[PDF Extract] Starting extraction for file: ${file.name}, size: ${file.size} bytes, type: ${file.type}`)
 
         // Read file as Uint8Array (pdfjs-dist prefers this)
-        const arrayBuffer = await file.arrayBuffer()
-        const uint8Array = new Uint8Array(arrayBuffer)
+        let arrayBuffer: ArrayBuffer
+        try {
+            arrayBuffer = await file.arrayBuffer()
+            console.log(`[PDF Extract] File read successfully, arrayBuffer size: ${arrayBuffer.byteLength} bytes`)
+        } catch (readError) {
+            console.error('[PDF Extract] Failed to read file:', readError)
+            throw new Error(`Failed to read file: ${readError instanceof Error ? readError.message : String(readError)}`)
+        }
         
-        console.log(`[PDF Extract] File read, buffer size: ${uint8Array.length} bytes`)
+        const uint8Array = new Uint8Array(arrayBuffer)
+        console.log(`[PDF Extract] Uint8Array created, length: ${uint8Array.length} bytes`)
+        
+        // Verify it looks like a PDF (starts with %PDF)
+        try {
+            const pdfHeader = String.fromCharCode(...uint8Array.slice(0, Math.min(4, uint8Array.length)))
+            if (!pdfHeader.startsWith('%PDF')) {
+                console.warn(`[PDF Extract] Warning: File does not start with PDF header. Got: ${pdfHeader}`)
+            } else {
+                console.log(`[PDF Extract] PDF header verified: ${pdfHeader}`)
+            }
+        } catch (headerError) {
+            console.warn('[PDF Extract] Could not verify PDF header:', headerError)
+        }
 
         // Use pdfjs-dist on server (more reliable in serverless than pdf-parse)
         let pdfjsModule: any
@@ -192,12 +211,19 @@ export async function POST(request: NextRequest) {
             elapsed
         })
         
+        // Return detailed error for debugging (even in production for now)
         return NextResponse.json(
             { 
                 error: 'Failed to extract PDF text',
                 message: errorMessage,
-                // Include stack in development for debugging
-                ...(process.env.NODE_ENV === 'development' ? { stack: errorStack } : {})
+                // Include detailed error info to help debug
+                details: process.env.NODE_ENV === 'development' || process.env.VERCEL_ENV === 'preview' ? {
+                    stack: errorStack,
+                    name: error instanceof Error ? error.name : undefined,
+                    elapsed: Date.now() - startTime
+                } : {
+                    elapsed: Date.now() - startTime
+                }
             },
             { status: 500 }
         )
