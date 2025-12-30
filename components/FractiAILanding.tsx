@@ -15,6 +15,7 @@ type FractiAILandingProps = {
 function ExpandablePanel({
   label,
   title,
+  defaultOpen,
   children,
   className,
   titleClassName,
@@ -22,13 +23,14 @@ function ExpandablePanel({
 }: {
   label: string
   title: string
+  defaultOpen?: boolean
   children?: React.ReactNode
   className?: string
   titleClassName?: string
   paddingClassName?: string
 }) {
   return (
-    <details className={['cockpit-panel', className].filter(Boolean).join(' ')}>
+    <details className={['cockpit-panel', className].filter(Boolean).join(' ')} open={defaultOpen}>
       <summary className={['cursor-pointer select-none list-none', paddingClassName || 'p-6'].join(' ')}>
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -106,6 +108,7 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
                   titleClassName="text-xl"
                   label="LAUNCH WINDOW"
                   title="Jan 1, 2026"
+                  defaultOpen={true}
                 >
                   <div className="cockpit-text space-y-3 text-sm">
                     <p>Base‑chain prerelease: gameplay, lens, and sandbox operations begin.</p>
@@ -122,6 +125,7 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
                   titleClassName="text-xl"
                   label="PRIMITIVES"
                   title="Game · Lens · Sandbox"
+                  defaultOpen={true}
                 >
                   <div className="cockpit-text space-y-3 text-sm">
                     <p>A holographic frontier explorer loop: discover → contribute → map → align → evolve.</p>
@@ -138,6 +142,7 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
                   titleClassName="text-xl"
                   label="PROTOCOL"
                   title="Proof‑of‑Contribution"
+                  defaultOpen={true}
                 >
                   <div className="cockpit-text space-y-3 text-sm">
                     <p>Submissions are evaluated for novelty, density, coherence, and alignment to grow the living map.</p>
@@ -154,6 +159,7 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
               <ExpandablePanel
                 label="SIGNATURE"
                 title="THE VORTEX CARTOGRAPHER — THE 12D HOLOGRAPHIC HYDROGEN FRACTAL CARTOGRAPHER"
+                defaultOpen={true}
               >
                 <div className="cockpit-text space-y-3">
                   <p>
@@ -171,7 +177,7 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
                 </div>
               </ExpandablePanel>
 
-              <ExpandablePanel label="CONTACT" title="Channels">
+              <ExpandablePanel label="CONTACT" title="Channels" defaultOpen={true}>
                 <div className="cockpit-text space-y-2">
                   <div>
                     Media & partnerships:{' '}
@@ -196,6 +202,7 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
           <ExpandablePanel
             label="FOR IMMEDIATE RELEASE"
             title="The Syntheverse Crypto Frontier Opens"
+            defaultOpen={true}
           >
             <div className="cockpit-text space-y-3">
               <p>
@@ -219,6 +226,7 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
           <ExpandablePanel
             label="VALIDATION → ECOSYSTEM"
             title="From Blueprint to Base‑Chain Sandbox"
+            defaultOpen={true}
           >
             <div className="cockpit-text space-y-3">
               <p>
@@ -240,7 +248,7 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
 
         {/* New: Game/Lens/Sandbox */}
         <div className="grid gap-6 lg:grid-cols-2">
-          <ExpandablePanel label="PRIMITIVES" title="Game · Lens · Sandbox">
+          <ExpandablePanel label="PRIMITIVES" title="Game · Lens · Sandbox" defaultOpen={true}>
             <div className="cockpit-text space-y-3">
               <p>
                 Syntheverse operates as a frontier explorer loop: a game-native economy, a lens for coherence/novelty,
@@ -256,7 +264,7 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
             </div>
           </ExpandablePanel>
 
-          <ExpandablePanel label="PROTOCOL" title="Proof‑of‑Contribution (PoC)">
+          <ExpandablePanel label="PROTOCOL" title="Proof‑of‑Contribution (PoC)" defaultOpen={true}>
             <div className="cockpit-text space-y-3">
               <p>
                 PoC is the ingestion layer of the Motherlode: submit text, evaluate in HHF space, archive vectors, and
@@ -274,7 +282,7 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
         </div>
 
         {/* New: Tokenomics */}
-        <ExpandablePanel label="TOKENOMICS" title="Metal Genesis + Epoch Halving">
+        <ExpandablePanel label="TOKENOMICS" title="Metal Genesis + Epoch Halving" defaultOpen={true}>
           <div className="cockpit-text space-y-3">
             <p>
               Genesis supply is split into three ERC‑20 tokens: <strong>45T Gold</strong>, <strong>22.5T Silver</strong>,
@@ -292,7 +300,7 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
         </ExpandablePanel>
 
         {/* About */}
-        <ExpandablePanel label="ABOUT" title="FractiAI: the HHF Whole Brain Blueprint">
+        <ExpandablePanel label="ABOUT" title="FractiAI: the HHF Whole Brain Blueprint" defaultOpen={true}>
           <div className="cockpit-text space-y-3">
             <p>
               FractiAI is building a Hydrogen‑Holographic Fractal “Whole Brain” blueprint: a structural grammar for
@@ -309,7 +317,7 @@ export default function FractiAILanding({ variant = 'home', cta }: FractiAILandi
         </ExpandablePanel>
 
         {/* Resources */}
-        <ExpandablePanel label="RESOURCES" title="Links, Code, and Contact">
+        <ExpandablePanel label="RESOURCES" title="Links, Code, and Contact" defaultOpen={true}>
           <div className="cockpit-text">
             Validation suite (open source):{' '}
             <a
