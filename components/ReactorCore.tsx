@@ -203,8 +203,13 @@ export function ReactorCore() {
     }
 
     const openEpochs = getOpenEpochs()
-    const totalAvailable = openEpochs.reduce((sum, epoch) => {
-        return sum + (epochInfo.epochs[epoch]?.balance || 0)
+    // Total remaining across ALL epochs (reflects current remaining supply).
+    const totalAvailable = Object.values(epochInfo.epochs || {}).reduce((sum: number, e: any) => {
+        return sum + (e?.balance || 0)
+    }, 0)
+    // Liquidity available across currently open epochs only (useful but not the headline number).
+    const openEpochAvailable = openEpochs.reduce((sum, epoch) => {
+        return sum + (epochInfo.epochs?.[epoch]?.balance || 0)
     }, 0)
     
     const totalSupplyGold = 45_000_000_000_000
@@ -241,6 +246,9 @@ export function ReactorCore() {
                 </div>
                 <div className="cockpit-text mt-2">
                     {((totalAvailable / totalSupply) * 100).toFixed(2)}% of total supply
+                </div>
+                <div className="cockpit-text text-xs mt-1" style={{ opacity: 0.8 }}>
+                    Open epoch liquidity: {formatTokens(openEpochAvailable)}
                 </div>
             </div>
 
