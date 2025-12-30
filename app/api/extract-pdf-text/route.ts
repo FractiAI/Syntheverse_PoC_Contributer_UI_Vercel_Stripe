@@ -2,18 +2,18 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/utils/supabase/server'
 
 /**
- * RECOMMENDED SOLUTION: Cloud-based PDF text extraction using Google Cloud Document AI
+ * FREE & OPEN SOURCE: PDF text extraction using pdfreader
  *
  * Why this approach:
- * - Serverless-native (no local file processing)
- * - Handles complex PDFs better than local libraries
- * - Google's generous free tier (1,000 pages/month)
- * - Scales automatically
+ * - 100% free and open source (no API costs)
+ * - Pure JavaScript implementation (no native dependencies)
+ * - Works in serverless environments
  * - No worker/polyfill issues
- * - Production-ready for enterprise use
+ * - Highly rated on GitHub (4.5k+ stars)
+ * - Zero configuration required
  *
- * Implementation uses Google Cloud Document AI for reliable PDF text extraction.
- * Falls back to simple title-based extraction if Document AI fails.
+ * Implementation uses pdfreader for reliable PDF text extraction.
+ * Falls back to simple title-based extraction if parsing fails.
  */
 export async function POST(request: NextRequest) {
     const startTime = Date.now()
@@ -50,21 +50,21 @@ export async function POST(request: NextRequest) {
 
         console.log(`[PDF Extract] Starting cloud-based extraction for file: ${file.name}, size: ${file.size} bytes`)
 
-        // Convert file to bytes for cloud service
-        const fileBytes = new Uint8Array(await file.arrayBuffer())
+        // Convert file to buffer for pdfreader
+        const buffer = Buffer.from(await file.arrayBuffer())
 
-        // Extract text using cloud service (AWS Textract)
+        // Extract text using pdfreader (free & open source)
         let extractedText = ''
-        let extractionMethod = 'cloud'
+        let extractionMethod = 'pdfreader'
         let pagesExtracted = 0
 
         try {
-            const result = await extractTextWithDocumentAI(fileBytes)
+            const result = await extractTextWithPdfReader(buffer)
             extractedText = result.text
             pagesExtracted = result.pages
-            console.log(`[PDF Extract] Cloud extraction successful: ${extractedText.length} chars from ${pagesExtracted} pages`)
-        } catch (cloudError) {
-            console.warn('[PDF Extract] Cloud extraction failed, falling back to basic method:', cloudError)
+            console.log(`[PDF Extract] PDF reader extraction successful: ${extractedText.length} chars from ${pagesExtracted} pages`)
+        } catch (readerError) {
+            console.warn('[PDF Extract] PDF reader extraction failed, falling back to basic method:', readerError)
 
             // Fallback: Simple title-based extraction
             extractedText = file.name.replace(/\.pdf$/i, '').replace(/[_-]/g, ' ')
@@ -120,101 +120,63 @@ export async function POST(request: NextRequest) {
 }
 
 /**
- * Extract text from PDF using Google Cloud Document AI
- * This is the recommended production solution for PDF text extraction
- * Uses the documentTextDetection endpoint with generous free tier (1,000 pages/month)
+ * Extract text from PDF using pdfreader
+ * Free, open source, and serverless-compatible PDF text extraction
+ * Uses pure JavaScript implementation without workers or native dependencies
  */
-async function extractTextWithDocumentAI(fileBytes: Uint8Array): Promise<{ text: string; pages: number }> {
-    const projectId = process.env.GOOGLE_CLOUD_PROJECT_ID || 'your-project-id'
-    const location = process.env.GOOGLE_CLOUD_LOCATION || 'us' // or 'eu'
-    const processorId = process.env.GOOGLE_DOCUMENT_AI_PROCESSOR_ID || 'your-processor-id'
+async function extractTextWithPdfReader(buffer: Buffer): Promise<{ text: string; pages: number }> {
+    // Import pdfreader dynamically to avoid issues
+    const { PdfReader } = await import('pdfreader')
 
-    // Google Cloud Document AI REST API endpoint
-    const endpoint = `https://${location}-documentai.googleapis.com/v1/projects/${projectId}/locations/${location}/processors/${processorId}:process`
+    return new Promise((resolve, reject) => {
+        const reader = new PdfReader()
+        let extractedText = ''
+        let currentPage = 0
+        let pageTexts: string[] = []
+        let currentPageText = ''
 
-    // Convert file to base64
-    const base64Content = Buffer.from(fileBytes).toString('base64')
+        // Handle PDF parsing events
+        reader.parseBuffer(buffer, (err: any, item: any) => {
+            if (err) {
+                reject(new Error(`PDF parsing error: ${err.message}`))
+                return
+            }
 
-    // Prepare request payload
-    const requestPayload = {
-        rawDocument: {
-            content: base64Content,
-            mimeType: 'application/pdf'
-        },
-        // Skip human-readable output for better performance
-        skipHumanReview: true
-    }
+            // End of file
+            if (!item) {
+                // Add the last page if it has content
+                if (currentPageText.trim()) {
+                    pageTexts.push(currentPageText.trim())
+                }
 
-    // Get access token using the provided OAuth credentials
-    const accessToken = await getGoogleAccessToken()
+                // Combine all pages
+                extractedText = pageTexts.join('\n\n')
+                resolve({
+                    text: extractedText.trim(),
+                    pages: pageTexts.length
+                })
+                return
+            }
 
-    // Make API request to Document AI
-    const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestPayload)
+            // New page
+            if (item.page) {
+                // Save previous page text
+                if (currentPageText.trim()) {
+                    pageTexts.push(currentPageText.trim())
+                }
+                currentPageText = ''
+                currentPage = item.page
+                return
+            }
+
+            // Text item
+            if (item.text) {
+                // Add space between words, but avoid excessive spaces
+                const separator = currentPageText.endsWith(' ') || currentPageText === '' ? '' : ' '
+                currentPageText += separator + item.text
+            }
+        })
     })
-
-    if (!response.ok) {
-        const errorText = await response.text()
-        throw new Error(`Document AI API error: ${response.status} ${errorText}`)
-    }
-
-    const result = await response.json()
-
-    // Extract text from Document AI response
-    let extractedText = ''
-    let pages = 0
-
-    if (result.document && result.document.text) {
-        extractedText = result.document.text
-    }
-
-    // Count pages if available
-    if (result.document && result.document.pages) {
-        pages = result.document.pages.length
-    }
-
-    // Fallback page count estimation
-    if (pages === 0) {
-        pages = Math.max(1, Math.ceil(extractedText.length / 3000)) // Rough estimate: ~3000 chars per page
-    }
-
-    return {
-        text: extractedText.trim(),
-        pages
-    }
-}
-
-/**
- * Get Google OAuth 2.0 access token using the provided client credentials
- */
-async function getGoogleAccessToken(): Promise<string> {
-    const clientId = process.env.GOOGLE_CLIENT_ID
-    const clientSecret = process.env.GOOGLE_CLIENT_SECRET
-
-    // For server-side applications, we need to use a service account key or
-    // implement the OAuth 2.0 service account flow
-    // For now, we'll use the simpler approach with API key if available
-
-    const apiKey = process.env.GOOGLE_API_KEY
-    if (apiKey) {
-        // If API key is available, use it (simpler but has quota limits)
-        return apiKey
-    }
-
-    // For production, you should use a service account:
-    // 1. Create a service account in Google Cloud Console
-    // 2. Download the JSON key file
-    // 3. Set GOOGLE_APPLICATION_CREDENTIALS environment variable
-    // 4. Use google-auth-library to get access token
-
-    // For now, throw an error indicating proper setup is needed
-    throw new Error('Google Cloud Document AI requires proper authentication setup. ' +
-                   'Please set GOOGLE_API_KEY or configure service account credentials.')
 }
 
 
