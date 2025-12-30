@@ -1,5 +1,5 @@
 import { db } from '@/utils/db/db'
-import { allocationsTable, epochMetalBalancesTable } from '@/utils/db/schema'
+import { allocationsTable, epochMetalBalancesTable, tokenomicsTable } from '@/utils/db/schema'
 import { and, eq } from 'drizzle-orm'
 import { debug, debugError } from '@/utils/debug'
 
@@ -105,6 +105,36 @@ export async function pickEpochForMetalWithBalance(
     if (!best || pool.balance > best.balance) best = pool
   }
   return best
+}
+
+function epochIdx(epoch: EpochType) {
+  const idx = EPOCH_ORDER.indexOf(epoch)
+  return idx < 0 ? 0 : idx
+}
+
+/**
+ * Advance global tokenomics.current_epoch forward (never backward).
+ * This is used as an override for payment fulfillment: if we allocate from a later epoch,
+ * we "open" it globally so the UI/epoch-info reflects the new active epoch.
+ */
+export async function advanceGlobalEpochTo(targetEpoch: EpochType) {
+  try {
+    const tokenomics = await db.select().from(tokenomicsTable).where(eq(tokenomicsTable.id, 'main')).limit(1)
+    const current = (String(tokenomics[0]?.current_epoch || 'founder').toLowerCase().trim() || 'founder') as EpochType
+
+    if (epochIdx(targetEpoch) <= epochIdx(current)) return { changed: false, from: current, to: current }
+
+    await db
+      .update(tokenomicsTable)
+      .set({ current_epoch: targetEpoch, updated_at: new Date() })
+      .where(eq(tokenomicsTable.id, 'main'))
+
+    debug('EpochMetalPools', 'Advanced global epoch to fulfill allocation', { from: current, to: targetEpoch })
+    return { changed: true, from: current, to: targetEpoch }
+  } catch (err) {
+    debugError('EpochMetalPools', 'Failed to advance global epoch', { targetEpoch, err })
+    return { changed: false, from: null, to: null }
+  }
 }
 
 

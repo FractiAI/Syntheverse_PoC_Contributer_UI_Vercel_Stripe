@@ -14,7 +14,7 @@ import { eq } from 'drizzle-orm'
 import { calculateProjectedAllocation } from '@/utils/tokenomics/projected-allocation'
 import { debug, debugError } from '@/utils/debug'
 import crypto from 'crypto'
-import { pickEpochForMetalWithBalance, type MetalType } from '@/utils/tokenomics/epoch-metal-pools'
+import { advanceGlobalEpochTo, pickEpochForMetalWithBalance, type MetalType } from '@/utils/tokenomics/epoch-metal-pools'
 import { computeMetalAssay } from '@/utils/tokenomics/metal-assay'
 
 export async function POST(
@@ -95,6 +95,7 @@ export async function POST(
 
             const pool = await pickEpochForMetalWithBalance(metal, 1, qualifiedEpoch as any)
             if (!pool || pool.balance <= 0) continue
+            await advanceGlobalEpochTo(pool.epoch as any)
 
             const amount = Math.floor(scorePct * pool.balance * w)
             if (amount <= 0) continue

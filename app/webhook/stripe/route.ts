@@ -6,7 +6,7 @@ import Stripe from 'stripe'
 import { debug, debugError } from '@/utils/debug'
 import { calculateProjectedAllocation } from '@/utils/tokenomics/projected-allocation'
 import crypto from 'crypto'
-import { pickEpochForMetalWithBalance, type MetalType, type EpochType } from '@/utils/tokenomics/epoch-metal-pools'
+import { advanceGlobalEpochTo, pickEpochForMetalWithBalance, type MetalType, type EpochType } from '@/utils/tokenomics/epoch-metal-pools'
 
 // Force dynamic rendering - webhooks must be server-side only
 export const dynamic = 'force-dynamic'
@@ -259,6 +259,7 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
                         // Find an epoch pool for this metal starting at the qualified epoch.
                         const pool = await pickEpochForMetalWithBalance(metal, 1, qualifiedEpoch as any)
                         if (!pool || pool.balance <= 0) continue
+                        await advanceGlobalEpochTo(pool.epoch as any)
 
                         // Allocate against THIS epoch metal balance.
                         const amount = Math.floor(scorePct * pool.balance * w)
@@ -555,6 +556,7 @@ async function handleFinancialAlignmentPayment(session: Stripe.Checkout.Session)
             }
 
             const epochUsed = pool.epoch as EpochType
+            await advanceGlobalEpochTo(epochUsed)
             const newBalance = currentBalance - synthAllocation
             
             // Create allocation record
