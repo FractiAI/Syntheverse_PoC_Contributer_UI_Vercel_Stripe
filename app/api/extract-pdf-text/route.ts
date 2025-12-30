@@ -70,20 +70,30 @@ export async function POST(request: NextRequest) {
             pagesExtracted = result.pages
             console.log(`[PDF Extract] Textract extraction successful: ${extractedText.length} chars from ${pagesExtracted} pages`)
         } catch (textractError) {
-            console.warn('[PDF Extract] Textract extraction failed, falling back to filename method:', textractError)
+            console.error('[PDF Extract] Textract extraction failed:', textractError)
 
-            // Fallback: Intelligent filename-based extraction
-            extractedText = extractTextFromFilename(file.name)
-            extractionMethod = 'filename-fallback'
-            pagesExtracted = 1
-
-            console.log(`[PDF Extract] Using filename fallback: "${file.name}" → "${extractedText}"`)
+            // Return error instead of fallback - user should know extraction failed
+            return NextResponse.json({
+                success: false,
+                error: 'PDF text extraction failed. The PDF may be corrupted, password-protected, or in an unsupported format. Please try a different PDF file.',
+                method: 'failed',
+                fileName: file.name,
+                fileSize: file.size,
+                extractionTime: Date.now() - startTime
+            }, { status: 422 }) // 422 Unprocessable Entity - indicates validation/semantic error
         }
 
-        // Ensure we have meaningful text
+        // Validate extracted text
         extractedText = extractedText.trim()
         if (extractedText.length === 0) {
-            extractedText = file.name.replace(/\.pdf$/i, '').replace(/[_-]/g, ' ')
+            return NextResponse.json({
+                success: false,
+                error: 'No text content could be extracted from the PDF. The document may be image-based, corrupted, or contain no readable text.',
+                method: 'empty-content',
+                fileName: file.name,
+                fileSize: file.size,
+                extractionTime: Date.now() - startTime
+            }, { status: 422 })
         }
 
         const elapsed = Date.now() - startTime
@@ -106,17 +116,15 @@ export async function POST(request: NextRequest) {
         const elapsed = Date.now() - startTime
         console.error(`[PDF Extract] Fatal error after ${elapsed}ms:`, error)
 
-        // Return fallback response using stored filename
-        const fallbackText = fileName?.replace(/\.pdf$/i, '').replace(/[_-]/g, ' ') || 'PDF content extraction failed'
-
+        // Return error - don't fallback to filename processing
         return NextResponse.json({
-            success: true, // Still return success with fallback
-            text: fallbackText,
-            pagesExtracted: 1,
-            totalPages: 1,
-            method: 'error-fallback',
-            error: error instanceof Error ? error.message : 'Unknown error'
-        })
+            success: false,
+            error: 'PDF processing failed due to an unexpected error. Please try again or contact support if the issue persists.',
+            method: 'fatal-error',
+            fileName: fileName,
+            extractionTime: elapsed,
+            details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : undefined
+        }, { status: 500 })
     }
 }
 

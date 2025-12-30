@@ -65,6 +65,13 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
             return
         }
 
+        // Check for PDF extraction errors
+        if (formData.pdfExtractionError) {
+            setError(`Cannot submit: ${formData.pdfExtractionError}`)
+            setLoading(false)
+            return
+        }
+
         try {
             const submitFormData = new FormData()
             submitFormData.append('title', formData.title)
@@ -901,8 +908,8 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
                                                 </p>
                                             )}
                                             {formData.pdfExtractionError && (
-                                                <p className="text-xs text-yellow-600 mt-1">
-                                                    ⚠ PDF text extraction failed: {formData.pdfExtractionError}. Submission will use title for evaluation.
+                                                <p className="text-xs text-red-600 mt-1">
+                                                    ❌ PDF text extraction failed: {formData.pdfExtractionError}. Please try a different PDF file.
                                                 </p>
                                             )}
                                             {!formData.extractedText && !formData.pdfExtractionError && (
@@ -936,7 +943,7 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
                                     Cancel
                                 </button>
                             </Link>
-                            <button type="submit" className="cockpit-transmission flex-1" disabled={loading || !formData.file}>
+                            <button type="submit" className="cockpit-transmission flex-1" disabled={loading || !formData.file || !!formData.pdfExtractionError}>
                                 {loading ? (
                                     <>
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
