@@ -182,151 +182,42 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
             const file = e.target.files[0]
             setFormData({ ...formData, file, extractedText: '' })
             
-            // Extract text from PDF on client side
+            // Extract text from PDF using server-side API (more reliable)
+            // Similar to Python scraper's extract_text_from_pdf approach
             if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
                 setExtractingText(true)
                 try {
-                    // Dynamically import pdfjs-dist for client-side PDF text extraction
-                    // pdfjs-dist v5.4.449 - use build/pdf path which is more reliable in Next.js
-                    let pdfjsLib: any = null
-                    let getDocumentFn: any = null
-                    let GlobalWorkerOptions: any = null
+                    // Use server-side PDF extraction API (similar to Python's PdfReader)
+                    const formData = new FormData()
+                    formData.append('file', file)
+
+                    const response = await fetch('/api/extract-pdf-text', {
+                        method: 'POST',
+                        body: formData
+                    })
+
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
+                        throw new Error(errorData.error || `Server error: ${response.status}`)
+                    }
+
+                    const result = await response.json()
                     
-                    // Import pdfjs-dist - use root import (TypeScript-compatible)
-                    try {
-                        const rootModule = await import('pdfjs-dist')
+                    if (result.success && result.text) {
+                        const extractedText = result.text.trim()
+                        setFormData(prev => ({ ...prev, extractedText }))
                         
-                        // Log module structure for debugging
-                        console.log('PDF.js module imported:', {
-                            hasDefault: !!rootModule.default,
-                            defaultType: typeof rootModule.default,
-                            hasGetDocument: 'getDocument' in rootModule,
-                            getDocumentType: typeof (rootModule as any).getDocument,
-                            moduleKeys: Object.keys(rootModule).slice(0, 10)
-                        })
-                        
-                        // Try various access patterns to find getDocument
-                        if (rootModule.default && typeof rootModule.default.getDocument === 'function') {
-                            pdfjsLib = rootModule.default
-                            getDocumentFn = rootModule.default.getDocument
-                            GlobalWorkerOptions = rootModule.default.GlobalWorkerOptions
-                            console.log('Found getDocument via rootModule.default.getDocument')
-                        } else if (typeof rootModule.getDocument === 'function') {
-                            pdfjsLib = rootModule
-                            getDocumentFn = rootModule.getDocument
-                            GlobalWorkerOptions = rootModule.GlobalWorkerOptions
-                            console.log('Found getDocument via rootModule.getDocument')
-                        } else if ((rootModule as any).getDocument && typeof (rootModule as any).getDocument === 'function') {
-                            pdfjsLib = rootModule
-                            getDocumentFn = (rootModule as any).getDocument
-                            GlobalWorkerOptions = (rootModule as any).GlobalWorkerOptions
-                            console.log('Found getDocument via rootModule (any).getDocument')
+                        if (extractedText.length > 0) {
+                            console.log(`Extracted ${extractedText.length} characters from PDF (${result.pagesExtracted || 0} of ${result.totalPages || 0} pages)`)
                         } else {
-                            // Log what we actually got
-                            console.error('getDocument not found. Module structure:', {
-                                rootModuleType: typeof rootModule,
-                                defaultExists: !!rootModule.default,
-                                defaultKeys: rootModule.default ? Object.keys(rootModule.default).slice(0, 10) : [],
-                                allKeys: Object.keys(rootModule).slice(0, 20)
-                            })
+                            console.warn('No text extracted from PDF - PDF may be image-based or encrypted')
                         }
-                    } catch (rootError) {
-                        console.error('PDF.js root import failed:', rootError)
-                    }
-                    
-                    // Verify getDocument is available and actually callable
-                    if (!getDocumentFn) {
-                        console.error('PDF.js getDocument function not found')
-                        throw new Error('PDF.js library could not be loaded. PDF text extraction will be skipped - submission will use title for evaluation.')
-                    }
-                    
-                    // Double-check it's actually a function before calling
-                    if (typeof getDocumentFn !== 'function') {
-                        console.error('getDocument is not a function:', {
-                            type: typeof getDocumentFn,
-                            value: getDocumentFn,
-                            constructor: getDocumentFn?.constructor?.name
-                        })
-                        throw new Error('PDF.js getDocument is not a callable function. PDF text extraction will be skipped.')
-                    }
-                    
-                    // Set worker source for pdfjs v5.x
-                    if (GlobalWorkerOptions) {
-                        const version = '5.4.449'
-                        GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${version}/pdf.worker.min.mjs`
-                    }
-                    
-                    // Read file as array buffer
-                    const arrayBuffer = await file.arrayBuffer()
-                    
-                    // Load PDF document with error handling
-                    // Verify function is still callable right before use
-                    if (typeof getDocumentFn !== 'function') {
-                        throw new Error('getDocument function became unavailable before call')
-                    }
-                    
-                    let loadingTask: any
-                    try {
-                        console.log('Calling getDocument with arrayBuffer length:', arrayBuffer.byteLength)
-                        loadingTask = getDocumentFn({ 
-                            data: arrayBuffer,
-                            verbosity: 0,
-                            useSystemFonts: true,
-                            disableFontFace: false
-                        })
-                        console.log('getDocument called successfully, got loadingTask:', typeof loadingTask)
-                    } catch (callError) {
-                        console.error('Error calling getDocument:', {
-                            error: callError,
-                            errorType: typeof callError,
-                            errorMessage: callError instanceof Error ? callError.message : String(callError),
-                            getDocumentFnType: typeof getDocumentFn,
-                            getDocumentFnValue: getDocumentFn
-                        })
-                        throw new Error(`Failed to initialize PDF document: ${callError instanceof Error ? callError.message : String(callError)}`)
-                    }
-                    
-                    const pdf = await loadingTask.promise
-                    
-                    // Extract text from all pages (limit to first 50 pages to prevent hanging)
-                    let fullText = ''
-                    const maxPages = Math.min(pdf.numPages, 50)
-                    
-                    for (let pageNum = 1; pageNum <= maxPages; pageNum++) {
-                        try {
-                            const page = await pdf.getPage(pageNum)
-                            const textContent = await page.getTextContent()
-                            
-                            if (textContent && textContent.items && Array.isArray(textContent.items)) {
-                                const pageText = textContent.items
-                                    .map((item: any) => item.str || '')
-                                    .filter((str: string) => str.trim().length > 0)
-                                    .join(' ')
-                                fullText += pageText + '\n\n'
-                            }
-                        } catch (pageError) {
-                            console.warn(`Error extracting text from page ${pageNum}:`, pageError)
-                            // Continue with other pages
-                        }
-                    }
-                    
-                    if (pdf.numPages > 50) {
-                        fullText += '\n\n[Content truncated - PDF has more than 50 pages]'
-                    }
-                    
-                    // Update form data with extracted text
-                    const extractedText = fullText.trim()
-                    setFormData(prev => ({ ...prev, extractedText }))
-                    
-                    if (extractedText.length > 0) {
-                        console.log(`Extracted ${extractedText.length} characters from PDF (${maxPages} of ${pdf.numPages} pages)`)
                     } else {
-                        console.warn('No text extracted from PDF - PDF may be image-based or encrypted')
+                        throw new Error('PDF extraction returned no text')
                     }
                 } catch (error) {
                     console.error('Error extracting PDF text:', error)
                     // Continue without extracted text - will fall back to title
-                    // Show user-friendly message
                     setFormData(prev => ({ 
                         ...prev, 
                         extractedText: '',
