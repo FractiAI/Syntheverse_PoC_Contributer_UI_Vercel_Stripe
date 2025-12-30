@@ -56,14 +56,29 @@ export async function POST(request: NextRequest) {
 
         console.log(`[PDF Extract] Starting cloud-based extraction for file: ${file.name}, size: ${file.size} bytes`)
 
-        // Use intelligent filename-based extraction (works reliably)
+        // Convert file to buffer for textract
+        const buffer = Buffer.from(await file.arrayBuffer())
+
+        // Extract text using textract (works in serverless)
         let extractedText = ''
-        let extractionMethod = 'filename-intelligent'
+        let extractionMethod = 'textract'
         let pagesExtracted = 1
 
-        // Intelligent filename processing
-        extractedText = extractTextFromFilename(file.name)
-        console.log(`[PDF Extract] Intelligent filename extraction: "${file.name}" → "${extractedText}"`)
+        try {
+            const result = await extractTextWithTextract(buffer)
+            extractedText = result.text
+            pagesExtracted = result.pages
+            console.log(`[PDF Extract] Textract extraction successful: ${extractedText.length} chars from ${pagesExtracted} pages`)
+        } catch (textractError) {
+            console.warn('[PDF Extract] Textract extraction failed, falling back to filename method:', textractError)
+
+            // Fallback: Intelligent filename-based extraction
+            extractedText = extractTextFromFilename(file.name)
+            extractionMethod = 'filename-fallback'
+            pagesExtracted = 1
+
+            console.log(`[PDF Extract] Using filename fallback: "${file.name}" → "${extractedText}"`)
+        }
 
         // Ensure we have meaningful text
         extractedText = extractedText.trim()
@@ -106,8 +121,52 @@ export async function POST(request: NextRequest) {
 }
 
 /**
+ * Extract text from PDF using textract library
+ * Textract is designed for serverless environments and handles PDFs well
+ */
+async function extractTextWithTextract(buffer: Buffer): Promise<{ text: string; pages: number }> {
+    // Import textract dynamically
+    const textract = (await import('textract')).default
+
+    return new Promise((resolve, reject) => {
+        // Configure textract for PDF processing
+        const config = {
+            preserveLineBreaks: true,
+            // Disable features that might cause issues in serverless
+            pdftotextOptions: {
+                layout: 'raw',
+                nopgbrk: true
+            }
+        }
+
+        textract.fromBufferWithMime('application/pdf', buffer, config, (error: any, text: string) => {
+            if (error) {
+                reject(new Error(`Textract PDF extraction error: ${error.message}`))
+                return
+            }
+
+            // Clean and process the extracted text
+            let cleanText = text || ''
+
+            // Remove excessive whitespace and normalize
+            cleanText = cleanText.replace(/[ \t]+/g, ' ')  // Multiple spaces to single
+            cleanText = cleanText.replace(/\n\s*\n\s*\n+/g, '\n\n')  // Multiple newlines to double
+            cleanText = cleanText.trim()
+
+            // Estimate pages (rough calculation: ~2000 chars per page)
+            const estimatedPages = Math.max(1, Math.ceil(cleanText.length / 2000))
+
+            resolve({
+                text: cleanText,
+                pages: estimatedPages
+            })
+        })
+    })
+}
+
+/**
  * Extract meaningful text from PDF filename using intelligent processing
- * Provides reliable, meaningful text extraction without complex PDF parsing
+ * Provides reliable, meaningful text extraction as fallback
  */
 function extractTextFromFilename(filename: string): string {
     // Remove .pdf extension
