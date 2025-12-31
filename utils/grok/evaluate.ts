@@ -359,7 +359,7 @@ ${top3Matches
         : ''
 
     // Evaluation query with contribution details + minimal extra instructions.
-    // IMPORTANT: Even though the system prompt contains narrative guidance, the API response MUST be parseable JSON.
+    // IMPORTANT: We want a detailed narrative review AND parseable JSON (embedded).
     const evaluationQuery = `Evaluate this Proof-of-Contribution (PoC) using the system prompt rules.
 
 Title: ${title}
@@ -375,8 +375,9 @@ ${calculatedRedundancyContext ? `\n${calculatedRedundancyContext}` : ''}
 Notes:
 - ${isSeedSubmission ? 'This is the FIRST submission defining the Syntheverse sandbox. Redundancy penalty MUST be 0%.' : `This is NOT the first submission. Compare against the sandbox + archived PoCs (archived count: ${archivedVectors.length}).`}
 - Apply redundancy penalty ONLY to the composite/total score (as specified in the system prompt).
-- Output: return a single valid JSON object that matches the REQUIRED JSON structure in the system prompt.
-- Do NOT output markdown, tables, or prose. Output JSON only (strictly parseable).`
+- Output: Provide a detailed narrative review (clear + specific), AND include the REQUIRED JSON structure from the system prompt.
+- The JSON may be placed in a markdown code block, but it MUST be valid parseable JSON.
+`
     
     try {
         // Add timeout to prevent hanging

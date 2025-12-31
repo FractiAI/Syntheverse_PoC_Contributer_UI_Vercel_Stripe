@@ -480,6 +480,16 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
                                                             </div>
                                                         )}
 
+                                                        {/* Detailed Review */}
+                                                        {evaluationStatus.evaluation.detailed_review && String(evaluationStatus.evaluation.detailed_review).trim().length > 0 && (
+                                                            <div className="p-4 bg-muted rounded-lg">
+                                                                <div className="text-sm font-semibold mb-2">Detailed Review</div>
+                                                                <div className="text-sm text-muted-foreground whitespace-pre-wrap">
+                                                                    {evaluationStatus.evaluation.detailed_review}
+                                                                </div>
+                                                            </div>
+                                                        )}
+
                                                         {/* Founder Certificate - Grok Generated */}
                                                         {evaluationStatus.evaluation.founder_certificate && evaluationStatus.qualified && (
                                                             <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
