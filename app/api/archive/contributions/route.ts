@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/utils/db/db'
 import { contributionsTable, pocLogTable, allocationsTable } from '@/utils/db/schema'
-import { eq, and, inArray, desc } from 'drizzle-orm'
+import { eq, and, inArray, desc, sql } from 'drizzle-orm'
 import { debug, debugError } from '@/utils/debug'
 import { createClient } from '@/utils/supabase/server'
 
@@ -56,7 +56,16 @@ export async function GET(request: NextRequest) {
                 status: contributionsTable.status,
                 category: contributionsTable.category,
                 metals: contributionsTable.metals,
-                metadata: contributionsTable.metadata,
+                // Extract only the lightweight metadata fields needed for list view.
+                // This avoids transferring the full metadata JSON (which can contain large Grok responses).
+                meta_pod_score: sql<number | null>`NULLIF((${contributionsTable.metadata} ->> 'pod_score'), '')::double precision`,
+                meta_novelty: sql<number | null>`NULLIF((${contributionsTable.metadata} ->> 'novelty'), '')::double precision`,
+                meta_density: sql<number | null>`NULLIF((${contributionsTable.metadata} ->> 'density'), '')::double precision`,
+                meta_coherence: sql<number | null>`NULLIF((${contributionsTable.metadata} ->> 'coherence'), '')::double precision`,
+                meta_alignment: sql<number | null>`NULLIF((${contributionsTable.metadata} ->> 'alignment'), '')::double precision`,
+                meta_redundancy: sql<number | null>`NULLIF((${contributionsTable.metadata} ->> 'redundancy'), '')::double precision`,
+                meta_qualified_founder: sql<boolean | null>`NULLIF((${contributionsTable.metadata} ->> 'qualified_founder'), '')::boolean`,
+                meta_qualified_epoch: sql<string | null>`(${contributionsTable.metadata} ->> 'qualified_epoch')`,
                 registered: contributionsTable.registered,
                 registration_date: contributionsTable.registration_date,
                 registration_tx_hash: contributionsTable.registration_tx_hash,
@@ -99,14 +108,13 @@ export async function GET(request: NextRequest) {
         
         // Format contributions to match expected API response
         const formattedContributions = contributions.map(contrib => {
-            const metadata = contrib.metadata as any || {}
-            const qualified = metadata.qualified_founder ?? false
+            const qualified = contrib.meta_qualified_founder ?? false
             
             // Use the stored qualified_epoch from metadata
             // This should have been set to the open epoch that was used to qualify the submission
             // If missing, we can't reliably determine which epoch was open at qualification time,
             // so we'll return null rather than calculating based on density (which doesn't reflect historical epoch state)
-            const qualified_epoch = metadata.qualified_epoch ?? null
+            const qualified_epoch = contrib.meta_qualified_epoch ?? null
             
             // Determine status: use qualified_founder from metadata as source of truth
             // If metadata says qualified but status field says unqualified, trust metadata
@@ -118,7 +126,7 @@ export async function GET(request: NextRequest) {
                     submission_hash: contrib.submission_hash,
                     status_field: contrib.status,
                     qualified_founder: qualified,
-                    pod_score: metadata.pod_score
+                    pod_score: contrib.meta_pod_score
                 })
             } else if (!qualified && contrib.status === 'qualified') {
                 displayStatus = 'unqualified'
@@ -133,12 +141,12 @@ export async function GET(request: NextRequest) {
                 category: contrib.category,
                 metals: contrib.metals as string[] || [],
                 // Extract scores from metadata
-                pod_score: metadata.pod_score ?? null,
-                novelty: metadata.novelty ?? null,
-                density: metadata.density ?? null,
-                coherence: metadata.coherence ?? null,
-                alignment: metadata.alignment ?? null,
-                redundancy: metadata.redundancy ?? null, // Redundancy percentage (0-100)
+                pod_score: contrib.meta_pod_score ?? null,
+                novelty: contrib.meta_novelty ?? null,
+                density: contrib.meta_density ?? null,
+                coherence: contrib.meta_coherence ?? null,
+                alignment: contrib.meta_alignment ?? null,
+                redundancy: contrib.meta_redundancy ?? null, // Redundancy percentage (0-100)
                 qualified: qualified, // Use qualified_founder from metadata as source of truth
                 qualified_epoch: qualified_epoch,
                 // Direct fields
@@ -148,7 +156,8 @@ export async function GET(request: NextRequest) {
                 stripe_payment_id: contrib.stripe_payment_id || null,
                 allocated: allocatedHashes.has(contrib.submission_hash),
                 allocation_amount: allocationAmounts.get(contrib.submission_hash) || null, // Total SYNTH tokens allocated
-                metadata: metadata,
+                // NOTE: Do not include full metadata in list view (it can be very large).
+                // Full details (including metadata + raw Grok response) are available via /api/archive/contributions/[hash].
                 created_at: contrib.created_at?.toISOString() || '',
                 updated_at: contrib.updated_at?.toISOString() || ''
             }

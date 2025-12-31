@@ -193,15 +193,21 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
         }
         setError(null)
         try {
+            const controller = new AbortController()
+            const timeoutId = setTimeout(() => controller.abort(), 15000) // 15s safety timeout
             const response = await fetch(`/api/archive/contributions?limit=200&t=${Date.now()}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-            })
+                signal: controller.signal,
+            }).finally(() => clearTimeout(timeoutId))
             
             if (!response.ok) {
                 const errorText = await response.text()
+                if (response.status === 401) {
+                    throw new Error('Session expired. Please refresh and log in again.')
+                }
                 throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`)
             }
             
@@ -214,7 +220,13 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
             setAllSubmissions(data.contributions || [])
         } catch (err) {
             console.error('Error fetching submissions:', err)
-            setError(err instanceof Error ? err.message : 'Failed to load submissions')
+            const message =
+                err instanceof Error && err.name === 'AbortError'
+                    ? 'Submissions request timed out. Please try again.'
+                    : err instanceof Error
+                      ? err.message
+                      : 'Failed to load submissions'
+            setError(message)
         } finally {
             if (!silent) {
                 setLoading(false)
