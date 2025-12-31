@@ -261,6 +261,12 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
                       The lens scores coherence/novelty/density, the sandbox indexes the vector terrain, and the game
                       turns contributions into on‑chain progression.
                     </p>
+                    <div className="pt-2">
+                      <Link href="/fractiai/hhf-ai" className="cockpit-lever inline-flex items-center">
+                        Read the 1‑page HHF‑AI brief
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                    </div>
                   </div>
                 </ExpandablePanel>
 
