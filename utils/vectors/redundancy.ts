@@ -5,7 +5,7 @@
  * and embedding similarity in the holographic hydrogen fractal sandbox.
  */
 
-import { cosineSimilarity, euclideanDistance } from './embeddings'
+import { cosineSimilarity } from './embeddings'
 import { distance3D, similarityFromDistance, Vector3D } from './hhf-3d-mapping'
 import { debug } from '@/utils/debug'
 
@@ -63,6 +63,12 @@ export function calculateRedundancy(
         combinedSimilarity: number
     }> = []
     
+    const clamp01 = (v: number): number => Math.max(0, Math.min(1, v))
+
+    // Convert cosine similarity (-1..1) to a stable [0..1] similarity.
+    // This prevents negative similarity percentages in the UI/logs.
+    const cosineToUnit = (cos: number): number => clamp01((cos + 1) / 2)
+
     // Calculate similarities to all archived vectors
     for (const archived of archivedVectors) {
         let embeddingSimilarity = 0
@@ -72,7 +78,8 @@ export function calculateRedundancy(
         // Calculate embedding similarity if available
         if (archived.embedding && archived.embedding.length > 0) {
             try {
-                embeddingSimilarity = cosineSimilarity(currentEmbedding, archived.embedding)
+                const cos = cosineSimilarity(currentEmbedding, archived.embedding)
+                embeddingSimilarity = cosineToUnit(cos)
             } catch (error) {
                 debug('CalculateRedundancy', 'Error calculating embedding similarity', error)
             }
@@ -84,13 +91,15 @@ export function calculateRedundancy(
             vectorSimilarity = similarityFromDistance(vectorDistance)
         }
         
-        // Combined similarity: average of embedding and vector similarity
-        // Weight embedding similarity more if both are available
-        const combinedSimilarity = archived.embedding && archived.vector
-            ? (embeddingSimilarity * 0.7 + vectorSimilarity * 0.3)
-            : embeddingSimilarity > 0
-                ? embeddingSimilarity
-                : vectorSimilarity
+        // Combined similarity: primarily embedding similarity (semantic), with optional HHF-3D proximity signal.
+        // Note: HHF 3D coords may reflect scoring-based geometry; keep it a light secondary signal.
+        const combinedSimilarityRaw =
+            archived.embedding && archived.vector
+                ? (embeddingSimilarity * 0.85 + vectorSimilarity * 0.15)
+                : archived.embedding
+                  ? embeddingSimilarity
+                  : vectorSimilarity
+        const combinedSimilarity = clamp01(combinedSimilarityRaw)
         
         similarities.push({
             hash: archived.submission_hash,
@@ -139,7 +148,7 @@ export function calculateRedundancy(
         distance: sim.vectorDistance || 0,
     }))
     
-    let analysis = `Redundancy analysis based on 3D vector similarity in holographic hydrogen fractal sandbox:\n`
+    let analysis = `Redundancy analysis based on vector similarity (embedding + HHF 3D proximity) in holographic hydrogen fractal sandbox:\n`
     if (topSimilar.length > 0) {
         analysis += `Highest similarity: ${(maxSimilarity * 100).toFixed(1)}% with "${topSimilar[0].title}" (hash: ${topSimilar[0].hash.substring(0, 8)}...)\n`
         if (topSimilar.length > 1) {
