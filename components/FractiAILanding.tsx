@@ -380,58 +380,7 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
           </ExpandablePanel>
         </div>
 
-        {/* New: Game/Lens/Sandbox */}
-        <div className="grid gap-6 lg:grid-cols-2">
-          <ExpandablePanel label="PRIMITIVES" title="Game · Lens · Sandbox" defaultOpen={true}>
-            <div className="cockpit-text space-y-3">
-              <p>
-                Syntheverse operates as a frontier explorer loop: a game-native economy, a lens for coherence/novelty,
-                and a sandbox where contributions become navigable terrain.
-              </p>
-              <p>
-                The “lens” is the scoring + redundancy field; the “sandbox” is the vector map; the “game” is the
-                contribution → registration → allocation loop.
-              </p>
-            </div>
-            <div className="mt-5 relative aspect-[16/9]">
-              <Image src="/fractiai/game-loop.svg" alt="Explorer game loop diagram" fill className="object-contain" />
-            </div>
-          </ExpandablePanel>
-
-          <ExpandablePanel label="PROTOCOL" title="Proof‑of‑Contribution (PoC)" defaultOpen={true}>
-            <div className="cockpit-text space-y-3">
-              <p>
-                PoC is the ingestion layer of the Motherlode: submit text, evaluate in HHF space, archive vectors, and
-                allocate tokens from metal pools using the metal assay.
-              </p>
-              <p>
-                Multi‑metal PoCs allocate from each qualifying metal pool proportionally—so the assay is enforced at the
-                accounting layer, not just as a label.
-              </p>
-            </div>
-            <div className="mt-5 relative aspect-[16/9]">
-              <Image src="/fractiai/poc-protocol.svg" alt="Proof-of-Contribution pipeline panel" fill className="object-contain" />
-            </div>
-          </ExpandablePanel>
-        </div>
-
-        {/* New: Tokenomics */}
-        <ExpandablePanel label="TOKENOMICS" title="Metal Supply + Epoch Halving" defaultOpen={true}>
-          <div className="cockpit-text space-y-3">
-            <p>
-              Supply is split into three ERC‑20 tokens: <strong>45T SYNTHG</strong> (Gold), <strong>22.5T SYNTHS</strong>{' '}
-              (Silver), and <strong>22.5T SYNTHC</strong> (Copper). The four Outcast Hero epochs continue in halves (50% /
-              25% / 12.5% / 12.5%) for each token pool.
-            </p>
-            <p>
-              Allocation uses the same score scaling against the available balances, and multi‑metal PoCs allocate across
-              metals by assay proportion.
-            </p>
-          </div>
-          <div className="mt-5 relative aspect-[16/9]">
-            <Image src="/fractiai/tokenomics-metals.svg" alt="Metal tokenomics panel" fill className="object-contain" />
-          </div>
-        </ExpandablePanel>
+        {/* PRIMITIVES / PROTOCOL / TOKENOMICS sections removed (redundant) */}
 
         {/* About */}
         <ExpandablePanel label="ABOUT" title="FractiAI: the HHF Whole Brain Blueprint" defaultOpen={true}>
