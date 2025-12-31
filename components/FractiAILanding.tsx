@@ -68,9 +68,37 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
 
           <div className="relative z-10 grid gap-8 lg:grid-cols-[1.3fr_0.7fr] items-start">
             <div>
-              <div className="flex items-center gap-3">
-                <Image src="/logo.png" alt="FractiAI" width={36} height={36} />
-                <div className="cockpit-label">FRACTIAI</div>
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <Image src="/logo.png" alt="FractiAI" width={36} height={36} />
+                  <div className="cockpit-label">FRACTIAI</div>
+                </div>
+
+                {/* Upper-right actions (FractiAI landing only) */}
+                {variant === 'fractiai' ? (
+                  <div className="flex flex-wrap items-center justify-end gap-2">
+                    {cta?.primaryHref ? (
+                      <Link href={cta.primaryHref} className="cockpit-lever inline-flex items-center">
+                        {cta.primaryLabel}
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                    ) : null}
+
+                    {showAuthButtons ? (
+                      <>
+                        <Link href="/signup" className="cockpit-lever inline-flex items-center">
+                          Sign up
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
+
+                        <Link href="/login" className="cockpit-lever inline-flex items-center">
+                          Log in
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
+                      </>
+                    ) : null}
+                  </div>
+                ) : null}
               </div>
 
               <h1 className="cockpit-title text-4xl mt-3">
@@ -124,30 +152,21 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
               </div>
 
               <div className="mt-6 flex flex-wrap gap-3">
-                {cta?.primaryHref ? (
-                  <Link href={cta.primaryHref} className="cockpit-lever inline-flex items-center">
-                    {cta.primaryLabel}
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                ) : null}
-
-                {cta?.secondaryHref ? (
-                  <Link href={cta.secondaryHref} className="cockpit-lever inline-flex items-center">
-                    {cta.secondaryLabel || 'Learn more'}
-                  </Link>
-                ) : null}
-
-                {showAuthButtons ? (
+                {/* Keep the legacy CTA row on the homepage variant */}
+                {variant !== 'fractiai' ? (
                   <>
-                    <Link href="/signup" className="cockpit-lever inline-flex items-center">
-                      Sign up
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
+                    {cta?.primaryHref ? (
+                      <Link href={cta.primaryHref} className="cockpit-lever inline-flex items-center">
+                        {cta.primaryLabel}
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                    ) : null}
 
-                    <Link href="/login" className="cockpit-lever inline-flex items-center">
-                      Log in
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
+                    {cta?.secondaryHref ? (
+                      <Link href={cta.secondaryHref} className="cockpit-lever inline-flex items-center">
+                        {cta.secondaryLabel || 'Learn more'}
+                      </Link>
+                    ) : null}
                   </>
                 ) : null}
 
