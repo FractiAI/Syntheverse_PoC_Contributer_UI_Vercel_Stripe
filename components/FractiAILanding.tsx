@@ -79,6 +79,10 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
 
               <div className="cockpit-text mt-4 max-w-3xl space-y-4">
                 <p>
+                  Welcome to <strong>FractiAI</strong>—the cognitive engine and frontier instrumentation layer of the
+                  Syntheverse.
+                </p>
+                <p>
                   I’m thrilled to announce that today I finalized the purchase and on-chain deployment of a fixed-supply{' '}
                   <strong>90,000,000,000,000 SYNTH ERC‑20 Motherlode</strong> on the <strong>Base</strong> blockchain, and beta
                   testing has officially begun.
