@@ -332,6 +332,11 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
               tooling, and safety boundaries—without making financial promises or centralized ownership claims.
             </p>
             <p>
+              <strong>Syntheverse’s mission</strong> is to chart the fractal, hydrogen‑holographic AI frontier as a living map—treating
+              the ecosystem as a <strong>12D vectorized analog of the human genome</strong>, where recursive traversal from entry nodes
+              reduces entropy and exposes routing invariants that keep the frontier navigable.
+            </p>
+            <p>
               SYNTH is treated as a fixed‑supply, non‑financial coordination primitive used internally for protocol accounting and
               sandbox operations (not a token sale, investment, or external market asset).
             </p>
