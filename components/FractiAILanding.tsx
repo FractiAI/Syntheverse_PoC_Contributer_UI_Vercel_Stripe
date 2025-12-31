@@ -105,50 +105,104 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
                 Welcome and Happy New Year 2026!
               </h1>
 
-              <div className="cockpit-text mt-4 max-w-3xl space-y-4">
-                <p>
-                  Welcome to <strong>FractiAI</strong>—the cognitive engine and frontier instrumentation layer of the
-                  Syntheverse.
-                </p>
-                <p>
-                  I’m thrilled to announce that today I finalized the purchase and on-chain deployment of a fixed-supply{' '}
-                  <strong>90,000,000,000,000 SYNTH ERC‑20 Motherlode</strong> on the <strong>Base</strong> blockchain, and beta
-                  testing has officially begun.
-                </p>
-                <p>
-                  This Motherlode is now the home for holographic hydrogen fractal Syntheverse researchers, developers, and
-                  financial alignment contributors, extending the work of our active Zenodo communities, which already see
-                  thousands of daily downloads and continuous submissions.
-                </p>
-                <p>
-                  The blockchain is not a replacement—it’s a new residence. Here, you can collaborate live, operate in real
-                  time, and contribute value within the Syntheverse sandbox, where every action is measured, traceable, and
-                  rewarded through Proof‑of‑Contribution.
-                </p>
-                <p className="cockpit-label">Key features you can explore:</p>
-                <ul className="list-disc pl-5 space-y-2">
-                  <li>90 trillion SYNTH Motherlode as the genesis resource</li>
-                  <li>Epoch-based token allocation aligned with contribution</li>
-                  <li>Closed, regenerative ERC‑20 ecosystem</li>
-                  <li>Living sandbox where contributions unlock access, benefits, and progression</li>
-                </ul>
-                <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                  <span>I invite you to step in, explore, and contribute:</span>
-                  <Link
-                    href="https://syntheverse-poc.vercel.app"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="underline underline-offset-4"
+              <div className="mt-4 max-w-3xl">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="cockpit-badge">FOUNDER TRANSMISSION</span>
+                  <span className="cockpit-badge">BASE</span>
+                  <span className="cockpit-badge">BETA LIVE</span>
+                </div>
+
+                <div className="cockpit-module p-5 mt-4">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <div className="cockpit-label">WELCOME</div>
+                      <div className="cockpit-text mt-2">
+                        Welcome to <strong>FractiAI</strong>—the cognitive engine and frontier instrumentation layer of the
+                        Syntheverse.
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="cockpit-label">MOTHERLODE</div>
+                      <div className="cockpit-number cockpit-number-medium mt-1">90T</div>
+                      <div className="cockpit-text text-xs mt-1" style={{ opacity: 0.85 }}>
+                        SYNTH ERC‑20 · fixed supply
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    className="mt-4 border p-4"
+                    style={{
+                      borderColor: 'var(--hydrogen-amber)',
+                      boxShadow: '0 0 0 1px var(--keyline-accent) inset, 0 0 24px var(--hydrogen-glow)',
+                    }}
                   >
-                    syntheverse-poc.vercel.app
-                  </Link>
-                </p>
-                <p>
-                  2026 doesn’t start with fireworks—it starts with a new frontier coming online. Come join the Syntheverse.
-                </p>
-                <p className="cockpit-text text-sm" style={{ opacity: 0.9 }}>
-                  — Pru “El Taino”, Architect of Syntheverse
-                </p>
+                    <div className="cockpit-label">SYSTEM ANNOUNCEMENT</div>
+                    <div className="cockpit-text mt-2">
+                      I’m thrilled to announce that today I finalized the purchase and on-chain deployment of a fixed-supply{' '}
+                      <strong>90,000,000,000,000 SYNTH ERC‑20 Motherlode</strong> on the <strong>Base</strong> blockchain, and
+                      beta testing has officially begun.
+                    </div>
+                  </div>
+
+                  <div className="cockpit-text mt-4 space-y-3">
+                    <p>
+                      This Motherlode is now the home for holographic hydrogen fractal Syntheverse researchers, developers,
+                      and financial alignment contributors—extending the work of our active Zenodo communities with thousands
+                      of daily downloads and continuous submissions.
+                    </p>
+                    <p>
+                      The blockchain is not a replacement—it’s a new residence. Here, you can collaborate live, operate in
+                      real time, and contribute value within the Syntheverse sandbox, where every action is measured,
+                      traceable, and rewarded through Proof‑of‑Contribution.
+                    </p>
+                  </div>
+
+                  <div className="mt-5">
+                    <div className="cockpit-label mb-3">KEY FEATURES</div>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <div className="border border-[var(--keyline-accent)] p-4">
+                        <div className="cockpit-label">GENESIS RESOURCE</div>
+                        <div className="cockpit-text mt-2">90T SYNTH Motherlode as the genesis resource.</div>
+                      </div>
+                      <div className="border border-[var(--keyline-accent)] p-4">
+                        <div className="cockpit-label">EPOCH ALLOCATION</div>
+                        <div className="cockpit-text mt-2">Epoch-based token allocation aligned with contribution.</div>
+                      </div>
+                      <div className="border border-[var(--keyline-accent)] p-4">
+                        <div className="cockpit-label">REGENERATIVE LOOP</div>
+                        <div className="cockpit-text mt-2">Closed, regenerative ERC‑20 ecosystem.</div>
+                      </div>
+                      <div className="border border-[var(--keyline-accent)] p-4">
+                        <div className="cockpit-label">LIVING SANDBOX</div>
+                        <div className="cockpit-text mt-2">
+                          Contributions unlock access, benefits, and progression.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1">
+                    <span className="cockpit-text">I invite you to step in, explore, and contribute:</span>
+                    <Link
+                      href="https://syntheverse-poc.vercel.app"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="underline underline-offset-4"
+                    >
+                      syntheverse-poc.vercel.app
+                    </Link>
+                  </div>
+
+                  <div className="mt-4 border-t border-[var(--keyline-accent)] pt-4">
+                    <div className="cockpit-text">
+                      2026 doesn’t start with fireworks—it starts with a new frontier coming online. Come join the Syntheverse.
+                    </div>
+                    <div className="cockpit-text text-sm mt-2" style={{ opacity: 0.9 }}>
+                      — Pru “El Taino”, Architect of Syntheverse
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div className="mt-6 flex flex-wrap gap-3">
