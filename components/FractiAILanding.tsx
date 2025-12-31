@@ -314,22 +314,7 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
                 </div>
               </ExpandablePanel>
 
-              <ExpandablePanel label="CONTACT" title="Channels" defaultOpen={true}>
-                <div className="cockpit-text space-y-2">
-                  <div>
-                    Media & partnerships:{' '}
-                    <a className="underline" href="mailto:info@fractiai.com">
-                      info@fractiai.com
-                    </a>
-                  </div>
-                  <div>
-                    Investor relations:{' '}
-                    <a className="underline" href="mailto:invest@fractiai.com">
-                      invest@fractiai.com
-                    </a>
-                  </div>
-                </div>
-              </ExpandablePanel>
+              {/* Channels section removed per request */}
             </div>
           </div>
         </div>
