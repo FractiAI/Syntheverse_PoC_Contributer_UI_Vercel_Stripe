@@ -321,15 +321,19 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
         {/* About */}
         <ExpandablePanel label="ABOUT" title="About FractiAI" defaultOpen={true}>
           <div className="cockpit-text space-y-4">
-            <div className="cockpit-label">FRACTIAI: PIONEERING THE FRACTAL INTELLIGENCE RENAISSANCE</div>
+            <div className="cockpit-label">FRACTIAI · HOLOGRAPHIC HYDROGEN · FRACTAL SYNTHEVERSE</div>
             <p>
-              FractiAI is an early trials phase startup, leading a new fractal intelligence paradigm. With our fractal
-              intelligence frameworks, FractiAI is transforming artificial intelligence, computation, and beyond.
+              FractiAI is an early‑trials research startup building the Syntheverse: a contribution‑based sandbox for fractal
+              intelligence, holographic hydrogen, and verifiable knowledge infrastructure.
             </p>
             <p>
-              FractiAI’s mission is to deliver open-source, fractal-based technologies that unlock universal harmony through
-              scalable, adaptive, and multidimensional systems, lowering costs to implement and operate and democratizing
-              state of the art fractal intelligence solutions.
+              Our focus is practical: a scoring lens + archive + optional on‑chain anchoring that turns contributions into durable,
+              auditable records. The protocol is public; FractiAI operates the reference client and contributes core research,
+              tooling, and safety boundaries—without making financial promises or centralized ownership claims.
+            </p>
+            <p>
+              SYNTH is treated as a fixed‑supply, non‑financial coordination primitive used internally for protocol accounting and
+              sandbox operations (not a token sale, investment, or external market asset).
             </p>
 
             <div className="pt-3 border-t border-[var(--keyline-primary)]">
@@ -338,7 +342,7 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
               <div className="grid gap-3 md:grid-cols-2">
                 <div className="cockpit-module p-4">
                   <div className="cockpit-title text-lg">Pru Mendez</div>
-                  <div className="cockpit-text text-sm mt-1">Founder and SAUUHUPP Architect</div>
+                  <div className="cockpit-text text-sm mt-1">Founder · Syntheverse Architect · HHF Systems</div>
                   <div className="cockpit-text text-sm mt-2">
                     Email:{' '}
                     <a className="underline" href="mailto:pru@fractiai.com">
@@ -346,17 +350,15 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
                     </a>
                   </div>
                   <div className="cockpit-text text-sm mt-3" style={{ opacity: 0.9 }}>
-                    Pru is the visionary architect and creator of the SAUUHUPP Framework, which forms the foundation of the
-                    company’s technologies. His innovations—including FractiScope 1.3 and Novelty 1.0—leverage SAUUHUPP
-                    fractal intelligence to build scalable and adaptive systems. His interests span fractal AI, networked
-                    systems, genetics, cosmology, and awareness intelligence. Pru is also development lead for EnterpriseWorld
-                    7DAI System, ParadiseWorld 7DAI Eternal Game and OmniScope (previously FractiScope) products.
+                    Pru is the architect of Syntheverse and FractiAI’s holographic hydrogen + fractal intelligence research
+                    direction—spanning evaluation lenses, vector cartography, protocol primitives, and the frontier‑noir
+                    cockpit design language.
                   </div>
                 </div>
 
                 <div className="cockpit-module p-4">
                   <div className="cockpit-title text-lg">Daniel Ari Friedman, Ph.D.</div>
-                  <div className="cockpit-text text-sm mt-1">Co-Founder, Neural Network Architect, and CEO</div>
+                  <div className="cockpit-text text-sm mt-1">Co‑Founder · Neural Systems · CEO</div>
                   <div className="cockpit-text text-sm mt-2">
                     Email:{' '}
                     <a className="underline" href="mailto:daniel@fractiai.com">
@@ -364,11 +366,9 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
                     </a>
                   </div>
                   <div className="cockpit-text text-sm mt-3" style={{ opacity: 0.9 }}>
-                    Daniel brings deep expertise in neural networks and computational intelligence to FractiAI. With a PhD from
-                    Stanford, where he studied the genetics and neuroscience of collective behavior, Daniel combines academic
-                    rigor with entrepreneurial leadership and pioneering spirit. Daniel is spearheading the development of
-                    fractal AI systems that redefine scalability, adaptability, and efficiency. Daniel is also development lead
-                    for Bucky MythicLink 4D-7DAI Peer Review Bridge.
+                    Daniel leads FractiAI’s applied intelligence layer—bridging neural systems, computation, and validation.
+                    His work focuses on scalable evaluation, reliable measurement, and operator‑safe deployment inside an
+                    experimental public protocol environment.
                   </div>
                 </div>
               </div>
@@ -397,7 +397,7 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
                 </div>
               </div>
               <div className="cockpit-text text-sm mt-4" style={{ opacity: 0.9 }}>
-                FractiAI is ready to revolutionize intelligence—join us in shaping the Fractal Intelligence Renaissance.
+                Interested in contributing to the Syntheverse frontier? Reach out—research, engineering, validation, and ecosystem operations.
               </div>
               <div className="cockpit-text text-xs mt-3" style={{ opacity: 0.85 }}>
                 AwarenessAI.com and FractiAI.com are currently searching for 7D AI domestic and international distributor and
