@@ -171,23 +171,6 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
                           <div>• Living sandbox where contributions unlock access and progression</div>
                         </div>
                       </div>
-
-                      <div className="border border-[var(--keyline-accent)] p-4">
-                        <div className="cockpit-label">ENTER</div>
-                        <div className="cockpit-text mt-2 text-sm" style={{ opacity: 0.9 }}>
-                          I invite you to step in, explore, and contribute:
-                        </div>
-                        <div className="mt-2">
-                          <Link
-                            href="https://syntheverse-poc.vercel.app"
-                            target="_blank"
-                            rel="noreferrer"
-                            className="underline underline-offset-4"
-                          >
-                            syntheverse-poc.vercel.app
-                          </Link>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>
