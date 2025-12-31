@@ -113,6 +113,28 @@
   pointer-events: none;
 }
 
+/* Expandable avionics panels (details/summary) */
+details.cockpit-panel > summary {
+  background: var(--cockpit-carbon);
+  border-bottom: var(--keyline-medium) solid var(--keyline-primary);
+}
+
+details.cockpit-panel > summary:hover {
+  box-shadow: inset 0 0 0 1px rgba(255, 184, 77, 0.06);
+}
+
+details.cockpit-panel > summary::-webkit-details-marker {
+  display: none;
+}
+
+.cockpit-chevron {
+  transition: transform var(--animation-fast) var(--easing-deliberate);
+}
+
+details[open] .cockpit-chevron {
+  transform: rotate(180deg);
+}
+
 .cockpit-module {
   background: var(--cockpit-deep-soil);
   border: var(--keyline-medium) solid var(--keyline-primary);

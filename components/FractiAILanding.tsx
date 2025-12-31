@@ -40,7 +40,7 @@ function ExpandablePanel({
             <div className={['cockpit-title mt-2', titleClassName || 'text-2xl'].join(' ')}>{title}</div>
           </div>
           <div className="mt-1">
-            <ChevronDown className="h-5 w-5 opacity-70" />
+            <ChevronDown className="cockpit-chevron h-5 w-5 opacity-70" />
           </div>
         </div>
       </summary>
@@ -53,8 +53,22 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
   const showAuthButtons = variant === 'fractiai' && !isAuthenticated
   return (
     <div className="cockpit-bg min-h-screen">
-      <div className="container mx-auto px-6 py-10 space-y-10">
-        {/* Hero */}
+      <div className="mx-auto max-w-[1400px] px-6 py-10 space-y-10">
+        {/* Cockpit header strip */}
+        {variant === 'fractiai' ? (
+          <div className="cockpit-panel p-4">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="cockpit-badge">SYSTEM: FRACTIAI</span>
+                <span className="cockpit-badge cockpit-badge-amber">MODE: LANDING</span>
+                <span className="cockpit-badge">BUILD: 90T MOTHERLODE</span>
+              </div>
+              <div className="cockpit-label">FRONTIER NOIR · KEYLINES · NEGATIVE SPACE</div>
+            </div>
+          </div>
+        ) : null}
+
+        {/* Hero / Transmission */}
         <div className="cockpit-panel p-8 overflow-hidden relative">
           <div className="absolute inset-0 opacity-25 pointer-events-none">
             <Image
@@ -66,45 +80,11 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
             />
           </div>
 
-          <div className="relative z-10 grid gap-8 lg:grid-cols-[1.3fr_0.7fr] items-start">
-            <div>
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <Image src="/logo.png" alt="FractiAI" width={36} height={36} />
-                  <div className="cockpit-label">FRACTIAI</div>
-                </div>
-
-                {/* Upper-right actions (FractiAI landing only) */}
-                {variant === 'fractiai' ? (
-                  <div className="flex flex-wrap items-center justify-end gap-2">
-                    {cta?.primaryHref ? (
-                      <Link href={cta.primaryHref} className="cockpit-lever inline-flex items-center">
-                        {cta.primaryLabel}
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Link>
-                    ) : null}
-
-                    {/* Keep Onboarding next to Dashboard CTA (FractiAI page) */}
-                    <Link href="/onboarding" className="cockpit-lever inline-flex items-center">
-                      Onboarding
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-
-                    {showAuthButtons ? (
-                      <>
-                        <Link href="/signup" className="cockpit-lever inline-flex items-center">
-                          Sign up
-                          <ArrowRight className="ml-2 h-4 w-4" />
-                        </Link>
-
-                        <Link href="/login" className="cockpit-lever inline-flex items-center">
-                          Log in
-                          <ArrowRight className="ml-2 h-4 w-4" />
-                        </Link>
-                      </>
-                    ) : null}
-                  </div>
-                ) : null}
+          <div className="relative z-10 grid gap-8 lg:grid-cols-[1fr_420px] items-start">
+            <div className="min-w-0">
+              <div className="flex items-center gap-3">
+                <Image src="/logo.png" alt="FractiAI" width={36} height={36} />
+                <div className="cockpit-label">FRACTIAI</div>
               </div>
 
               <h1 className="cockpit-title text-4xl mt-3">
@@ -114,17 +94,14 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
               <div className="mt-4 max-w-3xl">
                 <div className="cockpit-module p-6 mt-4">
                   <div className="flex items-center justify-between gap-4">
-                    <div className="cockpit-label">A WELCOME LETTER FROM THE FOUNDER</div>
-                    <div className="cockpit-label">NEW YEAR · 2026</div>
+                    <div className="cockpit-label">TRANSMISSION</div>
+                    <div className="cockpit-badge">NEW YEAR · 2026</div>
                   </div>
 
-                  <div className="mt-4 grid gap-6 lg:grid-cols-[1.2fr_0.8fr] items-start">
+                  <div className="mt-4">
                     <div className="cockpit-text space-y-4" style={{ fontSize: '0.95rem', lineHeight: 1.75 }}>
                       <p>
                         Dear new arrival,
-                      </p>
-                      <p>
-                        <strong>THE VORTEX CARTOGRAPHER — THE 12D HOLOGRAPHIC HYDROGEN FRACTAL CARTOGRAPHER</strong>
                       </p>
                       <p>
                         We are mapping <strong>12D Vector Cartography</strong> of both the Syntheverse and the fractal,
@@ -154,31 +131,6 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
                           — Pru “El Taino”
                         </div>
                         <div className="cockpit-label mt-1">Architect of Syntheverse</div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-4">
-                      <div
-                        className="border p-4"
-                        style={{
-                          borderColor: 'var(--hydrogen-amber)',
-                          boxShadow: '0 0 0 1px var(--keyline-accent) inset, 0 0 24px var(--hydrogen-glow)',
-                        }}
-                      >
-                        <div className="cockpit-label">MOTHERLODE</div>
-                        <div className="cockpit-number cockpit-number-medium mt-2">90T</div>
-                        <div className="cockpit-text mt-2 text-sm" style={{ opacity: 0.9 }}>
-                          SYNTH ERC‑20 on Base · fixed supply · genesis resource
-                        </div>
-                      </div>
-
-                      <div className="border border-[var(--keyline-accent)] p-4">
-                        <div className="cockpit-label">WHAT YOU CAN EXPLORE</div>
-                        <div className="cockpit-text mt-3 space-y-2 text-sm">
-                          <div>• Epoch-based coordination primitives tied to Proof‑of‑Contribution records</div>
-                          <div>• Closed, regenerative ERC‑20 ecosystem</div>
-                          <div>• Living sandbox where contributions unlock access and progression</div>
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -214,85 +166,89 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
               </div>
 
               {variant === 'fractiai' ? (
-                <div className="mt-6 cockpit-text text-xs" style={{ opacity: 0.82 }}>
-                  <div className="border border-[var(--keyline-accent)] p-4">
-                    <div className="cockpit-label">CLARIFICATION</div>
-                    <div className="mt-2 space-y-2">
-                      <div>
-                        Syntheverse is an <strong>experimental, non-custodial sandbox</strong>. Participation does not confer
-                        ownership, equity, profit rights, or guaranteed outcomes.
-                      </div>
-                      <div>
-                        SYNTH is a <strong>fixed-supply internal coordination marker</strong>. It is not a financial instrument;
-                        there is no expectation of profit or return.
-                      </div>
+                <div className="mt-6 grid gap-3 md:grid-cols-1">
+                  <ExpandablePanel
+                    className="cockpit-module"
+                    paddingClassName="p-5"
+                    titleClassName="text-xl"
+                    label="LAUNCH WINDOW"
+                    title="Jan 1, 2026"
+                    defaultOpen={true}
+                  >
+                    <div className="cockpit-text space-y-3 text-sm">
+                      <p>Base‑chain Beta release on Base: gameplay, lens and sandbox operations begin on the chain.</p>
+                      <p>
+                        This is open tuning: contributors expand the map, the scoring lens stabilizes, and the economy
+                        calibrates via real usage.
+                      </p>
                     </div>
+                  </ExpandablePanel>
+                </div>
+              ) : null}
+            </div>
+
+            <div className="space-y-4 lg:sticky lg:top-6">
+              {/* Right rail: Control bay + live instruments */}
+              {variant === 'fractiai' ? (
+                <div className="cockpit-panel p-5">
+                  <div className="cockpit-label">CONTROL BAY</div>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {cta?.primaryHref ? (
+                      <Link href={cta.primaryHref} className="cockpit-lever inline-flex items-center">
+                        {cta.primaryLabel}
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                    ) : null}
+                    <Link href="/onboarding" className="cockpit-lever inline-flex items-center">
+                      Onboarding
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                    {showAuthButtons ? (
+                      <>
+                        <Link href="/signup" className="cockpit-lever inline-flex items-center">
+                          Sign up
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
+                        <Link href="/login" className="cockpit-lever inline-flex items-center">
+                          Log in
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
+                      </>
+                    ) : null}
                   </div>
                 </div>
               ) : null}
 
-              <div className="mt-6 grid gap-3 md:grid-cols-3">
-                <ExpandablePanel
-                  className="cockpit-module"
-                  paddingClassName="p-5"
-                  titleClassName="text-xl"
-                  label="LAUNCH WINDOW"
-                  title="Jan 1, 2026"
-                  defaultOpen={true}
-                >
-                  <div className="cockpit-text space-y-3 text-sm">
-                    <p>Base‑chain Beta release on Base: gameplay, lens and sandbox operations begin on the chain.</p>
-                    <p>
-                      This is open tuning: contributors expand the map, the scoring lens stabilizes, and the economy
-                      calibrates via real usage.
-                    </p>
-                  </div>
-                </ExpandablePanel>
+              <div
+                className="cockpit-panel p-5"
+                style={{
+                  boxShadow: '0 0 0 1px var(--keyline-accent) inset, 0 0 24px var(--hydrogen-glow), 0 6px 16px rgba(0,0,0,0.75)',
+                }}
+              >
+                <div className="cockpit-label">MOTHERLODE</div>
+                <div className="cockpit-number cockpit-number-medium mt-2">90T</div>
+                <div className="cockpit-text mt-2 text-sm" style={{ opacity: 0.9 }}>
+                  SYNTH ERC‑20 on Base · fixed supply · genesis resource
+                </div>
+              </div>
 
-                <ExpandablePanel
-                  className="cockpit-module"
-                  paddingClassName="p-5"
-                  titleClassName="text-xl"
-                  label="PRIMITIVES"
-                  title="Game · Lens · Sandbox"
-                  defaultOpen={true}
-                >
-                  <div className="cockpit-text space-y-3 text-sm">
-                    <p>A holographic frontier explorer loop: discover → contribute → map → align → evolve.</p>
-                    <p>
-                      The lens scores coherence/novelty/density, the sandbox indexes the vector terrain, and the game
-                      turns contributions into on‑chain progression.
-                    </p>
-                    <div className="pt-2">
-                      <Link href="/fractiai/hhf-ai" className="cockpit-lever inline-flex items-center">
-                        Read the 1‑page HHF‑AI brief
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Link>
+              {variant === 'fractiai' ? <FractiAIStatusWidget /> : null}
+
+              {variant === 'fractiai' ? (
+                <div className="cockpit-panel p-5">
+                  <div className="cockpit-label">COMPLIANCE BOUNDARY</div>
+                  <div className="cockpit-text text-xs mt-3 space-y-2" style={{ opacity: 0.85 }}>
+                    <div>
+                      Syntheverse is an <strong>experimental, non-custodial sandbox</strong>. Participation does not confer
+                      ownership, equity, profit rights, or guaranteed outcomes.
+                    </div>
+                    <div>
+                      SYNTH is a <strong>fixed-supply internal coordination marker</strong>. It is not a financial instrument;
+                      there is no expectation of profit or return.
                     </div>
                   </div>
-                </ExpandablePanel>
-
-                <ExpandablePanel
-                  className="cockpit-module"
-                  paddingClassName="p-5"
-                  titleClassName="text-xl"
-                  label="PROTOCOL"
-                  title="Proof‑of‑Contribution"
-                  defaultOpen={true}
-                >
-                  <div className="cockpit-text space-y-3 text-sm">
-                    <p>Submissions are evaluated for novelty, density, coherence, and alignment to grow the living map.</p>
-                    <p>
-                      The protocol may recognize contributions using internal coordination pools (Gold/Silver/Copper) derived
-                      from a PoC’s metal assay—auditable and composition-aware.
-                    </p>
-                  </div>
-                </ExpandablePanel>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              {variant === 'fractiai' ? <FractiAIStatusWidget /> : null}
+                </div>
+              ) : null}
 
               {/* Channels section removed per request */}
             </div>
