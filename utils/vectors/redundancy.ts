@@ -122,20 +122,34 @@ export function calculateRedundancy(
     // Higher similarity = higher redundancy penalty
     const maxSimilarity = similarities.length > 0 ? similarities[0].combinedSimilarity : 0
     
-    // Map similarity to redundancy percentage
-    // Similarity 0.0-0.3: 0-25% penalty (low similarity)
-    // Similarity 0.3-0.6: 25-50% penalty (moderate similarity)
-    // Similarity 0.6-0.8: 50-75% penalty (high similarity)
-    // Similarity 0.8-1.0: 75-100% penalty (very high similarity/duplicate)
+    // Map similarity to redundancy percentage (0-100%).
+    // This curve is intentionally steep near the top end so that near-duplicates
+    // receive near-100% redundancy penalties.
+    //
+    // Guiding intent:
+    // - <= 0.70 similarity: low/no penalty
+    // - 0.70..0.90: ramps into meaningful penalties
+    // - 0.90..0.95: high redundancy
+    // - >= 0.95: near-duplicate (95–100%)
+    // - >= 0.985: hard 100% (effectively duplicate)
     let redundancyPercent = 0
-    if (maxSimilarity >= 0.8) {
-        redundancyPercent = 75 + (maxSimilarity - 0.8) * 125 // 75-100%
-    } else if (maxSimilarity >= 0.6) {
-        redundancyPercent = 50 + (maxSimilarity - 0.6) * 125 // 50-75%
-    } else if (maxSimilarity >= 0.3) {
-        redundancyPercent = 25 + (maxSimilarity - 0.3) * 83.33 // 25-50%
+    if (maxSimilarity >= 0.985) {
+        redundancyPercent = 100
+    } else if (maxSimilarity >= 0.95) {
+        // 0.95..0.985 -> 95..100
+        redundancyPercent = 95 + ((maxSimilarity - 0.95) / (0.985 - 0.95)) * 5
+    } else if (maxSimilarity >= 0.90) {
+        // 0.90..0.95 -> 80..95
+        redundancyPercent = 80 + ((maxSimilarity - 0.90) / (0.95 - 0.90)) * 15
+    } else if (maxSimilarity >= 0.70) {
+        // 0.70..0.90 -> 25..80
+        redundancyPercent = 25 + ((maxSimilarity - 0.70) / (0.90 - 0.70)) * 55
+    } else if (maxSimilarity >= 0.40) {
+        // 0.40..0.70 -> 5..25
+        redundancyPercent = 5 + ((maxSimilarity - 0.40) / (0.70 - 0.40)) * 20
     } else {
-        redundancyPercent = maxSimilarity * 83.33 // 0-25%
+        // 0..0.40 -> 0..5
+        redundancyPercent = (maxSimilarity / 0.40) * 5
     }
     
     redundancyPercent = Math.min(100, Math.max(0, redundancyPercent))
