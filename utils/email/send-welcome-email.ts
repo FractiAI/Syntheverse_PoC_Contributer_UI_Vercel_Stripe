@@ -57,7 +57,7 @@ export async function sendWelcomeEmail(data: WelcomeEmailData): Promise<{ succes
                 You stand at the threshold of a <strong style="color: #ffb84d;">new way to collaborate independently</strong> while building a <strong style="color: #ffb84d;">regenerative Proof-of-Contribution (PoC) system</strong> on the blockchain.
             </p>
             <p style="font-size: 16px; color: #fff; line-height: 1.8;">
-                Within Syntheverse, independent researchers, developers, and alignment contributors work together without traditional institutional constraints. Your contributions—whether scientific, technological, or aligned with our holographic hydrogen fractal principles—become part of a living, self-improving ecosystem anchored by the 90 Trillion SYNTH ERC-20 Motherlode Blockmine.
+                Within Syntheverse, independent researchers, developers, and ecosystem support contributors work together without traditional institutional constraints. Your contributions—whether scientific, technological, creative, operational, or ecosystem support—become part of a living, self-improving ecosystem anchored by the 90 Trillion SYNTH ERC-20 Motherlode Blockmine.
             </p>
         </div>
 

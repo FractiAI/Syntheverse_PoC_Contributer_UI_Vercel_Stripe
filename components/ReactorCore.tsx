@@ -40,7 +40,7 @@ export function ReactorCore() {
         const financialSupportStatus = params.get('financial_support') || params.get('financial_alignment')
         const shouldPoll = registrationStatus === 'success' || financialSupportStatus === 'success'
         
-        // Poll for updates after successful registration or financial alignment payment
+        // Poll for updates after successful registration or ecosystem support payment
         if (shouldPoll) {
             // Show success message
             if (financialSupportStatus === 'success') {

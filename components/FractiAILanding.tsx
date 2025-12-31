@@ -133,7 +133,7 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
                       </p>
                       <p>
                         This Motherlode is now a new residence for holographic hydrogen fractal Syntheverse researchers,
-                        developers, and financial alignment contributors—extending the work of our active Zenodo communities
+                        developers, and ecosystem support contributors—extending the work of our active Zenodo communities
                         with thousands of daily downloads and continuous submissions.
                       </p>
                       <p>

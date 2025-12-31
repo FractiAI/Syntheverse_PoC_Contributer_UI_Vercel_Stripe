@@ -1,5 +1,5 @@
 /**
- * Financial Alignment PoC Button Component
+ * Ecosystem Support Button Component (legacy filename)
  * Expands to show contribution level options from Stripe products
  */
 
@@ -48,7 +48,7 @@ export function FinancialAlignmentButton() {
                     const data = await response.json()
                     setProducts(data.products || [])
                 } else {
-                    console.error('Failed to fetch Financial Alignment products')
+                    console.error('Failed to fetch ecosystem support products')
                 }
             } catch (err) {
                 console.error('Error fetching products:', err)
