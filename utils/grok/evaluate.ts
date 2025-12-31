@@ -1123,53 +1123,86 @@ ${calculatedRedundancyContext ? `\n${calculatedRedundancyContext}` : ''}
 9. Generate Founder Certificate if qualified
 10. Add Homebase v2.0 intro paragraph
 
-**FINAL INSTRUCTIONS:**
-1. Calculate ALL scores as NUMBERS (0-2500 for dimensions, 0-10000 for total)
-2. Ensure density.base_score, density.final_score, and density.score are ALL present and are NUMBERS
-3. Include your full narrative evaluation with poetic introduction, detailed scoring breakdown, founder certificate, and concluding narrative
-4. Embed the JSON evaluation structure within your narrative response (you may include it in a markdown code block)
-5. Verify the JSON is parseable and includes all required fields
-6. All scores must be numeric values, never strings, null, or undefined
-7. Your response should be a complete narrative evaluation that includes the JSON structure for parsing
+**OUTPUT FORMAT (CRITICAL):**
+- Return **ONLY** a single valid JSON object (no markdown, no prose, no code fences).
+- Keep any long text fields concise.
 
-Provide your complete narrative evaluation including the JSON structure for parsing.`
+**FINAL CHECKS:**
+1. All scores are NUMBERS (0-2500 for dimensions, 0-10000 for total).
+2. Ensure density.base_score, density.final_score, and density.score are present and numeric.
+3. JSON must be parseable and include all required fields.`
     
     try {
         // Add timeout to prevent hanging
         const controller = new AbortController()
         const timeoutId = setTimeout(() => controller.abort(), 30000) // 30 second timeout for Grok API
         
-        let response: Response
-        try {
-            response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${grokApiKey}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    model: 'llama-3.1-8b-instant',
-                    messages: [
-                        { role: 'system', content: systemPrompt },
-                        { role: 'user', content: evaluationQuery }
-                    ],
-                    temperature: 0.0, // Deterministic evaluation
-                    max_tokens: 4000, // Increased to allow full narrative responses with JSON structure
-                }),
-                signal: controller.signal
-            })
-            clearTimeout(timeoutId)
-        } catch (fetchError) {
-            clearTimeout(timeoutId)
-            if (fetchError instanceof Error && fetchError.name === 'AbortError') {
-                throw new Error('Grok API request timed out after 30 seconds')
+        // Groq on-demand tier enforces strict per-request token budgets (TPM). To avoid 413/TPM errors,
+        // cap max_tokens and retry with smaller budgets if needed.
+        const tokenBudgets = [1200, 800, 500]
+        let response: Response | null = null
+        let lastErrorText: string | null = null
+
+        for (const maxTokens of tokenBudgets) {
+            const attemptController = new AbortController()
+            const attemptTimeoutId = setTimeout(() => attemptController.abort(), 30000)
+            try {
+                response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${grokApiKey}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        model: 'llama-3.1-8b-instant',
+                        messages: [
+                            { role: 'system', content: systemPrompt },
+                            { role: 'user', content: evaluationQuery }
+                        ],
+                        temperature: 0.0, // Deterministic evaluation
+                        max_tokens: maxTokens,
+                    }),
+                    signal: attemptController.signal
+                })
+            } catch (fetchError) {
+                if (fetchError instanceof Error && fetchError.name === 'AbortError') {
+                    throw new Error('Grok API request timed out after 30 seconds')
+                }
+                throw fetchError
+            } finally {
+                clearTimeout(attemptTimeoutId)
             }
-            throw fetchError
+
+            if (response.ok) break
+
+            // Read error body for decision making
+            lastErrorText = await response.text().catch(() => null)
+            const isTokenBudgetError =
+                response.status === 413 ||
+                (lastErrorText || '').includes('Request too large') ||
+                (lastErrorText || '').includes('TPM') ||
+                (lastErrorText || '').includes('rate_limit_exceeded')
+
+            debug('EvaluateWithGrok', 'Groq request failed, evaluating retry', {
+                status: response.status,
+                maxTokens,
+                willRetry: isTokenBudgetError && maxTokens !== tokenBudgets[tokenBudgets.length - 1],
+            })
+
+            if (!isTokenBudgetError) {
+                throw new Error(`Grok API error (${response.status}): ${lastErrorText || ''}`)
+            }
+        }
+
+        clearTimeout(timeoutId)
+        if (!response) {
+            throw new Error('Grok API error: no response')
         }
         
         if (!response.ok) {
-            const errorText = await response.text()
-            throw new Error(`Grok API error (${response.status}): ${errorText}`)
+            throw new Error(
+                `Grok API error (${response.status}): ${lastErrorText || 'Request failed (token budget exceeded)'}`
+            )
         }
         
         const data = await response.json()
@@ -1466,7 +1499,7 @@ Provide your complete narrative evaluation including the JSON structure for pars
             ? calculatedRedundancy.redundancy_percent
             : (evaluation.redundancy_penalty_percent ??
                (typeof noveltyRaw === 'object' && noveltyRaw !== null ? noveltyRaw.redundancy_penalty_percent : null) ?? 
-               (typeof noveltyRaw === 'object' && noveltyRaw !== null && noveltyRaw.redundancy_penalty && baseNoveltyScore > 0 ? (noveltyRaw.redundancy_penalty / baseNoveltyScore * 100) : 0) ?? 
+               (typeof noveltyRaw === 'object' && noveltyRaw !== null && noveltyRaw.redundancy_penalty && baseNoveltyScore > 0 ? (noveltyRaw.redundancy_penalty / baseNoveltyScore * 100) : null) ?? 
                0)
         
         // Use final_score if provided, otherwise use base score

@@ -10,6 +10,22 @@ import { sendApprovalRequestEmail } from '@/utils/email/send-approval-request'
 import { isQualifiedForOpenEpoch, getOpenEpochInfo } from '@/utils/epochs/qualification'
 import * as crypto from 'crypto'
 
+function toPublicEvaluationError(message: string): string {
+    const m = String(message || '')
+    if (
+        m.includes('Request too large') ||
+        m.includes('TPM') ||
+        m.includes('rate_limit_exceeded') ||
+        m.includes('Grok API error (413)')
+    ) {
+        return 'Evaluation queued: provider token budget exceeded. Your submission was saved and will be evaluated with a smaller output budget.'
+    }
+    if (m.includes('timed out')) {
+        return 'Evaluation queued: provider timeout. Your submission was saved and will be evaluated shortly.'
+    }
+    return m
+}
+
 export async function POST(request: NextRequest) {
     debug('SubmitContribution', 'Submission request received')
     
@@ -400,13 +416,18 @@ export async function POST(request: NextRequest) {
             } catch (error) {
                 evaluationError = error instanceof Error ? error : new Error(String(error))
                 debugError('SubmitContribution', 'Evaluation failed', evaluationError)
-            
-                // Update status to unqualified if evaluation fails (no drafts)
+                // IMPORTANT: Do not mark as unqualified on evaluation failures.
+                // Many failures are transient (provider token budget, timeouts, etc.). Keep as 'evaluating'
+                // so the submission can be re-evaluated later.
                 try {
                     await db
                         .update(contributionsTable)
                         .set({
-                            status: 'unqualified', // Set to unqualified if evaluation fails (no drafts)
+                            status: 'evaluating',
+                            metadata: {
+                                evaluation_error: evaluationError.message,
+                                evaluation_error_at: new Date().toISOString(),
+                            } as any,
                             updated_at: new Date()
                         })
                         .where(eq(contributionsTable.submission_hash, submission_hash))
@@ -478,13 +499,13 @@ export async function POST(request: NextRequest) {
                     raw_grok_response: (evaluation as any).raw_grok_response || null // Include raw Grok API response text/markdown
                 }
             } : null,
-            evaluation_error: evaluationError ? evaluationError.message : null,
-            status: evaluation ? (evaluation.qualified ? 'qualified' : 'unqualified') : 'unqualified', // No drafts - default to unqualified if evaluation skipped
+            evaluation_error: evaluationError ? toPublicEvaluationError(evaluationError.message) : null,
+            status: evaluation ? (evaluation.qualified ? 'qualified' : 'unqualified') : 'evaluating',
             allocation_status: evaluation ? 'pending_admin_approval' : undefined,
             message: evaluation 
                 ? 'Contribution submitted and evaluated successfully'
                 : evaluationError 
-                    ? `Contribution submitted but evaluation failed: ${evaluationError.message}. Status set to unqualified.`
+                    ? 'Contribution submitted successfully. Evaluation is queued and may complete shortly.'
                     : 'Contribution submitted successfully (evaluation pending)'
         })
     } catch (error) {
