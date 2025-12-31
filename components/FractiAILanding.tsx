@@ -84,6 +84,12 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
                       </Link>
                     ) : null}
 
+                    {/* Keep Onboarding next to Dashboard CTA (FractiAI page) */}
+                    <Link href="/onboarding" className="cockpit-lever inline-flex items-center">
+                      Onboarding
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+
                     {showAuthButtons ? (
                       <>
                         <Link href="/signup" className="cockpit-lever inline-flex items-center">
@@ -198,14 +204,10 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
                   </>
                 ) : null}
 
-                <Link href="/onboarding" className="cockpit-lever inline-flex items-center">
-                  Onboarding
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-
-                {variant === 'fractiai' ? (
-                  <Link href="/dashboard" className="cockpit-lever inline-flex items-center">
-                    Enter the Syntheverse
+                {/* Onboarding + Dashboard CTAs are in the upper-right on /fractiai */}
+                {variant !== 'fractiai' ? (
+                  <Link href="/onboarding" className="cockpit-lever inline-flex items-center">
+                    Onboarding
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 ) : null}
