@@ -56,7 +56,8 @@ export default function HHFAIPage() {
                 structural, and cognitive information.
               </p>
               <p>
-                <strong>Scaling constant</strong>: \( \Lambda^{HH} = \frac{R^H}{L_P} \approx 1.12 \times 10^{22} \).
+                <strong>Scaling constant</strong>:{' '}
+                {String.raw`\(\Lambda^{HH} = \frac{R^H}{L_P} \approx 1.12 \times 10^{22}\)`}
               </p>
               <p>
                 <strong>RSI dynamics</strong>: outputs recursively feed back as scale‑shifted inputs → self‑triggering,
