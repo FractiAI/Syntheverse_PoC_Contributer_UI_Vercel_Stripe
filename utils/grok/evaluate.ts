@@ -307,7 +307,7 @@ export async function evaluateWithGrok(
                 const epoch = String(row.epoch).toLowerCase().trim()
                 epochTotals[epoch] = (epochTotals[epoch] || 0) + Number(row.balance || 0)
             }
-
+            
             tokenomicsInfo = {
                 current_epoch: tk.current_epoch || 'founder',
                 epoch_balances: epochTotals,
@@ -392,29 +392,29 @@ Notes:
         for (const maxTokens of tokenBudgets) {
             const attemptController = new AbortController()
             const attemptTimeoutId = setTimeout(() => attemptController.abort(), 30000)
-            try {
-                response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${grokApiKey}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        model: 'llama-3.1-8b-instant',
-                        messages: [
-                            { role: 'system', content: systemPrompt },
-                            { role: 'user', content: evaluationQuery }
-                        ],
-                        temperature: 0.0, // Deterministic evaluation
+        try {
+            response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${grokApiKey}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    model: 'llama-3.1-8b-instant',
+                    messages: [
+                        { role: 'system', content: systemPrompt },
+                        { role: 'user', content: evaluationQuery }
+                    ],
+                    temperature: 0.0, // Deterministic evaluation
                         max_tokens: maxTokens,
-                    }),
+                }),
                     signal: attemptController.signal
-                })
-            } catch (fetchError) {
-                if (fetchError instanceof Error && fetchError.name === 'AbortError') {
-                    throw new Error('Grok API request timed out after 30 seconds')
-                }
-                throw fetchError
+            })
+        } catch (fetchError) {
+            if (fetchError instanceof Error && fetchError.name === 'AbortError') {
+                throw new Error('Grok API request timed out after 30 seconds')
+            }
+            throw fetchError
             } finally {
                 clearTimeout(attemptTimeoutId)
             }
@@ -487,8 +487,103 @@ Notes:
             try {
                 const parsed = JSON.parse(cleaned)
                 return parsed && typeof parsed === 'object' ? parsed : null
-            } catch {
-                return null
+                    } catch {
+                        return null
+                    }
+                }
+
+        const parseNarrativeToJson = (raw: string): any | null => {
+            const text = (raw || '').trim()
+            if (!text) return null
+
+            const normalizeNum = (v: string): number => {
+                const cleaned = String(v || '').replace(/,/g, '').trim()
+                const n = Number(cleaned)
+                return Number.isFinite(n) ? n : 0
+            }
+
+            const extractScoreFromTable = (label: string): number => {
+                const re = new RegExp(`\\|\\s*${label}\\s*\\|\\s*([\\d,\\.]+)\\s*\\|`, 'i')
+                const m = text.match(re)
+                return m?.[1] ? normalizeNum(m[1]) : 0
+            }
+
+            const novelty = extractScoreFromTable('Novelty')
+            const density = extractScoreFromTable('Density')
+            const coherence = extractScoreFromTable('Coherence')
+            const alignment = extractScoreFromTable('Alignment')
+            const total = novelty + density + coherence + alignment
+
+            // Classification (best-effort)
+            const classificationMatch =
+                text.match(/PoC\s*Classification:\s*([^\n\r]+)/i) ||
+                text.match(/Classification:\s*([^\n\r]+)/i)
+            const classificationRaw = (classificationMatch?.[1] || '').trim()
+            const classification = classificationRaw
+                ? classificationRaw
+                      .split(/[,\|\/]/g)
+                      .map((s) => s.trim())
+                      .filter(Boolean)
+                : []
+
+            // Metal alignment (best-effort)
+            const metalMatch =
+                text.match(/Metal\s*Alignment:\s*([A-Za-z]+)/i) ||
+                text.match(/Primary:\s*(Gold|Silver|Copper|Hybrid)/i)
+            const metal = (metalMatch?.[1] || '').trim()
+            const metalAlignment = metal || 'Copper'
+
+            const qualified_founder = total >= 8000
+
+            // Use the narrative itself as a readable analysis fallback so the dashboard still has detail.
+            const redundancy_analysis = text
+
+            return {
+                classification,
+                scoring: {
+                    novelty: {
+                        base_score: novelty,
+                        redundancy_penalty_percent: 0,
+                        final_score: novelty,
+                        justification: '',
+                    },
+                    density: {
+                        base_score: density,
+                        redundancy_penalty_percent: 0,
+                        final_score: density,
+                        score: density,
+                        justification: '',
+                    },
+                    coherence: {
+                        score: coherence,
+                        final_score: coherence,
+                        justification: '',
+                    },
+                    alignment: {
+                        score: alignment,
+                        final_score: alignment,
+                        justification: '',
+                    },
+                },
+                total_score: total,
+                pod_score: total,
+                qualified_founder,
+                metal_alignment: metalAlignment,
+                metals: [metalAlignment],
+                metal_justification: '',
+                redundancy_analysis,
+                founder_certificate: '',
+                homebase_intro: '',
+                tokenomics_recommendation: {
+                    eligible_epochs: [],
+                    suggested_allocation: 0,
+                    tier_multiplier: 1,
+                    epoch_distribution: {},
+                    allocation_notes: 'Token allocation requires human admin approval',
+                    requires_admin_approval: true,
+                },
+                // keep any extra fields used by downstream logic if present
+                _parsed_from: 'narrative_table',
             }
         }
 
@@ -505,7 +600,7 @@ Notes:
 
             const startMarker = a.indexOf('{')
             const endMarker = a.lastIndexOf('}')
-            if (startMarker !== -1 && endMarker !== -1 && endMarker > startMarker) {
+                if (startMarker !== -1 && endMarker !== -1 && endMarker > startMarker) {
                 candidates.push(a.substring(startMarker, endMarker + 1))
             }
 
@@ -532,14 +627,14 @@ Notes:
                 evaluation = parsed
                 debug('EvaluateWithGrok', 'JSON parsed successfully from Grok response', {
                     strategy: `candidate_${i + 1}/${candidates.length}`,
-                    hasScoring: !!evaluation.scoring,
-                    hasDensity: !!evaluation.density,
-                    hasScoringDensity: !!evaluation.scoring?.density,
-                    evaluationKeys: Object.keys(evaluation),
+                        hasScoring: !!evaluation.scoring,
+                        hasDensity: !!evaluation.density,
+                        hasScoringDensity: !!evaluation.scoring?.density,
+                        evaluationKeys: Object.keys(evaluation),
                     evaluationString: JSON.stringify(evaluation, null, 2).substring(0, 2000),
-                })
-                break
-            }
+                    })
+                    break
+                }
         }
 
         // If no JSON was produced, do a single "repair" call to convert the narrative output into strict JSON.
@@ -599,10 +694,10 @@ ${answer}`
                     break
                 } catch (e) {
                     repairLastError = e instanceof Error ? e.message : String(e)
-                    continue
-                }
+                continue
             }
-
+        }
+        
             if (repairedJsonText.trim().length > 0) {
                 const repairCandidates = extractJsonCandidates(repairedJsonText)
                 for (let i = 0; i < repairCandidates.length; i++) {
@@ -618,16 +713,28 @@ ${answer}`
                 }
             }
 
-            if (!evaluation) {
+        if (!evaluation) {
                 debugError('EvaluateWithGrok', 'JSON repair failed', {
                     repairLastError,
-                    responseLength: answer.length,
-                    responsePreview: answer.substring(0, 1000),
+                responseLength: answer.length,
+                responsePreview: answer.substring(0, 1000),
                     responseEnd: answer.substring(Math.max(0, answer.length - 500)),
                 })
-                throw new Error(
-                    `Failed to parse Grok response as JSON after tolerant parsing + repair. Response length: ${answer.length} chars. Preview: ${answer.substring(0, 200)}...`
-                )
+                // FINAL fallback: parse common narrative/table formats into the required JSON shape locally
+                const narrativeParsed = parseNarrativeToJson(answer)
+                if (narrativeParsed) {
+                    evaluation = narrativeParsed
+                    debug('EvaluateWithGrok', 'Parsed Grok narrative/table output into JSON locally', {
+                        responseLength: answer.length,
+                        total_score: evaluation.total_score,
+                        qualified_founder: evaluation.qualified_founder,
+                        metal_alignment: evaluation.metal_alignment,
+                    })
+                } else {
+                    throw new Error(
+                        `Failed to parse Grok response as JSON after tolerant parsing + repair. Response length: ${answer.length} chars. Preview: ${answer.substring(0, 200)}...`
+                    )
+                }
             }
         }
         
