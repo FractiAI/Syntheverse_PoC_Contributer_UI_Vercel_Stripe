@@ -293,26 +293,6 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
 
             <div className="space-y-4">
               {variant === 'fractiai' ? <FractiAIStatusWidget /> : null}
-              <ExpandablePanel
-                label="SIGNATURE"
-                title="THE VORTEX CARTOGRAPHER — THE 12D HOLOGRAPHIC HYDROGEN FRACTAL CARTOGRAPHER"
-                defaultOpen={true}
-              >
-                <div className="cockpit-text space-y-3">
-                  <p>
-                    A “frontier noir” visual grammar: heavy keylines, negative space, carved structure, and gilded
-                    discoveries—mapping the field as a living diagram.
-                  </p>
-                  <p>
-                    Inspired by the “Genome as a 12D Holographic Hydrogen Vector Map” analog: recursive traversal from
-                    entry nodes reduces entropy and exposes routing invariants—exactly what a frontier economy needs to
-                    stay navigable.
-                  </p>
-                </div>
-                <div className="mt-4 relative aspect-[4/3]">
-                  <Image src="/fractiai/vortex.svg" alt="Vortex cartography motif" fill className="object-contain" />
-                </div>
-              </ExpandablePanel>
 
               {/* Channels section removed per request */}
             </div>
