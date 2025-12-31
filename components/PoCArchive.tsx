@@ -884,32 +884,45 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                                         )}
                                         
                                         {/* Full Grok API Response - Markdown/Text */}
-                                        {selectedSubmission.metadata.grok_evaluation_details?.raw_grok_response && 
-                                         selectedSubmission.metadata.grok_evaluation_details.raw_grok_response.trim().length > 0 && (
+                                        {(() => {
+                                            const raw =
+                                                selectedSubmission.metadata.grok_evaluation_details?.raw_grok_response ||
+                                                selectedSubmission.metadata.grok_evaluation_details?.full_evaluation?.raw_grok_response ||
+                                                ''
+                                            if (!raw || raw.trim().length === 0) return null
+                                            return (
                                             <details className="mt-3">
                                                 <summary className="cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground">
                                                     View Full Response
                                                 </summary>
                                                 <div className="mt-3 p-4 bg-muted border rounded-lg">
                                                     <pre className="whitespace-pre-wrap text-sm overflow-auto max-h-96 font-mono text-foreground">
-                                                        {selectedSubmission.metadata.grok_evaluation_details.raw_grok_response}
+                                                        {raw}
                                                     </pre>
                                                 </div>
                                             </details>
-                                        )}
+                                            )
+                                        })()}
                                         
                                         {/* Fallback to JSON if raw response not available */}
-                                        {!selectedSubmission.metadata.grok_evaluation_details?.raw_grok_response && 
-                                         selectedSubmission.metadata.grok_evaluation_details?.full_evaluation && (
+                                        {(() => {
+                                            const raw =
+                                                selectedSubmission.metadata.grok_evaluation_details?.raw_grok_response ||
+                                                selectedSubmission.metadata.grok_evaluation_details?.full_evaluation?.raw_grok_response ||
+                                                ''
+                                            if (raw && raw.trim().length > 0) return null
+                                            if (!selectedSubmission.metadata.grok_evaluation_details?.full_evaluation) return null
+                                            return (
                                             <details className="mt-3">
                                                 <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground">
-                                                    View Full Response (JSON)
+                                                    View Parsed Evaluation (JSON)
                                                 </summary>
                                                 <pre className="mt-2 p-3 bg-slate-900 text-slate-100 rounded text-xs overflow-auto max-h-96">
                                                     {JSON.stringify(selectedSubmission.metadata.grok_evaluation_details.full_evaluation, null, 2)}
                                                 </pre>
                                             </details>
-                                        )}
+                                            )
+                                        })()}
                                     </div>
                                 </div>
                             )}

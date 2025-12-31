@@ -598,32 +598,45 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
                                                                     )}
                                                                     
                                                                     {/* Full Grok API Response - Markdown/Text */}
-                                                                    {evaluationStatus.evaluation.grok_evaluation_details?.raw_grok_response && 
-                                                                     evaluationStatus.evaluation.grok_evaluation_details.raw_grok_response.trim().length > 0 && (
+                                                                    {(() => {
+                                                                        const raw =
+                                                                            evaluationStatus.evaluation.grok_evaluation_details?.raw_grok_response ||
+                                                                            (evaluationStatus.evaluation.grok_evaluation_details as any)?.full_evaluation?.raw_grok_response ||
+                                                                            ''
+                                                                        if (!raw || raw.trim().length === 0) return null
+                                                                        return (
                                                                         <details className="mt-3">
                                                                             <summary className="cursor-pointer text-sm font-medium text-slate-600 hover:text-slate-800">
                                                                                 View Full Response
                                                                             </summary>
                                                                             <div className="mt-3 p-4 bg-slate-50 border border-slate-200 rounded-lg">
                                                                                 <pre className="whitespace-pre-wrap text-sm overflow-auto max-h-96 font-mono text-slate-900">
-                                                                                    {evaluationStatus.evaluation.grok_evaluation_details.raw_grok_response}
+                                                                                    {raw}
                                                                                 </pre>
                                                                             </div>
                                                                         </details>
-                                                                    )}
+                                                                        )
+                                                                    })()}
                                                                     
                                                                     {/* Fallback to JSON if raw response not available */}
-                                                                    {!evaluationStatus.evaluation.grok_evaluation_details?.raw_grok_response && 
-                                                                     evaluationStatus.evaluation.grok_evaluation_details?.full_evaluation && (
+                                                                    {(() => {
+                                                                        const raw =
+                                                                            evaluationStatus.evaluation.grok_evaluation_details?.raw_grok_response ||
+                                                                            (evaluationStatus.evaluation.grok_evaluation_details as any)?.full_evaluation?.raw_grok_response ||
+                                                                            ''
+                                                                        if (raw && raw.trim().length > 0) return null
+                                                                        if (!evaluationStatus.evaluation.grok_evaluation_details?.full_evaluation) return null
+                                                                        return (
                                                                         <details className="mt-3">
                                                                             <summary className="cursor-pointer text-xs text-slate-600 hover:text-slate-800">
-                                                                                View Full Response (JSON)
+                                                                                View Parsed Evaluation (JSON)
                                                                             </summary>
                                                                             <pre className="mt-2 p-3 bg-slate-900 text-slate-100 rounded text-xs overflow-auto max-h-96">
                                                                                 {JSON.stringify(evaluationStatus.evaluation.grok_evaluation_details.full_evaluation, null, 2)}
                                                                             </pre>
                                                                         </details>
-                                                                    )}
+                                                                        )
+                                                                    })()}
                                                                 </div>
                                                             </div>
                                                         )}

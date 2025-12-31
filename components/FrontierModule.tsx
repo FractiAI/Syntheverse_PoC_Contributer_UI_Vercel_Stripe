@@ -728,24 +728,35 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
                                         {/* Full Grok API Response - Toggleable */}
                                         {showFullReport && (
                                             <div className="mt-3 pt-3 border-t border-[var(--keyline-primary)]">
-                                                {selectedSubmission.metadata.grok_evaluation_details?.raw_grok_response && 
-                                                 selectedSubmission.metadata.grok_evaluation_details.raw_grok_response.trim().length > 0 ? (
+                                                {(() => {
+                                                    const raw =
+                                                        selectedSubmission.metadata.grok_evaluation_details?.raw_grok_response ||
+                                                        selectedSubmission.metadata.grok_evaluation_details?.full_evaluation?.raw_grok_response ||
+                                                        ''
+                                                    if (raw && raw.trim().length > 0) {
+                                                        return (
                                                     <div>
                                                         <div className="cockpit-label mb-2">Full Grok API Response</div>
                                                         <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-obsidian)] rounded">
                                                             <pre className="whitespace-pre-wrap text-xs overflow-auto max-h-96 font-mono cockpit-text">
-                                                                {selectedSubmission.metadata.grok_evaluation_details.raw_grok_response}
+                                                                {raw}
                                                             </pre>
                                                         </div>
                                                     </div>
-                                                ) : selectedSubmission.metadata.grok_evaluation_details?.full_evaluation ? (
+                                                        )
+                                                    }
+                                                    if (selectedSubmission.metadata.grok_evaluation_details?.full_evaluation) {
+                                                        return (
                                                     <div>
-                                                        <div className="cockpit-label mb-2">Full Grok API Response (JSON)</div>
+                                                        <div className="cockpit-label mb-2">Parsed Evaluation (JSON)</div>
                                                         <pre className="p-3 bg-[var(--cockpit-obsidian)] border border-[var(--keyline-primary)] rounded text-xs overflow-auto max-h-96 font-mono cockpit-text">
                                                             {JSON.stringify(selectedSubmission.metadata.grok_evaluation_details.full_evaluation, null, 2)}
                                                         </pre>
                                                     </div>
-                                                ) : null}
+                                                        )
+                                                    }
+                                                    return null
+                                                })()}
                                             </div>
                                         )}
                                     </div>
