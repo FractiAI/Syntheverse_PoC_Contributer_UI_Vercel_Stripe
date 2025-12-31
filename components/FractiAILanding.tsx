@@ -74,15 +74,50 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
               </div>
 
               <h1 className="cockpit-title text-4xl mt-3">
-                Tapping the Hydrogen‑Holographic, Fractal Syntheverse
+                Welcome and Happy New Year 2026!
               </h1>
 
-              <p className="cockpit-text mt-4 max-w-3xl">
-                The Hydrogen‑Holographic Fractal Syntheverse (HHFS) enters prerelease test‑and‑tuning, opening the
-                frontier to early collaborators. Beginning <strong>January 1, 2026</strong>, the ecosystem moves into
-                live field operations on <strong>Base</strong> with a game‑native ERC‑20 economy, lens, sandbox, and
-                contributor‑driven map of the frontier.
-              </p>
+              <div className="cockpit-text mt-4 max-w-3xl space-y-4">
+                <p>
+                  I’m thrilled to announce that today I finalized the purchase and on-chain deployment of a fixed-supply{' '}
+                  <strong>90,000,000,000,000 SYNTH ERC‑20 Motherlode</strong> on the <strong>Base</strong> blockchain, and beta
+                  testing has officially begun.
+                </p>
+                <p>
+                  This Motherlode is now the home for holographic hydrogen fractal Syntheverse researchers, developers, and
+                  financial alignment contributors, extending the work of our active Zenodo communities, which already see
+                  thousands of daily downloads and continuous submissions.
+                </p>
+                <p>
+                  The blockchain is not a replacement—it’s a new residence. Here, you can collaborate live, operate in real
+                  time, and contribute value within the Syntheverse sandbox, where every action is measured, traceable, and
+                  rewarded through Proof‑of‑Contribution.
+                </p>
+                <p className="cockpit-label">Key features you can explore:</p>
+                <ul className="list-disc pl-5 space-y-2">
+                  <li>90 trillion SYNTH Motherlode as the genesis resource</li>
+                  <li>Epoch-based token allocation aligned with contribution</li>
+                  <li>Closed, regenerative ERC‑20 ecosystem</li>
+                  <li>Living sandbox where contributions unlock access, benefits, and progression</li>
+                </ul>
+                <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                  <span>I invite you to step in, explore, and contribute:</span>
+                  <Link
+                    href="https://syntheverse-poc.vercel.app"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline underline-offset-4"
+                  >
+                    syntheverse-poc.vercel.app
+                  </Link>
+                </p>
+                <p>
+                  2026 doesn’t start with fireworks—it starts with a new frontier coming online. Come join the Syntheverse.
+                </p>
+                <p className="cockpit-text text-sm" style={{ opacity: 0.9 }}>
+                  — Pru “El Taino”, Architect of Syntheverse
+                </p>
+              </div>
 
               <div className="mt-6 flex flex-wrap gap-3">
                 {cta?.primaryHref ? (
@@ -116,6 +151,13 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
                   Onboarding
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
+
+                {variant === 'fractiai' ? (
+                  <Link href="/submit" className="cockpit-lever inline-flex items-center">
+                    Enter the Syntheverse
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                ) : null}
               </div>
 
               <div className="mt-6 grid gap-3 md:grid-cols-3">
