@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Label } from "@/components/ui/label"
-import { Brain, Award, Coins, AlertTriangle, Loader2, CheckCircle2 } from "lucide-react"
+import { Brain, Award, Coins, AlertTriangle, Loader2, CheckCircle2, CreditCard } from "lucide-react"
 import Link from "next/link"
 
 interface SubmitContributionFormProps {
@@ -20,6 +20,8 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
     const [error, setError] = useState<string | null>(null)
     const [success, setSuccess] = useState(false)
     const [submissionHash, setSubmissionHash] = useState<string | null>(null)
+    const [registeringPoC, setRegisteringPoC] = useState(false)
+    const [registerError, setRegisterError] = useState<string | null>(null)
     const [evaluationStatus, setEvaluationStatus] = useState<{
         completed?: boolean
         podScore?: number
@@ -162,6 +164,37 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
             setError(errorMessage)
         } finally {
             setLoading(false)
+        }
+    }
+
+    const handleRegisterQualifiedPoC = async () => {
+        if (!submissionHash) return
+        setRegisterError(null)
+        setRegisteringPoC(true)
+        try {
+            const res = await fetch(`/api/poc/${encodeURIComponent(submissionHash)}/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+            })
+            const text = await res.text()
+            let data: any = {}
+            try {
+                data = text ? JSON.parse(text) : {}
+            } catch {
+                data = {}
+            }
+            if (!res.ok) {
+                throw new Error(data?.error || data?.message || `Registration failed (${res.status})`)
+            }
+            if (!data?.checkout_url || typeof data.checkout_url !== 'string') {
+                throw new Error('Registration failed: missing checkout URL')
+            }
+            window.location.href = data.checkout_url
+        } catch (e) {
+            const msg = e instanceof Error ? e.message : 'Registration failed'
+            setRegisterError(msg)
+        } finally {
+            setRegisteringPoC(false)
         }
     }
 
@@ -378,6 +411,34 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
                                                                 <>Your contribution has met the qualification threshold (≥8,000 points)</>
                                                             )}
                                                         </div>
+                                                        {/* Register CTA (inside qualification notification) */}
+                                                        {submissionHash ? (
+                                                            <div className="mt-4">
+                                                                <Button
+                                                                    type="button"
+                                                                    onClick={handleRegisterQualifiedPoC}
+                                                                    disabled={registeringPoC}
+                                                                    className="w-full"
+                                                                >
+                                                                    {registeringPoC ? (
+                                                                        <>
+                                                                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                                                            Processing…
+                                                                        </>
+                                                                    ) : (
+                                                                        <>
+                                                                            <CreditCard className="h-4 w-4 mr-2" />
+                                                                            Register PoC (On-chain)
+                                                                        </>
+                                                                    )}
+                                                                </Button>
+                                                                {registerError ? (
+                                                                    <div className="text-xs text-red-700 mt-2">
+                                                                        {registerError}
+                                                                    </div>
+                                                                ) : null}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 )}
 
@@ -477,16 +538,6 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
                                                                         Redundancy Penalty: {evaluationStatus.evaluation.redundancy.toFixed(1)}%
                                                                     </div>
                                                                 )}
-                                                            </div>
-                                                        )}
-
-                                                        {/* Detailed Review */}
-                                                        {evaluationStatus.evaluation.detailed_review && String(evaluationStatus.evaluation.detailed_review).trim().length > 0 && (
-                                                            <div className="p-4 bg-muted rounded-lg">
-                                                                <div className="text-sm font-semibold mb-2">Detailed Review</div>
-                                                                <div className="text-sm text-muted-foreground whitespace-pre-wrap">
-                                                                    {evaluationStatus.evaluation.detailed_review}
-                                                                </div>
                                                             </div>
                                                         )}
 
