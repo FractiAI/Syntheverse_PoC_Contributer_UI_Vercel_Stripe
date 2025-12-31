@@ -323,22 +323,27 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
         <div className="grid gap-6 lg:grid-cols-2">
           <ExpandablePanel
             label="FOR IMMEDIATE RELEASE"
-            title="The Syntheverse Crypto Frontier Opens"
+            title="Welcome to Syntheverse"
             defaultOpen={true}
           >
             <div className="cockpit-text space-y-3">
               <p>
-                Pioneer Hydrogen‑Holographic, Fractal, Mythic, Crypto, and AI researchers, developers, enterprises, and
-                financiers are invited to contribute to the evolution of the Hydrogen‑Holographic Fractal Sandbox (HHFS).
+                A synthetic world powered by holographic hydrogen and fractal intelligence—where contributions become
+                verifiable, durable infrastructure through Proof‑of‑Contribution.
               </p>
               <p>
-                Each contribution expands coverage, resonance, and fractal density through Proof‑of‑Contribution (PoC)
-                protocols—forming a living map of the sandbox and its emergent economy.
+                Submissions are free. Qualified PoCs can be optionally registered on‑chain to anchor work immutably. Ecosystem
+                support contributions help sustain infrastructure, research, and operations—without any token sale framing.
               </p>
               <p>
-                Beginning Jan 1, 2026 on Base: a game‑native ERC‑20 economy paired with a scoring lens that rewards
-                measurable signal.
+                Beginning Jan 1, 2026 on Base: gameplay, lens, and sandbox operations begin on the chain.
               </p>
+            </div>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link href="/fractiai/syntheverse" className="cockpit-lever inline-flex items-center">
+                Read the 1‑page Syntheverse brief
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
             </div>
             <div className="mt-5 relative aspect-[4/3]">
               <Image src="/fractiai/press-release.svg" alt="Press release visual panel" fill className="object-contain" />
