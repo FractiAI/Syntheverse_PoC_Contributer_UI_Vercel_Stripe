@@ -3,7 +3,7 @@
  * 
  * POST /api/poc/[hash]/register
  * 
- * Creates a Stripe checkout session for $200 registration fee
+ * Creates a Stripe checkout session for an operator-configured, fee-based on-chain anchoring service.
  */
 
 import { NextRequest, NextResponse } from 'next/server'
@@ -18,7 +18,22 @@ import { debug, debugError } from '@/utils/debug'
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
 
-const REGISTRATION_FEE = 20000 // $200.00 in cents
+const DEFAULT_ANCHORING_FEE_CENTS = 20000
+
+function getAnchoringFeeCents(): number {
+    const raw = (process.env.POC_ANCHORING_FEE_CENTS || '').trim()
+    if (!raw) return DEFAULT_ANCHORING_FEE_CENTS
+    const n = Number(raw)
+    if (!Number.isFinite(n) || n <= 0) return DEFAULT_ANCHORING_FEE_CENTS
+    return Math.round(n)
+}
+
+function getAnchoringChainLabel(): string {
+    // We are currently operating against Hardhat/devnet unless instructed to migrate.
+    // Keep this operator-configurable so we can flip to Base for the Jan 1, 2026 beta launch.
+    const raw = (process.env.POC_ANCHORING_CHAIN_LABEL || '').trim()
+    return raw || 'Hardhat (devnet)'
+}
 
 export async function POST(
     request: NextRequest,
@@ -197,7 +212,7 @@ export async function POST(
         // Sanitize title for Stripe (max 500 chars, no special characters that might cause issues)
         const sanitizedTitle = (contrib.title || 'PoC Registration').substring(0, 500).replace(/[^\w\s-]/g, '')
         const productName = `PoC Registration: ${sanitizedTitle}`
-        const productDescription = `Register PoC submission ${submissionHash.substring(0, 8)}... on Hard Hat L1 blockchain`
+        const productDescription = `Optional on-chain anchoring service for PoC ${submissionHash.substring(0, 8)}… (${getAnchoringChainLabel()})`
         
         debug('RegisterPoC', 'Creating Stripe checkout session', {
             baseUrl,
@@ -217,7 +232,7 @@ export async function POST(
                                 name: productName,
                                 description: productDescription,
                             },
-                            unit_amount: REGISTRATION_FEE,
+                            unit_amount: getAnchoringFeeCents(),
                         },
                         quantity: 1,
                     },

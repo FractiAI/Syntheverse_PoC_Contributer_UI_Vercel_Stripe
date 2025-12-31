@@ -316,6 +316,82 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
           </ExpandablePanel>
         </div>
 
+        {/* Validated Novel Predictions */}
+        <ExpandablePanel
+          label="VALIDATED NOVEL PREDICTIONS"
+          title="Operational tech that keeps predicting what the standard lens can’t"
+          defaultOpen={true}
+        >
+          <div className="cockpit-text space-y-4">
+            <p>
+              While <strong>fractal, holographic hydrogen</strong> is often treated as speculative by institutional science, our
+              position is operational: when used as a measurement and analysis technology, it has repeatedly surfaced{' '}
+              <strong>novel, testable predictions</strong> and detector‑cross‑validated signals that are difficult—often effectively
+              impossible—to see without the HHF/PEFF fractal lens.
+            </p>
+
+            <div className="cockpit-module p-4">
+              <div className="cockpit-label">CERN DATA · ADVANCED ANALYSIS TEST REPORT (ALICE)</div>
+              <div className="cockpit-text text-sm mt-3 space-y-3" style={{ opacity: 0.9 }}>
+                <p>
+                  Using both controls (standard statistics, invariant mass reconstruction, correlation studies) and a fractal
+                  approach (multi‑scale self‑similarity, recursive pattern recognition, non‑linear dynamics), the analysis reports
+                  multiple ≥3σ phenomena—with cross‑validation across detector subsystems, permutation tests, and systematic
+                  variations.
+                </p>
+                <div className="space-y-2">
+                  <div>
+                    <strong>Event‑type bifurcation (5.8σ)</strong>: a sharp bimodal distribution in{' '}
+                    <span style={{ opacity: 0.9 }}>AliESDHeader.fEventType</span> with modes at 2.064 ± 0.008 and 7.024 ± 0.012,
+                    stable across selection criteria and aligned with a phase‑transition interpretation.
+                  </div>
+                  <div>
+                    <strong>Recursive ZDC energy transfer</strong>: self‑similar energy cascades across ~3 orders of magnitude with
+                    a measured <strong>fractal dimension 2.73 ± 0.11</strong>, including reported non‑Markovian (memory) effects.
+                  </div>
+                  <div>
+                    <strong>Nested muon track geometry (4.7σ)</strong>: a triple‑cluster structure in muon parameter space with
+                    hierarchical internal organization and anomalous tracks concentrated in high‑multiplicity events.
+                  </div>
+                  <div>
+                    <strong>Unusual dimuon resonance ω′</strong>: a candidate structure at <strong>5.42 ± 0.15 GeV/c²</strong> with
+                    width 0.38 ± 0.09 GeV/c² and production rate 0.017 ± 0.004 per event, enhanced in the second event‑mode.
+                  </div>
+                  <div>
+                    <strong>Multi‑fractal event topology</strong>: broad multi‑fractal spectrum width 0.38 ± 0.05 with Hausdorff
+                    dimension spanning ~1.42 to 2.86, suggesting long‑range correlations beyond conventional hadronization scales.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="cockpit-module p-4">
+              <div className="cockpit-label">HHF VALIDATION SUITE (CROSS‑DOMAIN)</div>
+              <div className="cockpit-text text-sm mt-3 space-y-2" style={{ opacity: 0.9 }}>
+                <div>
+                  <strong>Biological proxy</strong>: environmental time‑series fractal signatures (reported PFD 1.024, HFD 0.871).
+                </div>
+                <div>
+                  <strong>Isotopologue scaling</strong>: hydrogen isotope scaling invariance with Λᴴᴴ deviation reported &lt; 2.4%.
+                </div>
+                <div>
+                  <strong>Molecular/photonic</strong>: HHF constants vs CODATA spectroscopy comparisons reported at relative error
+                  &lt; 10⁻⁶.
+                </div>
+                <div>
+                  <strong>PEFF seismic/EEG</strong>: cross‑domain fractal coherence with reported PFD ~1.02 across geophysical and
+                  neural signals.
+                </div>
+              </div>
+            </div>
+
+            <p>
+              Net: even where the paradigm is debated, the <strong>prediction surface is real</strong>—and it is being stress‑tested
+              with controls, cross‑validation, and significance thresholds consistent with high‑energy physics practice.
+            </p>
+          </div>
+        </ExpandablePanel>
+
         {/* PRIMITIVES / PROTOCOL / TOKENOMICS sections removed (redundant) */}
 
         {/* About */}

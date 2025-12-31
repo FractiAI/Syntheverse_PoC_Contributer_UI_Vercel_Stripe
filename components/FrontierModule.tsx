@@ -541,7 +541,7 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
                                             ) : (
                                                 <>
                                                     <CreditCard className="inline h-4 w-4 mr-2" />
-                                                    Register PoC - $200
+                                                    Anchor PoC on‑chain (optional)
                                                 </>
                                             )}
                                         </button>
@@ -831,10 +831,10 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
                                         )}
                                         <div className="mt-3 p-3 border border-[var(--keyline-primary)] bg-[var(--cockpit-obsidian)] rounded">
                                             <div className="text-xs cockpit-label mb-1">
-                                                ✓ Registered on Hard Hat L1 Blockchain
+                                                ✓ On‑chain anchoring recorded
                                             </div>
                                             <div className="text-xs cockpit-text">
-                                                This PoC has been registered in the Syntheverse SYNTH90T Motherlode Blockmine on the Hard Hat blockchain.
+                                                This record indicates an optional on‑chain anchoring event was completed and a transaction hash was stored for verification.
                                             </div>
                                         </div>
                                     </div>

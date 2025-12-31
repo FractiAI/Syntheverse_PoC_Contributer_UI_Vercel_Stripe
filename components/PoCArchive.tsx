@@ -995,10 +995,10 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                                         )}
                                         <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
                                             <div className="text-xs font-semibold text-blue-900 dark:text-blue-100 mb-1">
-                                                ✓ Registered on Hard Hat L1 Blockchain
+                                                ✓ On‑chain anchoring recorded
                                             </div>
                                             <div className="text-xs text-blue-700 dark:text-blue-300">
-                                                This PoC has been registered in the Syntheverse SYNTH90T Motherlode Blockmine on the Hard Hat blockchain.
+                                                This record indicates an optional on‑chain anchoring event was completed and a transaction hash was stored for verification.
                                             </div>
                                         </div>
                                     </div>
@@ -1022,7 +1022,7 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                                             ) : (
                                                 <>
                                                     <CreditCard className="h-4 w-4 mr-2" />
-                                                    Register PoC - $200
+                                                    Anchor PoC on‑chain (optional)
                                                 </>
                                             )}
                                         </Button>

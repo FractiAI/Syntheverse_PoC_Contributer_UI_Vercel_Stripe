@@ -89,29 +89,28 @@ export function OnboardingNavigator() {
                                 </ul>
                             </div>
                             <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
-                                <div className="cockpit-label mb-2">Internal ERC-20 Crypto Ecosystem</div>
+                                <div className="cockpit-label mb-2">Internal ERC‑20 Coordination Layer</div>
                                 <p className="cockpit-text text-sm mb-3">
-                                    Syntheverse operates a complete <strong>internal ERC-20 based crypto ecosystem</strong> on the blockchain, anchored 
-                                    by the 90 Trillion SYNTH token Motherlode Blockmine. This ecosystem rewards contribution, tracks alignment, and 
-                                    provides a self-contained economic system.
+                                    Syntheverse uses a fixed‑supply ERC‑20 ledger as an <strong>internal coordination primitive</strong>—anchored by
+                                    the 90T SYNTH Motherlode. These units are used for protocol accounting, indexing, and coordination inside the
+                                    sandbox.
                                 </p>
                                 <ul className="space-y-2 cockpit-text text-sm mb-4">
-                                    <li>• <strong>ERC-20 SYNTH Tokens:</strong> Internal cryptocurrency for alignment and participation</li>
-                                    <li>• <strong>Token Distribution:</strong> Rewards based on PoC scores, epochs, and contribution tiers</li>
-                                    <li>• <strong>Blockchain Anchored:</strong> All transactions and allocations recorded permanently on-chain</li>
-                                    <li>• <strong>Internal Economy:</strong> Self-contained ecosystem that grows and regenerates through participation</li>
+                                    <li>• <strong>SYNTH (internal):</strong> fixed‑supply coordination units (non‑financial)</li>
+                                    <li>• <strong>Proof‑of‑Contribution:</strong> records what was contributed, when, and with what context</li>
+                                    <li>• <strong>Optional anchoring:</strong> contributions may be optionally anchored with an on‑chain tx hash</li>
+                                    <li>• <strong>No promises:</strong> protocol records do not create economic entitlement or ownership</li>
                                 </ul>
                             </div>
                             <div className="p-4 border border-[var(--hydrogen-amber)] bg-[rgba(255,215,0,0.05)]">
                                 <div className="cockpit-label mb-3 text-[var(--hydrogen-amber)]">
-                                    ERC-20 Token Alignment Purpose & Restrictions
+                                    ERC‑20 Role & Boundaries (Important)
                                 </div>
                                 <div className="cockpit-text space-y-3 text-sm">
                                     <div>
                                         <p className="mb-2">
-                                            <strong>ALIGNMENT PURPOSE ONLY:</strong> ERC-20 tokens (SYNTH) on the Hard Hat L1 blockchain are issued 
-                                            for the sole purpose of <strong>alignment with the Syntheverse ecosystem</strong> and participation in 
-                                            the Motherlode Blockmine collective intelligence network.
+                                            <strong>COORDINATION PURPOSE ONLY:</strong> SYNTH is used as an internal coordination marker within the
+                                            Syntheverse sandbox and its protocol accounting. It is not presented as a financial instrument.
                                         </p>
                                     </div>
                                     <div>
@@ -142,9 +141,9 @@ export function OnboardingNavigator() {
                                 <div className="cockpit-label mb-2">The Mission</div>
                                 <p className="cockpit-text text-sm">
                                     Syntheverse creates a <strong>new paradigm for independent collaboration</strong> by combining blockchain technology, 
-                                    ERC-20 tokenomics, and regenerative PoC evaluation. Through this system, independent contributors collaborate, 
-                                    improve the ecosystem, and build a sustainable internal crypto economy that rewards innovation, alignment, and 
-                                    meaningful contribution. Your work directly improves the system while you build your legacy on the blockchain.
+                                    internal coordination primitives, and regenerative PoC evaluation. Through this system, independent contributors
+                                    collaborate, improve the map, and strengthen the shared knowledge base—without centralized governance claims or
+                                    financial promises.
                                 </p>
                             </div>
                         </div>
@@ -187,12 +186,12 @@ export function OnboardingNavigator() {
                                 </p>
                             </div>
                             <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
-                                <div className="cockpit-label mb-2">Blockchain Registration</div>
+                                <div className="cockpit-label mb-2">Optional On‑Chain Anchoring</div>
                                 <ul className="space-y-2 cockpit-text text-sm">
-                                    <li>• Approved PoCs can be registered on-chain for $200</li>
-                                    <li>• Registration anchors contributions permanently to the blockchain</li>
-                                    <li>• Establishes &quot;I was here first&quot; recognition and legacy</li>
-                                    <li>• Registered PoCs train and evolve the Syntheverse AI</li>
+                                    <li>• Qualified PoCs may be optionally anchored on-chain (fee-based service; operator configured)</li>
+                                    <li>• Anchoring stores a transaction hash for independent verification</li>
+                                    <li>• Establishes provenance (“I was here first”) without creating economic entitlement</li>
+                                    <li>• The protocol remains public; this dashboard is a reference client</li>
                                 </ul>
                             </div>
                             <div className="p-4 border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)]">
@@ -216,8 +215,9 @@ export function OnboardingNavigator() {
                 <div className="space-y-4">
                     <div className="cockpit-text">
                         <p className="text-lg mb-4">
-                            Syntheverse operates on a <strong className="cockpit-number">Layer 1 blockchain</strong> that 
-                            stores immutable records of Proof-of-Contribution submissions and manages multi-token distribution (Gold/Silver/Copper).
+                            Syntheverse is currently operated in a <strong className="cockpit-number">Hardhat (devnet)</strong>{' '}
+                            environment while we prepare for the Base beta launch. The protocol is public; this dashboard is a
+                            reference client.
                         </p>
                         <div className="space-y-3">
                             <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
@@ -233,18 +233,17 @@ export function OnboardingNavigator() {
                             <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
                                 <div className="cockpit-label mb-2">Transaction Flow</div>
                                 <div className="cockpit-text text-sm space-y-2">
-                                    <div>1. Submit PoC → Stored on blockchain</div>
-                                    <div>2. Evaluate PoC → AI evaluation scores contribution</div>
-                                    <div>3. Register PoC → $200 payment anchors to blockchain</div>
-                                    <div>4. Allocate Tokens → SYNTH tokens distributed based on score, epoch, tier</div>
+                                    <div>1. Submit PoC → archived + evaluated</div>
+                                    <div>2. Qualify → PoC thresholds determine epoch eligibility</div>
+                                    <div>3. Optional on-chain anchoring → fee-based service (operator configured)</div>
+                                    <div>4. Protocol recognition → internal coordination accounting updates</div>
                                 </div>
                             </div>
                             <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
                                 <div className="cockpit-label mb-2">Blockchain Properties</div>
                                 <p className="cockpit-text text-sm">
-                                    Built on <strong>Base (Ethereum L2)</strong> for secure, fast, and cost-effective transactions. 
-                                    All registered contributions are permanently verifiable and contribute to the ecosystem&apos;s 
-                                    regenerative intelligence.
+                                    Current beta operations run on Hardhat/devnet. For the Base launch, anchoring events will be
+                                    independently verifiable via on-chain transaction hashes.
                                 </p>
                             </div>
                         </div>
@@ -360,38 +359,30 @@ export function OnboardingNavigator() {
                 <div className="space-y-4">
                     <div className="cockpit-text">
                         <p className="text-lg mb-4">
-                            <strong className="cockpit-number">Metallic Qualifications</strong> (Gold, Silver, Copper) 
-                            amplify token allocations when combined, rewarding cross-disciplinary contributions.
+                            <strong className="cockpit-number">Metallic Qualifications</strong> (Gold, Silver, Copper) are a
+                            composition-aware assay of contribution type and routing context. They do not imply tradable value,
+                            investment, or guaranteed outcomes.
                         </p>
                         <div className="space-y-3">
                             <div className="grid gap-4 md:grid-cols-3">
-                                {[
-                                    { name: 'Gold', desc: 'Scientific/Research', multiplier: '1000x', color: '#ffb84d' },
-                                    { name: 'Silver', desc: 'Technology/Innovation', multiplier: '100x', color: '#94a3b8' },
-                                    { name: 'Copper', desc: 'Alignment/Community', multiplier: '1x', color: '#cd7f32' }
-                                ].map((metal) => (
+                                    {[
+                                        { name: 'Gold', desc: 'Scientific / research signal', color: '#ffb84d' },
+                                        { name: 'Silver', desc: 'Technology / implementation signal', color: '#94a3b8' },
+                                        { name: 'Copper', desc: 'Ecosystem / operations signal', color: '#cd7f32' }
+                                    ].map((metal) => (
                                     <div key={metal.name} className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
                                         <div className="cockpit-label mb-2" style={{ color: metal.color }}>
                                             {metal.name}
                                         </div>
                                         <div className="cockpit-text text-sm mb-2">{metal.desc}</div>
-                                        <div className="cockpit-number text-lg" style={{ color: metal.color }}>
-                                            {metal.multiplier}
-                                        </div>
                                     </div>
                                 ))}
                             </div>
                             <div className="p-4 border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)]">
-                                <div className="cockpit-label mb-2" style={{ color: '#ffb84d' }}>Combination Amplifications</div>
-                                <ul className="space-y-2 cockpit-text text-sm">
-                                    <li>• <strong>Gold + Silver + Copper:</strong> 1.5× total amplification</li>
-                                    <li>• <strong>Gold + Silver:</strong> 1.25× amplification</li>
-                                    <li>• <strong>Gold + Copper:</strong> 1.2× amplification</li>
-                                    <li>• <strong>Silver + Copper:</strong> 1.15× amplification</li>
-                                </ul>
-                                <p className="cockpit-text text-xs mt-3 pt-3 border-t border-[var(--keyline-primary)]">
-                                    Multiple metals in a single contribution create synergistic amplification, rewarding 
-                                    cross-disciplinary work that spans scientific, technological, and alignment domains.
+                                <div className="cockpit-label mb-2" style={{ color: '#ffb84d' }}>Composition-aware routing</div>
+                                <p className="cockpit-text text-sm">
+                                    Multi-metal classifications provide richer context for evaluation and indexing. Any internal
+                                    protocol recognition is discretionary and separate from payments or external markets.
                                 </p>
                             </div>
                         </div>
@@ -431,12 +422,12 @@ export function OnboardingNavigator() {
                                 {
                                     step: '04',
                                     title: 'Blockchain Registration',
-                                    desc: 'Register qualified PoCs on-chain for $200 to anchor permanently'
+                                    desc: 'Optionally anchor qualified PoCs on-chain (fee-based service; operator configured)'
                                 },
                                 {
                                     step: '05',
                                     title: 'Token Allocation',
-                                    desc: 'Receive SYNTH tokens based on score, epoch, tier, and metal combinations'
+                                    desc: 'Protocol recognition updates internal coordination accounting (non-financial units)'
                                 }
                             ].map((item) => (
                                 <div key={item.step} className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
