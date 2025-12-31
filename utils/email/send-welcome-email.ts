@@ -48,7 +48,7 @@ export async function sendWelcomeEmail(data: WelcomeEmailData): Promise<{ succes
         
         <div style="background: rgba(255,184,77,0.1); border-left: 4px solid #ffb84d; padding: 20px; margin-bottom: 30px;">
             <p style="font-size: 16px; margin-bottom: 15px; color: #fff; line-height: 1.8;">
-                This is Pru &quot;El Taino,&quot; Architect of Syntheverse. You have arrived. Welcome to the world of holographic hydrogen, element zero—your timeless, infinite homebase.
+                Welcome to FractiAI — a fractal AI startup and the creator of the Syntheverse, a contribution-based blockchain ecosystem pioneering holographic hydrogen as a foundational substrate for intelligence, coordination, and validation. FractiAI advances holographic hydrogen as an organizing principle that spans physical, informational, and computational layers, enabling meaningful contributions to be encoded, validated, and preserved as verifiable units of knowledge. Within the Syntheverse, discovery becomes durable infrastructure through proof-of-contribution mechanisms—supporting a living sandbox where progress is measurable, participation is real, and contributions compound over time.
             </p>
             <p style="font-size: 16px; margin-bottom: 15px; color: #fff; line-height: 1.8;">
                 You stand at the threshold of a <strong style="color: #ffb84d;">new way to collaborate independently</strong> while building a <strong style="color: #ffb84d;">regenerative Proof-of-Contribution (PoC) system</strong> on the blockchain.

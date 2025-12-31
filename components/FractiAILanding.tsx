@@ -118,9 +118,14 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
                         Dear new arrival,
                       </p>
                       <p>
-                        Welcome to <strong>FractiAI</strong>—the cognitive engine and frontier instrumentation layer of the
-                        Syntheverse. If you’re reading this, you’ve stepped onto the threshold of a living sandbox where
-                        collaboration is real-time, progress is measurable, and contributions become momentum.
+                        Welcome to <strong>FractiAI</strong> — a fractal AI startup and the creator of the Syntheverse, a
+                        contribution-based blockchain ecosystem pioneering holographic hydrogen as a foundational substrate
+                        for intelligence, coordination, and validation. FractiAI advances holographic hydrogen as an organizing
+                        principle that spans physical, informational, and computational layers, enabling meaningful
+                        contributions to be encoded, validated, and preserved as verifiable units of knowledge. Within the
+                        Syntheverse, discovery becomes durable infrastructure through proof-of-contribution mechanisms—supporting
+                        a living sandbox where progress is measurable, participation is real, and contributions compound over
+                        time.
                       </p>
                       <p>
                         Today I finalized the purchase and on-chain deployment of a fixed-supply{' '}
