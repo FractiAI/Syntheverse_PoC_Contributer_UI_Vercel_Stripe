@@ -113,14 +113,6 @@ export default function FractiAIStatusWidget({ limit = 6 }: { limit?: number }) 
           <div className="cockpit-label">FRONTIER STATUS</div>
           <div className="cockpit-title mt-2 text-2xl">Live SYNTH + Open Epochs</div>
         </div>
-        <button
-          type="button"
-          onClick={fetchAll}
-          className="cockpit-lever"
-          aria-label="Refresh status"
-        >
-          Refresh
-        </button>
       </div>
 
       {loading ? (
