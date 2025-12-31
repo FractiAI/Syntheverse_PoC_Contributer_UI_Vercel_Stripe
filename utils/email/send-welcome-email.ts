@@ -93,7 +93,7 @@ export async function sendWelcomeEmail(data: WelcomeEmailData): Promise<{ succes
             <div style="margin-bottom: 20px; padding: 15px; background: rgba(255,184,77,0.1); border-left: 3px solid #ffb84d;">
                 <h3 style="margin-top: 0; color: #ffb84d; font-size: 18px; margin-bottom: 10px;">3. Submit Your First Contribution</h3>
                 <p style="font-size: 14px; color: #e0e0e0; margin: 0; line-height: 1.7;">
-                    Use the <a href="${BASE_URL}/submit?category=scientific" style="color: #ffb84d; text-decoration: underline;">Scientific Contribution</a> or <a href="${BASE_URL}/submit?category=technology" style="color: #ffb84d; text-decoration: underline;">Technology Contribution</a> buttons to submit your work. All submissions are <strong>free</strong> and evaluated using our Holographic Hydrogen Fractal Syntheverse Lens and Sandbox, providing detailed image and vector analysis.
+                    Use <a href="${BASE_URL}/submit" style="color: #ffb84d; text-decoration: underline;">Submit Contribution</a> to transmit your work. All submissions are <strong>free</strong> and evaluated using our Holographic Hydrogen Fractal Syntheverse Lens and Sandbox, providing detailed image and vector analysis.
                 </p>
             </div>
             
@@ -194,11 +194,8 @@ export async function sendWelcomeEmail(data: WelcomeEmailData): Promise<{ succes
                 <a href="${BASE_URL}/onboarding" style="display: block; padding: 15px; background: rgba(255,184,77,0.1); border: 1px solid #ffb84d; border-radius: 5px; color: #ffb84d; text-decoration: none; text-align: center; font-weight: bold;">
                     → Complete Onboarding Navigator Training
                 </a>
-                <a href="${BASE_URL}/submit?category=scientific" style="display: block; padding: 15px; background: rgba(255,184,77,0.1); border: 1px solid #ffb84d; border-radius: 5px; color: #ffb84d; text-decoration: none; text-align: center; font-weight: bold;">
-                    → Submit Scientific Contribution
-                </a>
-                <a href="${BASE_URL}/submit?category=technology" style="display: block; padding: 15px; background: rgba(255,184,77,0.1); border: 1px solid #ffb84d; border-radius: 5px; color: #ffb84d; text-decoration: none; text-align: center; font-weight: bold;">
-                    → Submit Technology Contribution
+                <a href="${BASE_URL}/submit" style="display: block; padding: 15px; background: rgba(255,184,77,0.1); border: 1px solid #ffb84d; border-radius: 5px; color: #ffb84d; text-decoration: none; text-align: center; font-weight: bold;">
+                    → Submit Contribution
                 </a>
             </div>
         </div>

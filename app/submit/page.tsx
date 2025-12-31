@@ -15,16 +15,20 @@ export default async function SubmitPage({ searchParams }: SubmitPageProps) {
         redirect('/login')
     }
 
-    // Get category from URL params or default to 'scientific'
-    const category = searchParams?.category || 'scientific'
-    const categoryLabel = category === 'scientific' ? 'SCIENTIFIC' : category === 'technology' ? 'TECHNOLOGY' : 'CONTRIBUTION'
+    // Category is optional; the UI uses a single "Submit Contribution" entry point.
+    // We still default the form to scientific internally unless explicitly set.
+    const categoryParam = searchParams?.category
+    const category = categoryParam || 'scientific'
+    const categoryLabel = categoryParam
+        ? (category === 'scientific' ? 'SCIENTIFIC' : category === 'technology' ? 'TECHNOLOGY' : 'CONTRIBUTION')
+        : 'CONTRIBUTION'
 
     return (
         <div className="cockpit-bg min-h-screen">
             <div className="container mx-auto px-6 py-8">
                 <div className="cockpit-panel p-6 mb-8">
                     <div className="cockpit-label">TRANSMISSION MODULE</div>
-                    <div className="cockpit-title text-3xl mt-2">SUBMIT {categoryLabel} CONTRIBUTION</div>
+                    <div className="cockpit-title text-3xl mt-2">SUBMIT {categoryLabel}</div>
                     <div className="cockpit-text mt-3">
                         Record your work into the Motherlode Blockmine through hydrogen-holographic evaluation
                     </div>

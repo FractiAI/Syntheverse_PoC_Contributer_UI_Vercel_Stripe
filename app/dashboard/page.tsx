@@ -59,13 +59,9 @@ export default async function Dashboard() {
                                 <BookOpen className="inline h-4 w-4 mr-2" />
                                 Onboarding Navigator
                             </Link>
-                            <Link href="/submit?category=scientific" className="cockpit-lever inline-block">
-                                <span className="mr-2">🔬</span>
-                                Scientific Contribution
-                            </Link>
-                            <Link href="/submit?category=technology" className="cockpit-lever inline-block">
-                                <span className="mr-2">⚙️</span>
-                                Technology Contribution
+                            <Link href="/submit" className="cockpit-lever inline-block">
+                                <span className="mr-2">✎</span>
+                                Submit Contribution
                             </Link>
                             <FinancialAlignmentButton />
                         </div>
