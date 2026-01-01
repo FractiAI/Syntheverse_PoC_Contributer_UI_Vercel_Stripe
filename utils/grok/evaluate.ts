@@ -36,10 +36,33 @@ interface TokenomicsInfo {
     epoch_progression: Record<string, boolean>
 }
 
+interface GrokEvaluationResult {
+    coherence: number
+    density: number
+    redundancy: number
+    pod_score: number
+    novelty: number
+    alignment: number
+    metals: string[]
+    qualified: boolean
+    qualified_epoch?: string
+    classification?: string[]
+    redundancy_analysis?: string
+    metal_justification?: string
+    founder_certificate?: string
+    homebase_intro?: string
+    tokenomics_recommendation?: any
+    base_novelty?: number
+    base_density?: number
+    redundancy_overlap_percent?: number
+    is_seed_submission?: boolean
+    raw_grok_response?: string
+}
+
 // Call Grok API directly for PoC evaluation
 export async function evaluateWithGrok(
-    textContent: string, 
-    title: string, 
+    textContent: string,
+    title: string,
     category?: string,
     excludeHash?: string
 ): Promise<{
@@ -68,6 +91,7 @@ export async function evaluateWithGrok(
     base_novelty?: number
     base_density?: number
     redundancy_overlap_percent?: number
+    is_seed_submission?: boolean
     raw_grok_response?: string
 }> {
     const grokApiKey = process.env.NEXT_PUBLIC_GROK_API_KEY
