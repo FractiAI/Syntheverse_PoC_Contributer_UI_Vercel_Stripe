@@ -556,7 +556,7 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
                                             ) : (
                                                 <>
                                                     <CreditCard className="inline h-4 w-4 mr-2" />
-                                                    Anchor PoC on‑chain - $500
+                                                    Anchor PoC on‑chain
                                                 </>
                                             )}
                                         </button>

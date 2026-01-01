@@ -124,6 +124,79 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
         return
     }
     
+    // Check if this is a PoC submission payment (evaluation fee)
+    if (session.metadata?.submission_type === 'poc_submission') {
+        const submissionHash = session.metadata.submission_hash
+        
+        if (!submissionHash) {
+            debugError('StripeWebhook', 'Missing submission_hash in metadata', { metadata: session.metadata })
+            return
+        }
+        
+        try {
+            // Get contribution
+            const contributions = await db
+                .select()
+                .from(contributionsTable)
+                .where(eq(contributionsTable.submission_hash, submissionHash))
+                .limit(1)
+            
+            if (!contributions || contributions.length === 0) {
+                debugError('StripeWebhook', 'Contribution not found for submission payment', { submissionHash })
+                return
+            }
+            
+            const contrib = contributions[0]
+            
+            // Update contribution: mark payment as complete and change status to evaluating
+            await db
+                .update(contributionsTable)
+                .set({
+                    status: 'evaluating',
+                    metadata: {
+                        ...(contrib.metadata as any || {}),
+                        payment_status: 'completed',
+                        payment_completed_at: new Date().toISOString(),
+                        stripe_payment_id: session.payment_intent as string,
+                        stripe_session_id: session.id
+                    } as any,
+                    updated_at: new Date()
+                })
+                .where(eq(contributionsTable.submission_hash, submissionHash))
+            
+            debug('StripeWebhook', 'PoC submission payment completed, triggering evaluation', {
+                submissionHash,
+                sessionId: session.id
+            })
+            
+            // Trigger evaluation by calling the evaluation endpoint
+            // Use internal URL to avoid external network calls
+            const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_WEBSITE_URL || 'http://localhost:3000'
+            const evaluateUrl = `${baseUrl}/api/evaluate/${submissionHash}`
+            
+            try {
+                // Trigger evaluation asynchronously (don't await to avoid blocking webhook)
+                fetch(evaluateUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }).catch((fetchError) => {
+                    debugError('StripeWebhook', 'Failed to trigger evaluation endpoint', fetchError)
+                })
+            } catch (evalTriggerError) {
+                debugError('StripeWebhook', 'Error triggering evaluation', evalTriggerError)
+                // Don't fail the webhook - evaluation can be triggered manually if needed
+            }
+            
+        } catch (error) {
+            debugError('StripeWebhook', 'Error processing PoC submission payment', error)
+            // Don't throw - webhook should return success to Stripe
+        }
+        
+        return
+    }
+    
     // Check if this is a PoC registration payment
     if (session.metadata?.type === 'poc_registration') {
         const submissionHash = session.metadata.submission_hash

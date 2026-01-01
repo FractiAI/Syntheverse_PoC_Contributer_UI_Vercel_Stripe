@@ -11,29 +11,11 @@ import { createClient } from '@/utils/supabase/server'
 import { db } from '@/utils/db/db'
 import { contributionsTable } from '@/utils/db/schema'
 import { eq } from 'drizzle-orm'
-import Stripe from 'stripe'
 import { debug, debugError } from '@/utils/debug'
 
 // Force dynamic rendering - this route must be server-side only
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
-
-const DEFAULT_ANCHORING_FEE_CENTS = 50000
-
-function getAnchoringFeeCents(): number {
-    const raw = (process.env.POC_ANCHORING_FEE_CENTS || '').trim()
-    if (!raw) return DEFAULT_ANCHORING_FEE_CENTS
-    const n = Number(raw)
-    if (!Number.isFinite(n) || n <= 0) return DEFAULT_ANCHORING_FEE_CENTS
-    return Math.round(n)
-}
-
-function getAnchoringChainLabel(): string {
-    // We are currently operating against Hardhat/devnet unless instructed to migrate.
-    // Keep this operator-configurable so we can flip to Base for the Jan 1, 2026 beta launch.
-    const raw = (process.env.POC_ANCHORING_CHAIN_LABEL || '').trim()
-    return raw || 'Hardhat (devnet)'
-}
 
 export async function POST(
     request: NextRequest,
@@ -150,185 +132,91 @@ export async function POST(
                 { status: 400 }
             )
         }
-        
-        // Get Stripe instance
-        if (!process.env.STRIPE_SECRET_KEY) {
-            debugError('RegisterPoC', 'STRIPE_SECRET_KEY environment variable is missing', {})
-            return NextResponse.json(
-                { 
-                    error: 'Stripe not configured',
-                    message: 'STRIPE_SECRET_KEY environment variable is not set'
-                },
-                { status: 500 }
-            )
-        }
-        
-        // Sanitize the Stripe key - remove whitespace and invalid characters
-        const sanitizedKey = process.env.STRIPE_SECRET_KEY.trim().replace(/\s+/g, '');
-        
-        // Validate key format (supports standard sk_ keys and restricted ssk_ keys)
-        if (!sanitizedKey.match(/^(sk|ssk|rk)_(test|live)_/)) {
-            debugError('RegisterPoC', 'Invalid Stripe key format', {
-                keyPrefix: sanitizedKey.substring(0, 10) + '...',
-                keyLength: sanitizedKey.length
-            })
-            return NextResponse.json(
-                { 
-                    error: 'Invalid Stripe key format',
-                    message: 'Stripe key must start with sk_test_, sk_live_, ssk_test_, ssk_live_, rk_test_, or rk_live_'
-                },
-                { status: 500 }
-            )
-        }
-        
-        const stripe = new Stripe(sanitizedKey, {
-            apiVersion: '2024-06-20'
-        })
-        
-        // Create Stripe checkout session
-        // Get base URL - must be a valid absolute URL for Stripe
-        // Trim whitespace to handle trailing newlines from Vercel env vars
-        let baseUrl: string | undefined = (process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_WEBSITE_URL)?.trim()
-        
-        // If no env var, try to get from request headers (for production)
-        if (!baseUrl) {
-            const host = request.headers.get('host')
-            const protocol = request.headers.get('x-forwarded-proto') || 'https'
-            if (host) {
-                baseUrl = `${protocol}://${host}`
-            }
-        }
-        
-        // Fallback to localhost only in development
-        if (!baseUrl) {
-            baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : undefined
-        }
-        
-        // Validate baseUrl is a valid absolute URL
-        if (!baseUrl || !baseUrl.match(/^https?:\/\//)) {
-            debugError('RegisterPoC', 'Invalid baseUrl for Stripe checkout', {
-                baseUrl,
-                NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
-                NEXT_PUBLIC_WEBSITE_URL: process.env.NEXT_PUBLIC_WEBSITE_URL,
-                NODE_ENV: process.env.NODE_ENV
-            })
-            return NextResponse.json(
-                { 
-                    error: 'Configuration error',
-                    message: 'Site URL not configured. NEXT_PUBLIC_SITE_URL or NEXT_PUBLIC_WEBSITE_URL must be set to a valid absolute URL (e.g., https://your-app.vercel.app)'
-                },
-                { status: 500 }
-            )
-        }
-        
-        // Sanitize title for Stripe (max 500 chars, no special characters that might cause issues)
-        const sanitizedTitle = (contrib.title || 'PoC Registration').substring(0, 500).replace(/[^\w\s-]/g, '')
-        const productName = `PoC Registration: ${sanitizedTitle}`
-        const productDescription = `Optional on-chain anchoring service for PoC ${submissionHash.substring(0, 8)}… (${getAnchoringChainLabel()})`
-        
-        debug('RegisterPoC', 'Creating Stripe checkout session', {
-            baseUrl,
-            productName: productName.substring(0, 100),
+
+        // Registration is now free - directly register the PoC on blockchain
+        debug('RegisterPoC', 'Initiating free PoC registration (no payment required)', {
             submissionHash
         })
+
+        const metadata = contrib.metadata as any || {}
+        const metals = (contrib.metals as string[]) || []
         
-        let session
+        // Register PoC on Hard Hat L1 blockchain
+        let blockchainTxHash: string | null = null
         try {
-            session = await stripe.checkout.sessions.create({
-                payment_method_types: ['card'],
-                line_items: [
-                    {
-                        price_data: {
-                            currency: 'usd',
-                            product_data: {
-                                name: productName,
-                                description: productDescription,
-                            },
-                            unit_amount: getAnchoringFeeCents(),
-                        },
-                        quantity: 1,
+            const { registerPoCOnBlockchain } = await import('@/utils/blockchain/register-poc')
+            const blockchainResult = await registerPoCOnBlockchain(
+                submissionHash,
+                contrib.contributor,
+                {
+                    novelty: metadata.novelty,
+                    density: metadata.density,
+                    coherence: metadata.coherence,
+                    alignment: metadata.alignment,
+                    pod_score: metadata.pod_score
+                },
+                metals,
+                contrib.text_content || null
+            )
+            
+            if (blockchainResult.success && blockchainResult.transaction_hash) {
+                blockchainTxHash = blockchainResult.transaction_hash
+                debug('RegisterPoC', 'PoC registered on Hard Hat L1 blockchain', {
+                    submissionHash,
+                    txHash: blockchainTxHash,
+                    blockNumber: blockchainResult.block_number
+                })
+            } else {
+                debugError('RegisterPoC', 'Blockchain registration failed', {
+                    submissionHash,
+                    error: blockchainResult.error
+                })
+                return NextResponse.json(
+                    { 
+                        error: 'Blockchain registration failed',
+                        message: blockchainResult.error || 'Failed to register PoC on blockchain'
                     },
-                ],
-                mode: 'payment',
-                success_url: `${baseUrl}/dashboard?registration=success&hash=${submissionHash}`,
-                cancel_url: `${baseUrl}/dashboard?registration=cancelled&hash=${submissionHash}`,
-                client_reference_id: submissionHash,
-                metadata: {
-                    submission_hash: submissionHash,
-                    contributor: contrib.contributor,
-                    title: sanitizedTitle,
-                    type: 'poc_registration',
-                },
-            })
-        } catch (stripeError: any) {
-            debugError('RegisterPoC', 'Stripe API error', {
-                error: stripeError,
-                type: stripeError?.type,
-                code: stripeError?.code,
-                message: stripeError?.message,
-                param: stripeError?.param,
-                statusCode: stripeError?.statusCode
-            })
-            
-            // Return detailed error for debugging
-            const errorResponse: any = {
-                error: 'Stripe checkout error',
-                message: stripeError?.message || 'Failed to create checkout session',
-                details: stripeError?.type || 'unknown_error'
+                    { status: 500 }
+                )
             }
-            
-            // Include additional details if available
-            if (stripeError?.code) {
-                errorResponse.code = stripeError.code
-            }
-            if (stripeError?.param) {
-                errorResponse.param = stripeError.param
-            }
-            
-            return NextResponse.json(errorResponse, { status: 500 })
-        }
-        
-        debug('RegisterPoC', 'Stripe checkout session created', { 
-            sessionId: session.id,
-            submissionHash,
-            checkoutUrl: session.url ? 'present' : 'missing'
-        })
-        
-        // Validate session URL is present
-        if (!session.url) {
-            debugError('RegisterPoC', 'Stripe session created but URL is missing', {
-                sessionId: session.id,
-                session: JSON.stringify(session).substring(0, 200)
-            })
+        } catch (blockchainError) {
+            debugError('RegisterPoC', 'Blockchain registration error', blockchainError)
             return NextResponse.json(
                 { 
-                    error: 'Stripe checkout error',
-                    message: 'Failed to get checkout URL from Stripe session'
+                    error: 'Blockchain registration error',
+                    message: blockchainError instanceof Error ? blockchainError.message : 'Unknown error during blockchain registration'
                 },
                 { status: 500 }
             )
         }
         
-        // Ensure session.url is a valid URL string
-        const checkoutUrl = session.url
-        if (!checkoutUrl || typeof checkoutUrl !== 'string' || !checkoutUrl.startsWith('http')) {
-            debugError('RegisterPoC', 'Invalid checkout URL format from Stripe', {
-                sessionId: session.id,
-                urlType: typeof checkoutUrl,
-                urlValue: checkoutUrl
+        // Update contribution with registration info
+        try {
+            await db
+                .update(contributionsTable)
+                .set({
+                    registered: true,
+                    status: 'registered',
+                    registration_date: new Date(),
+                    registration_tx_hash: blockchainTxHash,
+                    updated_at: new Date()
+                })
+                .where(eq(contributionsTable.submission_hash, submissionHash))
+            
+            debug('RegisterPoC', 'PoC registration completed successfully', {
+                submissionHash,
+                txHash: blockchainTxHash
             })
-            return NextResponse.json(
-                { 
-                    error: 'Stripe checkout error',
-                    message: 'Invalid checkout URL format received from Stripe'
-                },
-                { status: 500 }
-            )
+        } catch (updateError) {
+            debugError('RegisterPoC', 'Failed to update contribution after registration', updateError)
+            // Still return success since blockchain registration succeeded
         }
         
         return NextResponse.json({
-            checkout_url: checkoutUrl,
-            session_id: session.id
+            success: true,
+            registered: true,
+            registration_tx_hash: blockchainTxHash,
+            message: 'PoC registered successfully on blockchain'
         })
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error'

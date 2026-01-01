@@ -9,6 +9,7 @@ import { vectorizeSubmission } from '@/utils/vectors'
 import { sendApprovalRequestEmail } from '@/utils/email/send-approval-request'
 import { isQualifiedForOpenEpoch, getOpenEpochInfo } from '@/utils/epochs/qualification'
 import * as crypto from 'crypto'
+import Stripe from 'stripe'
 
 function toPublicEvaluationError(message: string): string {
     const m = String(message || '')
@@ -100,482 +101,200 @@ export async function POST(request: NextRequest) {
                 { status: 400 }
             )
         }
-        
-        // Check database connection
-        if (!process.env.DATABASE_URL) {
-            debugError('SubmitContribution', 'DATABASE_URL not configured', new Error('DATABASE_URL environment variable is missing'))
-            return NextResponse.json(
-                { 
-                    error: 'Database not configured',
-                    message: 'DATABASE_URL environment variable is missing',
-                    details: 'Please configure DATABASE_URL in Vercel environment variables'
-                },
-                { status: 500 }
-            )
-        }
-        
-        // Validate DATABASE_URL format
-        try {
-            new URL(process.env.DATABASE_URL)
-        } catch (urlError) {
-            debugError('SubmitContribution', 'Invalid DATABASE_URL format', urlError)
-            return NextResponse.json(
-                { 
-                    error: 'Invalid database configuration',
-                    message: 'DATABASE_URL format is invalid'
-                },
-                { status: 500 }
-            )
-        }
-        
-        // Generate submission hash
-        let submission_hash: string
-        try {
-            submission_hash = crypto.randomBytes(16).toString('hex')
-        } catch (cryptoError) {
-            debugError('SubmitContribution', 'Failed to generate submission hash', cryptoError)
-            return NextResponse.json(
-                { 
-                    error: 'Failed to generate submission hash',
-                    message: cryptoError instanceof Error ? cryptoError.message : String(cryptoError)
-                },
-                { status: 500 }
-            )
-        }
-        
-        // Text-only submissions: no file upload, no storage
-        const pdf_path: string | null = null
-        const textContentForEvaluation = text_content.trim()
-        const textContentForStorage = text_content.trim()
-        
-        debug('SubmitContribution', 'Text content prepared for evaluation', {
-            hasTextContent: !!text_content,
-            textContentLength: text_content?.length || 0,
-            titleLength: title.trim().length,
-            willUseForEvaluation: textContentForEvaluation.length,
-            source: 'user_pasted_text'
-        })
-        
-        // Calculate content hash from the full content
-        const contentToHash = textContentForEvaluation
-        const content_hash = crypto
-            .createHash('sha256')
-            .update(contentToHash.toLowerCase().trim())
-            .digest('hex')
-        
-        const startTime = Date.now()
-        
-        // Insert contribution into database
-        try {
-            debug('SubmitContribution', 'Inserting contribution into database', {
-                submission_hash,
-                title: title.trim(),
-                contributor: contributor || user.email,
-                content_length: textContentForStorage?.length || 0,
-                category: category || 'scientific'
-            })
-            
-            // Prepare values for insert - handle JSONB fields carefully
-            // Status starts as 'evaluating' - will be updated to 'qualified' or 'unqualified' after evaluation
-            const insertValues: any = {
-                submission_hash,
-                title: title.trim(),
-                contributor: contributor || user.email,
-                content_hash,
-                text_content: textContentForStorage,
-                pdf_path: pdf_path || null,
-                status: 'evaluating', // No drafts - submissions are immediately evaluated
-                category: category || 'scientific',
-                metals: [] as string[], // Empty array for metals
-                metadata: {} as Record<string, any> // Empty object for metadata
+
+        // Get base URL for Stripe redirects
+        let baseUrl: string | undefined = (process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_WEBSITE_URL)?.trim()
+
+        // If no env var, try to get from request headers (for production)
+        if (!baseUrl) {
+            const host = request.headers.get('host')
+            const protocol = request.headers.get('x-forwarded-proto') || 'https'
+            if (host) {
+                baseUrl = `${protocol}://${host}`
             }
-            
-            await db.insert(contributionsTable).values(insertValues)
-            
-            debug('SubmitContribution', 'Contribution inserted successfully', { submission_hash })
-        } catch (dbError) {
-            debugError('SubmitContribution', 'Database insert error', dbError)
-            const dbErrorMessage = dbError instanceof Error ? dbError.message : String(dbError)
-            const dbErrorStack = dbError instanceof Error ? dbError.stack : undefined
-            const dbErrorCode = (dbError as any)?.code || (dbError as any)?.constraint || undefined
-            
-            console.error('Database insert error details:', {
-                error: dbError,
-                message: dbErrorMessage,
-                stack: dbErrorStack,
-                code: dbErrorCode,
-                submission_hash,
-                title: title.trim(),
-                contributor: contributor || user.email
+        }
+
+        // Fallback to localhost only in development
+        if (!baseUrl) {
+            baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : undefined
+        }
+
+        // Validate baseUrl
+        if (!baseUrl || !baseUrl.match(/^https?:\/\//)) {
+            debugError('SubmitContribution', 'Invalid baseUrl for Stripe checkout', {
+                baseUrl,
+                NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+                NEXT_PUBLIC_WEBSITE_URL: process.env.NEXT_PUBLIC_WEBSITE_URL,
+                NODE_ENV: process.env.NODE_ENV
             })
-            
-            // Return more detailed error for debugging - show actual error in production too
             return NextResponse.json(
-                { 
-                    error: 'Database error',
-                    message: `Failed to save contribution: ${dbErrorMessage}`,
-                    details: dbErrorMessage, // Show actual error message
-                    code: dbErrorCode,
-                    // Include helpful info for debugging
-                    hint: dbErrorMessage.includes('does not exist') 
-                        ? 'Database table may not exist. Please run migrations.'
-                        : dbErrorMessage.includes('relation') 
-                        ? 'Database table may not exist. Please check migrations.'
-                        : dbErrorMessage.includes('column') 
-                        ? 'Database schema mismatch. Please check table structure.'
-                        : 'Check database connection and table structure.',
-                    ...(process.env.NODE_ENV === 'development' || process.env.VERCEL_ENV === 'preview' ? {
-                        stack: dbErrorStack,
-                        submission_hash,
-                        title: title.trim().substring(0, 50)
-                    } : {})
+                {
+                    error: 'Configuration error',
+                    message: 'Site URL not configured for payment processing'
                 },
                 { status: 500 }
             )
         }
-        
-        // Log submission event
+
+        // Initialize Stripe
+        if (!process.env.STRIPE_SECRET_KEY) {
+            debugError('SubmitContribution', 'STRIPE_SECRET_KEY not configured', new Error('Missing STRIPE_SECRET_KEY'))
+            return NextResponse.json(
+                {
+                    error: 'Payment service not configured',
+                    message: 'STRIPE_SECRET_KEY environment variable is missing'
+                },
+                { status: 500 }
+            )
+        }
+
+        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+            apiVersion: '2024-06-20',
+        })
+
+        // Generate submission hash for payment
+        const submissionHash = crypto.randomBytes(32).toString('hex')
+        const contentHash = crypto.createHash('sha256').update(text_content.trim()).digest('hex')
+
+        debug('SubmitContribution', 'Creating Stripe checkout session for PoC submission fee', { submissionHash })
+
+        // Save submission data temporarily with payment_pending status
         try {
-            const logId = crypto.randomUUID()
-            await db.insert(pocLogTable).values({
-                id: logId,
-                submission_hash,
-                contributor: contributor || user.email,
-                event_type: 'submission',
-                event_status: 'success',
+            // Save the contribution with payment_pending status
+            await db.insert(contributionsTable).values({
+                submission_hash: submissionHash,
                 title: title.trim(),
-                category: category || 'scientific',
+                contributor: contributor,
+                content_hash: contentHash,
+                category: category,
+                metals: [], // Will be determined during evaluation
+                status: 'payment_pending', // Custom status for pending payment
+                text_content: text_content.trim(),
+                metadata: {
+                    payment_status: 'pending',
+                    user_email: user.email,
+                    submission_timestamp: new Date().toISOString()
+                },
+                created_at: new Date(),
+                updated_at: new Date(),
+            })
+
+            // Log the submission attempt
+            await db.insert(pocLogTable).values({
+                id: crypto.randomUUID(),
+                submission_hash: submissionHash,
+                contributor: contributor,
+                event_type: 'submission',
+                event_status: 'payment_pending',
+                title: title.trim(),
+                category: category,
                 request_data: {
                     title: title.trim(),
-                    contributor: contributor || user.email,
-                    category: category || 'scientific',
-                    has_file: false,
-                    content_length: textContentForStorage?.length || 0
+                    category: category,
+                    content_hash: contentHash,
+                    text_content_length: text_content.length,
+                    user_email: user.email
                 },
-                response_data: {
-                    success: true,
-                    submission_hash
-                },
-                processing_time_ms: Date.now() - startTime,
-                created_at: new Date()
+                created_at: new Date(),
             })
-        } catch (logError) {
-            // Log error but don't fail the submission
-            debugError('SubmitContribution', 'Failed to log submission event', logError)
+
+        } catch (dbError) {
+            debugError('SubmitContribution', 'Failed to save submission data', dbError)
+            return NextResponse.json(
+                {
+                    error: 'Database error',
+                    message: 'Failed to prepare submission for payment'
+                },
+                { status: 500 }
+            )
         }
-        
-        debug('SubmitContribution', 'Contribution submitted successfully, starting evaluation', {
-            submission_hash,
-            title,
-            contributor
-        })
-        
-        // Automatically trigger Grok API evaluation
-        let evaluation: any = null
-        let evaluationError: Error | null = null
-        let evaluationNotice: string | null = null
-        let evaluationTruncation: { originalChars: number; truncatedChars: number } | null = null
-        
-        // Check if Grok API key is configured
-        if (!process.env.NEXT_PUBLIC_GROK_API_KEY) {
-            debug('SubmitContribution', 'GROK_API_KEY not configured, skipping evaluation')
-            evaluationError = new Error('GROK_API_KEY not configured. Evaluation skipped.')
-        } else {
-            try {
-                // Evaluate, retrying with truncated input if provider token budget is exceeded.
-                const charBudgets = [24000, 16000, 10000, 7000]
-                let lastEvalError: Error | null = null
-                let textUsedForEvaluation = textContentForEvaluation
 
-                for (const maxChars of charBudgets) {
-                    const t = truncateForEvaluation(textContentForEvaluation, maxChars)
-                    textUsedForEvaluation = t.text
+        // Create checkout session for $500 submission fee
+        const sanitizedTitle = title.substring(0, 100).replace(/[^\w\s-]/g, '')
+        const productName = `PoC Submission: ${sanitizedTitle}`
+        const productDescription = `AI evaluation and scoring service for your Proof-of-Contribution submission`
 
-                    debug('SubmitContribution', 'Starting Grok API evaluation', {
-                        textLength: textUsedForEvaluation.length,
-                        originalLength: t.originalChars,
-                        truncated: t.truncated,
-                        maxChars,
-                        title: title.trim(),
-                        source: 'user_pasted_text',
-                    })
-
-                    try {
-                        evaluation = await evaluateWithGrok(textUsedForEvaluation, title.trim(), category || undefined, submission_hash)
-                        if (t.truncated) {
-                            evaluationTruncation = { originalChars: t.originalChars, truncatedChars: t.truncatedChars }
-                            evaluationNotice = `Evaluated using truncated content (${t.truncatedChars.toLocaleString()} of ${t.originalChars.toLocaleString()} chars).`
-                        }
-                        break
-                    } catch (err) {
-                        const e = err instanceof Error ? err : new Error(String(err))
-                        lastEvalError = e
-                        if (isProviderTokenBudgetError(e)) {
-                            // retry with smaller input budget
-                            continue
-                        }
-                        throw e
-                    }
-                }
-
-                if (!evaluation) {
-                    throw lastEvalError || new Error('Evaluation failed to complete.')
-                }
-                
-                // Use qualified status from evaluation
-                // evaluation.qualified is already calculated with discounted pod_score in evaluateWithGrok
-                // Always use it directly - no fallback needed since evaluateWithGrok always returns qualified
-                const qualified = evaluation.qualified
-                
-                // Get the open epoch that was used to qualify (capture the epoch at qualification time)
-                let openEpochUsed: string | null = null
-                if (qualified) {
-                    try {
-                        const epochInfo = await getOpenEpochInfo()
-                        openEpochUsed = epochInfo.current_epoch
-                        debug('SubmitContribution', 'Captured open epoch for qualification', {
-                            submission_hash,
-                            open_epoch: openEpochUsed
-                        })
-                    } catch (epochError) {
-                        debugError('SubmitContribution', 'Error getting open epoch info', epochError)
-                        // Fallback to evaluation.qualified_epoch if available
-                        openEpochUsed = evaluation.qualified_epoch || null
-                    }
-                }
-            
-                // Generate vector embedding and 3D coordinates using evaluation scores
-                let vectorizationResult: { embedding: number[], vector: { x: number, y: number, z: number }, embeddingModel: string } | null = null
-                try {
-                    // Vectorize using the same text used for evaluation (may be truncated to fit provider limits).
-                    const textContent = evaluationTruncation ? truncateForEvaluation(textContentForEvaluation, evaluationTruncation.truncatedChars).text : textContentForEvaluation
-                    vectorizationResult = await vectorizeSubmission(textContent, {
-                        novelty: evaluation.novelty,
-                        density: evaluation.density,
-                        coherence: evaluation.coherence,
-                        alignment: evaluation.alignment,
-                        pod_score: evaluation.pod_score,
-                    })
-                    debug('SubmitContribution', 'Vectorization complete', {
-                        embeddingDimensions: vectorizationResult.embedding.length,
-                        vector: vectorizationResult.vector,
-                        model: vectorizationResult.embeddingModel,
-                    })
-                } catch (vectorError) {
-                    debugError('SubmitContribution', 'Failed to generate vectorization', vectorError)
-                    // Continue without vectorization - submission still succeeds
-                }
-                
-                // Update contribution with evaluation results and vector data
-                try {
-                    await db
-                        .update(contributionsTable)
-                        .set({
-                            status: qualified ? 'qualified' : 'unqualified',
-                            metals: evaluation.metals || [],
-                            metadata: {
-                                coherence: evaluation.coherence,
-                                density: evaluation.density,
-                                redundancy: evaluation.redundancy,
-                                pod_score: evaluation.pod_score,
-                                novelty: evaluation.novelty,
-                                alignment: evaluation.alignment,
-                                classification: evaluation.classification || [],
-                                redundancy_analysis: evaluation.redundancy_analysis,
-                                metal_justification: evaluation.metal_justification,
-                                founder_certificate: evaluation.founder_certificate,
-                                homebase_intro: evaluation.homebase_intro,
-                                tokenomics_recommendation: evaluation.tokenomics_recommendation,
-                                qualified_founder: qualified,
-                                qualified_epoch: openEpochUsed || evaluation.qualified_epoch || null, // Store the open epoch used to qualify
-                                allocation_status: 'pending_admin_approval', // Token allocation requires admin approval
-                                evaluation_truncated: evaluationTruncation ? true : false,
-                                evaluation_truncated_chars: evaluationTruncation?.truncatedChars ?? null,
-                                evaluation_original_chars: evaluationTruncation?.originalChars ?? null,
-                                // Store detailed Grok evaluation details for detailed report
-                                grok_evaluation_details: {
-                                    base_novelty: evaluation.base_novelty,
-                                    base_density: evaluation.base_density,
-                                    redundancy_penalty_percent: evaluation.redundancy_penalty_percent,
-                                    density_penalty_percent: evaluation.density_penalty_percent,
-                                    full_evaluation: evaluation, // Store full evaluation object
-                                    raw_grok_response: (evaluation as any).raw_grok_response || null // Store raw Grok API response text/markdown
-                                }
+        let session
+        try {
+            session = await stripe.checkout.sessions.create({
+                payment_method_types: ['card'],
+                line_items: [
+                    {
+                        price_data: {
+                            currency: 'usd',
+                            product_data: {
+                                name: productName,
+                                description: productDescription,
                             },
-                            // Store vector embedding and 3D coordinates if available
-                            embedding: vectorizationResult ? vectorizationResult.embedding : null,
-                            vector_x: vectorizationResult ? vectorizationResult.vector.x.toString() : null,
-                            vector_y: vectorizationResult ? vectorizationResult.vector.y.toString() : null,
-                            vector_z: vectorizationResult ? vectorizationResult.vector.z.toString() : null,
-                            embedding_model: vectorizationResult ? vectorizationResult.embeddingModel : null,
-                            vector_generated_at: vectorizationResult ? new Date() : null,
-                            updated_at: new Date()
-                        })
-                        .where(eq(contributionsTable.submission_hash, submission_hash))
-                } catch (updateError) {
-                    debugError('SubmitContribution', 'Failed to update contribution with evaluation results', updateError)
-                    // Don't fail the submission if update fails
-                }
-            
-                // Extract archive data (abstract, formulas, constants) for permanent storage in log
-                const { extractArchiveData } = await import('@/utils/archive/extract')
-                const archiveData = extractArchiveData(textContentForStorage || '', title.trim())
-                
-                // Log evaluation completion with archive data in metadata
-                try {
-                    const evalLogId = crypto.randomUUID()
-                    await db.insert(pocLogTable).values({
-                        id: evalLogId,
-                        submission_hash,
-                        contributor: contributor || user.email,
-                        event_type: 'evaluation_complete',
-                        event_status: 'success',
-                        title: title.trim(),
-                        category: category || 'scientific',
-                        evaluation_result: {
-                            coherence: evaluation.coherence,
-                            density: evaluation.density,
-                            redundancy: evaluation.redundancy,
-                            pod_score: evaluation.pod_score,
-                            novelty: evaluation.novelty,
-                            alignment: evaluation.alignment,
-                            metals: evaluation.metals || [],
-                            qualified,
-                            qualified_founder: qualified,
-                            classification: evaluation.classification || [],
-                            redundancy_analysis: evaluation.redundancy_analysis,
-                            metal_justification: evaluation.metal_justification
+                            unit_amount: 50000, // $500.00
                         },
-                        grok_api_response: {
-                            full_evaluation: evaluation, // Store full evaluation object for debugging
-                            scores_extracted: {
-                                coherence: evaluation.coherence,
-                                density: evaluation.density,
-                                novelty: evaluation.novelty,
-                                alignment: evaluation.alignment,
-                                pod_score: evaluation.pod_score
-                            }
-                        },
-                        response_data: {
-                            success: true,
-                            qualified,
-                            evaluation
-                        },
-                        metadata: {
-                            archive_data: {
-                                abstract: archiveData.abstract,
-                                formulas: archiveData.formulas,
-                                constants: archiveData.constants
-                            }
-                        },
-                        processing_time_ms: Date.now() - startTime,
-                        created_at: new Date()
-                    })
-                } catch (logError) {
-                    debugError('SubmitContribution', 'Failed to log evaluation', logError)
-                    // Don't fail submission if logging fails
-                }
-                
-                debug('SubmitContribution', 'Evaluation completed successfully', {
-                    submission_hash,
-                    qualified,
-                    pod_score: evaluation.pod_score
-                })
-            } catch (error) {
-                evaluationError = error instanceof Error ? error : new Error(String(error))
-                debugError('SubmitContribution', 'Evaluation failed', evaluationError)
-                // IMPORTANT: Do not mark as unqualified on evaluation failures.
-                // Many failures are transient (provider token budget, timeouts, etc.). Keep as 'evaluating'
-                // so the submission can be re-evaluated later.
-                try {
-                    await db
-                        .update(contributionsTable)
-                        .set({
-                            status: 'evaluating',
-                            metadata: {
-                                evaluation_error: evaluationError.message,
-                                evaluation_error_at: new Date().toISOString(),
-                            } as any,
-                            updated_at: new Date()
-                        })
-                        .where(eq(contributionsTable.submission_hash, submission_hash))
-                } catch (updateError) {
-                    debugError('SubmitContribution', 'Failed to update status after evaluation error', updateError)
-                }
-                
-                // Log evaluation error
-                try {
-                    const errorLogId = crypto.randomUUID()
-                    await db.insert(pocLogTable).values({
-                        id: errorLogId,
-                        submission_hash,
-                        contributor: contributor || user.email,
-                        event_type: 'evaluation_error',
-                        event_status: 'error',
-                        title: title.trim(),
-                        error_message: evaluationError.message,
-                        response_data: {
-                            success: false,
-                            error: evaluationError.message
-                        },
-                        created_at: new Date()
-                    })
-                } catch (logError) {
-                    debugError('SubmitContribution', 'Failed to log evaluation error', logError)
-                }
+                        quantity: 1,
+                    },
+                ],
+                mode: 'payment',
+                success_url: `${baseUrl}/submit?session_id={CHECKOUT_SESSION_ID}&status=success`,
+                cancel_url: `${baseUrl}/submit?canceled=true`,
+                metadata: {
+                    submission_hash: submissionHash,
+                    user_email: user.email,
+                    title: sanitizedTitle,
+                    category: category,
+                    submission_type: 'poc_submission',
+                },
+            })
+        } catch (stripeError: any) {
+            debugError('SubmitContribution', 'Stripe checkout creation failed', {
+                error: stripeError.message,
+                type: stripeError.type
+            })
+
+            // Clean up the pending submission on error
+            try {
+                await db.delete(contributionsTable).where(eq(contributionsTable.submission_hash, submissionHash))
+            } catch (cleanupError) {
+                debugError('SubmitContribution', 'Failed to cleanup pending submission', cleanupError)
             }
+
+            return NextResponse.json(
+                {
+                    error: 'Payment session creation failed',
+                    message: stripeError.message || 'Failed to create payment session'
+                },
+                { status: 500 }
+            )
         }
-        
-        // Always return success for submission, even if evaluation failed
-        debug('SubmitContribution', 'Returning success response', {
-            submission_hash,
-            hasEvaluation: !!evaluation,
-            hasError: !!evaluationError
+
+        if (!session.url) {
+            debugError('SubmitContribution', 'Stripe session missing URL', { sessionId: session.id })
+
+            // Clean up the pending submission on error
+            try {
+                await db.delete(contributionsTable).where(eq(contributionsTable.submission_hash, submissionHash))
+            } catch (cleanupError) {
+                debugError('SubmitContribution', 'Failed to cleanup pending submission', cleanupError)
+            }
+
+            return NextResponse.json(
+                {
+                    error: 'Payment session error',
+                    message: 'Failed to get checkout URL'
+                },
+                { status: 500 }
+            )
+        }
+
+        debug('SubmitContribution', 'Stripe checkout session created', {
+            sessionId: session.id,
+            submissionHash,
+            checkoutUrl: session.url.substring(0, 50) + '...'
         })
-        
+
+        // Return checkout URL to frontend
         return NextResponse.json({
-            success: true,
-            submission_hash,
-            evaluation: evaluation ? {
-                coherence: evaluation.coherence,
-                density: evaluation.density,
-                redundancy: evaluation.redundancy,
-                novelty: evaluation.novelty,
-                alignment: evaluation.alignment,
-                metals: evaluation.metals || [],
-                pod_score: evaluation.pod_score,
-                qualified: evaluation.qualified,
-                qualified_founder: evaluation.qualified,
-                qualified_epoch: evaluation.qualified_epoch || null,
-                classification: evaluation.classification || [],
-                redundancy_analysis: evaluation.redundancy_analysis,
-                metal_justification: evaluation.metal_justification,
-                founder_certificate: evaluation.founder_certificate,
-                homebase_intro: evaluation.homebase_intro,
-                tokenomics_recommendation: evaluation.tokenomics_recommendation,
-                allocation_status: 'pending_admin_approval', // Token allocation requires admin approval
-                // Include base scores for debugging and fallback
-                base_density: evaluation.base_density,
-                base_novelty: evaluation.base_novelty,
-                // Include detailed Grok evaluation details for detailed review
-                grok_evaluation_details: {
-                    base_novelty: evaluation.base_novelty,
-                    base_density: evaluation.base_density,
-                    redundancy_penalty_percent: evaluation.redundancy_penalty_percent,
-                    density_penalty_percent: evaluation.density_penalty_percent,
-                    full_evaluation: evaluation, // Include full evaluation object from Grok API
-                    raw_grok_response: (evaluation as any).raw_grok_response || null // Include raw Grok API response text/markdown
-                }
-            } : null,
-            evaluation_error: evaluationError ? toPublicEvaluationError(evaluationError.message) : null,
-            evaluation_notice: evaluationNotice,
-            status: evaluation ? (evaluation.qualified ? 'qualified' : 'unqualified') : 'evaluating',
-            allocation_status: evaluation ? 'pending_admin_approval' : undefined,
-            message: evaluation 
-                ? (evaluationNotice ? `Contribution submitted and evaluated successfully. ${evaluationNotice}` : 'Contribution submitted and evaluated successfully')
-                : evaluationError 
-                    ? 'Contribution submitted successfully. Evaluation is queued and may complete shortly.'
-                    : 'Contribution submitted successfully (evaluation pending)'
+            checkout_url: session.url,
+            session_id: session.id,
+            submission_hash: submissionHash,
+            message: 'Redirecting to payment for PoC evaluation service'
         })
     } catch (error) {
         debugError('SubmitContribution', 'Error submitting contribution', error)
