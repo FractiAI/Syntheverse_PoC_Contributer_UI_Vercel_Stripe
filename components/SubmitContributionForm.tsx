@@ -341,10 +341,10 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
             }
             // Registration is now free - directly registered on blockchain
             if (data.success && data.registered) {
-                // Registration successful - refresh page or show success message
+                // Registration successful - show success and redirect to dashboard
                 alert(`PoC registered successfully on blockchain!\nTransaction Hash: ${data.registration_tx_hash || 'N/A'}`)
-                // Refresh to show updated status
-                window.location.reload()
+                // Redirect to dashboard
+                window.location.href = '/dashboard'
             } else {
                 throw new Error(data?.message || data?.error || 'Registration failed')
             }
