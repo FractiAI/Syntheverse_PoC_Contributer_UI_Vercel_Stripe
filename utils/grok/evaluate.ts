@@ -1000,12 +1000,6 @@ ${answer}`
         // Apply overlap effect (penalty or bonus) to the composite/total score
         // redundancyOverlapPercent can be negative (penalty) or positive (bonus)
         pod_score = Math.max(0, Math.min(10000, pod_score * (1 + redundancyOverlapPercent / 100)))
-
-        // Reward edge sweet-spot overlap (no reward for seed submissions).
-        // Example: overlap=13% -> multiplier ≈ 1.13 (when inside the sweet spot band).
-        if (!isSeedSubmission && redundancyBonusMultiplier > 1) {
-            pod_score = Math.max(0, Math.min(10000, pod_score * redundancyBonusMultiplier))
-        }
         
         // CRITICAL: For foundational/seed submissions that define Syntheverse itself, 
         // auto-assign maximum scores to ensure consistency
