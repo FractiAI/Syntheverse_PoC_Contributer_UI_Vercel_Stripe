@@ -339,10 +339,15 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
             if (!res.ok) {
                 throw new Error(data?.error || data?.message || `Registration failed (${res.status})`)
             }
-            if (!data?.checkout_url || typeof data.checkout_url !== 'string') {
-                throw new Error('Registration failed: missing checkout URL')
+            // Registration is now free - directly registered on blockchain
+            if (data.success && data.registered) {
+                // Registration successful - refresh page or show success message
+                alert(`PoC registered successfully on blockchain!\nTransaction Hash: ${data.registration_tx_hash || 'N/A'}`)
+                // Refresh to show updated status
+                window.location.reload()
+            } else {
+                throw new Error(data?.message || data?.error || 'Registration failed')
             }
-            window.location.href = data.checkout_url
         } catch (e) {
             const msg = e instanceof Error ? e.message : 'Registration failed'
             setRegisterError(msg)

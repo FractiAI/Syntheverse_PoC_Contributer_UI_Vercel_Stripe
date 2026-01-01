@@ -258,15 +258,15 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
                 throw new Error(errorMessage)
             }
             
-            if (!data.checkout_url || typeof data.checkout_url !== 'string') {
-                throw new Error('Invalid checkout URL received from server')
+            // Registration is now free - directly registered on blockchain
+            if (data.success && data.registered) {
+                // Registration successful - show success and refresh
+                alert(`PoC registered successfully on blockchain!\nTransaction Hash: ${data.registration_tx_hash || 'N/A'}`)
+                // Refresh to show updated status
+                window.location.reload()
+            } else {
+                throw new Error(data?.message || data?.error || 'Registration failed')
             }
-            
-            if (!data.checkout_url.startsWith('http://') && !data.checkout_url.startsWith('https://')) {
-                throw new Error(`Invalid checkout URL format`)
-            }
-            
-            window.location.href = data.checkout_url
         } catch (err) {
             console.error('Registration error:', err)
             const errorMessage = err instanceof Error ? err.message : 'Failed to register PoC'

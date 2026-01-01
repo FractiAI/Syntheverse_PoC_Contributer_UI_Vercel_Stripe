@@ -25,7 +25,7 @@ export default function CockpitHeader() {
                             <div className="mt-3 pt-3 border-t border-[var(--keyline-primary)]">
                                 <div className="cockpit-label text-xs mb-1">AWARENESS KEY</div>
                                 <div className="cockpit-text text-xs font-semibold" style={{ opacity: 0.95 }}>
-                                    AWARENESSVERSE v2.0+ · Nested Spiraling Pong Story · Fractal Holographic Hydrogen Awareness
+                                    AWARENESSVERSE v2.0 · Fractal Holographic Hydrogen Awareness · Outcast Hero Story
                                 </div>
                             </div>
                         </div>

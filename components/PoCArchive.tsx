@@ -294,24 +294,15 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                 throw new Error(`${errorMessage}${errorType}${errorDetails}`)
             }
             
-            // Validate checkout_url is present and valid
-            if (!data.checkout_url) {
-                console.error('Response data:', data)
-                throw new Error(data.message || data.error || 'No checkout URL received from server. Please check server configuration.')
+            // Registration is now free - directly registered on blockchain
+            if (data.success && data.registered) {
+                // Registration successful - show success and refresh
+                alert(`PoC registered successfully on blockchain!\nTransaction Hash: ${data.registration_tx_hash || 'N/A'}`)
+                // Refresh to show updated status
+                window.location.reload()
+            } else {
+                throw new Error(data?.message || data?.error || 'Registration failed')
             }
-            
-            if (typeof data.checkout_url !== 'string') {
-                console.error('Invalid checkout_url type:', typeof data.checkout_url, data)
-                throw new Error('Invalid checkout URL format received from server')
-            }
-            
-            if (!data.checkout_url.startsWith('http://') && !data.checkout_url.startsWith('https://')) {
-                console.error('Invalid checkout_url format:', data.checkout_url)
-                throw new Error(`Invalid checkout URL format: ${data.checkout_url.substring(0, 50)}...`)
-            }
-            
-            // Redirect to Stripe checkout
-            window.location.href = data.checkout_url
         } catch (err) {
             console.error('Registration error:', err)
             const errorMessage = err instanceof Error ? err.message : 'Failed to register PoC'
