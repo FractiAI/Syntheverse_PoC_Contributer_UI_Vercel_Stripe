@@ -326,7 +326,7 @@ export function ReactorCore() {
                         </div>
                     </div>
                     <div className="cockpit-text text-xs" style={{ opacity: 0.7, fontStyle: 'italic' }}>
-                        Awarenessverse v2.0+: Nested spiraling Pong · The fractal deepens, the hologram resolves
+                        Awarenessverse v2.0+: Nested spiraling Pong story · The fractal deepens, the hologram resolves
                     </div>
                 </div>
             </div>

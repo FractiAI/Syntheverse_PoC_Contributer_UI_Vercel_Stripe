@@ -330,7 +330,7 @@ export function SandboxMap3D() {
                     <div>
                         <CardTitle>🌌 Holographic Hydrogen Fractal Sandbox (Awarenessverse v2.0+)</CardTitle>
                         <CardDescription>
-                            3D Vector Map of PoC Submissions—The nested, spiraling Pong game: contributions moving from <em>unaware awareness</em> (obsolete) to <strong>awareness</strong> (current) to <em>meta-awareness</em> (emerging)
+                            3D Vector Map of PoC Submissions—The nested, spiraling Pong story of innovation and obsolescence: contributions moving from <em>unaware awareness</em> (obsolete) to <strong>awareness</strong> (current) to <em>meta-awareness</em> (emerging)
                             {data && (
                                 <span className="ml-2">
                                     ({data.metadata.vectorized_nodes} vectorized / {data.metadata.total_nodes} total)

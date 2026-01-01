@@ -24,23 +24,21 @@ export default function CockpitHeader() {
                             <div className="cockpit-label mt-0.5">SYNTH 90T ERC-20 MOTHERLODE BLOCKMINE</div>
                             <div className="mt-3 pt-3 border-t border-[var(--keyline-primary)]">
                                 <div className="cockpit-label text-xs mb-1">AWARENESS KEY</div>
-                                <div className="cockpit-text text-xs font-semibold mb-1" style={{ opacity: 0.95 }}>
-                                    AWARENESSVERSE v2.0+ · Nested Spiraling Pong · Fractal Holographic Hydrogen Awareness
-                                </div>
-                                <div className="cockpit-text text-xs" style={{ opacity: 0.75, fontStyle: 'italic' }}>
-                                    From unaware awareness (obsolete) → awareness (current) → meta-awareness (emerging)
+                                <div className="cockpit-text text-xs font-semibold" style={{ opacity: 0.95 }}>
+                                    AWARENESSVERSE v2.0+ · Nested Spiraling Pong Story · Fractal Holographic Hydrogen Awareness
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Epoch Status & Profile */}
+                    {/* Syntheverse Status & Profile */}
                     <div className="flex items-center gap-6">
-                        {/* Current Epoch Status - Will be populated dynamically */}
+                        {/* Syntheverse Deployment Status */}
                         <div className="hidden md:flex items-center gap-2">
+                            <div className="w-2 h-2 bg-[var(--hydrogen-amber)] rounded-full animate-pulse" 
+                                 style={{ boxShadow: '0 0 8px var(--hydrogen-amber)' }}></div>
                             <div className="cockpit-badge">
-                                <span style={{ color: '#ffb84d' }}>◎</span>
-                                <span className="ml-2">FOUNDER</span>
+                                <span>DEPLOYMENT</span>
                             </div>
                         </div>
                         <DashboardHeaderProfileDropdown />

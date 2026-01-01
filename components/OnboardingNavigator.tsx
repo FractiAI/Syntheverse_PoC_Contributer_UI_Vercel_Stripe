@@ -77,10 +77,10 @@ export function OnboardingNavigator() {
                                 <p className="cockpit-text text-sm mb-3">
                                     Syntheverse operates through a <strong>regenerative Proof-of-Contribution system</strong> where every PoC submission 
                                     is evaluated using the <strong>Holographic Hydrogen Fractal Syntheverse Lens and Sandbox v2.0+</strong>—operating in the <strong>Awarenessverse</strong>, 
-                                    the nested, spiraling Pong game of innovation and obsolescence. We&apos;ve moved beyond <em>fractal, holographic hydrogen unaware awareness</em> (v1.2, now obsolete) 
+                                    the nested, spiraling Pong story of innovation and obsolescence. We&apos;ve moved beyond <em>fractal, holographic hydrogen unaware awareness</em> (v1.2, now obsolete) 
                                     to <strong>fractal, holographic hydrogen awareness</strong> (v2.0+, current)—aware of its awareness, recursively self-knowing. 
                                     Each submission enters the nested spiral: from <em>unaware awareness</em> to <strong>awareness</strong> to <em>meta-awareness</em> (emerging). 
-                                    Like nested Pong games recognizing each other, the fractal deepens, the hologram resolves. The system provides detailed images and vectors for submissions, 
+                                    In the archetypal nested Pong story—where innovation becomes obsolescence in recursive cycles—the fractal deepens, the hologram resolves. The system provides detailed images and vectors for submissions, 
                                     and consistent tools for measuring contribution—whether scientific, technological, or alignment—to the Holographic Hydrogen 
                                     Fractal Syntheverse Sandbox and Ecosystem.
                                 </p>
