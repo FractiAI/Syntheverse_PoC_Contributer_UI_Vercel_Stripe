@@ -176,13 +176,43 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
             
             try {
                 // Trigger evaluation asynchronously (don't await to avoid blocking webhook)
+                // Add timeout to prevent hanging (Vercel functions have execution time limits)
+                const controller = new AbortController()
+                const timeoutId = setTimeout(() => {
+                    controller.abort()
+                    debug('StripeWebhook', 'Evaluation trigger timeout (60s)', { submissionHash })
+                }, 60000) // 60 second timeout for trigger call
+                
                 fetch(evaluateUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                }).catch((fetchError) => {
-                    debugError('StripeWebhook', 'Failed to trigger evaluation endpoint', fetchError)
+                    signal: controller.signal,
+                })
+                .then((response) => {
+                    clearTimeout(timeoutId)
+                    if (!response.ok) {
+                        debugError('StripeWebhook', 'Evaluation endpoint returned error', {
+                            status: response.status,
+                            statusText: response.statusText,
+                            submissionHash
+                        })
+                    } else {
+                        debug('StripeWebhook', 'Evaluation triggered successfully', { submissionHash })
+                    }
+                })
+                .catch((fetchError) => {
+                    clearTimeout(timeoutId)
+                    if (fetchError.name === 'AbortError') {
+                        debug('StripeWebhook', 'Evaluation trigger aborted due to timeout', { submissionHash })
+                    } else {
+                        debugError('StripeWebhook', 'Failed to trigger evaluation endpoint', {
+                            error: fetchError.message,
+                            submissionHash
+                        })
+                    }
+                    // Don't fail the webhook - evaluation can be triggered manually if needed
                 })
             } catch (evalTriggerError) {
                 debugError('StripeWebhook', 'Error triggering evaluation', evalTriggerError)

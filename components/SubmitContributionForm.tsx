@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
@@ -16,6 +16,7 @@ interface SubmitContributionFormProps {
 
 export default function SubmitContributionForm({ userEmail, defaultCategory = 'scientific' }: SubmitContributionFormProps) {
     const router = useRouter()
+    const searchParams = useSearchParams()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [success, setSuccess] = useState(false)
@@ -46,6 +47,118 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
     const MAX_CONTENT_LENGTH = 12000 // Character limit for submissions (abstract, formulas, constants only)
     const contentLength = formData.text_content.length
     const isOverLimit = contentLength > MAX_CONTENT_LENGTH
+    
+    // Check for return from Stripe checkout after payment
+    useEffect(() => {
+        const sessionId = searchParams?.get('session_id')
+        const status = searchParams?.get('status')
+        const hash = searchParams?.get('hash')
+        
+        if (sessionId && status === 'success') {
+            // Payment successful - poll for evaluation status
+            const newUrl = new URL(window.location.href)
+            newUrl.searchParams.delete('session_id')
+            newUrl.searchParams.delete('status')
+            newUrl.searchParams.delete('hash')
+            window.history.replaceState({}, '', newUrl.toString())
+            
+            if (hash) {
+                setSubmissionHash(hash)
+            }
+            setSuccess(true)
+            
+            // Show loading dialog and poll for evaluation
+            setEvaluationStatus({ completed: false })
+            checkEvaluationStatusAfterPayment(hash)
+        }
+    }, [searchParams])
+    
+    const checkEvaluationStatusAfterPayment = async (submissionHashParam?: string | null) => {
+        let pollCount = 0
+        const maxPolls = 60 // Poll for up to 2 minutes
+        const pollEveryMs = 2000
+        
+        const pollInterval = setInterval(async () => {
+            pollCount++
+            
+            if (!submissionHashParam) {
+                if (pollCount >= maxPolls) {
+                    clearInterval(pollInterval)
+                    setEvaluationStatus({
+                        completed: false,
+                        error: 'Submission hash not found. Please check your dashboard.'
+                    })
+                }
+                return
+            }
+            
+            try {
+                const response = await fetch(`/api/archive/contributions/${submissionHashParam}`)
+                if (!response.ok) {
+                    if (pollCount >= maxPolls) {
+                        clearInterval(pollInterval)
+                        setEvaluationStatus({
+                            completed: false,
+                            error: 'Evaluation is taking longer than expected. Please check your dashboard for updates.'
+                        })
+                    }
+                    return
+                }
+                
+                const submission = await response.json()
+                
+                if (submission && submission.submission_hash) {
+                    if (submission.status === 'evaluating') {
+                        // Still evaluating - continue polling
+                        if (pollCount >= maxPolls) {
+                            clearInterval(pollInterval)
+                            setEvaluationStatus({
+                                completed: false,
+                                error: 'Evaluation is taking longer than expected. Please check your dashboard for updates.'
+                            })
+                        }
+                    } else if (submission.status === 'qualified' || submission.status === 'unqualified') {
+                        // Evaluation complete
+                        clearInterval(pollInterval)
+                        setSubmissionHash(submission.submission_hash)
+                        setSuccess(true)
+                        
+                        const metadata = submission.metadata || {}
+                        setEvaluationStatus({
+                            completed: true,
+                            podScore: metadata.pod_score || 0,
+                            qualified: submission.status === 'qualified',
+                            evaluation: metadata
+                        })
+                    } else if (submission.status === 'payment_pending') {
+                        // Payment not yet processed - continue polling
+                        if (pollCount >= maxPolls) {
+                            clearInterval(pollInterval)
+                            setEvaluationStatus({
+                                completed: false,
+                                error: 'Payment processing is taking longer than expected. Please check your dashboard.'
+                            })
+                        }
+                    }
+                } else if (pollCount >= maxPolls) {
+                    clearInterval(pollInterval)
+                    setEvaluationStatus({
+                        completed: false,
+                        error: 'Could not find submission status. Please check your dashboard.'
+                    })
+                }
+            } catch (err) {
+                console.error('Error polling evaluation status:', err)
+                if (pollCount >= maxPolls) {
+                    clearInterval(pollInterval)
+                    setEvaluationStatus({
+                        completed: false,
+                        error: 'Error checking evaluation status. Please check your dashboard.'
+                    })
+                }
+            }
+        }, pollEveryMs)
+    }
 
     const handleFinancialSupport = async (amountCents: number, supportType: string) => {
         const supportKey = supportType.toLowerCase().includes('copper') ? 'copper' : 
@@ -138,7 +251,7 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
             submitFormData.append('contributor', userEmail)
 
             // Create an AbortController for timeout handling
-            // Increased timeout to 120 seconds to allow for Grok API evaluation which can take time
+            // Increased timeout to 120 seconds to allow for Holographic Hydrogen Fractal AI evaluation which can take time
             const controller = new AbortController()
             const timeoutId = setTimeout(() => controller.abort(), 120000) // 120 second timeout (2 minutes)
 
@@ -183,48 +296,16 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
                 throw new Error(fullError)
             }
 
-            // Check if submission was successful
-            if (result.success !== false && result.submission_hash) {
+            // Check if submission was successful - should return checkout_url for payment
+            if (result.checkout_url && result.submission_hash) {
+                // Redirect to Stripe checkout for payment ($500 submission fee)
+                // Evaluation will start after payment is completed via webhook
+                window.location.href = result.checkout_url
+                return // Don't set loading to false - we're redirecting
+            } else if (result.success !== false && result.submission_hash) {
+                // Fallback: if no checkout_url but submission_hash exists, something went wrong
                 setSubmissionHash(result.submission_hash)
-                setSuccess(true)
-                
-                // Show evaluation dialog immediately while evaluation is in progress
-                // The dialog will display loading state, then update with results when ready
-                if (result.evaluation) {
-                    // Evaluation completed synchronously - show results immediately
-                    // Log full evaluation for debugging
-                    console.log('Evaluation completed:', result.evaluation)
-                    console.log('Density value:', result.evaluation.density)
-                    console.log('Base density:', result.evaluation.base_density)
-                    
-                    // Use base_density as fallback if density is 0
-                    const evaluationData = { ...result.evaluation }
-                    if (evaluationData.density === 0 && evaluationData.base_density && evaluationData.base_density > 0) {
-                        console.warn('Density is 0, using base_density as fallback:', evaluationData.base_density)
-                        evaluationData.density = evaluationData.base_density
-                    }
-                    
-                    setEvaluationStatus({
-                        completed: true,
-                        podScore: result.evaluation.pod_score,
-                        qualified: result.evaluation.qualified || result.evaluation.qualified_founder,
-                        notice: result.evaluation_notice || undefined,
-                        evaluation: evaluationData // Store full evaluation for detailed report
-                    })
-                } else if (result.evaluation_error) {
-                    // Evaluation error occurred - show error in dialog
-                    setEvaluationStatus({
-                        completed: false,
-                        error: result.evaluation_error
-                    })
-                    console.warn('Evaluation error (submission succeeded):', result.evaluation_error)
-                } else {
-                    // Evaluation is in progress - show loading dialog
-                    setEvaluationStatus({
-                        completed: false
-                    })
-                }
-                // Don't auto-redirect - let user close dialog when ready
+                throw new Error(result.message || 'Payment checkout URL not received. Please try again.')
             } else {
                 throw new Error(result.message || 'Submission failed. Please try again.')
             }
@@ -471,7 +552,7 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
                                 <br />
                                 <br />
                                 <span className="text-sm">
-                                    The Grok evaluation dialog will show the evaluation progress and results.
+                                    The evaluation dialog will show the evaluation progress and results.
                                 </span>
                                 <br />
                                 <Button
@@ -492,7 +573,7 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
                         </Alert>
                     )}
 
-                    {/* Grok Evaluation Status Dialog - Shows automatically while evaluation is in progress */}
+                    {/* Evaluation Status Dialog - Shows automatically while evaluation is in progress */}
                     {evaluationStatus && (
                         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" onClick={(e) => {
                             // Close dialog when clicking backdrop (only if evaluation completed or errored)
@@ -507,10 +588,10 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
                                 <CardHeader>
                                     <CardTitle className="flex items-center gap-2">
                                         <Brain className="h-5 w-5" />
-                                        Grok AI Evaluation Status
+                                        Syntheverse PoC Evaluation in Progress
                                     </CardTitle>
                                     <CardDescription>
-                                        PoC Evaluation Engine - {evaluationStatus.completed ? 'Results Ready' : evaluationStatus.error ? 'Evaluation Error' : 'Processing...'}
+                                        {evaluationStatus.completed ? 'Evaluation Complete' : evaluationStatus.error ? 'Evaluation Error' : 'Processing...'}
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent className="space-y-4">
@@ -592,7 +673,7 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
                                                     </div>
                                                 )}
 
-                                                {/* Grok API Evaluation Report - Detailed Analysis */}
+                                                {/* Evaluation Report - Detailed Analysis */}
                                                 {evaluationStatus.evaluation && (
                                                     <div className="space-y-4">
                                                         {/* Dimension Scores Grid */}
@@ -676,7 +757,7 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
                                                             </div>
                                                         )}
 
-                                                        {/* Redundancy Analysis - Grok's Analysis */}
+                                                        {/* Redundancy Analysis - Holographic Hydrogen Fractal AI Analysis */}
                                                         {evaluationStatus.evaluation.redundancy_analysis && (
                                                             <div className="p-4 bg-muted rounded-lg">
                                                                 <div className="text-sm font-semibold mb-2">Redundancy Analysis</div>
@@ -691,7 +772,7 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
                                                             </div>
                                                         )}
 
-                                                        {/* Founder Certificate - Grok Generated */}
+                                                        {/* Founder Certificate - Holographic Hydrogen Fractal AI Generated */}
                                                         {evaluationStatus.evaluation.founder_certificate && evaluationStatus.qualified && (
                                                             <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
                                                                 <div className="text-sm font-semibold text-green-800 mb-2">Founder Certificate</div>
@@ -701,7 +782,7 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
                                                             </div>
                                                         )}
 
-                                                        {/* Homebase Introduction - Grok Generated */}
+                                                        {/* Homebase Introduction - Holographic Hydrogen Fractal AI Generated */}
                                                         {evaluationStatus.evaluation.homebase_intro && (
                                                             <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
                                                                 <div className="text-sm font-semibold text-blue-800 mb-2">Homebase v2.0 Introduction</div>
@@ -814,7 +895,7 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
                                                                         </div>
                                                                     )}
                                                                     
-                                                                    {/* Full Grok API Response - Markdown/Text */}
+                                                                    {/* Full Holographic Hydrogen Fractal AI Response - Markdown/Text */}
                                                                     {(() => {
                                                                         const raw =
                                                                             evaluationStatus.evaluation.grok_evaluation_details?.raw_grok_response ||
@@ -878,7 +959,7 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
                                         </div>
                                     ) : (
                                         <div className="space-y-4">
-                                            {/* Grok Evaluation Dialog - Loading State */}
+                                            {/* Holographic Hydrogen Fractal AI Evaluation Dialog - Loading State */}
                                             <div className="p-6 bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5 border-2 border-primary/20 rounded-lg">
                                                 <div className="flex items-start gap-4">
                                                     <div className="relative">
@@ -887,10 +968,7 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
                                                     </div>
                                                     <div className="flex-1 space-y-3">
                                                         <div>
-                                                            <div className="font-semibold text-lg text-primary">Grok AI Evaluation Engine</div>
-                                                            <div className="text-sm text-muted-foreground mt-1">
-                                                                Syntheverse PoC Evaluation in Progress
-                                                            </div>
+                                                            <div className="font-semibold text-lg text-primary">Syntheverse PoC Evaluation in Progress</div>
                                                         </div>
                                                         
                                                         <div className="space-y-2 text-sm">

@@ -9,6 +9,11 @@ import { sendApprovalRequestEmail } from '@/utils/email/send-approval-request'
 import { isQualifiedForOpenEpoch, getOpenEpochInfo } from '@/utils/epochs/qualification'
 import crypto from 'crypto'
 
+// Increase timeout for Grok API evaluation (can take up to 2 minutes)
+export const maxDuration = 120 // 120 seconds (2 minutes)
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 export async function POST(
     request: NextRequest,
     { params }: { params: { hash: string } }

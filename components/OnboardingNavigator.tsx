@@ -599,6 +599,41 @@ export function OnboardingNavigator() {
                     </div>
                 </div>
 
+                {/* Module Navigation List */}
+                <div className="cockpit-panel p-6 mb-6">
+                    <div className="cockpit-label mb-4">MODULE OVERVIEW</div>
+                    <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+                        {modules.map((module, idx) => (
+                            <button
+                                key={module.id}
+                                onClick={() => goToModule(idx)}
+                                className={`p-4 border text-left transition-all ${
+                                    idx === currentModule
+                                        ? 'border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.1)]'
+                                        : 'border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] hover:border-[var(--keyline-accent)]'
+                                }`}
+                            >
+                                <div className="flex items-start gap-2 mb-2">
+                                    <div className="text-[var(--hydrogen-amber)]" style={{ opacity: idx === currentModule ? 1 : 0.7 }}>
+                                        {module.icon}
+                                    </div>
+                                    <div className="flex-1">
+                                        <div className="cockpit-label text-xs">{module.label}</div>
+                                        <div className={`cockpit-text text-sm mt-1 ${idx === currentModule ? 'font-semibold' : ''}`}>
+                                            {module.title}
+                                        </div>
+                                    </div>
+                                </div>
+                            </button>
+                        ))}
+                    </div>
+                    <div className="mt-4 pt-4 border-t border-[var(--keyline-primary)]">
+                        <div className="cockpit-text text-xs" style={{ opacity: 0.8 }}>
+                            Click any module above to jump directly to that section, or use Previous/Next buttons to navigate sequentially.
+                        </div>
+                    </div>
+                </div>
+
                 {/* Module Navigation */}
                 <div className="cockpit-module cockpit-panel p-6 mb-6">
                     <div className="flex items-center justify-between mb-4">

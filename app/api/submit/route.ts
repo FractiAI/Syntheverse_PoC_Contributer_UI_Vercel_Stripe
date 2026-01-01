@@ -232,7 +232,7 @@ export async function POST(request: NextRequest) {
                     },
                 ],
                 mode: 'payment',
-                success_url: `${baseUrl}/submit?session_id={CHECKOUT_SESSION_ID}&status=success`,
+                success_url: `${baseUrl}/submit?session_id={CHECKOUT_SESSION_ID}&status=success&hash=${submissionHash}`,
                 cancel_url: `${baseUrl}/submit?canceled=true`,
                 metadata: {
                     submission_hash: submissionHash,
