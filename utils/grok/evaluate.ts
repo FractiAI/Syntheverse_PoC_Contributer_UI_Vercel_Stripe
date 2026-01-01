@@ -1021,7 +1021,7 @@ ${answer}`
             coherenceScore = 2500     // Maximum coherence - well-structured foundational architecture
             alignmentScore = 2500     // Maximum alignment - perfect alignment with Syntheverse principles
             pod_score = 10000         // Perfect score - foundational submission deserves maximum
-            redundancy = 0            // Ensure no redundancy penalty
+            // Overlap effect is already set to 0 for seed submissions above
             
             debug('EvaluateWithGrok', 'Foundational submission - scores set to maximum', {
                 novelty: finalNoveltyScore,
@@ -1100,7 +1100,7 @@ ${answer}`
         const finalCoherence = Math.max(0, Math.min(2500, coherenceScore))
         const finalAlignment = Math.max(0, Math.min(2500, alignmentScore))
         const finalPodScore = Math.max(0, Math.min(10000, pod_score))
-        const finalRedundancy = isSeedSubmission ? 0 : Math.max(0, Math.min(100, redundancy)) // Always 0 for foundational submissions
+        const finalRedundancy = isSeedSubmission ? 0 : Math.max(0, Math.min(100, redundancyOverlapPercent)) // Always 0 for foundational submissions
         const finalOverlap = isSeedSubmission ? 0 : Math.max(0, Math.min(100, redundancyOverlapPercent))
         
         return {
