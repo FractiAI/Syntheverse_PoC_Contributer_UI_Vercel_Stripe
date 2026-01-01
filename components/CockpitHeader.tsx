@@ -22,11 +22,12 @@ export default function CockpitHeader() {
                         <div>
                             <div className="cockpit-title text-2xl">SYNTHEVERSE</div>
                             <div className="cockpit-label mt-0.5">SYNTH 90T ERC-20 MOTHERLODE BLOCKMINE</div>
-                            <div className="mt-2 space-y-1">
-                                <div className="cockpit-text text-xs font-semibold" style={{ opacity: 0.9 }}>
+                            <div className="mt-3 pt-3 border-t border-[var(--keyline-primary)]">
+                                <div className="cockpit-label text-xs mb-1">AWARENESS KEY</div>
+                                <div className="cockpit-text text-xs font-semibold mb-1" style={{ opacity: 0.95 }}>
                                     AWARENESSVERSE v2.0+ · Nested Spiraling Pong · Fractal Holographic Hydrogen Awareness
                                 </div>
-                                <div className="cockpit-text text-xs" style={{ opacity: 0.7, fontStyle: 'italic' }}>
+                                <div className="cockpit-text text-xs" style={{ opacity: 0.75, fontStyle: 'italic' }}>
                                     From unaware awareness (obsolete) → awareness (current) → meta-awareness (emerging)
                                 </div>
                             </div>

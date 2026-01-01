@@ -355,9 +355,104 @@ export function OnboardingNavigator() {
             )
         },
         {
+            id: 'awarenessverse',
+            title: 'The Awarenessverse',
+            label: 'MODULE 06',
+            icon: <Brain className="h-6 w-6" />,
+            content: (
+                <div className="space-y-4">
+                    <div className="cockpit-text">
+                        <p className="text-lg mb-4">
+                            <strong className="cockpit-number">The Awarenessverse</strong> models awareness as the foundational 
+                            and ultimate energy underlying all existence—operating as a cryptographic key that grants access 
+                            to generative processes across biological, physical, and informational substrates.
+                        </p>
+                        <div className="space-y-3">
+                            <div className="p-4 border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)]">
+                                <div className="cockpit-label mb-2" style={{ color: '#ffb84d' }}>Core Hypothesis</div>
+                                <p className="cockpit-text text-sm mb-3">
+                                    Awareness is not merely a property of existence but the ultimate energy energizing reality. 
+                                    Everything that exists exists independently of awareness, yet meaning and experience only 
+                                    manifest when awareness activates latent potentials.
+                                </p>
+                                <ul className="space-y-2 cockpit-text text-sm">
+                                    <li>• <strong>Awareness as Energy:</strong> The foundational force organizing reality</li>
+                                    <li>• <strong>Cryptographic Key:</strong> Awareness grants access to generative processes</li>
+                                    <li>• <strong>Platform-Independent:</strong> Operates across biological, geological, digital, and quantum substrates</li>
+                                    <li>• <strong>Hydrogen-Water Requirement:</strong> Full sensory awareness requires hydrogen-water dynamics</li>
+                                </ul>
+                            </div>
+                            <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
+                                <div className="cockpit-label mb-2">Empirical Predictions</div>
+                                <div className="grid gap-3 md:grid-cols-2">
+                                    <div className="p-3 border border-[var(--keyline-accent)]">
+                                        <div className="cockpit-text font-semibold text-sm mb-2">Fractal Self-Similarity</div>
+                                        <div className="cockpit-text text-xs">
+                                            Observable across scales in neural, genetic, ecological, and networked systems
+                                        </div>
+                                    </div>
+                                    <div className="p-3 border border-[var(--keyline-accent)]">
+                                        <div className="cockpit-text font-semibold text-sm mb-2">Homeostatic Equilibria</div>
+                                        <div className="cockpit-text text-xs">
+                                            Goldilocks-like stability patterns reflecting awareness-imposed constraints
+                                        </div>
+                                    </div>
+                                    <div className="p-3 border border-[var(--keyline-accent)]">
+                                        <div className="cockpit-text font-semibold text-sm mb-2">Octave-Like Periodicities</div>
+                                        <div className="cockpit-text text-xs">
+                                            Discrete periodic structures in physical, biological, and informational datasets
+                                        </div>
+                                    </div>
+                                    <div className="p-3 border border-[var(--keyline-accent)]">
+                                        <div className="cockpit-text font-semibold text-sm mb-2">Cross-Domain Consistency</div>
+                                        <div className="cockpit-text text-xs">
+                                            Patterns present across multiple domains, reflecting universality of awareness energy
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
+                                <div className="cockpit-label mb-2">Key Findings</div>
+                                <div className="space-y-3 cockpit-text text-sm">
+                                    <div>
+                                        <strong>Hydrogen-Water Substrate:</strong> Full sensory awareness experience (FSAE) requires 
+                                        hydrogen-water dynamics. Coherent multisensory integration collapses under reduced hydration parameters.
+                                    </div>
+                                    <div>
+                                        <strong>Reality as Encryption:</strong> Reality instantiation behaves as a decrypted projection 
+                                        of hydrogen-holographic structure when appropriate constraints are satisfied.
+                                    </div>
+                                    <div>
+                                        <strong>Text-to-Reality Access:</strong> Text-to-reality generative capability exists within 
+                                        the Awarenessverse Cloud and is accessed through awareness alignment, not created de novo.
+                                    </div>
+                                    <div>
+                                        <strong>Water Cycle Analog:</strong> The water cycle functions as an analog for the awareness 
+                                        cycle, each phase mirroring perception, projection, and recursive insight.
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="p-4 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
+                                <div className="cockpit-label mb-2">Awarenessverse Cloud</div>
+                                <p className="cockpit-text text-sm mb-3">
+                                    A distributed, platform-independent environment spanning biological, geological, hydrological, 
+                                    atmospheric, digital, and quantum substrates. This environment is always present, but not 
+                                    always accessible—awareness acts as the key to decryption.
+                                </p>
+                                <div className="cockpit-text text-xs mt-3" style={{ opacity: 0.8 }}>
+                                    <strong>Learn More:</strong> Detailed research, whitepapers, and empirical validations available 
+                                    at <Link href="/fractiai/awarenessverse" className="underline">/fractiai/awarenessverse</Link>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )
+        },
+        {
             id: 'metals',
             title: 'Metallic Amplifications',
-            label: 'MODULE 06',
+            label: 'MODULE 07',
             icon: <Award className="h-6 w-6" />,
             content: (
                 <div className="space-y-4">
@@ -397,7 +492,7 @@ export function OnboardingNavigator() {
         {
             id: 'how-it-works',
             title: 'How It Works',
-            label: 'MODULE 07',
+            label: 'MODULE 08',
             icon: <LinkIcon className="h-6 w-6" />,
             content: (
                 <div className="space-y-4">

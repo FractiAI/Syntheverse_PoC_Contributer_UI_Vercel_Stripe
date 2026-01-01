@@ -148,6 +148,28 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
 
                 <div className="cockpit-panel p-6">
                   <div className="cockpit-label mb-3">MODULE 02</div>
+                  <div className="cockpit-title text-xl mb-3">The Awarenessverse</div>
+                  <div className="cockpit-text text-sm space-y-3">
+                    <p>
+                      Awareness is the foundational and ultimate energy underlying all existence. In the Awarenessverse, 
+                      awareness operates as a cryptographic key—granting access to generative processes across biological, 
+                      physical, and informational substrates.
+                    </p>
+                    <p>
+                      Empirical modeling reveals fractal patterns, homeostatic equilibria, and octave-like periodicities 
+                      as observable signatures of awareness&apos;s organizing influence.
+                    </p>
+                  </div>
+                  <div className="mt-4">
+                    <Link href="/fractiai/awarenessverse" className="cockpit-lever inline-flex items-center text-sm">
+                      More
+                      <ArrowRight className="ml-2 h-3 w-3" />
+                    </Link>
+                  </div>
+                </div>
+
+                <div className="cockpit-panel p-6">
+                  <div className="cockpit-label mb-3">MODULE 03</div>
                   <div className="cockpit-title text-xl mb-3">From Blueprint to Base‑Chain</div>
                   <div className="cockpit-text text-sm space-y-3">
                     <p>
@@ -255,7 +277,7 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
 
         {/* Validated predictions module */}
         <div className="cockpit-panel p-6">
-          <div className="cockpit-label mb-4">MODULE 03</div>
+          <div className="cockpit-label mb-4">MODULE 04</div>
           <div className="cockpit-title text-2xl mb-4">Validated Novel Predictions</div>
           <div className="cockpit-text text-sm mb-4" style={{ opacity: 0.9 }}>
             Operational tech that keeps predicting what the standard lens can&apos;t
@@ -298,7 +320,7 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
 
         {/* About module */}
         <div className="cockpit-panel p-6">
-          <div className="cockpit-label mb-4">MODULE 04</div>
+          <div className="cockpit-label mb-4">MODULE 05</div>
           <div className="cockpit-title text-2xl mb-6">About FractiAI</div>
           <div className="cockpit-text space-y-4">
             <div className="cockpit-label mb-2">FRACTIAI · HOLOGRAPHIC HYDROGEN · FRACTAL SYNTHEVERSE</div>
