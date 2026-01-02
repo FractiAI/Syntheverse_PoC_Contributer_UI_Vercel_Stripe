@@ -79,7 +79,12 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
                         Log in
                       </Link>
                     </>
-                  ) : null}
+                  ) : (
+                    <Link href="/dashboard" className="cockpit-lever inline-flex items-center">
+                      Dashboard
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  )}
                   <Link href="/onboarding" className="cockpit-lever inline-flex items-center">
                     Onboarding
                     <ArrowRight className="ml-2 h-4 w-4" />

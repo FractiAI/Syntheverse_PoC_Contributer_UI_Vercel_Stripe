@@ -97,7 +97,7 @@ export async function sendWelcomeEmail(data: WelcomeEmailData): Promise<{ succes
             <div style="margin-bottom: 20px; padding: 15px; background: rgba(255,184,77,0.1); border-left: 3px solid #ffb84d;">
                 <h3 style="margin-top: 0; color: #ffb84d; font-size: 18px; margin-bottom: 10px;">3. Submit Your First Contribution</h3>
                 <p style="font-size: 14px; color: #e0e0e0; margin: 0; line-height: 1.7;">
-                    Use <a href="${BASE_URL}/submit" style="color: #ffb84d; text-decoration: underline;">Submit Contribution</a> to transmit your work. All submissions are <strong>free</strong> and evaluated using our Holographic Hydrogen Fractal Syntheverse Lens and Sandbox, providing detailed image and vector analysis.
+                    Use <a href="${BASE_URL}/submit" style="color: #ffb84d; text-decoration: underline;">Submit Contribution</a> to transmit your work. Submission fee: $500 for evaluation—well below submission fees at leading journals. All submissions are evaluated using our Holographic Hydrogen Fractal Syntheverse Lens and Sandbox, providing detailed image and vector analysis.
                 </p>
             </div>
             

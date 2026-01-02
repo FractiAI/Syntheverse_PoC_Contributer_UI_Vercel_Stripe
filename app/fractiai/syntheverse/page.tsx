@@ -68,7 +68,7 @@ export default function SyntheverseBriefPage() {
                 Contributions are indexed as a living map in nested spirals of evolution, where the outer layer of the story sees the inner, the inner recognizes itself.
               </p>
               <p>
-                Submissions are free. Qualified PoCs may be optionally registered on‑chain as an anchoring service to preserve
+                Submission fee: $500 for evaluation—well below submission fees at leading journals. Qualified PoCs may be optionally registered on‑chain as an anchoring service to preserve
                 work immutably.
               </p>
             </div>

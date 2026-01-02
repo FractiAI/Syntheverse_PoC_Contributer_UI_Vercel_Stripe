@@ -212,7 +212,7 @@ export default async function LandingPage() {
           </div>
           <div className="text-center mt-8">
             <p className="text-muted-foreground">
-              All evaluation submissions are <strong>free</strong>. Tokens are allocated when PoCs are approved and registered on-chain.
+              Submission fee: $500 for evaluation—well below submission fees at leading journals. Tokens are allocated when PoCs are approved and registered on-chain.
             </p>
           </div>
         </div>

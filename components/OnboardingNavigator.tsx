@@ -545,7 +545,7 @@ export function OnboardingNavigator() {
                                 <div className="cockpit-label mb-2" style={{ color: '#ffb84d' }}>Ready to Begin?</div>
                                 <p className="cockpit-text text-sm mb-4">
                                     Join the Syntheverse colony and start contributing to the regenerative ecosystem. 
-                                    All evaluations are free—qualified PoCs may be optionally registered on-chain.
+                                    Submission fee: $500 for evaluation—well below submission fees at leading journals. Qualified PoCs may be optionally registered on-chain.
                                 </p>
                                 <div className="flex gap-3">
                                     <Link href="/signup">
