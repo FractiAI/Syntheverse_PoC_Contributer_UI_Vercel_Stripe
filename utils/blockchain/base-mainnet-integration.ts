@@ -431,7 +431,10 @@ export async function emitLensEvent(
                 const revertInfo = errorDetails.revertReason || errorMessage
                 errorMessage = `Transaction reverted: ${revertInfo}`
             } else if (errorMessage.includes('network') || errorMessage.includes('ECONNREFUSED') || errorMessage.includes('TIMEOUT')) {
-                errorMessage = `Network error: ${errorMessage}. Check RPC URL (${config?.rpcUrl}) and network connectivity.`
+                // Get config again for error message (may be null if config failed)
+                const errorConfig = getBaseMainnetConfig()
+                const rpcInfo = errorConfig ? `RPC: ${errorConfig.rpcUrl}` : 'Check RPC URL'
+                errorMessage = `Network error: ${errorMessage}. ${rpcInfo} and network connectivity.`
             } else if (errorMessage.includes('rate limit')) {
                 errorMessage = 'Rate limit exceeded (try again later)'
             } else if (errorMessage.includes('ENS') || errorMessage.includes('getEnsAddress') || errorMessage.includes('UNSUPPORTED_OPERATION')) {
