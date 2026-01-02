@@ -170,12 +170,14 @@ export async function POST(
             } else {
                 debugError('RegisterPoC', 'Blockchain registration failed', {
                     submissionHash,
-                    error: blockchainResult.error
+                    error: blockchainResult.error,
+                    errorDetails: (blockchainResult as any).errorDetails
                 })
                 return NextResponse.json(
                     { 
                         error: 'Blockchain registration failed',
-                        message: blockchainResult.error || 'Failed to register PoC on blockchain'
+                        message: blockchainResult.error || 'Failed to register PoC on blockchain',
+                        errorDetails: (blockchainResult as any).errorDetails || undefined
                     },
                     { status: 500 }
                 )

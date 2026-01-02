@@ -291,7 +291,15 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                 const errorMessage = data.message || data.error || `Failed to initiate registration (${response.status})`
                 const errorType = data.error_type ? ` (${data.error_type})` : ''
                 const errorDetails = data.details ? ` - ${data.details}` : ''
-                throw new Error(`${errorMessage}${errorType}${errorDetails}`)
+                const errorCode = data.errorDetails?.code ? ` [Code: ${data.errorDetails.code}]` : ''
+                const revertReason = data.errorDetails?.revertReason ? `\nRevert Reason: ${data.errorDetails.revertReason}` : ''
+                const fullError = `${errorMessage}${errorType}${errorCode}${errorDetails}${revertReason}`
+                console.error('Registration API Error:', {
+                    status: response.status,
+                    data,
+                    fullError
+                })
+                throw new Error(fullError)
             }
             
             // Registration is now free - directly registered on blockchain
@@ -306,7 +314,8 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
         } catch (err) {
             console.error('Registration error:', err)
             const errorMessage = err instanceof Error ? err.message : 'Failed to register PoC'
-            alert(`Registration Error: ${errorMessage}`)
+            // Show detailed error in alert
+            alert(`Registration Error:\n\n${errorMessage}\n\nCheck browser console for more details.`)
         } finally {
             setRegistering(null)
         }
