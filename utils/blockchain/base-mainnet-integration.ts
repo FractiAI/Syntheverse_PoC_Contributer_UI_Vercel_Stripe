@@ -67,7 +67,7 @@ export function getBaseMainnetConfig(): BaseMainnetConfig | null {
     
     const synth90TAddress = process.env.SYNTH90T_CONTRACT_ADDRESS || '0xAC9fa48Ca1D60e5274d14c7CEd6B3F4C1ADd1Aa3'
     const lensKernelAddress = process.env.LENS_KERNEL_CONTRACT_ADDRESS || '0xD9ABf9B19B4812A2fd06c5E8986B84040505B9D8'
-    const privateKey = process.env.BLOCKCHAIN_PRIVATE_KEY
+    const privateKey = process.env.BLOCKCHAIN_PRIVATE_KEY?.trim() // Trim whitespace/newlines
     
     if (!privateKey) {
         debugError('BaseMainnetConfig', 'BLOCKCHAIN_PRIVATE_KEY not configured', new Error('Missing BLOCKCHAIN_PRIVATE_KEY environment variable'))
