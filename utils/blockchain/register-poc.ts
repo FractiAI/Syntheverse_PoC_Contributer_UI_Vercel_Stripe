@@ -191,17 +191,17 @@ export async function registerPoCOnBlockchain(
             }
             
             // Extract ethers.js specific error information
-            // @ts-ignore - ethers errors may have additional properties
-            if (error.code) {
-                errorDetails.code = error.code
+            // Type assertion for ethers.js error properties
+            const ethersError = error as any
+            
+            if (ethersError.code) {
+                errorDetails.code = ethersError.code
             }
-            // @ts-ignore
-            if (error.reason) {
-                errorDetails.reason = error.reason
+            if (ethersError.reason) {
+                errorDetails.reason = ethersError.reason
             }
-            // @ts-ignore
-            if (error.data) {
-                errorDetails.data = error.data
+            if (ethersError.data) {
+                errorDetails.data = ethersError.data
             }
             
             // Log full error details for debugging

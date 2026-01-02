@@ -379,40 +379,36 @@ export async function emitLensEvent(
             }
             
             // Extract ethers.js specific error information
-            // @ts-ignore - ethers errors may have additional properties
-            if (error.code) {
-                errorDetails.code = error.code
+            // Type assertion for ethers.js error properties
+            const ethersError = error as any
+            
+            if (ethersError.code) {
+                errorDetails.code = ethersError.code
             }
-            // @ts-ignore
-            if (error.reason) {
-                errorDetails.reason = error.reason
+            if (ethersError.reason) {
+                errorDetails.reason = ethersError.reason
             }
-            // @ts-ignore
-            if (error.data) {
-                errorDetails.data = error.data
+            if (ethersError.data) {
+                errorDetails.data = ethersError.data
             }
-            // @ts-ignore
-            if (error.transaction) {
+            if (ethersError.transaction) {
                 errorDetails.transaction = {
-                    to: error.transaction.to,
-                    data: error.transaction.data?.substring(0, 20) + '...',
-                    value: error.transaction.value?.toString()
+                    to: ethersError.transaction.to,
+                    data: ethersError.transaction.data?.substring(0, 20) + '...',
+                    value: ethersError.transaction.value?.toString()
                 }
             }
-            // @ts-ignore
-            if (error.receipt) {
+            if (ethersError.receipt) {
                 errorDetails.receipt = {
-                    status: error.receipt.status,
-                    gasUsed: error.receipt.gasUsed?.toString()
+                    status: ethersError.receipt.status,
+                    gasUsed: ethersError.receipt.gasUsed?.toString()
                 }
             }
             
             // Parse revert reason if available
-            // @ts-ignore
-            if (error.reason || error.data) {
+            if (ethersError.reason || ethersError.data) {
                 try {
-                    // @ts-ignore
-                    const revertReason = error.reason || (error.data ? JSON.stringify(error.data) : null)
+                    const revertReason = ethersError.reason || (ethersError.data ? JSON.stringify(ethersError.data) : null)
                     if (revertReason) {
                         errorDetails.revertReason = revertReason
                     }
