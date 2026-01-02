@@ -20,7 +20,8 @@ The following blockchain-related environment variables were used for Hardhat int
 
 **To update**: Run:
 ```bash
-export VERCEL_TOKEN="wugxCXxebp2Qr1XyiqAngVGJ"
+# Set your Vercel token as an environment variable (never commit to git!)
+export VERCEL_TOKEN="your_token_here"
 vercel env rm HARDHAT_RPC_URL production --token="$VERCEL_TOKEN"
 echo "https://your-remote-rpc-endpoint.com" | vercel env add HARDHAT_RPC_URL production --token="$VERCEL_TOKEN"
 ```
@@ -39,7 +40,8 @@ echo "https://your-remote-rpc-endpoint.com" | vercel env add HARDHAT_RPC_URL pro
 2. Copy the contract address from the deployment output
 3. Update the environment variable:
    ```bash
-   export VERCEL_TOKEN="wugxCXxebp2Qr1XyiqAngVGJ"
+   # Set your Vercel token as an environment variable (never commit to git!)
+   export VERCEL_TOKEN="your_token_here"
    vercel env rm POC_REGISTRY_ADDRESS production --token="$VERCEL_TOKEN"
    echo "0x..." | vercel env add POC_REGISTRY_ADDRESS production --token="$VERCEL_TOKEN"
    ```
@@ -64,7 +66,8 @@ echo "https://your-remote-rpc-endpoint.com" | vercel env add HARDHAT_RPC_URL pro
 3. Deploy contract with this wallet
 4. Update environment variable:
    ```bash
-   export VERCEL_TOKEN="wugxCXxebp2Qr1XyiqAngVGJ"
+   # Set your Vercel token as an environment variable (never commit to git!)
+   export VERCEL_TOKEN="your_token_here"
    vercel env rm BLOCKCHAIN_PRIVATE_KEY production --token="$VERCEL_TOKEN"
    echo "0x..." | vercel env add BLOCKCHAIN_PRIVATE_KEY production --token="$VERCEL_TOKEN"
    ```
@@ -88,7 +91,8 @@ Copy the contract address from the output.
 ### 2. Update POC_REGISTRY_ADDRESS
 
 ```bash
-export VERCEL_TOKEN="wugxCXxebp2Qr1XyiqAngVGJ"
+# Set your Vercel token as an environment variable (never commit to git!)
+export VERCEL_TOKEN="your_token_here"
 vercel env rm POC_REGISTRY_ADDRESS production --token="$VERCEL_TOKEN"
 echo "YOUR_CONTRACT_ADDRESS" | vercel env add POC_REGISTRY_ADDRESS production --token="$VERCEL_TOKEN"
 ```
@@ -120,7 +124,8 @@ Generate a secure private key and update it in Vercel.
 Check all environment variables are set:
 
 ```bash
-export VERCEL_TOKEN="wugxCXxebp2Qr1XyiqAngVGJ"
+# Set your Vercel token as an environment variable (never commit to git!)
+export VERCEL_TOKEN="your_token_here"
 vercel env ls --token="$VERCEL_TOKEN" | grep -E "(HARDHAT|POC_REGISTRY|BLOCKCHAIN)"
 ```
 

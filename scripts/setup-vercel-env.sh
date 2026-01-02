@@ -1,11 +1,24 @@
 #!/bin/bash
 
 # Setup Vercel Environment Variables for Base Sepolia
-# Usage: ./scripts/setup-vercel-env.sh
+# Usage: VERCEL_TOKEN=your_token ./scripts/setup-vercel-env.sh
+#
+# IMPORTANT: Never commit your Vercel token to git!
+# Set it as an environment variable before running this script.
 
 set -e
 
-VERCEL_TOKEN="wugxCXxebp2Qr1XyiqAngVGJ"
+# Check if VERCEL_TOKEN is set
+if [ -z "$VERCEL_TOKEN" ]; then
+    echo "❌ ERROR: VERCEL_TOKEN environment variable is not set!"
+    echo ""
+    echo "Usage:"
+    echo "  export VERCEL_TOKEN=your_token_here"
+    echo "  ./scripts/setup-vercel-env.sh"
+    echo ""
+    echo "Get your token from: https://vercel.com/account/tokens"
+    exit 1
+fi
 
 echo "🚀 Setting up Vercel environment variables..."
 echo ""
