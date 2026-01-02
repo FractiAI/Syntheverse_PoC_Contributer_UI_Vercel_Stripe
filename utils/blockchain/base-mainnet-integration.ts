@@ -176,7 +176,8 @@ export async function allocateTokens(
         const { provider, wallet } = createBaseProvider(config)
         
         // Normalize contract address to checksummed format to prevent ENS resolution
-        const synth90TAddress = ethers.getAddress(config.synth90TAddress)
+        // Trim again in case config was created before trimming fix
+        const synth90TAddress = ethers.getAddress(config.synth90TAddress.trim())
         
         // Create contract instance
         const synthContract = new ethers.Contract(
@@ -282,7 +283,8 @@ export async function getMetalBalance(metal: 'gold' | 'silver' | 'copper'): Prom
         const { provider } = createBaseProvider(config)
         
         // Normalize contract address to checksummed format to prevent ENS resolution
-        const synth90TAddress = ethers.getAddress(config.synth90TAddress)
+        // Trim again in case config was created before trimming fix
+        const synth90TAddress = ethers.getAddress(config.synth90TAddress.trim())
         
         const synthContract = new ethers.Contract(
             synth90TAddress,
@@ -315,7 +317,8 @@ export async function getContributorBalance(contributorAddress: string): Promise
         const { provider } = createBaseProvider(config)
         
         // Normalize contract address to checksummed format to prevent ENS resolution
-        const synth90TAddress = ethers.getAddress(config.synth90TAddress)
+        // Trim again in case config was created before trimming fix
+        const synth90TAddress = ethers.getAddress(config.synth90TAddress.trim())
         
         const synthContract = new ethers.Contract(
             synth90TAddress,
@@ -357,7 +360,8 @@ export async function emitLensEvent(
         const { provider, wallet } = createBaseProvider(config)
         
         // Ensure contract address is properly formatted (checksummed) to avoid ENS resolution
-        const lensKernelAddress = ethers.getAddress(config.lensKernelAddress)
+        // Trim again in case config was created before trimming fix
+        const lensKernelAddress = ethers.getAddress(config.lensKernelAddress.trim())
         
         const lensContract = new ethers.Contract(
             lensKernelAddress,
@@ -365,11 +369,44 @@ export async function emitLensEvent(
             wallet
         )
         
+        // Check if wallet is the contract owner (extendLens requires onlyOwner)
+        // Based on successful deployment: https://github.com/FractiAI/Syntheverse-Genesis-Base-Blockchain
+        // Expected owner (deployer): 0x3563388d0E1c2D66A004E5E57717dc6D7e568BE3
+        const contractOwner = await lensContract.owner()
+        const walletAddress = await wallet.getAddress()
+        
+        if (contractOwner.toLowerCase() !== walletAddress.toLowerCase()) {
+            debugError('EmitLensEvent', 'Wallet is not contract owner', new Error(`Wallet ${walletAddress} is not the owner. Contract owner is ${contractOwner}`))
+            return {
+                success: false,
+                error: `Wallet address ${walletAddress} is not the owner of the LensKernel contract. The contract owner is ${contractOwner}. Please ensure BLOCKCHAIN_PRIVATE_KEY corresponds to the deployer wallet (0x3563388d0E1c2D66A004E5E57717dc6D7e568BE3). The extendLens() function requires onlyOwner modifier.`
+            }
+        }
+        
         // Convert data to bytes
         const dataBytes = ethers.toUtf8Bytes(data)
         
-        // Estimate gas
-        const gasEstimate = await lensContract.extendLens.estimateGas(extensionType, dataBytes)
+        debug('EmitLensEvent', 'Calling extendLens', {
+            extensionType,
+            dataLength: dataBytes.length,
+            walletAddress,
+            contractOwner
+        })
+        
+        // Try to estimate gas first - this will fail early if there's an issue
+        let gasEstimate: bigint
+        try {
+            gasEstimate = await lensContract.extendLens.estimateGas(extensionType, dataBytes)
+            debug('EmitLensEvent', 'Gas estimate successful', { gasEstimate: gasEstimate.toString() })
+        } catch (estimateError: any) {
+            debugError('EmitLensEvent', 'Gas estimation failed', estimateError)
+            // If gas estimation fails, try to extract the revert reason
+            const revertReason = estimateError.reason || estimateError.message || 'Gas estimation failed'
+            return {
+                success: false,
+                error: `Gas estimation failed: ${revertReason}. This usually means the transaction would revert. Check that the wallet is the contract owner and all parameters are valid.`
+            }
+        }
         
         // Call extendLens function
         const tx = await lensContract.extendLens(extensionType, dataBytes, {
@@ -546,7 +583,8 @@ export async function queryMetalAllocatedEvents(
         const { provider } = createBaseProvider(config)
         
         // Normalize contract address to checksummed format to prevent ENS resolution
-        const synth90TAddress = ethers.getAddress(config.synth90TAddress)
+        // Trim again in case config was created before trimming fix
+        const synth90TAddress = ethers.getAddress(config.synth90TAddress.trim())
         
         const synthContract = new ethers.Contract(
             synth90TAddress,
