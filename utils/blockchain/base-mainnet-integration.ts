@@ -65,8 +65,9 @@ export function getBaseMainnetConfig(): BaseMainnetConfig | null {
         chainId = 8453
     }
     
-    const synth90TAddress = process.env.SYNTH90T_CONTRACT_ADDRESS || '0xAC9fa48Ca1D60e5274d14c7CEd6B3F4C1ADd1Aa3'
-    const lensKernelAddress = process.env.LENS_KERNEL_CONTRACT_ADDRESS || '0xD9ABf9B19B4812A2fd06c5E8986B84040505B9D8'
+    // Trim all addresses and keys to remove any trailing newlines/whitespace
+    const synth90TAddress = (process.env.SYNTH90T_CONTRACT_ADDRESS || '0xAC9fa48Ca1D60e5274d14c7CEd6B3F4C1ADd1Aa3').trim()
+    const lensKernelAddress = (process.env.LENS_KERNEL_CONTRACT_ADDRESS || '0xD9ABf9B19B4812A2fd06c5E8986B84040505B9D8').trim()
     const privateKey = process.env.BLOCKCHAIN_PRIVATE_KEY?.trim() // Trim whitespace/newlines
     
     if (!privateKey) {
