@@ -77,7 +77,9 @@ export async function GET(request: NextRequest) {
             status: sufficient ? 'sufficient' : 'low_balance',
             message: sufficient 
                 ? 'Sufficient balance for transactions' 
-                : `Low balance! Get Base Sepolia ETH from: https://www.coinbase.com/faucets/base-ethereum-sepolia-faucet`
+                : config.chainId === 8453
+                    ? `Low balance! You need Base Mainnet ETH. Transfer ETH to: ${address}`
+                    : `Low balance! Get Base Sepolia ETH from: https://www.coinbase.com/faucets/base-ethereum-sepolia-faucet`
         })
         
     } catch (error) {

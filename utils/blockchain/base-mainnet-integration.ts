@@ -96,16 +96,29 @@ export function createBaseProvider(config: BaseMainnetConfig): {
         name: config.chainId === 8453 ? 'base-mainnet' : 'base-sepolia'
     })
     
-    // Override resolveName to prevent ENS resolution attempts
+    // Override resolveName and getEnsAddress to prevent ENS resolution attempts
     // Base doesn't support ENS, so we return the input as-is if it's already an address
-    const originalResolveName = provider.resolveName.bind(provider)
     provider.resolveName = async (name: string): Promise<string | null> => {
         // If it's already a valid address, return it
         if (ethers.isAddress(name)) {
             return name
         }
-        // Otherwise, throw an error indicating ENS is not supported
-        throw new Error(`ENS resolution not supported on Base network. Use a valid address instead of: ${name}`)
+        // Otherwise, return null (don't throw - just return null to indicate no resolution)
+        return null
+    }
+    
+    // Override getEnsAddress to prevent ENS lookups
+    // @ts-ignore - getEnsAddress might not be in the type definition but exists at runtime
+    if (provider.getEnsAddress) {
+        // @ts-ignore
+        provider.getEnsAddress = async (name: string): Promise<string | null> => {
+            // If it's already a valid address, return it
+            if (ethers.isAddress(name)) {
+                return name
+            }
+            // Return null instead of trying ENS resolution
+            return null
+        }
     }
     
     const wallet = new ethers.Wallet(config.privateKey, provider)
@@ -370,6 +383,10 @@ export async function emitLensEvent(
                 errorMessage = `Network error: ${errorMessage}. Check RPC URL and network connectivity.`
             } else if (errorMessage.includes('rate limit')) {
                 errorMessage = 'Rate limit exceeded (try again later)'
+            } else if (errorMessage.includes('ENS') || errorMessage.includes('getEnsAddress') || errorMessage.includes('UNSUPPORTED_OPERATION')) {
+                // Ignore ENS errors - Base doesn't support ENS, but this shouldn't block transactions
+                // If the error is specifically about ENS, we can continue without it
+                errorMessage = `ENS not supported on Base (this is expected). ${errorMessage}`
             }
         }
         
