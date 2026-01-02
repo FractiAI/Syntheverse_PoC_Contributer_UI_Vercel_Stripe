@@ -96,14 +96,17 @@ export function createBaseProvider(config: BaseMainnetConfig): {
         name: config.chainId === 8453 ? 'base-mainnet' : 'base-sepolia'
     })
     
-    // Override resolveName and getEnsAddress to prevent ENS resolution attempts
-    // Base doesn't support ENS, so we return the input as-is if it's already an address
+    // Override resolveName to prevent ENS resolution attempts on Base network
+    // Base doesn't support ENS, so we return checksummed addresses immediately
+    const originalResolveName = provider.resolveName.bind(provider)
     provider.resolveName = async (name: string): Promise<string | null> => {
-        // If it's already a valid address, return it
+        // If it's already a valid address, return it checksummed immediately
+        // This prevents ethers.js from attempting ENS resolution
         if (ethers.isAddress(name)) {
-            return name
+            return ethers.getAddress(name) // Return checksummed address
         }
-        // Otherwise, return null (don't throw - just return null to indicate no resolution)
+        // For non-address strings, return null (don't attempt ENS resolution)
+        // This prevents the "network does not support ENS" error
         return null
     }
     
@@ -112,11 +115,23 @@ export function createBaseProvider(config: BaseMainnetConfig): {
     if (provider.getEnsAddress) {
         // @ts-ignore
         provider.getEnsAddress = async (name: string): Promise<string | null> => {
-            // If it's already a valid address, return it
+            // If it's already a valid address, return it checksummed immediately
             if (ethers.isAddress(name)) {
-                return name
+                return ethers.getAddress(name) // Return checksummed address
             }
             // Return null instead of trying ENS resolution
+            return null
+        }
+    }
+    
+    // Also override _getAddress to prevent internal ENS resolution
+    // @ts-ignore - Internal method that might be called
+    if ((provider as any)._getAddress) {
+        // @ts-ignore
+        (provider as any)._getAddress = async (name: string): Promise<string | null> => {
+            if (ethers.isAddress(name)) {
+                return ethers.getAddress(name)
+            }
             return null
         }
     }
@@ -159,9 +174,12 @@ export async function allocateTokens(
         
         const { provider, wallet } = createBaseProvider(config)
         
+        // Normalize contract address to checksummed format to prevent ENS resolution
+        const synth90TAddress = ethers.getAddress(config.synth90TAddress)
+        
         // Create contract instance
         const synthContract = new ethers.Contract(
-            config.synth90TAddress,
+            synth90TAddress,
             SyntheverseGenesisSYNTH90TABI,
             wallet
         )
@@ -262,8 +280,11 @@ export async function getMetalBalance(metal: 'gold' | 'silver' | 'copper'): Prom
         
         const { provider } = createBaseProvider(config)
         
+        // Normalize contract address to checksummed format to prevent ENS resolution
+        const synth90TAddress = ethers.getAddress(config.synth90TAddress)
+        
         const synthContract = new ethers.Contract(
-            config.synth90TAddress,
+            synth90TAddress,
             SyntheverseGenesisSYNTH90TABI,
             provider
         )
@@ -292,8 +313,11 @@ export async function getContributorBalance(contributorAddress: string): Promise
         
         const { provider } = createBaseProvider(config)
         
+        // Normalize contract address to checksummed format to prevent ENS resolution
+        const synth90TAddress = ethers.getAddress(config.synth90TAddress)
+        
         const synthContract = new ethers.Contract(
-            config.synth90TAddress,
+            synth90TAddress,
             SyntheverseGenesisSYNTH90TABI,
             provider
         )
@@ -475,8 +499,11 @@ export async function getLensInfo(): Promise<{
         
         const { provider } = createBaseProvider(config)
         
+        // Normalize contract address to checksummed format to prevent ENS resolution
+        const lensKernelAddress = ethers.getAddress(config.lensKernelAddress)
+        
         const lensContract = new ethers.Contract(
-            config.lensKernelAddress,
+            lensKernelAddress,
             SyntheverseGenesisLensKernelABI,
             provider
         )
@@ -517,8 +544,11 @@ export async function queryMetalAllocatedEvents(
         
         const { provider } = createBaseProvider(config)
         
+        // Normalize contract address to checksummed format to prevent ENS resolution
+        const synth90TAddress = ethers.getAddress(config.synth90TAddress)
+        
         const synthContract = new ethers.Contract(
-            config.synth90TAddress,
+            synth90TAddress,
             SyntheverseGenesisSYNTH90TABI,
             provider
         )
