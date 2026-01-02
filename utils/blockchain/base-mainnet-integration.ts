@@ -91,12 +91,22 @@ export function createBaseProvider(config: BaseMainnetConfig): {
     wallet: ethers.Wallet
 } {
     // Base doesn't support ENS, so we disable it to avoid errors
-    // Note: We don't set ensAddress to avoid ENS resolution attempts
     const provider = new ethers.JsonRpcProvider(config.rpcUrl, {
         chainId: config.chainId,
         name: config.chainId === 8453 ? 'base-mainnet' : 'base-sepolia'
-        // ensAddress is omitted - Base doesn't support ENS
     })
+    
+    // Override resolveName to prevent ENS resolution attempts
+    // Base doesn't support ENS, so we return the input as-is if it's already an address
+    const originalResolveName = provider.resolveName.bind(provider)
+    provider.resolveName = async (name: string): Promise<string | null> => {
+        // If it's already a valid address, return it
+        if (ethers.isAddress(name)) {
+            return name
+        }
+        // Otherwise, throw an error indicating ENS is not supported
+        throw new Error(`ENS resolution not supported on Base network. Use a valid address instead of: ${name}`)
+    }
     
     const wallet = new ethers.Wallet(config.privateKey, provider)
     
