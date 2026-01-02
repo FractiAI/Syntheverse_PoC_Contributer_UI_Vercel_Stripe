@@ -6,6 +6,8 @@
  */
 
 import { debug, debugError } from '@/utils/debug'
+import { ethers } from 'ethers'
+import POCRegistryABI from './POCRegistry.abi.json'
 
 export interface BlockchainRegistrationResult {
     success: boolean
@@ -15,16 +17,44 @@ export interface BlockchainRegistrationResult {
 }
 
 /**
+ * Map epoch string to number for contract
+ */
+function epochToNumber(epoch: string): number {
+    const epochMap: Record<string, number> = {
+        'founder': 1,
+        'pioneer': 2,
+        'community': 3,
+        'ecosystem': 4
+    }
+    return epochMap[epoch.toLowerCase()] || 1 // Default to founder if unknown
+}
+
+/**
+ * Derive Ethereum address from contributor email
+ * Uses a deterministic hash-based approach
+ * Note: In production, users should connect wallets for real addresses
+ */
+async function deriveAddressFromEmail(email: string): Promise<string> {
+    // Create a deterministic address from email hash
+    // This is a placeholder - in production, users should connect wallets
+    const crypto = await import('crypto')
+    const hash = crypto.createHash('sha256').update(email.toLowerCase().trim()).digest('hex')
+    // Use first 20 bytes (40 hex chars) to create a valid Ethereum address
+    // This creates a deterministic but non-standard address
+    // For production, consider: zero address, or require wallet connection
+    return '0x' + hash.substring(0, 40)
+}
+
+/**
  * Register PoC on Hard Hat L1 blockchain
  * 
  * This function creates a blockchain transaction to register the PoC
  * on the Hard Hat L1 network. The transaction includes:
  * - Submission hash
- * - Contributor address
- * - PoC scores (novelty, density, coherence, alignment)
- * - Metal type
- * - Submission text hash (SHA-256) for anchoring the submitted artifact
- * - Registration timestamp
+ * - Contributor address (derived from email)
+ * - Metal type (first metal from array)
+ * - Allocated amount (0 if allocations not yet created)
+ * - Epoch number
  * 
  * @param submissionHash - PoC submission hash
  * @param contributor - Contributor email/address
@@ -42,6 +72,7 @@ export async function registerPoCOnBlockchain(
         coherence?: number
         alignment?: number
         pod_score?: number
+        qualified_epoch?: string
     },
     metals: string[],
     submissionText?: string | null
@@ -68,82 +99,141 @@ export async function registerPoCOnBlockchain(
     try {
         // Check if Hard Hat RPC URL is configured
         const hardhatRpcUrl = process.env.HARDHAT_RPC_URL || process.env.NEXT_PUBLIC_HARDHAT_RPC_URL
+        const contractAddress = process.env.POC_REGISTRY_ADDRESS
+        const privateKey = process.env.BLOCKCHAIN_PRIVATE_KEY
         
         if (!hardhatRpcUrl) {
-            debug('RegisterPoCBlockchain', 'Hard Hat RPC URL not configured, using mock transaction', {
-                submissionHash
+            debugError('RegisterPoCBlockchain', 'Hard Hat RPC URL not configured', {
+                submissionHash,
+                note: 'Set HARDHAT_RPC_URL or NEXT_PUBLIC_HARDHAT_RPC_URL environment variable'
             })
-            
-            // For now, generate a mock transaction hash
-            // In production, this would connect to Hard Hat L1 and create a real transaction
-            const mockTxHash = generateMockTransactionHash(submissionHash)
-            
             return {
-                success: true,
-                transaction_hash: mockTxHash,
-                block_number: Date.now(), // Mock block number
+                success: false,
+                error: 'Hard Hat RPC URL not configured'
             }
         }
         
-        // TODO: Implement actual Hard Hat L1 blockchain integration
-        // This would use ethers.js or web3.js to:
-        // 1. Connect to Hard Hat L1 RPC endpoint
-        // 2. Load POCRegistry contract
-        // 3. Call recordEvaluation or registerCertificate function with:
-        //    - submission_hash
-        //    - contributor address
-        //    - PoC scores (novelty, density, coherence, alignment, pod_score)
-        //    - metals array
-        //    - submission_text_hash (SHA-256) OR an IPFS/Arweave hash if you later store large artifacts off-chain
-        // 4. Store hashes on-chain (recommended) instead of raw content
-        // 5. Wait for transaction confirmation
-        // 6. Return transaction hash and block number
+        if (!contractAddress) {
+            debugError('RegisterPoCBlockchain', 'POC Registry contract address not configured', {
+                submissionHash,
+                note: 'Set POC_REGISTRY_ADDRESS environment variable'
+            })
+            return {
+                success: false,
+                error: 'POC Registry contract address not configured'
+            }
+        }
         
-        debug('RegisterPoCBlockchain', 'Blockchain registration would be implemented here', {
-            hardhatRpcUrl: hardhatRpcUrl.substring(0, 20) + '...',
-            submissionHash,
-            submissionTextHash: submissionTextHash || 'none',
-            note: 'Text-only submissions: anchor via SHA-256 hash (or store off-chain and anchor content hash)'
+        if (!privateKey) {
+            debugError('RegisterPoCBlockchain', 'Blockchain private key not configured', {
+                submissionHash,
+                note: 'Set BLOCKCHAIN_PRIVATE_KEY environment variable (owner wallet private key)'
+            })
+            return {
+                success: false,
+                error: 'Blockchain private key not configured'
+            }
+        }
+        
+        // Connect to Hardhat network
+        debug('RegisterPoCBlockchain', 'Connecting to Hardhat network', {
+            rpcUrl: hardhatRpcUrl.substring(0, 30) + '...',
+            contractAddress: contractAddress.substring(0, 20) + '...'
         })
         
-        // For now, return mock transaction
-        const mockTxHash = generateMockTransactionHash(submissionHash)
+        const provider = new ethers.JsonRpcProvider(hardhatRpcUrl)
+        const wallet = new ethers.Wallet(privateKey, provider)
+        
+        // Create contract instance
+        const contract = new ethers.Contract(contractAddress, POCRegistryABI, wallet)
+        
+        // Prepare contract parameters
+        // submissionHash is hex string (64 chars), convert to bytes32
+        const submissionHashWithPrefix = submissionHash.startsWith('0x') ? submissionHash : '0x' + submissionHash
+        const submissionHashBytes32 = ethers.zeroPadValue(submissionHashWithPrefix, 32)
+        
+        // Derive contributor address from email (placeholder - in production use wallet addresses)
+        const contributorAddress = await deriveAddressFromEmail(contributor)
+        
+        // Use first metal from array (contract takes single string)
+        const metal = metals && metals.length > 0 ? metals[0] : 'copper'
+        
+        // Allocated amount - use 0 as default since allocations may not be created yet
+        // Contract can be updated later via updateContribution if needed
+        const allocatedAmount = 0
+        
+        // Get epoch number (default to founder if not specified)
+        const epochStr = metadata.qualified_epoch || 'founder'
+        const epochNumber = epochToNumber(epochStr)
+        
+        debug('RegisterPoCBlockchain', 'Calling registerContribution', {
+            submissionHash: submissionHash.substring(0, 20) + '...',
+            contributorAddress,
+            metal,
+            allocatedAmount,
+            epoch: epochNumber,
+            epochStr
+        })
+        
+        // Call registerContribution function
+        const tx = await contract.registerContribution(
+            submissionHashBytes32,
+            contributorAddress,
+            metal,
+            allocatedAmount,
+            epochNumber,
+            {
+                // Gas limit (adjust if needed)
+                gasLimit: 500000
+            }
+        )
+        
+        debug('RegisterPoCBlockchain', 'Transaction sent, waiting for confirmation', {
+            txHash: tx.hash,
+            submissionHash: submissionHash.substring(0, 20) + '...'
+        })
+        
+        // Wait for transaction confirmation
+        const receipt = await tx.wait()
+        
+        debug('RegisterPoCBlockchain', 'Transaction confirmed', {
+            txHash: receipt.hash,
+            blockNumber: receipt.blockNumber,
+            gasUsed: receipt.gasUsed?.toString(),
+            submissionHash: submissionHash.substring(0, 20) + '...'
+        })
         
         return {
             success: true,
-            transaction_hash: mockTxHash,
-            block_number: Date.now(),
+            transaction_hash: receipt.hash,
+            block_number: receipt.blockNumber
         }
         
     } catch (error) {
         debugError('RegisterPoCBlockchain', 'Blockchain registration failed', error)
+        
+        // Provide more detailed error information
+        let errorMessage = 'Unknown blockchain error'
+        if (error instanceof Error) {
+            errorMessage = error.message
+            
+            // Check for common errors
+            if (errorMessage.includes('insufficient funds')) {
+                errorMessage = 'Insufficient funds in wallet for gas fees'
+            } else if (errorMessage.includes('nonce')) {
+                errorMessage = 'Transaction nonce error (try again)'
+            } else if (errorMessage.includes('revert')) {
+                errorMessage = `Transaction reverted: ${errorMessage}`
+            } else if (errorMessage.includes('network')) {
+                errorMessage = `Network error: ${errorMessage}`
+            }
+        }
+        
         return {
             success: false,
-            error: error instanceof Error ? error.message : 'Unknown blockchain error'
+            error: errorMessage
         }
     }
-}
-
-/**
- * Generate a mock transaction hash for testing
- * In production, this would be replaced by actual blockchain transaction
- */
-function generateMockTransactionHash(submissionHash: string): string {
-    // Generate a deterministic mock hash based on submission hash and timestamp
-    const timestamp = Date.now()
-    const combined = `${submissionHash}-${timestamp}`
-    
-    // Simple hash function (in production, use actual blockchain transaction hash)
-    let hash = 0
-    for (let i = 0; i < combined.length; i++) {
-        const char = combined.charCodeAt(i)
-        hash = ((hash << 5) - hash) + char
-        hash = hash & hash // Convert to 32-bit integer
-    }
-    
-    // Format as Ethereum transaction hash (0x + 64 hex chars)
-    const hexHash = Math.abs(hash).toString(16).padStart(64, '0')
-    return `0x${hexHash}`
 }
 
 /**
@@ -157,19 +247,28 @@ export async function verifyBlockchainTransaction(txHash: string): Promise<boole
         
         if (!hardhatRpcUrl) {
             debug('VerifyBlockchainTransaction', 'Hard Hat RPC URL not configured, skipping verification')
-            return true // Assume valid if not configured
+            return false
         }
         
-        // TODO: Implement actual transaction verification
-        // This would query the Hard Hat L1 blockchain to verify the transaction exists
+        debug('VerifyBlockchainTransaction', 'Verifying transaction', { txHash })
         
-        debug('VerifyBlockchainTransaction', 'Transaction verification would be implemented here', { txHash })
+        const provider = new ethers.JsonRpcProvider(hardhatRpcUrl)
+        const receipt = await provider.getTransactionReceipt(txHash)
         
-        return true // Mock verification
+        if (receipt && receipt.status === 1) {
+            debug('VerifyBlockchainTransaction', 'Transaction verified successfully', {
+                txHash,
+                blockNumber: receipt.blockNumber,
+                status: receipt.status
+            })
+            return true
+        } else {
+            debug('VerifyBlockchainTransaction', 'Transaction not found or failed', { txHash })
+            return false
+        }
         
     } catch (error) {
         debugError('VerifyBlockchainTransaction', 'Transaction verification failed', error)
         return false
     }
 }
-

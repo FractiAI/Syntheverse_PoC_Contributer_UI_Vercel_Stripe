@@ -266,7 +266,8 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
                         density: metadata.density,
                         coherence: metadata.coherence,
                         alignment: metadata.alignment,
-                        pod_score: metadata.pod_score
+                        pod_score: metadata.pod_score,
+                        qualified_epoch: metadata.qualified_epoch || 'founder'
                     },
                     metals,
                     contrib.text_content || null

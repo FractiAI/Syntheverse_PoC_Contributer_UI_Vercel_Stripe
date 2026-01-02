@@ -47,6 +47,7 @@ This repo currently contains:
 - **3D vectorized sandbox map**: Three.js + R3F visualization of PoCs as navigable infrastructure
 - **Auth + storage**: Supabase Auth + Postgres
 - **Payments**: Stripe Checkout + Billing Portal for operator-managed flows
+- **Blockchain integration**: Hardhat L1 blockchain registration with ethers.js v6
 
 ### Tech stack (reference client)
 
@@ -55,6 +56,8 @@ This repo currently contains:
 - **3D**: Three.js + React Three Fiber + Drei
 - **Auth/DB**: Supabase Auth + Postgres + Drizzle ORM
 - **Payments**: Stripe
+- **Blockchain**: Hardhat + ethers.js v6
+- **AI Evaluation**: Groq API (Grok)
 - **Deployment**: Vercel
 - **Language**: TypeScript
 
@@ -91,18 +94,29 @@ POC_ANCHORING_FEE_CENTS=50000
 # (optional) Display label used in Stripe product description (e.g., "Base", "Hardhat (devnet)")
 POC_ANCHORING_CHAIN_LABEL=Hardhat (devnet)
 
+# Blockchain (Hardhat)
+# (required for blockchain registration) Hardhat RPC endpoint URL
+HARDHAT_RPC_URL=http://localhost:8545
+# (required for blockchain registration) Deployed POCRegistry contract address
+POC_REGISTRY_ADDRESS=0x...
+# (required for blockchain registration) Contract owner's private key
+BLOCKCHAIN_PRIVATE_KEY=0x...
+
 # OAuth (optional)
 GOOGLE_CLIENT_ID=...
 GOOGLE_CLIENT_SECRET=...
 ```
 
-See `docs/deployment/VERCEL_ENV_SETUP.md` for the full setup checklist.
+See `docs/deployment/VERCEL_ENV_SETUP.md` for the full setup checklist.  
+See `docs/HARDHAT_BLOCKCHAIN_SETUP.md` for blockchain integration setup.
 
 ### Documentation map
 
 - **Protocol**: `protocol/README.md`
 - **Operator**: `operator/README.md`
+- **Code Review**: `docs/CODE_REVIEW_SENIOR_ENGINEER.md` - Comprehensive senior engineer code review
 - **Deployment**: `docs/deployment/VERCEL_DEPLOYMENT_GUIDE.md`
+- **Blockchain**: `docs/HARDHAT_BLOCKCHAIN_SETUP.md` - Hardhat integration setup
 - **OAuth**: `docs/oauth/OAUTH_QUICK_SETUP.md`
 - **Stripe**: `docs/stripe/STRIPE_WEBHOOK_SETUP.md`
 - **Supabase**: `docs/supabase/`
