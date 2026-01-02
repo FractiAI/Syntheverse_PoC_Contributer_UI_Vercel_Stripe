@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
             const feeData = await provider.getFeeData()
             if (feeData.gasPrice) {
                 gasPriceGwei = ethers.formatUnits(feeData.gasPrice, 'gwei')
-                const estimatedGas = 200000n // Typical contract interaction
+                const estimatedGas = BigInt(200000) // Typical contract interaction
                 const estimatedCost = feeData.gasPrice * estimatedGas
                 estimatedCostEth = ethers.formatEther(estimatedCost)
             }
