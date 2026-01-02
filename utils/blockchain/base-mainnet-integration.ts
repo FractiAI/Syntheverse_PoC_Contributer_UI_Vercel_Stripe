@@ -340,9 +340,29 @@ export async function emitLensEvent(
     } catch (error) {
         debugError('EmitLensEvent', 'Failed to emit lens event', error)
         
+        let errorMessage = 'Unknown error'
+        if (error instanceof Error) {
+            errorMessage = error.message
+            
+            // Check for common errors
+            if (errorMessage.includes('Ownable: caller is not the owner') || errorMessage.includes('onlyOwner')) {
+                errorMessage = 'Wallet is not the owner of the LensKernel contract. Check BLOCKCHAIN_PRIVATE_KEY matches the contract owner.'
+            } else if (errorMessage.includes('insufficient funds')) {
+                errorMessage = 'Insufficient funds in wallet for gas fees'
+            } else if (errorMessage.includes('nonce')) {
+                errorMessage = 'Transaction nonce error (try again)'
+            } else if (errorMessage.includes('revert')) {
+                errorMessage = `Transaction reverted: ${errorMessage}`
+            } else if (errorMessage.includes('network') || errorMessage.includes('ECONNREFUSED')) {
+                errorMessage = `Network error: ${errorMessage}. Check RPC URL and network connectivity.`
+            } else if (errorMessage.includes('rate limit')) {
+                errorMessage = 'Rate limit exceeded (try again later)'
+            }
+        }
+        
         return {
             success: false,
-            error: error instanceof Error ? error.message : 'Unknown error'
+            error: errorMessage
         }
     }
 }

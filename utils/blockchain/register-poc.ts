@@ -141,7 +141,6 @@ export async function registerPoCOnBlockchain(
         }
         
         const eventDataJson = JSON.stringify(eventData)
-        const eventDataBytes = ethers.toUtf8Bytes(eventDataJson)
         
         debug('RegisterPoCBlockchain', 'Emitting Lens event for PoC registration', {
             submissionHash: submissionHash.substring(0, 20) + '...',
@@ -151,7 +150,8 @@ export async function registerPoCOnBlockchain(
         })
         
         // Emit Lens event to record PoC registration
-        const lensResult = await emitLensEvent('poc_registration', ethers.hexlify(eventDataBytes))
+        // Pass JSON string directly - emitLensEvent will convert to bytes
+        const lensResult = await emitLensEvent('poc_registration', eventDataJson)
         
         if (!lensResult.success || !lensResult.transaction_hash) {
             debugError('RegisterPoCBlockchain', 'Failed to emit Lens event', new Error(lensResult.error || 'Unknown error'))
