@@ -66,9 +66,23 @@ export function getBaseMainnetConfig(): BaseMainnetConfig | null {
     }
     
     // Trim all addresses and keys to remove any trailing newlines/whitespace
-    const synth90TAddress = (process.env.SYNTH90T_CONTRACT_ADDRESS || '0xAC9fa48Ca1D60e5274d14c7CEd6B3F4C1ADd1Aa3').trim()
-    const lensKernelAddress = (process.env.LENS_KERNEL_CONTRACT_ADDRESS || '0xD9ABf9B19B4812A2fd06c5E8986B84040505B9D8').trim()
-    const privateKey = process.env.BLOCKCHAIN_PRIVATE_KEY?.trim() // Trim whitespace/newlines
+    // CRITICAL: Environment variables from Vercel may have trailing newlines
+    // We need to trim aggressively to ensure clean addresses
+    const synth90TAddress = (process.env.SYNTH90T_CONTRACT_ADDRESS || '0xAC9fa48Ca1D60e5274d14c7CEd6B3F4C1ADd1Aa3')
+        .trim()
+        .replace(/\n/g, '')
+        .replace(/\r/g, '')
+        .trim()
+    const lensKernelAddress = (process.env.LENS_KERNEL_CONTRACT_ADDRESS || '0xD9ABf9B19B4812A2fd06c5E8986B84040505B9D8')
+        .trim()
+        .replace(/\n/g, '')
+        .replace(/\r/g, '')
+        .trim()
+    const privateKey = process.env.BLOCKCHAIN_PRIVATE_KEY
+        ?.trim()
+        .replace(/\n/g, '')
+        .replace(/\r/g, '')
+        .trim() // Trim whitespace/newlines aggressively
     
     if (!privateKey) {
         debugError('BaseMainnetConfig', 'BLOCKCHAIN_PRIVATE_KEY not configured', new Error('Missing BLOCKCHAIN_PRIVATE_KEY environment variable'))
@@ -363,17 +377,31 @@ export async function emitLensEvent(
         // Trim again in case config was created before trimming fix
         const lensKernelAddress = ethers.getAddress(config.lensKernelAddress.trim())
         
+        // Create contract instance with wallet as signer
         const lensContract = new ethers.Contract(
             lensKernelAddress,
             SyntheverseGenesisLensKernelABI,
             wallet
         )
         
+        const walletAddress = await wallet.getAddress()
+        
+        // Verify contract is accessible by calling a view function
+        try {
+            const [name, purpose, version, genesis] = await lensContract.getLensInfo()
+            debug('EmitLensEvent', 'Contract accessible', { name, purpose, version: version.toString(), genesis: genesis.toString() })
+        } catch (viewError) {
+            debugError('EmitLensEvent', 'Failed to call getLensInfo view function', viewError)
+            return {
+                success: false,
+                error: `Cannot access contract at ${lensKernelAddress}. Check contract address and network configuration.`
+            }
+        }
+        
         // Check if wallet is the contract owner (extendLens requires onlyOwner)
         // Based on successful deployment: https://github.com/FractiAI/Syntheverse-Genesis-Base-Blockchain
         // Expected owner (deployer): 0x3563388d0E1c2D66A004E5E57717dc6D7e568BE3
         const contractOwner = await lensContract.owner()
-        const walletAddress = await wallet.getAddress()
         
         if (contractOwner.toLowerCase() !== walletAddress.toLowerCase()) {
             debugError('EmitLensEvent', 'Wallet is not contract owner', new Error(`Wallet ${walletAddress} is not the owner. Contract owner is ${contractOwner}`))
