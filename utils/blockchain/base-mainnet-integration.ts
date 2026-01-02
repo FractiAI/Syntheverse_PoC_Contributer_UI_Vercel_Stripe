@@ -422,16 +422,32 @@ export async function queryMetalAllocatedEvents(
             toBlock || 'latest'
         )
         
-        return events.map(event => ({
-            submissionHash: event.args[0],
-            contributor: event.args[1],
-            metal: event.args[2],
-            amount: event.args[3].toString(),
-            epochBalance: event.args[4].toString(),
-            timestamp: Number(event.args[5]),
-            blockNumber: event.blockNumber,
-            transactionHash: event.transactionHash
-        }))
+        return events.map(event => {
+            // Type guard for EventLog
+            if ('args' in event && event.args) {
+                return {
+                    submissionHash: event.args[0],
+                    contributor: event.args[1],
+                    metal: event.args[2],
+                    amount: event.args[3].toString(),
+                    epochBalance: event.args[4].toString(),
+                    timestamp: Number(event.args[5]),
+                    blockNumber: event.blockNumber,
+                    transactionHash: event.transactionHash
+                }
+            }
+            // Fallback for Log type
+            return {
+                submissionHash: '',
+                contributor: '',
+                metal: '',
+                amount: '0',
+                epochBalance: '0',
+                timestamp: 0,
+                blockNumber: event.blockNumber,
+                transactionHash: event.transactionHash
+            }
+        })
         
     } catch (error) {
         debugError('QueryMetalAllocatedEvents', 'Failed to query events', error)

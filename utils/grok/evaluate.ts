@@ -58,6 +58,17 @@ interface GrokEvaluationResult {
     redundancy_overlap_percent?: number
     is_seed_submission?: boolean
     raw_grok_response?: string
+    llm_metadata?: {
+        timestamp: string
+        date: string
+        model: string
+        model_version: string
+        provider: string
+        system_prompt_preview: string
+        system_prompt_hash: string
+        system_prompt_file: string
+        evaluation_timestamp_ms: number
+    }
 }
 
 // Call Grok API directly for PoC evaluation
@@ -94,6 +105,17 @@ export async function evaluateWithGrok(
     redundancy_overlap_percent?: number
     is_seed_submission?: boolean
     raw_grok_response?: string
+    llm_metadata?: {
+        timestamp: string
+        date: string
+        model: string
+        model_version: string
+        provider: string
+        system_prompt_preview: string
+        system_prompt_hash: string
+        system_prompt_file: string
+        evaluation_timestamp_ms: number
+    }
 }> {
     const grokApiKey = process.env.NEXT_PUBLIC_GROK_API_KEY
     if (!grokApiKey) {
