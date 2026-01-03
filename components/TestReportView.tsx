@@ -59,7 +59,7 @@ export default function TestReportView() {
                 if (data.report) {
                     setReport(data.report)
                     // Expand failed suites by default
-                    const failedSuites = new Set(
+                    const failedSuites = new Set<string>(
                         data.report.suites
                             .filter((s: TestSuite) => s.status === 'failed' || s.status === 'partial')
                             .map((s: TestSuite) => s.suiteId)
