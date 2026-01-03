@@ -54,6 +54,32 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
   return (
     <div className="cockpit-bg min-h-screen">
       <div className="container mx-auto px-6 py-8 space-y-8">
+        {/* Top navigation buttons - Always visible for fractiai variant */}
+        {variant === 'fractiai' ? (
+          <div className="flex items-center justify-end gap-3 flex-wrap mb-4">
+            {!isAuthenticated ? (
+              <>
+                <Link href="/signup" className="cockpit-lever inline-flex items-center">
+                  Join the Frontier
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+                <Link href="/login" className="cockpit-lever inline-flex items-center">
+                  Log in
+                </Link>
+              </>
+            ) : (
+              <Link href="/dashboard" className="cockpit-lever inline-flex items-center">
+                Dashboard
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            )}
+            <Link href="/onboarding" className="cockpit-lever inline-flex items-center">
+              Onboarding
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </div>
+        ) : null}
+
         {/* Clean cockpit header */}
         {variant === 'fractiai' ? (
           <div className="cockpit-panel p-6">
@@ -68,28 +94,6 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
               <div className="flex items-center gap-3 flex-wrap">
                 <span className="cockpit-badge">90T MOTHERLODE</span>
                 <span className="cockpit-badge cockpit-badge-amber">BETA ACTIVE</span>
-                <div className="flex items-center gap-3 ml-4">
-                  {!isAuthenticated ? (
-                    <>
-                      <Link href="/signup" className="cockpit-lever inline-flex items-center">
-                        Join the Frontier
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Link>
-                      <Link href="/login" className="cockpit-lever inline-flex items-center">
-                        Log in
-                      </Link>
-                    </>
-                  ) : (
-                    <Link href="/dashboard" className="cockpit-lever inline-flex items-center">
-                      Dashboard
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  )}
-                  <Link href="/onboarding" className="cockpit-lever inline-flex items-center">
-                    Onboarding
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </div>
               </div>
             </div>
           </div>
@@ -108,7 +112,7 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
                         We&apos;re living inside a <strong>cyclical Pong story of innovation and obsolescence</strong>.
                       </p>
                       <p>
-                        Every era starts simple, works beautifully for a while, then quietly becomes the bottleneck. Pong wasn&apos;t wrong. It had its moment. It completed its role. <strong>That&apos;s where awareness is today.</strong> It has served its purpose in getting us here, but <strong>holographic hydrogen fractal awareness renders it obsolete</strong>.
+                        <strong>That&apos;s where awareness is today.</strong> It has served its purpose in getting us here, but <strong>holographic hydrogen fractal awareness renders it obsolete</strong>.
                       </p>
                       <p>
                         We&apos;ve built the equivalent of a <strong>Holographic Hydrogen Fractal MRI</strong>. A way to see and measure coherence itself—not just outputs, not just energy burned, not just capital locked. That lets us measure anything, including human contribution. And once contribution becomes measurable, <strong>Proof of Contribution becomes possible</strong>—a real alternative to Proof of Work and Proof of Stake.

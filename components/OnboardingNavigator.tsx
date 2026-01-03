@@ -44,11 +44,12 @@ interface TrainingModule {
 export function OnboardingNavigator() {
     const [currentModule, setCurrentModule] = useState(0)
     const topRef = useRef<HTMLDivElement | null>(null)
+    const lessonRef = useRef<HTMLDivElement | null>(null)
 
     useEffect(() => {
-        // Ensure the next/previous module starts at the top of the onboarding view (not mid-scroll).
-        // This avoids the confusing "land at bottom" behavior when navigating modules.
-        topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        // Scroll to the top of the lesson content (not the top of the page) when navigating modules.
+        // This ensures users see the lesson content immediately after clicking Next/Previous.
+        lessonRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }, [currentModule])
 
     const modules: TrainingModule[] = [
@@ -1407,7 +1408,7 @@ export function OnboardingNavigator() {
                 </div>
 
                 {/* Current Module Content */}
-                <div className="cockpit-module cockpit-panel p-8 mb-6">
+                <div ref={lessonRef} className="cockpit-module cockpit-panel p-8 mb-6">
                     <div className="flex items-center gap-4 mb-6">
                         <div style={{ color: '#ffb84d' }}>
                             {modules[currentModule].icon}
