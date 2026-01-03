@@ -68,11 +68,17 @@ export function getBaseMainnetConfig(): BaseMainnetConfig | null {
     // Simple address handling - trim only, trust ethers.getAddress() for validation
     const synth90TAddress = (process.env.SYNTH90T_CONTRACT_ADDRESS || '0xAC9fa48Ca1D60e5274d14c7CEd6B3F4C1ADd1Aa3').trim()
     const lensKernelAddress = (process.env.LENS_KERNEL_CONTRACT_ADDRESS || '0xD9ABf9B19B4812A2fd06c5E8986B84040505B9D8').trim()
-    const privateKey = process.env.BLOCKCHAIN_PRIVATE_KEY?.trim()
+    let privateKey = process.env.BLOCKCHAIN_PRIVATE_KEY?.trim()
     
     if (!privateKey) {
         debugError('BaseMainnetConfig', 'BLOCKCHAIN_PRIVATE_KEY not configured', new Error('Missing BLOCKCHAIN_PRIVATE_KEY environment variable'))
         return null
+    }
+    
+    // Ensure private key has 0x prefix (required by ethers.js)
+    if (!privateKey.startsWith('0x')) {
+        privateKey = '0x' + privateKey
+        debug('BaseMainnetConfig', 'Added 0x prefix to private key')
     }
     
     return {
@@ -372,7 +378,6 @@ export async function emitLensEvent(
             }
             
             // Extract ethers.js specific error information
-            // Type assertion for ethers.js error properties
             const ethersError = error as any
             
             if (ethersError.code) {
@@ -383,6 +388,27 @@ export async function emitLensEvent(
             }
             if (ethersError.data) {
                 errorDetails.data = ethersError.data
+                
+                // Try to decode revert reason from error data
+                // require(false) errors often have the actual reason in the data
+                try {
+                    if (typeof ethersError.data === 'string' && ethersError.data.startsWith('0x')) {
+                        // Try to decode as Error(string) revert
+                        const errorSig = ethers.id('Error(string)').slice(0, 10) // 0x08c379a0
+                        if (ethersError.data.startsWith(errorSig)) {
+                            const decoded = ethers.AbiCoder.defaultAbiCoder().decode(
+                                ['string'],
+                                '0x' + ethersError.data.slice(10)
+                            )
+                            if (decoded && decoded[0]) {
+                                errorDetails.decodedReason = decoded[0]
+                                errorMessage = `Transaction reverted: ${decoded[0]}`
+                            }
+                        }
+                    }
+                } catch (decodeError) {
+                    // If decoding fails, continue with original error
+                }
             }
             if (ethersError.transaction) {
                 errorDetails.transaction = {
