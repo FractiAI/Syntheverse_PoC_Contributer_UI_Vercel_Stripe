@@ -368,6 +368,28 @@ export async function emitLensEvent(
         // Convert data to bytes
         const dataBytes = ethers.toUtf8Bytes(data)
         
+        // Check wallet balance before attempting transaction
+        const balance = await provider.getBalance(walletAddress)
+        const feeData = await provider.getFeeData()
+        const estimatedGasCost = (feeData.gasPrice || 0n) * 200000n // Estimate ~200k gas
+        
+        debug('EmitLensEvent', 'Pre-transaction checks', {
+            extensionType,
+            dataLength: dataBytes.length,
+            contractAddress: lensKernelAddress,
+            walletAddress,
+            balance: ethers.formatEther(balance),
+            gasPrice: feeData.gasPrice ? ethers.formatUnits(feeData.gasPrice, 'gwei') : 'unknown',
+            estimatedCost: ethers.formatEther(estimatedGasCost)
+        })
+        
+        if (balance < estimatedGasCost) {
+            return {
+                success: false,
+                error: `Insufficient balance for gas. Balance: ${ethers.formatEther(balance)} ETH, Estimated cost: ${ethers.formatEther(estimatedGasCost)} ETH`
+            }
+        }
+        
         debug('EmitLensEvent', 'Calling extendLens', {
             extensionType,
             dataLength: dataBytes.length,
@@ -375,9 +397,11 @@ export async function emitLensEvent(
             walletAddress
         })
         
-        // Direct call - no pre-checks, no gas estimation
-        // Match the working deployment pattern exactly
-        const tx = await lensContract.extendLens(extensionType, dataBytes)
+        // Direct call with explicit gas limit to bypass estimation issues
+        // Use a generous gas limit (300k) to avoid estimation failures
+        const tx = await lensContract.extendLens(extensionType, dataBytes, {
+            gasLimit: 300000n
+        })
         
         debug('EmitLensEvent', 'Transaction sent', { txHash: tx.hash })
         
