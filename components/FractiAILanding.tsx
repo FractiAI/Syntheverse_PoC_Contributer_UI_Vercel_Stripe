@@ -53,32 +53,36 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
   const showAuthButtons = variant === 'fractiai' && !isAuthenticated
   return (
     <div className="cockpit-bg min-h-screen">
-      <div className="container mx-auto px-6 py-8 space-y-8">
-        {/* Top navigation buttons - Always visible for fractiai variant */}
-        {variant === 'fractiai' ? (
-          <div className="flex items-center justify-end gap-3 flex-wrap mb-4">
-            {!isAuthenticated ? (
-              <>
-                <Link href="/signup" className="cockpit-lever inline-flex items-center">
-                  Join the Frontier
+      {/* Top navigation buttons - Always visible for fractiai variant, at absolute top */}
+      {variant === 'fractiai' ? (
+        <div className="w-full border-b border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
+          <div className="container mx-auto px-6 py-4">
+            <div className="flex items-center justify-end gap-3 flex-wrap">
+              {!isAuthenticated ? (
+                <>
+                  <Link href="/signup" className="cockpit-lever inline-flex items-center">
+                    Join the Frontier
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                  <Link href="/login" className="cockpit-lever inline-flex items-center">
+                    Log in
+                  </Link>
+                </>
+              ) : (
+                <Link href="/dashboard" className="cockpit-lever inline-flex items-center">
+                  Dashboard
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
-                <Link href="/login" className="cockpit-lever inline-flex items-center">
-                  Log in
-                </Link>
-              </>
-            ) : (
-              <Link href="/dashboard" className="cockpit-lever inline-flex items-center">
-                Dashboard
+              )}
+              <Link href="/onboarding" className="cockpit-lever inline-flex items-center">
+                Onboarding
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
-            )}
-            <Link href="/onboarding" className="cockpit-lever inline-flex items-center">
-              Onboarding
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
+            </div>
           </div>
-        ) : null}
+        </div>
+      ) : null}
+      <div className="container mx-auto px-6 py-8 space-y-8">
 
         {/* Clean cockpit header */}
         {variant === 'fractiai' ? (
