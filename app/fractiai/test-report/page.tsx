@@ -1,7 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import TestReportView from '@/components/TestReportView'
-import '../dashboard-cockpit.css'
+import '../../dashboard-cockpit.css'
 
 export const dynamic = 'force-dynamic'
 
