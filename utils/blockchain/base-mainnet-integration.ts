@@ -373,8 +373,8 @@ export async function emitLensEvent(
         const feeData = await provider.getFeeData()
         
         // Use a reasonable gas limit for extendLens (typically 100-150k, but use 200k for safety)
-        const gasLimit = 200000n
-        const gasPrice = feeData.gasPrice || await provider.getFeeData().then(f => f.gasPrice || 0n)
+        const gasLimit = BigInt(200000)
+        const gasPrice = feeData.gasPrice || await provider.getFeeData().then(f => f.gasPrice || BigInt(0))
         const estimatedGasCost = gasPrice * gasLimit
         
         // Convert to USD for better understanding (Base ETH price ~$2500, but this is approximate)
@@ -403,7 +403,7 @@ export async function emitLensEvent(
         })
         
         // Check if balance is sufficient (with 20% buffer for price fluctuations)
-        const requiredBalance = estimatedGasCost * 120n / 100n
+        const requiredBalance = estimatedGasCost * BigInt(120) / BigInt(100)
         if (balance < requiredBalance) {
             return {
                 success: false,
