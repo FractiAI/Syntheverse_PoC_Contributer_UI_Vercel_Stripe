@@ -322,12 +322,19 @@ export async function emitLensEvent(
             }
         }
         
-        const { provider, wallet } = createBaseProvider(config)
+        // Simple provider creation - no ENS overrides (matches working deployment)
+        const provider = new ethers.JsonRpcProvider(config.rpcUrl, {
+            chainId: config.chainId,
+            name: config.chainId === 8453 ? 'base-mainnet' : 'base-sepolia'
+        })
         
-        // Simple address handling - trim only at config level, trust ethers.getAddress()
+        // Simple wallet creation
+        const wallet = new ethers.Wallet(config.privateKey, provider)
+        
+        // Simple address handling - only trim at config level (trust ethers.getAddress())
         const lensKernelAddress = ethers.getAddress(config.lensKernelAddress.trim())
         
-        // Simple contract creation - direct pattern matching working deployment
+        // Simple contract creation - direct pattern (matches working deployment)
         const lensContract = new ethers.Contract(
             lensKernelAddress,
             SyntheverseGenesisLensKernelABI,
@@ -340,69 +347,18 @@ export async function emitLensEvent(
         debug('EmitLensEvent', 'Calling extendLens', {
             extensionType,
             dataLength: dataBytes.length,
-            contractAddress: lensKernelAddress
-        })
-        
-        // Direct call - match working deployment pattern exactly
-        // No pre-flight checks, no gas estimation - trust the contract and network
-        debug('EmitLensEvent', 'Calling extendLens', {
-            extensionType,
-            dataLength: dataBytes.length,
             contractAddress: lensKernelAddress,
             walletAddress: await wallet.getAddress()
         })
         
+        // Direct call - no pre-checks, no gas estimation
+        // Match the working deployment pattern exactly
         const tx = await lensContract.extendLens(extensionType, dataBytes)
         
-        debug('EmitLensEvent', 'Transaction sent', { 
-            txHash: tx.hash,
-            from: tx.from,
-            to: tx.to,
-            gasLimit: tx.gasLimit?.toString(),
-            value: tx.value?.toString()
-        })
+        debug('EmitLensEvent', 'Transaction sent', { txHash: tx.hash })
         
-        // Wait for transaction with detailed error handling
-        let receipt
-        try {
-            receipt = await tx.wait()
-        } catch (waitError: any) {
-            // If wait() fails, try to get the receipt anyway to see what happened
-            debugError('EmitLensEvent', 'Transaction wait failed', waitError)
-            
-            try {
-                // Try to get the receipt to see if it was mined
-                const possibleReceipt = await provider.getTransactionReceipt(tx.hash)
-                if (possibleReceipt) {
-                    receipt = possibleReceipt
-                    debug('EmitLensEvent', 'Retrieved receipt after wait error', {
-                        status: receipt.status,
-                        gasUsed: receipt.gasUsed?.toString()
-                    })
-                } else {
-                    throw waitError // Re-throw if no receipt
-                }
-            } catch (receiptError) {
-                // If we can't get receipt, re-throw original error
-                throw waitError
-            }
-        }
-        
-        // Check transaction status
-        if (receipt.status === 0) {
-            // Transaction failed - try to get revert reason
-            debugError('EmitLensEvent', 'Transaction reverted', new Error('Transaction status is 0 (failed)'))
-            
-            // Try to call the transaction again to get revert reason
-            try {
-                await lensContract.extendLens.staticCall(extensionType, dataBytes)
-            } catch (staticCallError: any) {
-                const revertReason = staticCallError.reason || staticCallError.message || 'Unknown revert reason'
-                throw new Error(`Transaction reverted: ${revertReason}`)
-            }
-            
-            throw new Error('Transaction reverted: status 0 (failed)')
-        }
+        // Wait for confirmation (simple pattern)
+        const receipt = await tx.wait()
         
         debug('EmitLensEvent', 'Lens event emitted', {
             txHash: receipt.hash,
@@ -418,111 +374,26 @@ export async function emitLensEvent(
     } catch (error) {
         debugError('EmitLensEvent', 'Failed to emit lens event', error)
         
-        // Extract detailed error information
+        // Extract error information (simple pattern)
         let errorMessage = 'Unknown error'
-        let errorDetails: any = {}
         
         if (error instanceof Error) {
             errorMessage = error.message
-            errorDetails = {
-                name: error.name,
-                message: error.message,
-                stack: error.stack
-            }
             
             // Extract ethers.js specific error information
             const ethersError = error as any
             
             if (ethersError.code) {
-                errorDetails.code = ethersError.code
+                errorMessage = `[${ethersError.code}] ${errorMessage}`
             }
             if (ethersError.reason) {
-                errorDetails.reason = ethersError.reason
-            }
-            if (ethersError.data) {
-                errorDetails.data = ethersError.data
-                
-                // Try to decode revert reason from error data
-                // require(false) errors often have the actual reason in the data
-                try {
-                    if (typeof ethersError.data === 'string' && ethersError.data.startsWith('0x')) {
-                        // Try to decode as Error(string) revert
-                        const errorSig = ethers.id('Error(string)').slice(0, 10) // 0x08c379a0
-                        if (ethersError.data.startsWith(errorSig)) {
-                            const decoded = ethers.AbiCoder.defaultAbiCoder().decode(
-                                ['string'],
-                                '0x' + ethersError.data.slice(10)
-                            )
-                            if (decoded && decoded[0]) {
-                                errorDetails.decodedReason = decoded[0]
-                                errorMessage = `Transaction reverted: ${decoded[0]}`
-                            }
-                        }
-                    }
-                } catch (decodeError) {
-                    // If decoding fails, continue with original error
-                }
-            }
-            if (ethersError.transaction) {
-                errorDetails.transaction = {
-                    to: ethersError.transaction.to,
-                    data: ethersError.transaction.data?.substring(0, 20) + '...',
-                    value: ethersError.transaction.value?.toString()
-                }
-            }
-            if (ethersError.receipt) {
-                errorDetails.receipt = {
-                    status: ethersError.receipt.status,
-                    gasUsed: ethersError.receipt.gasUsed?.toString()
-                }
-            }
-            
-            // Parse revert reason if available
-            if (ethersError.reason || ethersError.data) {
-                try {
-                    const revertReason = ethersError.reason || (ethersError.data ? JSON.stringify(ethersError.data) : null)
-                    if (revertReason) {
-                        errorDetails.revertReason = revertReason
-                    }
-                } catch (e) {
-                    // Ignore parsing errors
-                }
-            }
-            
-            // Log full error details for debugging
-            debug('EmitLensEvent', 'Error details', errorDetails)
-            
-            // Check for common errors and provide helpful messages
-            if (errorMessage.includes('Ownable: caller is not the owner') || errorMessage.includes('onlyOwner')) {
-                errorMessage = 'Wallet is not the owner of the LensKernel contract. Check BLOCKCHAIN_PRIVATE_KEY matches the contract owner.'
-            } else if (errorMessage.includes('insufficient funds') || errorMessage.includes('insufficient balance')) {
-                errorMessage = `Insufficient funds in wallet for gas fees. ${errorDetails.reason || ''}`
-            } else if (errorMessage.includes('nonce')) {
-                errorMessage = `Transaction nonce error: ${errorDetails.reason || errorMessage}. Try again.`
-            } else if (errorMessage.includes('revert') || errorDetails.revertReason) {
-                const revertInfo = errorDetails.revertReason || errorMessage
-                errorMessage = `Transaction reverted: ${revertInfo}`
-            } else if (errorMessage.includes('network') || errorMessage.includes('ECONNREFUSED') || errorMessage.includes('TIMEOUT')) {
-                // Get config again for error message (may be null if config failed)
-                const errorConfig = getBaseMainnetConfig()
-                const rpcInfo = errorConfig ? `RPC: ${errorConfig.rpcUrl}` : 'Check RPC URL'
-                errorMessage = `Network error: ${errorMessage}. ${rpcInfo} and network connectivity.`
-            } else if (errorMessage.includes('rate limit')) {
-                errorMessage = 'Rate limit exceeded (try again later)'
-            } else if (errorMessage.includes('ENS') || errorMessage.includes('getEnsAddress') || errorMessage.includes('UNSUPPORTED_OPERATION')) {
-                // ENS errors shouldn't block - try to continue
-                errorMessage = `ENS not supported on Base. ${errorDetails.reason || errorMessage}`
-            } else if (errorDetails.code) {
-                // Include error code in message
-                errorMessage = `[${errorDetails.code}] ${errorMessage}${errorDetails.reason ? ` - ${errorDetails.reason}` : ''}`
+                errorMessage = `${errorMessage} - ${ethersError.reason}`
             }
         }
         
         return {
             success: false,
-            error: errorMessage,
-            // Include error details in development
-            ...(process.env.NODE_ENV === 'development' ? { errorDetails } : {})
+            error: errorMessage
         }
     }
 }
