@@ -134,6 +134,22 @@ export async function POST(
             )
         }
 
+        // Check if blockchain registration is enabled
+        const registrationEnabled = process.env.ENABLE_BLOCKCHAIN_REGISTRATION === 'true'
+        if (!registrationEnabled) {
+            debug('RegisterPoC', 'Blockchain registration is temporarily disabled', {
+                submissionHash,
+                reason: 'ENABLE_BLOCKCHAIN_REGISTRATION is not set to true'
+            })
+            return NextResponse.json(
+                { 
+                    error: 'Blockchain registration is temporarily disabled',
+                    message: 'Blockchain registration is temporarily disabled due to insufficient wallet funds. Please try again later or contact support.'
+                },
+                { status: 503 } // Service Unavailable
+            )
+        }
+
         // Registration is now free - directly register the PoC on blockchain
         debug('RegisterPoC', 'Initiating free PoC registration (no payment required)', {
             submissionHash
@@ -142,7 +158,7 @@ export async function POST(
         const metadata = contrib.metadata as any || {}
         const metals = (contrib.metals as string[]) || []
         
-        // Register PoC on Hard Hat L1 blockchain
+        // Register PoC on Base blockchain
         let blockchainTxHash: string | null = null
         try {
             const { registerPoCOnBlockchain } = await import('@/utils/blockchain/register-poc')

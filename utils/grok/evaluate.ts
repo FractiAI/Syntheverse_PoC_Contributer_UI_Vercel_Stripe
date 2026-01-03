@@ -1101,7 +1101,7 @@ ${answer}`
         const allScoresZero = finalNoveltyScore === 0 && densityFinal === 0 && coherenceScore === 0 && alignmentScore === 0
         if (allScoresZero) {
             // Always log this critical error, even if debug is disabled
-            console.error('[EvaluateWithGrok] CRITICAL ERROR: All scores are 0 - Grok may not have returned scores properly', {
+            const errorDetails = {
                 evaluationFull: JSON.stringify(evaluation, null, 2),
                 rawAnswer: answer.substring(0, 3000),
                 scoring: scoring,
@@ -1113,17 +1113,11 @@ ${answer}`
                 baseDensityScore,
                 coherenceScore,
                 alignmentScore
-            })
-            debugError('EvaluateWithGrok', 'CRITICAL ERROR: All scores are 0 - Grok may not have returned scores properly', {
-                evaluationFull: JSON.stringify(evaluation, null, 2),
-                rawAnswer: answer.substring(0, 2000),
-                scoring: scoring,
-                noveltyRaw: noveltyRaw,
-                densityRaw: densityRaw,
-                coherenceRaw: coherenceRaw,
-                alignmentRaw: alignmentRaw
-            })
-            // Don't throw - return zeros but log the issue so we can debug
+            }
+            console.error('[EvaluateWithGrok] CRITICAL ERROR: All scores are 0 - Grok may not have returned scores properly', errorDetails)
+            debugError('EvaluateWithGrok', 'CRITICAL ERROR: All scores are 0 - Grok may not have returned scores properly', new Error(JSON.stringify(errorDetails)))
+            // Throw error to prevent saving invalid evaluation
+            throw new Error('Evaluation failed: All scores are 0. This indicates the AI evaluation did not return valid scores. Please try submitting again.')
         }
         
         // Use final scores (may have been overridden for foundational submissions)
