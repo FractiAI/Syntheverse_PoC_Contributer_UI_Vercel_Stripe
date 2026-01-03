@@ -341,6 +341,26 @@ export async function emitLensEvent(
             wallet
         )
         
+        // Verify wallet is contract owner before calling extendLens (onlyOwner modifier)
+        const walletAddress = await wallet.getAddress()
+        try {
+            const contractOwner = await lensContract.owner()
+            if (contractOwner.toLowerCase() !== walletAddress.toLowerCase()) {
+                debugError('EmitLensEvent', 'Wallet is not contract owner', new Error(`Wallet ${walletAddress} is not the owner. Contract owner: ${contractOwner}`))
+                return {
+                    success: false,
+                    error: `Wallet ${walletAddress} is not the owner of the LensKernel contract. Only the contract owner can call extendLens(). Expected owner: ${contractOwner}`
+                }
+            }
+            debug('EmitLensEvent', 'Ownership verified', { walletAddress, contractOwner })
+        } catch (ownerError) {
+            debugError('EmitLensEvent', 'Failed to verify ownership', ownerError)
+            return {
+                success: false,
+                error: `Failed to verify contract ownership: ${ownerError instanceof Error ? ownerError.message : 'Unknown error'}`
+            }
+        }
+        
         // Convert data to bytes
         const dataBytes = ethers.toUtf8Bytes(data)
         
@@ -348,7 +368,7 @@ export async function emitLensEvent(
             extensionType,
             dataLength: dataBytes.length,
             contractAddress: lensKernelAddress,
-            walletAddress: await wallet.getAddress()
+            walletAddress
         })
         
         // Direct call - no pre-checks, no gas estimation
@@ -360,9 +380,19 @@ export async function emitLensEvent(
         // Wait for confirmation (simple pattern)
         const receipt = await tx.wait()
         
+        // Validate transaction status (HIGH priority fix)
+        if (receipt.status === 0) {
+            debugError('EmitLensEvent', 'Transaction reverted', new Error('Transaction status is 0 (failed)'))
+            return {
+                success: false,
+                error: 'Transaction reverted on-chain. Check contract logs for details.'
+            }
+        }
+        
         debug('EmitLensEvent', 'Lens event emitted', {
             txHash: receipt.hash,
-            blockNumber: receipt.blockNumber
+            blockNumber: receipt.blockNumber,
+            status: receipt.status
         })
         
         return {

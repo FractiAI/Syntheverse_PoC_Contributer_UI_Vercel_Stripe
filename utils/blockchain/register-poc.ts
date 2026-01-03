@@ -39,18 +39,18 @@ function epochToNumber(epoch: string): number {
 
 /**
  * Derive Ethereum address from contributor email
- * Uses a deterministic hash-based approach
- * Note: In production, users should connect wallets for real addresses
+ * 
+ * For email-based registrations, we use the zero address as a placeholder.
+ * In production, users should connect wallets to use their real addresses.
+ * 
+ * @param email - Contributor email (not used, kept for API compatibility)
+ * @returns Zero address (0x0000...0000) for email-based registrations
  */
 async function deriveAddressFromEmail(email: string): Promise<string> {
-    // Create a deterministic address from email hash
-    // This is a placeholder - in production, users should connect wallets
-    const crypto = await import('crypto')
-    const hash = crypto.createHash('sha256').update(email.toLowerCase().trim()).digest('hex')
-    // Use first 20 bytes (40 hex chars) to create a valid Ethereum address
-    // This creates a deterministic but non-standard address
-    // For production, consider: zero address, or require wallet connection
-    return '0x' + hash.substring(0, 40)
+    // Use zero address for email-based registrations
+    // This is a valid Ethereum address that indicates "no specific wallet"
+    // In production, consider requiring wallet connection for real addresses
+    return '0x0000000000000000000000000000000000000000'
 }
 
 /**
