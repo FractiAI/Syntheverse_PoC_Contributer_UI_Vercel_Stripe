@@ -190,8 +190,14 @@ export async function allocateTokens(
         const { provider, wallet } = createBaseProvider(config)
         
         // Normalize contract address to checksummed format to prevent ENS resolution
-        // Trim again in case config was created before trimming fix
-        const synth90TAddress = ethers.getAddress(config.synth90TAddress.trim())
+        // Aggressively trim to remove any newlines/carriage returns from Vercel environment variables
+        const synth90TAddress = ethers.getAddress(
+            config.synth90TAddress
+                .trim()
+                .replace(/\n/g, '')
+                .replace(/\r/g, '')
+                .trim()
+        )
         
         // Create contract instance
         const synthContract = new ethers.Contract(
@@ -297,8 +303,14 @@ export async function getMetalBalance(metal: 'gold' | 'silver' | 'copper'): Prom
         const { provider } = createBaseProvider(config)
         
         // Normalize contract address to checksummed format to prevent ENS resolution
-        // Trim again in case config was created before trimming fix
-        const synth90TAddress = ethers.getAddress(config.synth90TAddress.trim())
+        // Aggressively trim to remove any newlines/carriage returns from Vercel environment variables
+        const synth90TAddress = ethers.getAddress(
+            config.synth90TAddress
+                .trim()
+                .replace(/\n/g, '')
+                .replace(/\r/g, '')
+                .trim()
+        )
         
         const synthContract = new ethers.Contract(
             synth90TAddress,
@@ -331,8 +343,14 @@ export async function getContributorBalance(contributorAddress: string): Promise
         const { provider } = createBaseProvider(config)
         
         // Normalize contract address to checksummed format to prevent ENS resolution
-        // Trim again in case config was created before trimming fix
-        const synth90TAddress = ethers.getAddress(config.synth90TAddress.trim())
+        // Aggressively trim to remove any newlines/carriage returns from Vercel environment variables
+        const synth90TAddress = ethers.getAddress(
+            config.synth90TAddress
+                .trim()
+                .replace(/\n/g, '')
+                .replace(/\r/g, '')
+                .trim()
+        )
         
         const synthContract = new ethers.Contract(
             synth90TAddress,
@@ -374,8 +392,14 @@ export async function emitLensEvent(
         const { provider, wallet } = createBaseProvider(config)
         
         // Ensure contract address is properly formatted (checksummed) to avoid ENS resolution
-        // Trim again in case config was created before trimming fix
-        const lensKernelAddress = ethers.getAddress(config.lensKernelAddress.trim())
+        // Aggressively trim to remove any newlines/carriage returns from Vercel environment variables
+        const lensKernelAddress = ethers.getAddress(
+            config.lensKernelAddress
+                .trim()
+                .replace(/\n/g, '')
+                .replace(/\r/g, '')
+                .trim()
+        )
         
         // Create contract instance with wallet as signer
         const lensContract = new ethers.Contract(
@@ -437,8 +461,17 @@ export async function emitLensEvent(
         }
         
         // Call extendLens function
+        // Use the wallet's signer explicitly to ensure proper authorization
         const tx = await lensContract.extendLens(extensionType, dataBytes, {
-            gasLimit: gasEstimate * BigInt(120) / BigInt(100) // Add 20% buffer
+            gasLimit: gasEstimate * BigInt(120) / BigInt(100), // Add 20% buffer
+            // Don't set gasPrice - let the network determine it
+        })
+        
+        debug('EmitLensEvent', 'Transaction created', {
+            hash: tx.hash,
+            from: tx.from,
+            to: tx.to,
+            gasLimit: tx.gasLimit?.toString()
         })
         
         debug('EmitLensEvent', 'Transaction sent, waiting for confirmation', { txHash: tx.hash })
@@ -611,8 +644,14 @@ export async function queryMetalAllocatedEvents(
         const { provider } = createBaseProvider(config)
         
         // Normalize contract address to checksummed format to prevent ENS resolution
-        // Trim again in case config was created before trimming fix
-        const synth90TAddress = ethers.getAddress(config.synth90TAddress.trim())
+        // Aggressively trim to remove any newlines/carriage returns from Vercel environment variables
+        const synth90TAddress = ethers.getAddress(
+            config.synth90TAddress
+                .trim()
+                .replace(/\n/g, '')
+                .replace(/\r/g, '')
+                .trim()
+        )
         
         const synthContract = new ethers.Contract(
             synth90TAddress,
