@@ -53,35 +53,6 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
   const showAuthButtons = variant === 'fractiai' && !isAuthenticated
   return (
     <div className="cockpit-bg min-h-screen">
-      {/* Top navigation buttons - Always visible for fractiai variant, at absolute top */}
-      {variant === 'fractiai' ? (
-        <div className="w-full border-b border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
-          <div className="container mx-auto px-6 py-4">
-            <div className="flex items-center justify-end gap-3 flex-wrap">
-              {!isAuthenticated ? (
-                <>
-                  <Link href="/signup" className="cockpit-lever inline-flex items-center">
-                    Join the Frontier
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                  <Link href="/login" className="cockpit-lever inline-flex items-center">
-                    Log in
-                  </Link>
-                </>
-              ) : (
-                <Link href="/dashboard" className="cockpit-lever inline-flex items-center">
-                  Dashboard
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              )}
-              <Link href="/onboarding" className="cockpit-lever inline-flex items-center">
-                Onboarding
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      ) : null}
       <div className="container mx-auto px-6 py-8 space-y-8">
 
         {/* Clean cockpit header */}
@@ -366,6 +337,34 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
 
           {/* Right: Instrument panel */}
           <div className="space-y-6 lg:sticky lg:top-6">
+            {/* Navigation buttons - Above MOTHERLODE for fractiai variant */}
+            {variant === 'fractiai' ? (
+              <div className="cockpit-panel p-4">
+                <div className="flex flex-col gap-2">
+                  {!isAuthenticated ? (
+                    <>
+                      <Link href="/signup" className="cockpit-lever inline-flex items-center justify-center text-sm">
+                        Join the Frontier
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                      <Link href="/login" className="cockpit-lever inline-flex items-center justify-center text-sm">
+                        Log in
+                      </Link>
+                    </>
+                  ) : (
+                    <Link href="/dashboard" className="cockpit-lever inline-flex items-center justify-center text-sm">
+                      Dashboard
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  )}
+                  <Link href="/onboarding" className="cockpit-lever inline-flex items-center justify-center text-sm">
+                    Onboarding
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </div>
+              </div>
+            ) : null}
+
             {/* Motherlode instrument */}
             <div className="cockpit-panel p-6" style={{
               boxShadow: '0 0 0 1px var(--keyline-accent) inset, 0 0 20px var(--hydrogen-glow)',
