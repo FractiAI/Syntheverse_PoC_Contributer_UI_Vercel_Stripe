@@ -91,6 +91,20 @@ export async function registerPoCOnBlockchain(
         hasSubmissionText: !!submissionText && submissionText.trim().length > 0
     })
     
+    // TEMPORARY: Disable registration until wallet is funded
+    // Set ENABLE_BLOCKCHAIN_REGISTRATION=true to re-enable
+    const registrationEnabled = process.env.ENABLE_BLOCKCHAIN_REGISTRATION === 'true'
+    if (!registrationEnabled) {
+        debug('RegisterPoCBlockchain', 'Registration temporarily disabled', {
+            reason: 'Insufficient wallet funds',
+            submissionHash: submissionHash.substring(0, 20) + '...'
+        })
+        return {
+            success: false,
+            error: 'Blockchain registration is temporarily disabled due to insufficient wallet funds. Please try again later or contact support.'
+        }
+    }
+    
     try {
         // Get Base configuration
         const config = getBaseMainnetConfig()
