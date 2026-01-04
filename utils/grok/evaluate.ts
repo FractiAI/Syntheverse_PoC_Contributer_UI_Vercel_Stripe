@@ -1294,10 +1294,17 @@ ${answer}`
                 // Timestamp for correlation
                 timestamp: new Date().toISOString()
             }
-            console.error('[EvaluateWithGrok] CRITICAL ERROR: All scores are 0 - Grok may not have returned scores properly', JSON.stringify(errorDetails, null, 2))
-            debugError('EvaluateWithGrok', 'CRITICAL ERROR: All scores are 0 - Grok may not have returned scores properly', new Error(JSON.stringify(errorDetails, null, 2)))
-            // Throw error to prevent saving invalid evaluation
-            throw new Error('Evaluation failed: All scores are 0. This indicates the AI evaluation did not return valid scores. Please try submitting again.')
+            const errorDetailsString = JSON.stringify(errorDetails, null, 2)
+            console.error('[EvaluateWithGrok] CRITICAL ERROR: All scores are 0 - Grok may not have returned scores properly', errorDetailsString)
+            debugError('EvaluateWithGrok', 'CRITICAL ERROR: All scores are 0 - Grok may not have returned scores properly', new Error(errorDetailsString))
+            
+            // Create a custom error with detailed information attached
+            const error = new Error('Evaluation failed: All scores are 0. This indicates the AI evaluation did not return valid scores. Please try submitting again.')
+            ;(error as any).errorDetails = errorDetails
+            ;(error as any).fullGrokResponse = fullGrokResponse
+            ;(error as any).rawAnswer = answer
+            ;(error as any).evaluation = evaluation
+            throw error
         }
         
         // Use final scores (may have been overridden for foundational submissions)

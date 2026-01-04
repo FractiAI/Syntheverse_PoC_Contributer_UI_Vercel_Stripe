@@ -110,6 +110,12 @@ export async function POST(
             evaluationError = error instanceof Error ? error : new Error(String(error))
             const errorMessage = error instanceof Error ? error.message : String(error)
             
+            // Extract detailed error information if available
+            const errorDetails = (error as any)?.errorDetails || null
+            const fullGrokResponse = (error as any)?.fullGrokResponse || null
+            const rawAnswer = (error as any)?.rawAnswer || null
+            const evaluation = (error as any)?.evaluation || null
+            
             // If evaluation failed (e.g., all scores are 0), mark status as evaluation_failed
             if (errorMessage.includes('All scores are 0') || errorMessage.includes('evaluation did not return valid scores')) {
                 // Update status to evaluation_failed and store error details
@@ -121,13 +127,18 @@ export async function POST(
                             ...(contrib.metadata as any || {}),
                             evaluation_error: errorMessage,
                             evaluation_failed_at: new Date().toISOString(),
-                            evaluation_error_type: 'zero_scores'
+                            evaluation_error_type: 'zero_scores',
+                            // Store detailed error information for debugging
+                            error_details: errorDetails,
+                            full_grok_response: fullGrokResponse,
+                            raw_grok_answer: rawAnswer,
+                            parsed_evaluation: evaluation
                         } as any,
                         updated_at: new Date()
                     })
                     .where(eq(contributionsTable.submission_hash, submissionHash))
                 
-                // Log evaluation failure
+                // Log evaluation failure with detailed information
                 await db.insert(pocLogTable).values({
                     id: crypto.randomUUID(),
                     submission_hash: submissionHash,
@@ -141,12 +152,23 @@ export async function POST(
                         error_type: 'zero_scores',
                         text_content_length: textContent.length
                     },
+                    response_data: {
+                        error: errorMessage,
+                        error_details: errorDetails,
+                        full_grok_response: fullGrokResponse,
+                        raw_grok_answer: rawAnswer,
+                        parsed_evaluation: evaluation
+                    },
+                    grok_api_response: fullGrokResponse || null,
+                    error_message: errorMessage,
                     created_at: new Date(),
                 })
                 
                 debugError('EvaluateContribution', 'Evaluation failed - all scores are 0', {
                     submissionHash,
-                    error: errorMessage
+                    error: errorMessage,
+                    hasErrorDetails: !!errorDetails,
+                    hasFullGrokResponse: !!fullGrokResponse
                 })
                 
                 // Return error response instead of throwing (so frontend can handle it)

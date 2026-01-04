@@ -6,7 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/utils/db/db'
 import { pocLogTable } from '@/utils/db/schema'
-import { desc, eq } from 'drizzle-orm'
+import { desc, eq, or } from 'drizzle-orm'
 import { debug, debugError } from '@/utils/debug'
 
 export const dynamic = 'force-dynamic'
@@ -28,10 +28,14 @@ export async function GET(request: NextRequest) {
                 .orderBy(desc(pocLogTable.created_at))
                 .limit(limit)
         } else {
+            // Include both evaluation_complete and evaluation_failed events
             logs = await db
                 .select()
                 .from(pocLogTable)
-                .where(eq(pocLogTable.event_type, 'evaluation_complete'))
+                .where(or(
+                    eq(pocLogTable.event_type, 'evaluation_complete'),
+                    eq(pocLogTable.event_type, 'evaluation_failed')
+                ))
                 .orderBy(desc(pocLogTable.created_at))
                 .limit(limit)
         }
@@ -45,7 +49,11 @@ export async function GET(request: NextRequest) {
             event_status: log.event_status,
             evaluation_result: log.evaluation_result,
             grok_api_response: log.grok_api_response,
+            grok_api_request: log.grok_api_request,
             error_message: log.error_message,
+            error_stack: log.error_stack,
+            response_data: log.response_data, // Contains detailed error info for evaluation_failed
+            request_data: log.request_data,
             processing_time_ms: log.processing_time_ms
         }))
         
