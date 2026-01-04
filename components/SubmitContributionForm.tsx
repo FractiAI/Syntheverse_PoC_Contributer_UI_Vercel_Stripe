@@ -969,17 +969,27 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
                                             </div>
                                         </>
                                     ) : evaluationStatus.error ? (
-                                        <div className="p-4 bg-yellow-100 border border-yellow-500 rounded-lg">
-                                            <div className="font-semibold text-yellow-800 flex items-center gap-2">
+                                        <div className="p-4 bg-orange-50 border border-orange-500 rounded-lg">
+                                            <div className="font-semibold text-orange-800 flex items-center gap-2 mb-3">
                                                 <AlertTriangle className="h-5 w-5" />
-                                                ⚠️ Evaluation Status
+                                                Evaluation Temporarily Unavailable
                                             </div>
-                                            <div className="text-sm text-yellow-700 mt-2">
-                                                {evaluationStatus.error}
+                                            <div className="text-sm text-orange-700 space-y-2">
+                                                <p>
+                                                    The AI evaluation service encountered an issue processing your submission. 
+                                                    This is typically a temporary problem with the evaluation provider.
+                                                </p>
+                                                <p className="font-medium">
+                                                    Your submission has been saved and will be automatically retried.
+                                                </p>
                                             </div>
-                                            <div className="text-xs text-yellow-600 mt-3">
-                                                Your submission was saved successfully. Evaluation may complete later. 
-                                                You can check the status on your dashboard.
+                                            <div className="mt-4 p-3 bg-white border border-orange-200 rounded text-xs text-orange-700">
+                                                <strong>What to do:</strong>
+                                                <ul className="list-disc list-inside mt-2 space-y-1">
+                                                    <li>Check your dashboard in a few minutes - evaluation may complete automatically</li>
+                                                    <li>If the issue persists, try submitting again with the same content</li>
+                                                    <li>Your submission is safely stored and will not be lost</li>
+                                                </ul>
                                             </div>
                                         </div>
                                     ) : (
