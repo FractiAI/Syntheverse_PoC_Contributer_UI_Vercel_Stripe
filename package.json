@@ -66,6 +66,7 @@
     "@types/node": "^20.17.8",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/react-icons": "^3.0.0",
     "chai": "^6.2.2",
     "dotenv": "^16.4.5",
     "eslint": "^8",

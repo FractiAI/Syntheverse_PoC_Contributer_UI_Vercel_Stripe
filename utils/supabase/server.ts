@@ -12,9 +12,9 @@ export function createClient() {
         getAll() {
           return cookieStore.getAll();
         },
-        setAll(cookiesToSet) {
+        setAll(cookiesToSet: { name: string; value: string; options: CookieOptions }[]) {
           try {
-            cookiesToSet.forEach(({ name, value, options }) => {
+            cookiesToSet.forEach(({ name, value, options }: { name: string; value: string; options: CookieOptions }) => {
               // Merge with defaults to ensure proper cookie settings, preserving Supabase's expiration
               const mergedOptions = {
                 path: '/',
