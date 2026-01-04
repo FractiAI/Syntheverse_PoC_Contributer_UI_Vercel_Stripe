@@ -178,7 +178,7 @@ export async function POST(
             return NextResponse.json(
                 { 
                     error: 'Blockchain registration is temporarily disabled',
-                    message: 'Blockchain registration is temporarily disabled due to insufficient wallet funds. Please try again later or contact support.'
+                    message: 'SYNTH90T MOTHERLODE VAULT opens Spring Equinox, March 20, 2026. On-chain registration will be available when the vault opens. All qualifying PoCs will be registered on-chain and allocated SYNTH, by score.'
                 },
                 { status: 503 } // Service Unavailable
             )

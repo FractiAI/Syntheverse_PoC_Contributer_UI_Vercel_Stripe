@@ -91,17 +91,17 @@ export async function registerPoCOnBlockchain(
         hasSubmissionText: !!submissionText && submissionText.trim().length > 0
     })
     
-    // TEMPORARY: Disable registration until wallet is funded
+    // TEMPORARY: Disable registration until vault opens
     // Set ENABLE_BLOCKCHAIN_REGISTRATION=true to re-enable
     const registrationEnabled = process.env.ENABLE_BLOCKCHAIN_REGISTRATION === 'true'
     if (!registrationEnabled) {
         debug('RegisterPoCBlockchain', 'Registration temporarily disabled', {
-            reason: 'Insufficient wallet funds',
+            reason: 'Vault opens Spring Equinox, March 20, 2026',
             submissionHash: submissionHash.substring(0, 20) + '...'
         })
         return {
             success: false,
-            error: 'Blockchain registration is temporarily disabled due to insufficient wallet funds. Please try again later or contact support.'
+            error: 'SYNTH90T MOTHERLODE VAULT opens Spring Equinox, March 20, 2026. On-chain registration will be available when the vault opens. All qualifying PoCs will be registered on-chain and allocated SYNTH, by score.'
         }
     }
     

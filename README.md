@@ -30,7 +30,7 @@ This repository implements the **Syntheverse Protocol** - a public, implementati
 
 ### 🎯 SYNTH90T MOTHERLODE VAULT Opening
 
-**Welcome to Syntheverse!** The **SYNTH90T MOTHERLODE VAULT** will officially open for mining on **Spring Equinox, March 20, 2026**. All qualifying PoCs will be registered on-chain and allocated SYNTH, by score. **Be sure to get your best work in by March 19.**
+**Welcome to Syntheverse!** The **SYNTH90T MOTHERLODE VAULT** opens **Spring Equinox, March 20, 2026**. All qualifying PoCs will be registered on-chain and allocated SYNTH, by score. **Be sure to get your best work in by March 19.**
 
 ### Key Concepts
 
@@ -209,7 +209,7 @@ DEPLOYER_ADDRESS=0x...        # Public address
 ### 📋 Upcoming Milestones
 
 - **March 19, 2026**: Submission deadline for SYNTH90T MOTHERLODE VAULT opening
-- **March 20, 2026**: Spring Equinox - SYNTH90T MOTHERLODE VAULT officially opens for mining
+- **March 20, 2026**: Spring Equinox - SYNTH90T MOTHERLODE VAULT opens
 - **Post-Vault Opening**: On-chain registration and SYNTH allocation for all qualifying PoCs
 
 ### Future Enhancements

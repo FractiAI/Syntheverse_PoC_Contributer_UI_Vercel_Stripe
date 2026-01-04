@@ -1,6 +1,9 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight, ChevronDown, FileText } from 'lucide-react'
+import { useEffect, useState, useMemo } from 'react'
 import FractiAIStatusWidget from '@/components/FractiAIStatusWidget'
 import { StatusIndicators } from './StatusIndicators'
 
@@ -13,6 +16,133 @@ type FractiAILandingProps = {
     secondaryHref?: string
     secondaryLabel?: string
   }
+}
+
+type EpochInfo = {
+  current_epoch: string
+  epochs: Record<
+    string,
+    {
+      balance: number
+      threshold: number
+      distribution_amount: number
+      distribution_percent: number
+      available_tiers: string[]
+    }
+  >
+  epoch_metals?: Record<
+    string,
+    Record<
+      string,
+      {
+        balance: number
+        threshold: number
+        distribution_amount: number
+        distribution_percent: number
+      }
+    >
+  >
+}
+
+function formatTokens(tokens: number): string {
+  if (tokens >= 1_000_000_000_000) return `${(tokens / 1_000_000_000_000).toFixed(2)}T`
+  if (tokens >= 1_000_000_000) return `${(tokens / 1_000_000_000).toFixed(2)}B`
+  if (tokens >= 1_000_000) return `${(tokens / 1_000_000).toFixed(2)}M`
+  return tokens.toLocaleString()
+}
+
+function MotherlodeVaultStatus() {
+  const [epochInfo, setEpochInfo] = useState<EpochInfo | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  const totalSupply = 90_000_000_000_000
+
+  const computed = useMemo(() => {
+    const epochs = epochInfo?.epochs || {}
+    const totalAvailable = Object.values(epochs).reduce((sum, e) => sum + (Number(e?.balance || 0) || 0), 0)
+    const epochOrder = ['founder', 'pioneer', 'community', 'ecosystem']
+    const currentEpoch = String(epochInfo?.current_epoch || 'founder').toLowerCase().trim()
+    const idx = epochOrder.indexOf(currentEpoch)
+    const openEpochs = idx <= 0 ? ['founder'] : epochOrder.slice(0, idx + 1)
+    const openEpochAvailable = openEpochs.reduce((sum, epoch) => sum + (Number(epochs?.[epoch]?.balance || 0) || 0), 0)
+    return { totalAvailable, openEpochs, openEpochAvailable, currentEpoch }
+  }, [epochInfo])
+
+  useEffect(() => {
+    async function fetchEpochInfo() {
+      setLoading(true)
+      setError(null)
+      try {
+        const res = await fetch(`/api/tokenomics/epoch-info?t=${Date.now()}`, { cache: 'no-store' })
+        if (!res.ok) throw new Error(`Failed: ${res.status}`)
+        const data = await res.json()
+        setEpochInfo(data)
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : 'Failed to load'
+        setError(msg)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchEpochInfo()
+    const interval = setInterval(fetchEpochInfo, 30000) // Refresh every 30 seconds
+    return () => clearInterval(interval)
+  }, [])
+
+  if (loading && !epochInfo) {
+    return (
+      <div className="cockpit-panel p-4">
+        <div className="cockpit-text text-sm" style={{ opacity: 0.85 }}>
+          Loading vault status…
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="cockpit-panel p-4">
+      <div className="flex items-center justify-between flex-wrap gap-4">
+        <div className="flex items-center gap-6 flex-wrap">
+          <div>
+            <div className="cockpit-label text-xs">CURRENT EPOCH</div>
+            <div className="cockpit-title text-lg mt-1 capitalize">
+              {computed.currentEpoch || 'founder'}
+            </div>
+          </div>
+          <div>
+            <div className="cockpit-label text-xs">SYNTH AVAILABLE</div>
+            <div className="cockpit-number cockpit-number-medium mt-1">
+              {formatTokens(computed.totalAvailable)}
+            </div>
+            <div className="cockpit-text text-xs mt-0.5" style={{ opacity: 0.85 }}>
+              {((computed.totalAvailable / totalSupply) * 100).toFixed(2)}% of 90T supply
+            </div>
+          </div>
+          <div>
+            <div className="cockpit-label text-xs">OPEN EPOCHS</div>
+            <div className="flex flex-wrap gap-2 mt-1">
+              {computed.openEpochs.map((e) => (
+                <span key={e} className="cockpit-badge text-xs">
+                  {e.toUpperCase()}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" 
+               style={{ boxShadow: '0 0 8px #22c55e' }}></div>
+          <div className="cockpit-label text-xs">VAULT LIVE</div>
+        </div>
+      </div>
+      {error && (
+        <div className="cockpit-text text-xs mt-2" style={{ opacity: 0.85, color: '#fca5a5' }}>
+          Status delayed: {error}
+        </div>
+      )}
+    </div>
+  )
 }
 
 function ExpandablePanel({
@@ -72,8 +202,36 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
                 <StatusIndicators />
               </div>
             </div>
+            {/* Mobile navigation buttons - shown only on mobile */}
+            <div className="mt-4 md:hidden">
+              <div className="flex flex-col gap-2">
+                {!isAuthenticated ? (
+                  <>
+                    <Link href="/signup" className="cockpit-lever inline-flex items-center justify-center text-sm">
+                      Join the Frontier
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                    <Link href="/login" className="cockpit-lever inline-flex items-center justify-center text-sm">
+                      Log in
+                    </Link>
+                  </>
+                ) : (
+                  <Link href="/dashboard" className="cockpit-lever inline-flex items-center justify-center text-sm">
+                    Dashboard
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                )}
+                <Link href="/onboarding" className="cockpit-lever inline-flex items-center justify-center text-sm">
+                  Onboarding
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </div>
+            </div>
           </div>
         ) : null}
+
+        {/* Motherlode Vault Status - Epoch and SYNTH Available */}
+        {variant === 'fractiai' ? <MotherlodeVaultStatus /> : null}
 
         {/* Main cockpit grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_400px] items-start">
@@ -132,7 +290,7 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
               <div className="cockpit-label mb-4" style={{ color: '#ffb84d' }}>SYNTH90T MOTHERLODE VAULT OPENING</div>
               <div className="cockpit-text space-y-4" style={{ fontSize: '0.95rem', lineHeight: 1.7 }}>
                 <p className="text-amber-200 font-semibold text-lg">
-                  Welcome to Syntheverse! The <strong>SYNTH90T MOTHERLODE VAULT</strong> will officially open for mining on <strong>Spring Equinox, March 20, 2026</strong>.
+                  Welcome to Syntheverse! The <strong>SYNTH90T MOTHERLODE VAULT</strong> opens <strong>Spring Equinox, March 20, 2026</strong>.
                 </p>
                 <p className="text-amber-100">
                   All qualifying PoCs will be registered on-chain and allocated <strong>SYNTH, by score</strong>. This represents the on-chain allocation mechanism for the fixed-supply 90 trillion SYNTH ERC-20 token system.
@@ -357,9 +515,9 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
 
           {/* Right: Instrument panel */}
           <div className="space-y-6 lg:sticky lg:top-6">
-            {/* Navigation buttons - Above MOTHERLODE for fractiai variant */}
+            {/* Navigation buttons - Above MOTHERLODE for fractiai variant - Hidden on mobile, shown on desktop */}
             {variant === 'fractiai' ? (
-              <div className="cockpit-panel p-4">
+              <div className="cockpit-panel p-4 hidden md:block">
                 <div className="flex flex-col gap-2">
                   {!isAuthenticated ? (
                     <>
