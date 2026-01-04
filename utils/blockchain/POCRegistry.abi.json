@@ -258,7 +258,7 @@
           },
           {
             "internalType": "uint256",
-        "name": "allocatedAmount",
+            "name": "allocatedAmount",
             "type": "uint256"
           },
           {
@@ -434,4 +434,3 @@
     "type": "function"
   }
 ]
-

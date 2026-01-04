@@ -12,29 +12,29 @@
   --cockpit-obsidian: #1a1a1a;
   --cockpit-carbon: #252525;
   --cockpit-deep-soil: #1e1e1e;
-  
+
   /* Keyline & Structure */
   --keyline-primary: #000000;
   --keyline-accent: #1a1a1a;
   --keyline-thick: 3px;
   --keyline-medium: 2px;
   --keyline-thin: 1px;
-  
+
   /* Hydrogen Amber / Gold Highlights */
   --hydrogen-amber: #ffb84d;
   --hydrogen-gold: #ffd700;
   --hydrogen-glow: rgba(255, 184, 77, 0.15);
-  
+
   /* Typography - Modernist Sans */
   --font-cockpit: 'Space Grotesk', 'Inter', -apple-system, sans-serif;
   --font-mono: 'Space Mono', 'Courier New', monospace;
-  
+
   /* Spacing - Intentional, Cinematic */
   --ma-small: 1rem;
   --ma-medium: 2rem;
   --ma-large: 4rem;
   --ma-xlarge: 6rem;
-  
+
   /* Animations - Slow, Deliberate, Orbital */
   --animation-slow: 3s;
   --animation-medium: 1.5s;
@@ -46,7 +46,7 @@
 /* Fractal Pattern Background */
 .cockpit-bg {
   background: var(--cockpit-black);
-  background-image: 
+  background-image:
     radial-gradient(circle at 20% 30%, rgba(255, 184, 77, 0.03) 0%, transparent 50%),
     radial-gradient(circle at 80% 70%, rgba(255, 184, 77, 0.02) 0%, transparent 50%),
     repeating-linear-gradient(
@@ -56,7 +56,10 @@
       rgba(0, 0, 0, 0.1) 2px,
       rgba(0, 0, 0, 0.1) 4px
     );
-  background-size: 100% 100%, 100% 100%, 100% 8px;
+  background-size:
+    100% 100%,
+    100% 100%,
+    100% 8px;
   position: relative;
 }
 
@@ -67,7 +70,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: 
+  background:
     repeating-linear-gradient(
       90deg,
       transparent,
@@ -92,7 +95,7 @@
   background: var(--cockpit-obsidian);
   border: var(--keyline-thick) solid var(--keyline-primary);
   position: relative;
-  box-shadow: 
+  box-shadow:
     0 0 0 1px var(--keyline-accent) inset,
     0 4px 12px rgba(0, 0, 0, 0.8);
 }
@@ -149,19 +152,23 @@ details[open] .cockpit-chevron {
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(
-    circle,
-    rgba(255, 184, 77, 0.03) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle, rgba(255, 184, 77, 0.03) 0%, transparent 70%);
   animation: orbital-sweep var(--animation-slow) infinite;
   pointer-events: none;
 }
 
 @keyframes orbital-sweep {
-  0% { transform: rotate(0deg); opacity: 0.3; }
-  50% { opacity: 0.5; }
-  100% { transform: rotate(360deg); opacity: 0.3; }
+  0% {
+    transform: rotate(0deg);
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: rotate(360deg);
+    opacity: 0.3;
+  }
 }
 
 /* Typography - Authoritative, Mythic */
@@ -215,7 +222,7 @@ details[open] .cockpit-chevron {
 .reactor-core {
   position: relative;
   padding: var(--ma-large);
-  background: 
+  background:
     radial-gradient(circle at center, rgba(255, 184, 77, 0.1) 0%, transparent 70%),
     var(--cockpit-near-black);
   border: var(--keyline-thick) solid var(--keyline-primary);
@@ -240,8 +247,12 @@ details[open] .cockpit-chevron {
 }
 
 @keyframes rotate-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Fractal Spiral Loading */
@@ -256,8 +267,12 @@ details[open] .cockpit-chevron {
 }
 
 @keyframes spiral-rotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Lever / Control Button */
@@ -284,18 +299,13 @@ details[open] .cockpit-chevron {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 184, 77, 0.2),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(255, 184, 77, 0.2), transparent);
   transition: left var(--animation-medium) var(--easing-deliberate);
 }
 
 .cockpit-lever:hover {
   border-color: var(--hydrogen-amber);
-  box-shadow: 
+  box-shadow:
     0 0 20px var(--hydrogen-glow),
     inset 0 0 20px rgba(255, 184, 77, 0.1);
   transform: translateY(-1px);
@@ -307,7 +317,7 @@ details[open] .cockpit-chevron {
 
 .cockpit-lever:active {
   transform: translateY(0);
-  box-shadow: 
+  box-shadow:
     0 0 10px var(--hydrogen-glow),
     inset 0 2px 10px rgba(0, 0, 0, 0.5);
 }
@@ -490,7 +500,7 @@ details[open] .cockpit-chevron {
   width: 100%;
 }
 
-.cockpit-file-input input[type="file"] {
+.cockpit-file-input input[type='file'] {
   position: absolute;
   opacity: 0;
   width: 100%;
@@ -548,12 +558,7 @@ details[open] .cockpit-chevron {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 184, 77, 0.3),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(255, 184, 77, 0.3), transparent);
   transition: left var(--animation-medium) var(--easing-deliberate);
 }
 
@@ -584,13 +589,12 @@ details[open] .cockpit-chevron {
   .cockpit-title {
     font-size: 1.75rem;
   }
-  
+
   .cockpit-number-large {
     font-size: 2.5rem;
   }
-  
+
   .reactor-core {
     padding: var(--ma-medium);
   }
 }
-

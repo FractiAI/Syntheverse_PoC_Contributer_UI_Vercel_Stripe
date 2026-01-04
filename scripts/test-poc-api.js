@@ -17,18 +17,18 @@ console.log('----------------------------');
 
 // Check for PoC-related files
 const pocFiles = [
-    'app/submit/page.tsx',
-    'syntheverse-ui/src/frontend/poc-frontend/src/lib/api.ts',
-    'syntheverse-ui/src/api/poc-api/',
-    'syntheverse-ui/src/core/layer2/'
+  'app/submit/page.tsx',
+  'syntheverse-ui/src/frontend/poc-frontend/src/lib/api.ts',
+  'syntheverse-ui/src/api/poc-api/',
+  'syntheverse-ui/src/core/layer2/',
 ];
 
-pocFiles.forEach(file => {
-    if (fs.existsSync(file)) {
-        console.log(`✅ ${file} exists`);
-    } else {
-        console.log(`❌ ${file} missing`);
-    }
+pocFiles.forEach((file) => {
+  if (fs.existsSync(file)) {
+    console.log(`✅ ${file} exists`);
+  } else {
+    console.log(`❌ ${file} missing`);
+  }
 });
 
 console.log('\n📊 Current Implementation Status:');
@@ -123,4 +123,3 @@ console.log('• Integrate real PoC API endpoints');
 console.log('• Test full evaluation pipeline');
 
 console.log('\n🚀 Ready for Vercel deployment testing! The core app is fully functional.');
-

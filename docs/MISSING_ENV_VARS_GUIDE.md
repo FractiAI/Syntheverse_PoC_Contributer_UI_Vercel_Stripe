@@ -3,6 +3,7 @@
 ## Current Status
 
 ✅ **Set:**
+
 - NEXT_PUBLIC_SUPABASE_URL
 - NEXT_PUBLIC_SUPABASE_ANON_KEY
 - SUPABASE_SERVICE_ROLE_KEY
@@ -12,6 +13,7 @@
 - STRIPE_WEBHOOK_SECRET
 
 ❌ **Missing (Required for Testing):**
+
 1. `DATABASE_URL`
 2. `NEXT_PUBLIC_WEBSITE_URL`
 3. `NEXT_PUBLIC_GROK_API_KEY`
@@ -26,6 +28,7 @@
 **Source:** Supabase Dashboard
 
 **Steps:**
+
 1. Go to [Supabase Dashboard](https://supabase.com/dashboard)
 2. Select your project: `jfbgdxeumzqzigptbmvp`
 3. Go to **Settings** → **Database**
@@ -35,11 +38,13 @@
 7. Replace `[YOUR-PASSWORD]` with your actual database password
 
 **Format:**
+
 ```
 postgresql://postgres:[YOUR-PASSWORD]@db.jfbgdxeumzqzigptbmvp.supabase.co:5432/postgres
 ```
 
 **If you don't know your password:**
+
 - Go to **Settings** → **Database** → **Database password**
 - Click **Reset database password** (if needed)
 - Save the new password securely
@@ -51,16 +56,19 @@ postgresql://postgres:[YOUR-PASSWORD]@db.jfbgdxeumzqzigptbmvp.supabase.co:5432/p
 **Source:** Your Vercel deployment URL
 
 **Steps:**
+
 1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
 2. Select your project
 3. Go to **Deployments** tab
 4. Copy the production URL (e.g., `https://syntheverse-poc.vercel.app`)
 
 **Value:**
+
 ```
 https://syntheverse-poc.vercel.app
 ```
-*(Replace with your actual Vercel URL)*
+
+_(Replace with your actual Vercel URL)_
 
 **Note:** This should be the same as `NEXT_PUBLIC_SITE_URL` if you already have that set.
 
@@ -71,6 +79,7 @@ https://syntheverse-poc.vercel.app
 **Source:** Groq API (for AI evaluation)
 
 **Steps:**
+
 1. Go to [Groq Console](https://console.groq.com/)
 2. Sign in or create an account
 3. Go to **API Keys** section
@@ -78,11 +87,13 @@ https://syntheverse-poc.vercel.app
 5. Copy the API key
 
 **Format:**
+
 ```
 gsk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 **Alternative:** If you don't have a Groq account yet:
+
 - Sign up at https://console.groq.com/
 - Free tier includes API access
 - Create an API key from the dashboard
@@ -96,11 +107,13 @@ gsk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 **Options:**
 
 **Option A: Public RPC (Free, Rate Limited)**
+
 ```
 https://mainnet.base.org
 ```
 
 **Option B: Alchemy (Recommended for Testing)**
+
 1. Go to [Alchemy](https://www.alchemy.com/)
 2. Create a free account
 3. Create a new app
@@ -108,6 +121,7 @@ https://mainnet.base.org
 5. Copy the HTTPS URL from the app dashboard
 
 **Option C: Infura (Alternative)**
+
 1. Go to [Infura](https://www.infura.io/)
 2. Create a free account
 3. Create a new project
@@ -115,15 +129,19 @@ https://mainnet.base.org
 5. Copy the HTTPS endpoint URL
 
 **Recommended Value (Public):**
+
 ```
 https://mainnet.base.org
 ```
 
 **For Production/Testing (Alchemy/Infura):**
+
 ```
 https://base-mainnet.g.alchemy.com/v2/YOUR_API_KEY
 ```
+
 or
+
 ```
 https://base-mainnet.infura.io/v3/YOUR_PROJECT_ID
 ```
@@ -177,4 +195,3 @@ This will verify all required variables are set.
 - **Stripe:** Already configured ✅
 - **Groq API:** Sign up at https://console.groq.com/
 - **Base RPC:** Use public endpoint or sign up for Alchemy/Infura
-

@@ -15,6 +15,7 @@ This is a **Next.js 14** application for the Syntheverse Proof of Contribution (
 ## Current Dashboard Components
 
 ### 1. **PoCDashboardStats Component** (`components/PoCDashboardStats.tsx`)
+
 - **Purpose**: Displays PoC evaluation statistics
 - **Features**:
   - Total contributions count
@@ -31,6 +32,7 @@ This is a **Next.js 14** application for the Syntheverse Proof of Contribution (
 - **Status**: ✅ Fully implemented with charts
 
 ### 2. **SandboxMap3D Component** (`components/SandboxMap3D.tsx`)
+
 - **Purpose**: 3D visualization of PoC submissions in HHF space
 - **Current Implementation**:
   - Canvas-based 2D projection of 3D coordinates
@@ -49,6 +51,7 @@ This is a **Next.js 14** application for the Syntheverse Proof of Contribution (
 - **Status**: 🔧 Needs upgrade (as mentioned in your plan)
 
 ### 3. **Dashboard Page** (`app/dashboard/page.tsx`)
+
 - **Purpose**: Main dashboard layout
 - **Sections**:
   - Account overview
@@ -64,11 +67,13 @@ This is a **Next.js 14** application for the Syntheverse Proof of Contribution (
 ### Vector System (`utils/vectors/`)
 
 #### 1. **Embedding Generation** (`embeddings.ts`)
+
 - **Primary**: OpenAI Embeddings API (`text-embedding-3-small`, 1536 dimensions)
 - **Fallback**: Hash-based embedding if no API key
 - **Functions**: `generateEmbedding()`, `cosineSimilarity()`, `euclideanDistance()`
 
 #### 2. **3D Coordinate Mapping** (`hhf-3d-mapping.ts`)
+
 - **HHF Constant**: Λᴴᴴ ≈ 1.12 × 10²²
 - **Coordinate System**:
   - **X-axis**: Novelty (0-2500 score → ~0-200 range)
@@ -78,13 +83,15 @@ This is a **Next.js 14** application for the Syntheverse Proof of Contribution (
 - **Functions**: `mapTo3DCoordinates()`, `distance3D()`, `similarityFromDistance()`
 
 #### 3. **Redundancy Calculation** (`redundancy.ts`)
+
 - Compares embeddings and 3D vectors for similarity
 - Calculates redundancy penalty based on vector distance
 - Used during PoC evaluation
 
 #### 4. **API Endpoint** (`app/api/sandbox-map/route.ts`)
+
 - **Endpoint**: `GET /api/sandbox-map`
-- **Returns**: 
+- **Returns**:
   - `nodes[]`: All submissions with 3D coordinates
   - `edges[]`: Similarity connections between nodes
   - `metadata`: Statistics about vectorization
@@ -98,6 +105,7 @@ This is a **Next.js 14** application for the Syntheverse Proof of Contribution (
 ## Testing Areas
 
 ### ✅ Well-Tested Components
+
 1. **Authentication**: Supabase auth flow
 2. **Database Schema**: Drizzle ORM with proper types
 3. **API Routes**: Archive, tokenomics, epochs endpoints
@@ -106,13 +114,16 @@ This is a **Next.js 14** application for the Syntheverse Proof of Contribution (
 ### 🔧 Components Needing Testing/Tuning
 
 #### 1. **3D Map Rendering** (High Priority)
+
 **Current Issues**:
+
 - Node selection broken (always selects first node)
 - 2D canvas projection limitations
 - No proper 3D interaction
 - Limited visual feedback
 
 **Testing Checklist**:
+
 - [ ] Verify nodes render at correct 3D positions
 - [ ] Test node clicking - should select closest node in 2D projection
 - [ ] Verify edge rendering (similarity connections)
@@ -123,6 +134,7 @@ This is a **Next.js 14** application for the Syntheverse Proof of Contribution (
 - [ ] Check axis labels and legend
 
 **Recommended Improvements**:
+
 - Upgrade to WebGL/Three.js for true 3D rendering
 - Implement proper node picking (3D to 2D projection)
 - Add hover tooltips
@@ -131,7 +143,9 @@ This is a **Next.js 14** application for the Syntheverse Proof of Contribution (
 - Responsive canvas sizing
 
 #### 2. **Vector Generation & Storage**
+
 **Testing Checklist**:
+
 - [ ] Verify embeddings are generated for new submissions
 - [ ] Check embedding quality (OpenAI vs fallback)
 - [ ] Verify 3D coordinates are calculated correctly
@@ -140,14 +154,18 @@ This is a **Next.js 14** application for the Syntheverse Proof of Contribution (
 - [ ] Verify HHF scaling factor application
 
 #### 3. **API Performance**
+
 **Testing Checklist**:
+
 - [ ] `/api/sandbox-map` response time with 100+ submissions
 - [ ] Edge calculation performance (O(n²) complexity)
 - [ ] Database query optimization for large datasets
 - [ ] Vector similarity calculations
 
 #### 4. **Dashboard Stats**
+
 **Testing Checklist**:
+
 - [ ] Verify all statistics are accurate
 - [ ] Test chart rendering with various data states (empty, single item, many items)
 - [ ] Check refresh functionality
@@ -159,12 +177,15 @@ This is a **Next.js 14** application for the Syntheverse Proof of Contribution (
 ## 3D Map Upgrade Plan
 
 ### Phase 1: Fix Current Implementation
+
 1. **Fix Node Selection**
+
    - Implement proper 3D-to-2D picking
    - Calculate closest node to click position in screen space
    - Update `handleClick()` function in `SandboxMap3D.tsx`
 
 2. **Improve Visual Feedback**
+
    - Add hover states
    - Better node highlighting
    - Tooltips with submission details
@@ -175,13 +196,16 @@ This is a **Next.js 14** application for the Syntheverse Proof of Contribution (
    - Add loading states for large maps
 
 ### Phase 2: Enhanced Features
+
 1. **WebGL/Three.js Migration**
+
    - Replace canvas 2D with Three.js for true 3D
    - Better rendering quality
    - Hardware acceleration
    - Smooth animations
 
 2. **Interactive Features**
+
    - Node filtering by status/category/metal
    - Search functionality
    - Time-based filtering (show submissions by date range)
@@ -194,12 +218,15 @@ This is a **Next.js 14** application for the Syntheverse Proof of Contribution (
    - Orbit controls with smooth transitions
 
 ### Phase 3: Advanced Features
+
 1. **Multi-dimensional Views**
+
    - Switch between different axis mappings
    - Add 4D visualization (time dimension)
    - Dimension filtering
 
 2. **Comparison Tools**
+
    - Compare two submissions side-by-side
    - Path tracing between related submissions
    - Similarity heatmap overlay
@@ -214,6 +241,7 @@ This is a **Next.js 14** application for the Syntheverse Proof of Contribution (
 ## Key Files for 3D Map Upgrade
 
 ### Current Implementation
+
 - `components/SandboxMap3D.tsx` - Main 3D map component (NEEDS UPGRADE)
 - `app/api/sandbox-map/route.ts` - API endpoint for map data
 - `utils/vectors/hhf-3d-mapping.ts` - 3D coordinate calculations
@@ -221,6 +249,7 @@ This is a **Next.js 14** application for the Syntheverse Proof of Contribution (
 - `utils/vectors/redundancy.ts` - Similarity calculations
 
 ### Database Schema
+
 - `contributions` table with vector columns:
   - `embedding` (jsonb) - Full embedding array
   - `vector_x`, `vector_y`, `vector_z` (numeric) - 3D coordinates
@@ -232,6 +261,7 @@ This is a **Next.js 14** application for the Syntheverse Proof of Contribution (
 ## Environment Variables Required
 
 For full functionality:
+
 - `OPENAI_API_KEY` - For high-quality embeddings (optional, has fallback)
 - `DATABASE_URL` - PostgreSQL connection string
 - `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
@@ -263,16 +293,19 @@ npm run db:studio
 ## Next Steps
 
 1. **Immediate**: Test current 3D map functionality
+
    - Identify all bugs and limitations
    - Document performance issues
    - Test with real data
 
 2. **Short-term**: Fix critical issues
+
    - Fix node selection
    - Improve rendering performance
    - Add better visual feedback
 
 3. **Medium-term**: Upgrade to WebGL/Three.js
+
    - Migrate from canvas 2D to Three.js
    - Implement proper 3D interactions
    - Add advanced features
@@ -294,4 +327,3 @@ npm run db:studio
 
 **Last Updated**: Based on current codebase review
 **Status**: Ready for testing and 3D map upgrade planning
-

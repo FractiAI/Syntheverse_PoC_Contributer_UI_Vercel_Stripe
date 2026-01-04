@@ -3,6 +3,7 @@
 ## Method 1: Using Safari Developer Tools (Recommended)
 
 ### Step 1: Enable Developer Menu
+
 1. Open **Safari**
 2. Click **Safari** in the menu bar (top left)
 3. Click **Settings** (or **Preferences**)
@@ -11,25 +12,31 @@
 6. Close the settings window
 
 ### Step 2: Open Web Inspector
+
 1. Go to your site: `https://syntheverse-poc.vercel.app`
 2. Sign in with Google/OAuth
 3. In the menu bar, click **Develop**
 4. Click **Show Web Inspector** (or press `Cmd + Option + I`)
 
 ### Step 3: View Cookies
+
 1. In the Web Inspector window, click the **Storage** tab (at the top)
 2. In the left sidebar, expand **Cookies**
 3. Click on `https://syntheverse-poc.vercel.app`
 4. You'll see a list of all cookies for that site
 
 ### Step 4: Look for Supabase Cookies
+
 After signing in, look for cookies starting with:
+
 - `sb-jfbgdxeumzqzigptbmvp-auth-token`
 - `sb-jfbgdxeumzqzigptbmvp-auth-token-code-verifier`
 - Any other cookies starting with `sb-`
 
 ### Step 5: Check Cookie Details
+
 For each cookie, check:
+
 - **Name**: Should start with `sb-`
 - **Value**: Should have a long string
 - **Domain**: Should be `.vercel.app` or `syntheverse-poc.vercel.app`
@@ -62,6 +69,7 @@ For each cookie, check:
 ## What to Look For
 
 After signing in with OAuth, you should see:
+
 - ✅ At least one cookie starting with `sb-`
 - ✅ Cookie domain should match your site
 - ✅ Cookie expiration should be in the future
@@ -77,5 +85,3 @@ If you **don't see** any `sb-` cookies after signing in, that means cookies aren
 2. Sign in with Google
 3. After redirect to dashboard: Check cookies again
 4. Do you see `sb-` cookies now? **Yes / No**
-
-

@@ -16,34 +16,36 @@ console.log('📋 Stripe Environment Check:');
 console.log('----------------------------');
 
 const stripeEnvVars = [
-    'STRIPE_SECRET_KEY',
-    'STRIPE_WEBHOOK_SECRET',
-    'NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY'
+  'STRIPE_SECRET_KEY',
+  'STRIPE_WEBHOOK_SECRET',
+  'NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY',
 ];
 
 let stripeConfigured = true;
 
 try {
-    if (fs.existsSync('.env.local')) {
-        const envContent = fs.readFileSync('.env.local', 'utf8');
-        const envLines = envContent.split('\n');
+  if (fs.existsSync('.env.local')) {
+    const envContent = fs.readFileSync('.env.local', 'utf8');
+    const envLines = envContent.split('\n');
 
-        stripeEnvVars.forEach(varName => {
-            const hasVar = envLines.some(line => line.startsWith(`${varName}=`) && line.length > varName.length + 1);
-            if (hasVar) {
-                console.log(`✅ ${varName} configured`);
-            } else {
-                console.log(`❌ ${varName} missing or empty`);
-                stripeConfigured = false;
-            }
-        });
-    } else {
-        console.log('❌ .env.local file missing');
+    stripeEnvVars.forEach((varName) => {
+      const hasVar = envLines.some(
+        (line) => line.startsWith(`${varName}=`) && line.length > varName.length + 1
+      );
+      if (hasVar) {
+        console.log(`✅ ${varName} configured`);
+      } else {
+        console.log(`❌ ${varName} missing or empty`);
         stripeConfigured = false;
-    }
-} catch (error) {
-    console.log('❌ Error reading .env.local:', error.message);
+      }
+    });
+  } else {
+    console.log('❌ .env.local file missing');
     stripeConfigured = false;
+  }
+} catch (error) {
+  console.log('❌ Error reading .env.local:', error.message);
+  stripeConfigured = false;
 }
 
 // Check Stripe-related files
@@ -51,28 +53,28 @@ console.log('\n📄 Stripe Files Check:');
 console.log('---------------------');
 
 const stripeFiles = [
-    'app/subscribe/page.tsx',
-    'app/webhook/stripe/route.ts',
-    'utils/stripe/api.ts',
-    'stripeSetup.ts'
+  'app/subscribe/page.tsx',
+  'app/webhook/stripe/route.ts',
+  'utils/stripe/api.ts',
+  'stripeSetup.ts',
 ];
 
-stripeFiles.forEach(file => {
-    if (fs.existsSync(file)) {
-        console.log(`✅ ${file} exists`);
-    } else {
-        console.log(`❌ ${file} missing`);
-    }
+stripeFiles.forEach((file) => {
+  if (fs.existsSync(file)) {
+    console.log(`✅ ${file} exists`);
+  } else {
+    console.log(`❌ ${file} missing`);
+  }
 });
 
 console.log('\n🧪 Stripe Testing Steps:');
 console.log('=========================');
 
 if (!stripeConfigured) {
-    console.log('⚠️  WARNING: Stripe environment variables not configured!');
-    console.log('   Set up your Stripe test account first.');
-    console.log('   Visit: https://dashboard.stripe.com/test/');
-    console.log('');
+  console.log('⚠️  WARNING: Stripe environment variables not configured!');
+  console.log('   Set up your Stripe test account first.');
+  console.log('   Visit: https://dashboard.stripe.com/test/');
+  console.log('');
 }
 
 console.log('1. Set up Stripe Products (one-time setup):');
@@ -142,6 +144,5 @@ console.log('');
 console.log('✅ Ready to test Stripe billing! Complete authentication testing first.');
 
 if (!stripeConfigured) {
-    console.log('\n🚨 ACTION REQUIRED: Configure Stripe environment variables in .env.local');
+  console.log('\n🚨 ACTION REQUIRED: Configure Stripe environment variables in .env.local');
 }
-

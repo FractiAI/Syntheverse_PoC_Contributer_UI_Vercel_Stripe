@@ -3,11 +3,13 @@
 ## How to Open Browser DevTools
 
 ### On Mac:
+
 - **Chrome/Edge**: `Cmd + Option + I` (or `Cmd + Shift + C` for inspector)
 - **Safari**: `Cmd + Option + I` (enable Developer menu first in Preferences → Advanced)
 - **Firefox**: `Cmd + Option + I`
 
 ### On Windows/Linux:
+
 - **Chrome/Edge/Firefox**: `F12` or `Ctrl + Shift + I`
 - **Right-click** on page → "Inspect" or "Inspect Element"
 
@@ -18,14 +20,17 @@
 1. **Open DevTools** (use one of the methods above)
 
 2. **Go to Application tab** (Chrome/Edge) or **Storage tab** (Firefox)
+
    - If you don't see tabs, click the `>>` icon to see more
 
 3. **In the left sidebar, expand "Cookies"**
+
    - Click on your domain: `syntheverse-poc.vercel.app`
 
 4. **Sign in with Google/OAuth**
 
 5. **Look for cookies starting with:**
+
    - `sb-jfbgdxeumzqzigptbmvp-auth-token`
    - `sb-jfbgdxeumzqzigptbmvp-auth-token-code-verifier`
    - Any other cookies starting with `sb-`
@@ -44,18 +49,21 @@
 ## What to Report
 
 Please tell me:
+
 1. **Do you see any cookies starting with `sb-` after signing in?**
+
    - Yes / No
 
 2. **If yes, what is the "Expires" value?**
+
    - A date/time in the future
    - "Session" (expires when browser closes)
-   - Other: ________
+   - Other: **\_\_\_\_**
 
 3. **What domain are the cookies set for?**
    - `.vercel.app`
    - `syntheverse-poc.vercel.app`
-   - Other: ________
+   - Other: **\_\_\_\_**
 
 ---
 
@@ -76,9 +84,7 @@ Please tell me:
 Try this in the browser console (DevTools → Console tab):
 
 ```javascript
-document.cookie
+document.cookie;
 ```
 
 This will show all cookies. Do you see any `sb-` cookies after signing in?
-
-

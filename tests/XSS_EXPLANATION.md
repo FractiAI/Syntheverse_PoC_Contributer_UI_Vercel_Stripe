@@ -15,8 +15,9 @@
 ## Real-World Example
 
 ### Attack Scenario:
+
 ```
-1. Attacker writes a comment: 
+1. Attacker writes a comment:
    <script>alert('Your cookies: ' + document.cookie)</script>
 
 2. Website stores it without sanitization
@@ -25,6 +26,7 @@
 ```
 
 ### What Could Happen:
+
 - **Steal session tokens** → Attacker can log in as you
 - **Steal personal data** → Credit cards, addresses, etc.
 - **Redirect to malicious sites** → Phishing attacks
@@ -33,55 +35,73 @@
 ## Common XSS Attack Patterns
 
 ### 1. Script Tags
+
 ```html
-<script>alert('XSS')</script>
+<script>
+  alert('XSS');
+</script>
 ```
+
 **What it does**: Runs JavaScript code directly
 
 ### 2. Event Handlers
+
 ```html
 <img src=x onerror=alert('XSS')>
 ```
+
 **What it does**: Runs code when image fails to load
 
 ### 3. JavaScript Protocol
+
 ```html
 <a href="javascript:alert('XSS')">Click me</a>
 ```
+
 **What it does**: Runs JavaScript when link is clicked
 
 ### 4. SVG with onload
+
 ```html
 <svg onload=alert('XSS')>
 ```
+
 **What it does**: Runs code when SVG loads
 
 ### 5. Injected Script in Attributes
+
 ```html
-"><script>alert('XSS')</script>
+">
+<script>
+  alert('XSS');
+</script>
 ```
+
 **What it does**: Breaks out of HTML attributes and injects script
 
 ## How Our Test Prevents XSS
 
 ### Our Sanitization Function:
+
 ```typescript
 const sanitizeXSS = (input: string): string => {
-    return input
-        .replace(/</g, '&lt;')      // < becomes &lt; (HTML entity)
-        .replace(/>/g, '&gt;')       // > becomes &gt; (HTML entity)
-        .replace(/"/g, '&quot;')     // " becomes &quot; (HTML entity)
-        .replace(/'/g, '&#x27;')     // ' becomes &#x27; (HTML entity)
-        .replace(/\//g, '&#x2F;')    // / becomes &#x2F; (HTML entity)
-}
+  return input
+    .replace(/</g, '&lt;') // < becomes &lt; (HTML entity)
+    .replace(/>/g, '&gt;') // > becomes &gt; (HTML entity)
+    .replace(/"/g, '&quot;') // " becomes &quot; (HTML entity)
+    .replace(/'/g, '&#x27;') // ' becomes &#x27; (HTML entity)
+    .replace(/\//g, '&#x2F;'); // / becomes &#x2F; (HTML entity)
+};
 ```
 
 ### What This Does:
+
 - **Converts dangerous characters** to HTML entities
 - **Prevents scripts from executing** by escaping them
 - **Makes code display as text** instead of running
 
 ### Example:
+
 ```typescript
 // Input (dangerous):
 <script>alert('XSS')</script>
@@ -96,6 +116,7 @@ const sanitizeXSS = (input: string): string => {
 ## What Our Test Validates
 
 Our test checks that:
+
 1. ✅ **Sanitization function exists** and works
 2. ✅ **All 5 common XSS patterns** are properly sanitized
 3. ✅ **Dangerous patterns are removed**:
@@ -106,12 +127,14 @@ Our test checks that:
 ## Why This Matters
 
 Without XSS protection:
+
 - ❌ Attackers could steal user data
 - ❌ Attackers could hijack user sessions
 - ❌ Attackers could deface your website
 - ❌ Users would lose trust in your platform
 
 With XSS protection:
+
 - ✅ User input is safe to display
 - ✅ Malicious code is neutralized
 - ✅ User data is protected
@@ -126,4 +149,3 @@ With XSS protection:
 ---
 
 **Think of it like**: A security guard checking everyone's bags before they enter a building. We're checking user input before it gets displayed to other users!
-

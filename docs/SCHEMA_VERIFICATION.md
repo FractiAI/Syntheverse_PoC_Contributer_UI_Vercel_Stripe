@@ -9,14 +9,17 @@ The registration fields migration has been successfully applied to the `contribu
 The following columns have been added to the `contributions` table:
 
 1. **`registered`** (boolean, default: false)
+
    - Indicates if the PoC has been registered on the blockchain
    - Default: `false`
 
 2. **`registration_date`** (timestamp, nullable)
+
    - Timestamp when the PoC was registered
    - Nullable (only set when registered)
 
 3. **`registration_tx_hash`** (text, nullable)
+
    - Blockchain transaction hash for the registration
    - Nullable (only set when registered)
 
@@ -27,6 +30,7 @@ The following columns have been added to the `contributions` table:
 ## Created Indexes
 
 1. **`contributions_registered_idx`**
+
    - Index on `registered` column
    - Partial index (WHERE registered = true)
    - Optimizes queries for registered PoCs
@@ -39,13 +43,14 @@ The following columns have been added to the `contributions` table:
 ## Verification Queries
 
 ### Check Columns
+
 ```sql
 SELECT column_name, data_type, is_nullable, column_default
-FROM information_schema.columns 
-WHERE table_name = 'contributions' 
+FROM information_schema.columns
+WHERE table_name = 'contributions'
 AND table_schema = 'public'
 AND (
-    column_name LIKE 'registration%' 
+    column_name LIKE 'registration%'
     OR column_name = 'stripe_payment_id'
     OR column_name = 'registered'
 )
@@ -53,13 +58,14 @@ ORDER BY column_name;
 ```
 
 ### Check Indexes
+
 ```sql
 SELECT indexname, indexdef
 FROM pg_indexes
 WHERE tablename = 'contributions'
 AND schemaname = 'public'
 AND (
-    indexname LIKE '%registered%' 
+    indexname LIKE '%registered%'
     OR indexname LIKE '%stripe%'
 )
 ORDER BY indexname;
@@ -84,4 +90,3 @@ ORDER BY indexname;
   - `app/api/poc/[hash]/register/route.ts` - Initiate registration
   - `app/api/poc/[hash]/registration-status/route.ts` - Check status
   - `app/webhook/stripe/route.ts` - Handle payment webhook
-

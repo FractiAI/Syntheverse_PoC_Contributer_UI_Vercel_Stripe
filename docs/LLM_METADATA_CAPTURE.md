@@ -7,16 +7,19 @@ All qualifying PoCs generated and registered must include complete LLM metadata 
 ## Required Metadata Fields
 
 ### Timestamp & Date
+
 - **`timestamp`**: ISO 8601 timestamp of evaluation (e.g., `2025-01-15T10:30:45.123Z`)
 - **`date`**: Date in YYYY-MM-DD format (e.g., `2025-01-15`)
 - **`evaluation_timestamp_ms`**: Unix timestamp in milliseconds
 
 ### Model Information
+
 - **`model`**: LLM model name (e.g., `llama-3.1-8b-instant`)
 - **`model_version`**: Model version (e.g., `3.1`)
 - **`provider`**: API provider (e.g., `Groq`)
 
 ### System Prompt
+
 - **`system_prompt_preview`**: First 500 characters of the system prompt (for quick reference)
 - **`system_prompt_hash`**: SHA-256 hash of the full system prompt (first 16 chars for verification)
 - **`system_prompt_file`**: File path to the full system prompt (e.g., `utils/grok/system-prompt.ts`)
@@ -29,19 +32,24 @@ LLM metadata is captured in `utils/grok/evaluate.ts` during PoC evaluation:
 
 ```typescript
 const llmMetadata = {
-    timestamp: evaluationTimestamp.toISOString(),
-    date: evaluationTimestamp.toISOString().split('T')[0],
-    model: 'llama-3.1-8b-instant',
-    model_version: '3.1',
-    provider: 'Groq',
-    system_prompt_preview: systemPrompt.substring(0, 500) + '...',
-    system_prompt_hash: crypto.createHash('sha256').update(systemPrompt).digest('hex').substring(0, 16),
-    system_prompt_file: 'utils/grok/system-prompt.ts',
-    evaluation_timestamp_ms: evaluationTimestamp.getTime()
-}
+  timestamp: evaluationTimestamp.toISOString(),
+  date: evaluationTimestamp.toISOString().split('T')[0],
+  model: 'llama-3.1-8b-instant',
+  model_version: '3.1',
+  provider: 'Groq',
+  system_prompt_preview: systemPrompt.substring(0, 500) + '...',
+  system_prompt_hash: crypto
+    .createHash('sha256')
+    .update(systemPrompt)
+    .digest('hex')
+    .substring(0, 16),
+  system_prompt_file: 'utils/grok/system-prompt.ts',
+  evaluation_timestamp_ms: evaluationTimestamp.getTime(),
+};
 ```
 
 This metadata is:
+
 1. Included in the evaluation result
 2. Stored in `contributions.metadata.llm_metadata`
 3. Logged in `poc_log.grok_api_response`
@@ -49,6 +57,7 @@ This metadata is:
 ### Registration Phase
 
 LLM metadata is **preserved** during registration:
+
 - The `metadata` field is **not overwritten** during registration
 - Only registration-specific fields are updated (`registered`, `registration_date`, `registration_tx_hash`, etc.)
 - LLM metadata remains intact from the evaluation phase
@@ -95,7 +104,7 @@ LLM metadata is also captured in `poc_log.grok_api_response` for audit trail:
 ### Check LLM Metadata for a PoC
 
 ```sql
-SELECT 
+SELECT
     submission_hash,
     title,
     metadata->'llm_metadata' as llm_metadata
@@ -106,6 +115,7 @@ WHERE submission_hash = 'your_hash_here';
 ### Verify System Prompt Hash
 
 The system prompt hash can be verified by:
+
 1. Reading the system prompt from `utils/grok/system-prompt.ts`
 2. Computing SHA-256 hash
 3. Comparing first 16 characters with stored `system_prompt_hash`
@@ -145,4 +155,3 @@ The system prompt hash can be verified by:
 
 **Last Updated**: January 2025  
 **Status**: ✅ Implemented
-

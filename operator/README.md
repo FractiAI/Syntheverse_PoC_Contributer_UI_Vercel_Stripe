@@ -33,5 +33,3 @@ An operator is responsible for infrastructure, safety boundaries, costs, and pol
 ### Compliance boundary
 
 The reference instance is an **experimental, non-custodial sandbox**. Participation does not confer ownership, equity, profit rights, or guaranteed outcomes.
-
-

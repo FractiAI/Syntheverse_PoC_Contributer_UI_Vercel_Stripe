@@ -5,14 +5,18 @@
 For your Supabase project (`jfbgdxeumzqzigptbmvp`), you should see cookies starting with:
 
 ### Main Authentication Cookie:
+
 **Name:** `sb-jfbgdxeumzqzigptbmvp-auth-token`
+
 - **Purpose**: Contains the access token and refresh token for authentication
 - **Must be present**: ✅ YES - This is the most important one!
 - **Value**: Should be a long encoded string (JSON data)
 - **Expires**: Should be a future date (not "Session")
 
 ### OAuth Code Verifier (if using OAuth):
+
 **Name:** `sb-jfbgdxeumzqzigptbmvp-auth-token-code-verifier`
+
 - **Purpose**: Used for OAuth PKCE flow
 - **Must be present**: Usually yes, for OAuth
 - **Value**: Random string
@@ -42,12 +46,14 @@ For the main cookie (`sb-jfbgdxeumzqzigptbmvp-auth-token`), check:
 ## What Each Cookie Does
 
 ### `sb-jfbgdxeumzqzigptbmvp-auth-token`
+
 - **Critical**: This is the main cookie that keeps you logged in
 - Contains your JWT access token and refresh token
 - Without this cookie, you'll be logged out immediately
 - Should persist for the session duration (30 days if configured)
 
 ### `sb-jfbgdxeumzqzigptbmvp-auth-token-code-verifier`
+
 - Used during OAuth flow for security
 - May expire quickly (that's okay)
 - Not critical for maintaining session after initial sign-in
@@ -73,6 +79,7 @@ After signing in with Google/OAuth:
 ## If Cookies Are Missing
 
 If you **don't see** the `sb-jfbgdxeumzqzigptbmvp-auth-token` cookie after signing in:
+
 - ❌ Cookies aren't being set properly in the callback route
 - This explains why sessions don't persist
 - We need to fix the cookie handling in `/app/auth/callback/route.ts`
@@ -82,8 +89,7 @@ If you **don't see** the `sb-jfbgdxeumzqzigptbmvp-auth-token` cookie after signi
 ## If Cookie Has Wrong Expiration
 
 If the cookie exists but shows "Session" expiration:
+
 - ❌ Cookie will expire when you close the browser
 - This explains why you need to sign in again
 - We need to ensure cookies are set with proper expiration
-
-

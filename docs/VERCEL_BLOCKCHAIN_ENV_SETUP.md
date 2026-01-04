@@ -9,16 +9,19 @@
 The following blockchain-related environment variables were used for Hardhat integration (now deprecated):
 
 ### 1. HARDHAT_RPC_URL
+
 - **Value**: `http://localhost:8545`
 - **Environment**: Production
 - **Status**: ⚠️ **NOTE**: `localhost:8545` will NOT work for Vercel deployments!
 
 **Important**: Vercel deployments run in the cloud and cannot access `localhost`. You need to:
+
 - Use a remote Hardhat node (e.g., deployed to a server)
 - Use a public RPC endpoint (Infura, Alchemy, etc.)
 - Use a tunnel service (ngrok, etc.) for testing
 
 **To update**: Run:
+
 ```bash
 # Set your Vercel token as an environment variable (never commit to git!)
 export VERCEL_TOKEN="your_token_here"
@@ -27,11 +30,13 @@ echo "https://your-remote-rpc-endpoint.com" | vercel env add HARDHAT_RPC_URL pro
 ```
 
 ### 2. POC_REGISTRY_ADDRESS
+
 - **Value**: `0x0000000000000000000000000000000000000000` (PLACEHOLDER)
 - **Environment**: Production
 - **Status**: ⚠️ **NEEDS UPDATE** - Set to actual deployed contract address
 
 **To get the actual address**:
+
 1. Deploy POCRegistry contract:
    ```bash
    cd syntheverse-ui/src/blockchain/contracts
@@ -47,16 +52,19 @@ echo "https://your-remote-rpc-endpoint.com" | vercel env add HARDHAT_RPC_URL pro
    ```
 
 ### 3. BLOCKCHAIN_PRIVATE_KEY
+
 - **Value**: `0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80`
 - **Environment**: Production
 - **Status**: ⚠️ **WARNING**: This is Hardhat's default test account #0 private key
 
-**Security Warning**: 
+**Security Warning**:
+
 - ⚠️ This is a **known public test key** - NOT SECURE for production!
 - ⚠️ Anyone with this key can control your contract!
 - ⚠️ **Generate a new secure wallet for production**
 
 **To update with a secure key**:
+
 1. Generate a new wallet:
    ```bash
    # Using Node.js
@@ -100,17 +108,20 @@ echo "YOUR_CONTRACT_ADDRESS" | vercel env add POC_REGISTRY_ADDRESS production --
 ### 3. Set Up Remote RPC (Required for Vercel)
 
 **Option A: Use a Public RPC Service**
+
 - Sign up for Infura (https://infura.io) or Alchemy (https://alchemy.com)
 - Create a new project
 - Get your RPC endpoint URL
 - Update `HARDHAT_RPC_URL`
 
 **Option B: Deploy Hardhat Node**
+
 - Deploy Hardhat node to a server (AWS, DigitalOcean, etc.)
 - Expose RPC endpoint
 - Update `HARDHAT_RPC_URL`
 
 **Option C: Use a Tunnel (Testing Only)**
+
 - Use ngrok: `ngrok http 8545`
 - Use the ngrok URL as `HARDHAT_RPC_URL`
 - ⚠️ Only for testing - not production!
@@ -141,4 +152,3 @@ vercel env ls --token="$VERCEL_TOKEN" | grep -E "(HARDHAT|POC_REGISTRY|BLOCKCHAI
 
 - `docs/HARDHAT_BLOCKCHAIN_SETUP.md` - Detailed blockchain setup guide
 - `docs/HARDHAT_IMPLEMENTATION_SUMMARY.md` - Implementation summary
-

@@ -19,8 +19,8 @@ let envVars = {};
 if (fs.existsSync(envPath)) {
   const content = fs.readFileSync(envPath, 'utf8');
   const lines = content.split('\n');
-  
-  lines.forEach(line => {
+
+  lines.forEach((line) => {
     line = line.trim();
     // Skip comments and empty lines
     if (line && !line.startsWith('#')) {
@@ -39,28 +39,25 @@ if (fs.existsSync(envPath)) {
 
 // Required variables checklist
 const requiredVars = {
-  'Supabase': [
+  Supabase: [
     'NEXT_PUBLIC_SUPABASE_URL',
     'NEXT_PUBLIC_SUPABASE_ANON_KEY',
     'SUPABASE_SERVICE_ROLE_KEY',
-    'DATABASE_URL'
+    'DATABASE_URL',
   ],
-  'Site URLs': [
-    'NEXT_PUBLIC_SITE_URL',
-    'NEXT_PUBLIC_WEBSITE_URL'
-  ],
-  'Stripe': [
+  'Site URLs': ['NEXT_PUBLIC_SITE_URL', 'NEXT_PUBLIC_WEBSITE_URL'],
+  Stripe: [
     'STRIPE_SECRET_KEY',
     'STRIPE_WEBHOOK_SECRET',
     'NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY',
-    'NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID'
+    'NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID',
   ],
   'OAuth (Optional)': [
     'GOOGLE_CLIENT_ID',
     'GOOGLE_CLIENT_SECRET',
     'GITHUB_CLIENT_ID',
-    'GITHUB_CLIENT_SECRET'
-  ]
+    'GITHUB_CLIENT_SECRET',
+  ],
 };
 
 console.log('📋 Environment Variables Status:\n');
@@ -70,11 +67,11 @@ let missingVars = [];
 
 Object.entries(requiredVars).forEach(([category, vars]) => {
   console.log(`\n${category}:`);
-  vars.forEach(varName => {
+  vars.forEach((varName) => {
     const isPresent = envVars[varName] && envVars[varName] !== 'whsec_your_webhook_secret';
     const icon = isPresent ? '✅' : '❌';
     console.log(`  ${icon} ${varName}`);
-    
+
     if (!isPresent) {
       allPresent = false;
       missingVars.push(varName);
@@ -93,7 +90,7 @@ if (envVars.NEXT_PUBLIC_SUPABASE_URL) {
   vercelVars.push({
     key: 'NEXT_PUBLIC_SUPABASE_URL',
     value: envVars.NEXT_PUBLIC_SUPABASE_URL,
-    category: 'Supabase'
+    category: 'Supabase',
   });
 }
 
@@ -101,7 +98,7 @@ if (envVars.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
   vercelVars.push({
     key: 'NEXT_PUBLIC_SUPABASE_ANON_KEY',
     value: envVars.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    category: 'Supabase'
+    category: 'Supabase',
   });
 }
 
@@ -109,7 +106,7 @@ if (envVars.SUPABASE_SERVICE_ROLE_KEY) {
   vercelVars.push({
     key: 'SUPABASE_SERVICE_ROLE_KEY',
     value: envVars.SUPABASE_SERVICE_ROLE_KEY,
-    category: 'Supabase'
+    category: 'Supabase',
   });
 }
 
@@ -118,7 +115,7 @@ if (envVars.DATABASE_URL) {
   vercelVars.push({
     key: 'DATABASE_URL',
     value: envVars.DATABASE_URL,
-    category: 'Supabase'
+    category: 'Supabase',
   });
 } else {
   console.log('⚠️  DATABASE_URL not found in .env.local');
@@ -136,7 +133,7 @@ if (envVars.NEXT_PUBLIC_SITE_URL) {
     key: 'NEXT_PUBLIC_SITE_URL',
     value: 'https://YOUR-APP-NAME.vercel.app', // Placeholder
     category: 'Site URLs',
-    note: 'Update with your actual Vercel URL'
+    note: 'Update with your actual Vercel URL',
   });
 }
 
@@ -144,7 +141,7 @@ vercelVars.push({
   key: 'NEXT_PUBLIC_WEBSITE_URL',
   value: 'https://YOUR-APP-NAME.vercel.app', // Placeholder
   category: 'Site URLs',
-  note: 'Update with your actual Vercel URL (same as NEXT_PUBLIC_SITE_URL)'
+  note: 'Update with your actual Vercel URL (same as NEXT_PUBLIC_SITE_URL)',
 });
 
 // Stripe
@@ -152,7 +149,7 @@ if (envVars.STRIPE_SECRET_KEY) {
   vercelVars.push({
     key: 'STRIPE_SECRET_KEY',
     value: envVars.STRIPE_SECRET_KEY,
-    category: 'Stripe'
+    category: 'Stripe',
   });
 }
 
@@ -160,26 +157,29 @@ if (envVars.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
   vercelVars.push({
     key: 'NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY',
     value: envVars.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
-    category: 'Stripe'
+    category: 'Stripe',
   });
 }
 
-if (envVars.STRIPE_WEBHOOK_SECRET && envVars.STRIPE_WEBHOOK_SECRET !== 'whsec_your_webhook_secret') {
+if (
+  envVars.STRIPE_WEBHOOK_SECRET &&
+  envVars.STRIPE_WEBHOOK_SECRET !== 'whsec_your_webhook_secret'
+) {
   vercelVars.push({
     key: 'STRIPE_WEBHOOK_SECRET',
     value: envVars.STRIPE_WEBHOOK_SECRET,
-    category: 'Stripe'
+    category: 'Stripe',
   });
 } else {
   console.log('⚠️  STRIPE_WEBHOOK_SECRET needs to be set after creating webhook in Stripe');
-  console.log('   (You\'ll get this after configuring the webhook endpoint)\n');
+  console.log("   (You'll get this after configuring the webhook endpoint)\n");
 }
 
 if (envVars.NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID) {
   vercelVars.push({
     key: 'NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID',
     value: envVars.NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID,
-    category: 'Stripe'
+    category: 'Stripe',
   });
 } else {
   console.log('⚠️  NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID not found');
@@ -191,7 +191,7 @@ if (envVars.GOOGLE_CLIENT_ID) {
   vercelVars.push({
     key: 'GOOGLE_CLIENT_ID',
     value: envVars.GOOGLE_CLIENT_ID,
-    category: 'OAuth'
+    category: 'OAuth',
   });
 }
 
@@ -199,7 +199,7 @@ if (envVars.GOOGLE_CLIENT_SECRET) {
   vercelVars.push({
     key: 'GOOGLE_CLIENT_SECRET',
     value: envVars.GOOGLE_CLIENT_SECRET,
-    category: 'OAuth'
+    category: 'OAuth',
   });
 }
 
@@ -207,7 +207,7 @@ if (envVars.GITHUB_CLIENT_ID) {
   vercelVars.push({
     key: 'GITHUB_CLIENT_ID',
     value: envVars.GITHUB_CLIENT_ID,
-    category: 'OAuth'
+    category: 'OAuth',
   });
 }
 
@@ -215,7 +215,7 @@ if (envVars.GITHUB_CLIENT_SECRET) {
   vercelVars.push({
     key: 'GITHUB_CLIENT_SECRET',
     value: envVars.GITHUB_CLIENT_SECRET,
-    category: 'OAuth'
+    category: 'OAuth',
   });
 }
 
@@ -244,4 +244,3 @@ console.log('   - Update Site URLs with your actual Vercel URL after first deplo
 console.log('   - Add DATABASE_URL from Supabase Dashboard');
 console.log('   - Add STRIPE_WEBHOOK_SECRET after creating webhook in Stripe');
 console.log('   - Add NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID from Stripe Dashboard\n');
-

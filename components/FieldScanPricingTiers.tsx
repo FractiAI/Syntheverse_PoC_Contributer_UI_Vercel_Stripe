@@ -1,14 +1,14 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { ArrowRight } from 'lucide-react'
+import { useState } from 'react';
+import { ArrowRight } from 'lucide-react';
 
 interface PricingTier {
-  name: string
-  price: number
-  priceLabel: string
-  deliverables: string[]
-  idealFor: string
+  name: string;
+  price: number;
+  priceLabel: string;
+  deliverables: string[];
+  idealFor: string;
 }
 
 const tiers: PricingTier[] = [
@@ -19,9 +19,9 @@ const tiers: PricingTier[] = [
     deliverables: [
       'Targeted system scan',
       'Standard edge contrast analysis',
-      'Basic coherence metrics'
+      'Basic coherence metrics',
     ],
-    idealFor: 'Small teams or simple PoCs needing quick insight'
+    idealFor: 'Small teams or simple PoCs needing quick insight',
   },
   {
     name: 'FieldScan Pro',
@@ -31,9 +31,9 @@ const tiers: PricingTier[] = [
       'Deep nested-layer imaging',
       'Predictive resonance scoring',
       'Syntheverse Sandbox integration',
-      'Detailed actionable report'
+      'Detailed actionable report',
     ],
-    idealFor: 'Medium complexity nodes needing predictive, multi-layer insights'
+    idealFor: 'Medium complexity nodes needing predictive, multi-layer insights',
   },
   {
     name: 'FieldScan Enterprise',
@@ -43,17 +43,18 @@ const tiers: PricingTier[] = [
       'Complete complex systems imaging',
       'Multi-node analysis & inter-node coherence mapping',
       'Proof-of-Contribution Vault integration',
-      'Full scoring, nested-layer insights, predictive modeling, operational recommendations'
+      'Full scoring, nested-layer insights, predictive modeling, operational recommendations',
     ],
-    idealFor: 'Large-scale PoCs or institutional nodes critical to system function and contribution measurement'
-  }
-]
+    idealFor:
+      'Large-scale PoCs or institutional nodes critical to system function and contribution measurement',
+  },
+];
 
 export default function FieldScanPricingTiers() {
-  const [loading, setLoading] = useState<string | null>(null)
+  const [loading, setLoading] = useState<string | null>(null);
 
   const handlePurchase = async (tier: PricingTier) => {
-    setLoading(tier.name)
+    setLoading(tier.name);
     try {
       const response = await fetch('/api/fieldscan/create-checkout', {
         method: 'POST',
@@ -65,21 +66,21 @@ export default function FieldScanPricingTiers() {
           tier: tier.name,
           price: tier.price,
         }),
-      })
+      });
 
-      const data = await response.json()
-      
+      const data = await response.json();
+
       if (data.checkout_url) {
-        window.location.href = data.checkout_url
+        window.location.href = data.checkout_url;
       } else {
-        console.error('No checkout URL returned')
-        setLoading(null)
+        console.error('No checkout URL returned');
+        setLoading(null);
       }
     } catch (error) {
-      console.error('Error creating checkout session:', error)
-      setLoading(null)
+      console.error('Error creating checkout session:', error);
+      setLoading(null);
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -87,7 +88,7 @@ export default function FieldScanPricingTiers() {
         {tiers.map((tier, index) => (
           <div
             key={tier.name}
-            className={`cockpit-panel p-6 border ${
+            className={`cockpit-panel border p-6 ${
               index === 2
                 ? 'border-2 border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)]'
                 : 'border-[var(--keyline-primary)]'
@@ -95,17 +96,17 @@ export default function FieldScanPricingTiers() {
           >
             <div className="mb-4">
               <div className="cockpit-label mb-2">{tier.name}</div>
-              <div className="cockpit-title text-2xl mb-1">{tier.priceLabel}</div>
+              <div className="cockpit-title mb-1 text-2xl">{tier.priceLabel}</div>
               <div className="cockpit-text text-xs" style={{ opacity: 0.8 }}>
                 per session
               </div>
             </div>
 
             <div className="mb-4">
-              <div className="cockpit-text text-sm font-semibold mb-2">Deliverables</div>
+              <div className="cockpit-text mb-2 text-sm font-semibold">Deliverables</div>
               <ul className="space-y-1">
                 {tier.deliverables.map((deliverable, idx) => (
-                  <li key={idx} className="cockpit-text text-xs flex items-start">
+                  <li key={idx} className="cockpit-text flex items-start text-xs">
                     <span className="mr-2">•</span>
                     <span style={{ opacity: 0.9 }}>{deliverable}</span>
                   </li>
@@ -113,8 +114,8 @@ export default function FieldScanPricingTiers() {
               </ul>
             </div>
 
-            <div className="mb-4 pt-4 border-t border-[var(--keyline-primary)]">
-              <div className="cockpit-text text-xs font-semibold mb-1">Ideal for</div>
+            <div className="mb-4 border-t border-[var(--keyline-primary)] pt-4">
+              <div className="cockpit-text mb-1 text-xs font-semibold">Ideal for</div>
               <div className="cockpit-text text-xs" style={{ opacity: 0.8 }}>
                 {tier.idealFor}
               </div>
@@ -123,14 +124,14 @@ export default function FieldScanPricingTiers() {
             <button
               onClick={() => handlePurchase(tier)}
               disabled={loading === tier.name}
-              className="cockpit-lever w-full text-center mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="cockpit-lever mt-4 w-full text-center disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loading === tier.name ? (
                 'Processing...'
               ) : (
                 <>
                   Engage
-                  <ArrowRight className="ml-2 h-4 w-4 inline" />
+                  <ArrowRight className="ml-2 inline h-4 w-4" />
                 </>
               )}
             </button>
@@ -138,16 +139,21 @@ export default function FieldScanPricingTiers() {
         ))}
       </div>
 
-      <div className="cockpit-panel p-6 bg-[rgba(255,184,77,0.05)] border border-[var(--hydrogen-amber)]">
+      <div className="cockpit-panel border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)] p-6">
         <div className="cockpit-label mb-3 text-[var(--hydrogen-amber)]">HOW IT WORKS</div>
-        <div className="cockpit-text text-sm space-y-2">
+        <div className="cockpit-text space-y-2 text-sm">
           <p>• Select your tier based on node complexity and desired insights</p>
           <p>• Submit your node(s) for FieldScan</p>
-          <p>• Receive full Holographic Hydrogen Fractal MRI analysis, predictive scoring, and optional integration with the Syntheverse Sandbox and PoC Vault</p>
-          <p className="mt-3 font-semibold">FieldScan is full-service consulting — the experts come to you, do the scan, interpret results, and deliver actionable insights.</p>
+          <p>
+            • Receive full Holographic Hydrogen Fractal MRI analysis, predictive scoring, and
+            optional integration with the Syntheverse Sandbox and PoC Vault
+          </p>
+          <p className="mt-3 font-semibold">
+            FieldScan is full-service consulting — the experts come to you, do the scan, interpret
+            results, and deliver actionable insights.
+          </p>
         </div>
       </div>
     </div>
-  )
+  );
 }
-

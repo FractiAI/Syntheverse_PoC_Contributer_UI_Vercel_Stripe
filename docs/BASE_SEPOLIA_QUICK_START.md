@@ -37,6 +37,7 @@ npx hardhat deploy --network base_sepolia
 ```
 
 This will deploy:
+
 - SyntheverseGenesisSYNTH90T
 - SyntheverseGenesisLensKernel
 
@@ -45,6 +46,7 @@ Then update your `.env` with the new Sepolia contract addresses.
 #### Option B: Test Network Connection Only
 
 You can test the network connection, wallet balance, and gas estimation without deploying contracts. The test script will verify:
+
 - ✅ Network connectivity
 - ✅ Wallet balance
 - ✅ Gas estimation
@@ -61,6 +63,7 @@ npx tsx scripts/test-base-sepolia.ts
 ```
 
 This will check:
+
 - ✅ Environment variables
 - ✅ Network connection
 - ✅ Wallet balance
@@ -84,21 +87,26 @@ Before testing on Sepolia, ensure:
 ## Testing Workflow
 
 ### Step 1: Network & Balance Check
+
 ```bash
 npx tsx scripts/test-base-sepolia.ts
 ```
 
 ### Step 2: Deploy Contracts (if needed)
+
 ```bash
 cd syntheverse-ui/src/blockchain/contracts
 npx hardhat deploy --network base_sepolia
 ```
 
 ### Step 3: Update Contract Addresses
+
 Update `.env` with Sepolia contract addresses from deployment output.
 
 ### Step 4: Test Integration
+
 Test the blockchain integration functions:
+
 - Token allocation
 - Event querying
 - Transaction verification
@@ -117,14 +125,17 @@ Test the blockchain integration functions:
 ## Troubleshooting
 
 ### "Insufficient funds"
+
 - Get Sepolia ETH from the faucet
 - Check balance: https://sepolia.basescan.org/address/YOUR_ADDRESS
 
 ### "Contract not found"
+
 - Contracts may not be deployed on Sepolia yet
 - Deploy contracts or use mainnet addresses for network testing only
 
 ### "Network error"
+
 - Verify RPC URL is correct: `https://sepolia.base.org`
 - Check internet connection
 - Try alternative RPC provider if needed
@@ -134,13 +145,14 @@ Test the blockchain integration functions:
 ## Ready to Test?
 
 Run the test script now:
+
 ```bash
 npx tsx scripts/test-base-sepolia.ts
 ```
 
 This will show you:
+
 - Your wallet address
 - Current balance
 - Whether you have enough gas
 - Network connectivity status
-

@@ -17,6 +17,7 @@ The Syntheverse PoC system automatically sends email notifications to administra
 ### 2. Admin Email
 
 The admin email is configured via environment variable:
+
 - Variable name: `ADMIN_EMAIL`
 - Default value: `espressolico@gmail.com`
 - You can override this in Vercel environment variables
@@ -24,6 +25,7 @@ The admin email is configured via environment variable:
 ### 3. Site URL
 
 Make sure `NEXT_PUBLIC_SITE_URL` is set in Vercel:
+
 - For production: `https://your-domain.com`
 - For preview deployments: Vercel automatically sets `VERCEL_URL`
 
@@ -39,6 +41,7 @@ Make sure `NEXT_PUBLIC_SITE_URL` is set in Vercel:
 ## Email Content
 
 The approval request email includes:
+
 - PoC title and contributor
 - PoD score (out of 10,000)
 - Assigned metals (Gold/Silver/Copper)
@@ -52,12 +55,16 @@ The approval request email includes:
 ## API Endpoints
 
 ### GET `/api/admin/approve-allocation`
+
 Handles email link clicks:
+
 - `?hash=<submission_hash>&action=approve` - Approve allocation
 - `?hash=<submission_hash>&action=reject` - Reject allocation
 
 ### POST `/api/admin/approve-allocation`
+
 Handles authenticated admin actions:
+
 ```json
 {
   "submission_hash": "...",
@@ -75,16 +82,19 @@ Handles authenticated admin actions:
 ## Troubleshooting
 
 ### Email not sending
+
 - Check `RESEND_API_KEY` is set in Vercel
 - Verify Resend account is active
 - Check server logs for email errors
 
 ### Buttons not working
+
 - Verify `NEXT_PUBLIC_SITE_URL` is set correctly
 - Check that the approval endpoint is accessible
 - Review server logs for errors
 
 ### Status not updating
+
 - Check database connection
 - Verify allocation endpoint is working
 - Review server logs for errors
@@ -97,4 +107,3 @@ Handles authenticated admin actions:
   - Rate limiting
   - Admin role verification
   - IP whitelisting
-

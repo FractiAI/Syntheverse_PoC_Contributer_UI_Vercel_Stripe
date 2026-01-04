@@ -1,6 +1,7 @@
 # 🚀 Complete Server Startup Guide
 
 ## Step 1: Kill Any Existing Processes
+
 ```bash
 # Kill all Node.js processes
 pkill -f node
@@ -16,6 +17,7 @@ lsof -i :3000 2>/dev/null || echo 'Port 3000 is free'
 ```
 
 ## Step 2: Clean Install (if needed)
+
 ```bash
 # Remove old dependencies
 rm -rf node_modules package-lock.json
@@ -25,6 +27,7 @@ npm install
 ```
 
 ## Step 3: Verify Environment
+
 ```bash
 # Check environment file
 cat .env.local
@@ -37,11 +40,13 @@ cat .env.local
 ```
 
 ## Step 4: Start Development Server
+
 ```bash
 npm run dev
 ```
 
 ## Step 5: Verify Server is Running
+
 ```bash
 # Check if server responds
 curl -s http://localhost:3000 | head -10
@@ -50,6 +55,7 @@ curl -s http://localhost:3000 | head -10
 ```
 
 ## Expected Output:
+
 ```
 ▲ Next.js 14.x.x
 - Local:        http://localhost:3000
@@ -59,12 +65,14 @@ curl -s http://localhost:3000 | head -10
 ```
 
 ## Test URLs:
+
 - Landing: http://localhost:3000
-- Signup: http://localhost:3000/signup  
+- Signup: http://localhost:3000/signup
 - Login: http://localhost:3000/login
 - Dashboard: http://localhost:3000/dashboard
 
 ## If Issues:
+
 - Check port 3000 isn't used: `netstat -tulpn | grep :3000`
 - Clear Next.js cache: `rm -rf .next`
 - Check Node version: `node --version` (should be 18+)

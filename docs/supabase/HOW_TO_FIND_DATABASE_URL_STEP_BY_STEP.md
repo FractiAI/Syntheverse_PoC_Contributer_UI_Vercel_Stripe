@@ -3,17 +3,20 @@
 ## Exact Navigation Path
 
 ### Step 1: Open Supabase Dashboard
+
 1. Open your web browser
 2. Go to: **https://app.supabase.io/**
 3. **Sign in** to your account
 
 ### Step 2: Select Your Project
+
 1. You'll see a list of your projects
 2. Look for project: **`jfbgdxeumzqzigptbmvp`**
    - OR look for your project name if you named it differently
 3. **Click on the project** to open it
 
 ### Step 3: Open Settings
+
 1. Look at the **left sidebar** (vertical menu on the left side)
 2. Scroll down if needed
 3. Find and click the **⚙️ Settings** icon (gear/cog icon)
@@ -21,6 +24,7 @@
    - May be labeled "Settings" or just be an icon
 
 ### Step 4: Click "Database"
+
 1. In the Settings page, you'll see multiple options/tabs:
    - General
    - API
@@ -31,6 +35,7 @@
 2. **Click on "Database"**
 
 ### Step 5: Scroll to Connection String Section
+
 1. The Database settings page will load
 2. **Scroll down** on the page
 3. Look for a section called one of these:
@@ -40,7 +45,9 @@
    - **"Database connection"**
 
 ### Step 6: Look for Tabs
+
 1. Above the connection string box, you should see **tabs** like:
+
    - **URI** (this is what we need!)
    - JDBC
    - **Connection pooling** (alternative option)
@@ -51,12 +58,15 @@
 2. **Click on the "URI" tab** first
 
 ### Step 7: Copy the Connection String
+
 1. You should see a connection string in a text box that looks like:
+
    ```
    postgresql://postgres:[YOUR-PASSWORD]@[HOSTNAME]:5432/postgres
    ```
-   
+
    OR it might show:
+
    ```
    postgresql://postgres:your-actual-password@db.jfbgdxeumzqzigptbmvp.supabase.co:5432/postgres
    ```
@@ -68,6 +78,7 @@
    - OR it might be something different like a pooler hostname
 
 ### Step 8 (Alternative): Try Connection Pooling Tab
+
 If the URI tab doesn't work or you want to try connection pooling:
 
 1. Click on the **"Connection pooling"** tab
@@ -114,10 +125,12 @@ Try this direct link to go straight to Database settings:
 If you don't see a "Connection string" section:
 
 1. **Look for "Database Password"** section
+
    - You can reset your password here
    - Then build the connection string manually
 
 2. **Check "Connection Pooling"** section
+
    - Might be a separate section
    - Has its own connection string
 
@@ -129,6 +142,7 @@ If you don't see a "Connection string" section:
 ## Once You Find It
 
 **Copy the ENTIRE connection string** including:
+
 - The protocol: `postgresql://`
 - The username: `postgres`
 - The password: (whatever is shown)
@@ -137,11 +151,13 @@ If you don't see a "Connection string" section:
 - The database: `/postgres`
 
 **Example of what to copy:**
+
 ```
 postgresql://postgres:7XGuw9RZyd2gG6JZ@db.jfbgdxeumzqzigptbmvp.supabase.co:5432/postgres
 ```
 
 OR if using pooling:
+
 ```
 postgresql://postgres.jfbgdxeumzqzigptbmvp:7XGuw9RZyd2gG6JZ@aws-0-us-west-1.pooler.supabase.com:6543/postgres
 ```
@@ -162,5 +178,3 @@ postgresql://postgres.jfbgdxeumzqzigptbmvp:7XGuw9RZyd2gG6JZ@aws-0-us-west-1.pool
 ---
 
 **Once you have the connection string, paste it here and I'll update it in Vercel!**
-
-

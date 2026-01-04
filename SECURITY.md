@@ -17,5 +17,3 @@ Include:
 
 - This repo contains an operator reference client (web app + API routes). Treat auth/session, Stripe webhooks, and database access paths as in-scope.
 - Do **not** include secrets (API keys, `.env` contents) in reports.
-
-

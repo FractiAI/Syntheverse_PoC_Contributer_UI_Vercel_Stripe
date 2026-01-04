@@ -7,6 +7,7 @@ This guide explains how to enable Row Level Security (RLS) on all public tables 
 ## Current Status
 
 **⚠️ Security Warnings**: The following tables are public but don't have RLS enabled:
+
 - `public.contributions`
 - `public.allocations`
 - `public.epoch_balances`
@@ -31,7 +32,7 @@ After running the migration, verify RLS is enabled:
 
 ```sql
 -- Check RLS status for all tables
-SELECT 
+SELECT
     schemaname,
     tablename,
     rowsecurity
@@ -62,27 +63,33 @@ This will check user passwords against the HaveIBeenPwned database to prevent co
 ## RLS Policies Overview
 
 ### Contributions Table
+
 - ✅ Users can read their own contributions
 - ✅ Public can read qualified contributions (archive)
 - ✅ Service role has full access (for API routes)
 
 ### Allocations Table
+
 - ✅ Users can read their own allocations
 - ✅ Service role has full access
 
 ### Epoch Balances Table
+
 - ✅ Public read access (tokenomics state is public)
 - ✅ Service role can update
 
 ### Epoch Metal Balances Table
+
 - ✅ Public read access (tokenomics state is public)
 - ✅ Service role can update
 
 ### Users Table
+
 - ✅ Users can read their own user record
 - ✅ Service role has full access
 
 ### PoC Log Table
+
 - ✅ Users can read logs for their contributions
 - ✅ Public can read logs for qualified contributions
 - ✅ Service role has full access
@@ -119,11 +126,13 @@ SELECT * FROM contributions WHERE status = 'qualified';
 ### If Migration Fails
 
 1. Check if policies already exist:
+
 ```sql
 SELECT * FROM pg_policies WHERE schemaname = 'public';
 ```
 
 2. Drop existing policies if needed:
+
 ```sql
 DROP POLICY IF EXISTS "policy_name" ON public.table_name;
 ```
@@ -133,6 +142,7 @@ DROP POLICY IF EXISTS "policy_name" ON public.table_name;
 ### If RLS Blocks Legitimate Access
 
 1. Check the user's authentication status:
+
 ```sql
 SELECT auth.uid(), auth.jwt();
 ```
@@ -140,6 +150,7 @@ SELECT auth.uid(), auth.jwt();
 2. Verify the policy conditions match your access patterns.
 
 3. Temporarily disable RLS for debugging (NOT recommended for production):
+
 ```sql
 ALTER TABLE public.table_name DISABLE ROW LEVEL SECURITY;
 ```
@@ -147,12 +158,14 @@ ALTER TABLE public.table_name DISABLE ROW LEVEL SECURITY;
 ## Security Best Practices
 
 ✅ **DO**:
+
 - Keep RLS enabled on all public tables
 - Use service role key only in backend API routes
 - Test policies after changes
 - Review policies periodically
 
 ❌ **DON'T**:
+
 - Disable RLS in production
 - Use service role key in client-side code
 - Create overly permissive policies
@@ -162,4 +175,3 @@ ALTER TABLE public.table_name DISABLE ROW LEVEL SECURITY;
 
 **Last Updated**: January 3, 2025  
 **Migration File**: `supabase/migrations/20260103000000_enable_rls_policies.sql`
-

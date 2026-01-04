@@ -15,45 +15,45 @@ console.log('📋 Pre-Deployment Checklist:');
 console.log('===========================');
 
 const checks = [
-    {
-        name: 'Git repository initialized',
-        check: () => fs.existsSync('.git'),
-        required: true
+  {
+    name: 'Git repository initialized',
+    check: () => fs.existsSync('.git'),
+    required: true,
+  },
+  {
+    name: 'Package.json exists',
+    check: () => fs.existsSync('package.json'),
+    required: true,
+  },
+  {
+    name: 'Next.js app structure',
+    check: () => fs.existsSync('app') && fs.existsSync('app/page.tsx'),
+    required: true,
+  },
+  {
+    name: 'Build script configured',
+    check: () => {
+      try {
+        const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+        return pkg.scripts && pkg.scripts.build;
+      } catch {
+        return false;
+      }
     },
-    {
-        name: 'Package.json exists',
-        check: () => fs.existsSync('package.json'),
-        required: true
-    },
-    {
-        name: 'Next.js app structure',
-        check: () => fs.existsSync('app') && fs.existsSync('app/page.tsx'),
-        required: true
-    },
-    {
-        name: 'Build script configured',
-        check: () => {
-            try {
-                const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-                return pkg.scripts && pkg.scripts.build;
-            } catch {
-                return false;
-            }
-        },
-        required: true
-    },
-    {
-        name: 'Environment variables documented',
-        check: () => fs.existsSync('.env.example'),
-        required: true
-    }
+    required: true,
+  },
+  {
+    name: 'Environment variables documented',
+    check: () => fs.existsSync('.env.example'),
+    required: true,
+  },
 ];
 
 checks.forEach(({ name, check, required }) => {
-    const passed = check();
-    const icon = passed ? '✅' : '❌';
-    const suffix = required && !passed ? ' (REQUIRED)' : '';
-    console.log(`${icon} ${name}${suffix}`);
+  const passed = check();
+  const icon = passed ? '✅' : '❌';
+  const suffix = required && !passed ? ' (REQUIRED)' : '';
+  console.log(`${icon} ${name}${suffix}`);
 });
 
 console.log('\n🚀 Vercel Deployment Steps:');
@@ -167,4 +167,3 @@ console.log('• Set up CI/CD for automatic deployments');
 console.log('• Plan for scaling and performance optimization');
 
 console.log('\n🚀 Ready for production deployment! Complete local testing first.');
-

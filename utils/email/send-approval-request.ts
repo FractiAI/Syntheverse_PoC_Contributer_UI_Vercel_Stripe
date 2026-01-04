@@ -2,48 +2,55 @@
  * Email utility for sending PoC approval request emails to admin
  */
 
-import { Resend } from 'resend'
-import { debug, debugError } from '@/utils/debug'
-import crypto from 'crypto'
+import { Resend } from 'resend';
+import { debug, debugError } from '@/utils/debug';
+import crypto from 'crypto';
 
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'espressolico@gmail.com'
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL 
-    ? `https://${process.env.VERCEL_URL}` 
-    : 'http://localhost:3000'
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'espressolico@gmail.com';
+const BASE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : 'http://localhost:3000';
 
 export interface ApprovalRequestData {
-    submission_hash: string
-    title: string
-    contributor: string
-    pod_score: number
-    metals: string[]
-    tokenomics_recommendation?: any
+  submission_hash: string;
+  title: string;
+  contributor: string;
+  pod_score: number;
+  metals: string[];
+  tokenomics_recommendation?: any;
 }
 
-export async function sendApprovalRequestEmail(data: ApprovalRequestData): Promise<{ success: boolean, error?: string }> {
-    if (!resend) {
-        debugError('SendApprovalEmail', 'Resend API key not configured', new Error('RESEND_API_KEY not set'))
-        return { success: false, error: 'Email service not configured' }
-    }
-    
-    // Generate a secure token for approval/rejection
-    const approvalToken = crypto.randomBytes(32).toString('hex')
-    const rejectToken = crypto.randomBytes(32).toString('hex')
-    
-    // Store tokens temporarily (in production, use Redis or database)
-    // For now, we'll encode them in the URL with a timestamp
-    const approveUrl = `${BASE_URL}/api/admin/approve-allocation?hash=${data.submission_hash}&token=${approvalToken}&action=approve`
-    const rejectUrl = `${BASE_URL}/api/admin/approve-allocation?hash=${data.submission_hash}&token=${rejectToken}&action=reject`
-    const viewUrl = `${BASE_URL}/dashboard?submission=${data.submission_hash}`
-    
-    const metalsList = data.metals.length > 0 ? data.metals.join(', ') : 'Not assigned'
-    const suggestedAllocation = data.tokenomics_recommendation?.suggested_allocation || 0
-    const eligibleEpochs = data.tokenomics_recommendation?.eligible_epochs || []
-    
-    try {
-        const emailHtml = `
+export async function sendApprovalRequestEmail(
+  data: ApprovalRequestData
+): Promise<{ success: boolean; error?: string }> {
+  if (!resend) {
+    debugError(
+      'SendApprovalEmail',
+      'Resend API key not configured',
+      new Error('RESEND_API_KEY not set')
+    );
+    return { success: false, error: 'Email service not configured' };
+  }
+
+  // Generate a secure token for approval/rejection
+  const approvalToken = crypto.randomBytes(32).toString('hex');
+  const rejectToken = crypto.randomBytes(32).toString('hex');
+
+  // Store tokens temporarily (in production, use Redis or database)
+  // For now, we'll encode them in the URL with a timestamp
+  const approveUrl = `${BASE_URL}/api/admin/approve-allocation?hash=${data.submission_hash}&token=${approvalToken}&action=approve`;
+  const rejectUrl = `${BASE_URL}/api/admin/approve-allocation?hash=${data.submission_hash}&token=${rejectToken}&action=reject`;
+  const viewUrl = `${BASE_URL}/dashboard?submission=${data.submission_hash}`;
+
+  const metalsList = data.metals.length > 0 ? data.metals.join(', ') : 'Not assigned';
+  const suggestedAllocation = data.tokenomics_recommendation?.suggested_allocation || 0;
+  const eligibleEpochs = data.tokenomics_recommendation?.eligible_epochs || [];
+
+  try {
+    const emailHtml = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -80,18 +87,26 @@ export async function sendApprovalRequestEmail(data: ApprovalRequestData): Promi
                     <td style="padding: 8px 0; font-weight: bold;">Submission Hash:</td>
                     <td style="padding: 8px 0; font-family: monospace; font-size: 12px; word-break: break-all;">${data.submission_hash}</td>
                 </tr>
-                ${suggestedAllocation > 0 ? `
+                ${
+                  suggestedAllocation > 0
+                    ? `
                 <tr>
                     <td style="padding: 8px 0; font-weight: bold;">Suggested Allocation:</td>
                     <td style="padding: 8px 0;">${suggestedAllocation.toLocaleString()} SYNTH</td>
                 </tr>
-                ` : ''}
-                ${eligibleEpochs.length > 0 ? `
+                `
+                    : ''
+                }
+                ${
+                  eligibleEpochs.length > 0
+                    ? `
                 <tr>
                     <td style="padding: 8px 0; font-weight: bold;">Eligible Epochs:</td>
                     <td style="padding: 8px 0;">${eligibleEpochs.join(', ')}</td>
                 </tr>
-                ` : ''}
+                `
+                    : ''
+                }
             </table>
         </div>
         
@@ -120,28 +135,27 @@ export async function sendApprovalRequestEmail(data: ApprovalRequestData): Promi
     </div>
 </body>
 </html>
-        `
-        
-        const result = await resend.emails.send({
-            from: 'Syntheverse PoC <noreply@syntheverse.ai>', // Update with your verified domain
-            to: ADMIN_EMAIL,
-            subject: `🔬 PoC Approval Request: ${data.title} (Score: ${data.pod_score})`,
-            html: emailHtml,
-        })
-        
-        debug('SendApprovalEmail', 'Approval request email sent', {
-            submission_hash: data.submission_hash,
-            email_id: result.data?.id,
-            recipient: ADMIN_EMAIL
-        })
-        
-        return { success: true }
-    } catch (error) {
-        debugError('SendApprovalEmail', 'Failed to send approval request email', error)
-        return { 
-            success: false, 
-            error: error instanceof Error ? error.message : String(error) 
-        }
-    }
-}
+        `;
 
+    const result = await resend.emails.send({
+      from: 'Syntheverse PoC <noreply@syntheverse.ai>', // Update with your verified domain
+      to: ADMIN_EMAIL,
+      subject: `🔬 PoC Approval Request: ${data.title} (Score: ${data.pod_score})`,
+      html: emailHtml,
+    });
+
+    debug('SendApprovalEmail', 'Approval request email sent', {
+      submission_hash: data.submission_hash,
+      email_id: result.data?.id,
+      recipient: ADMIN_EMAIL,
+    });
+
+    return { success: true };
+  } catch (error) {
+    debugError('SendApprovalEmail', 'Failed to send approval request email', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}

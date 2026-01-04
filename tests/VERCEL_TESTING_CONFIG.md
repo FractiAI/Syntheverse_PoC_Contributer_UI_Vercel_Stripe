@@ -100,28 +100,28 @@ Tests run automatically on Vercel:
 ```typescript
 // tests/utils/hardhat-setup.ts
 export async function setupHardhatNetwork() {
-    // Connects to Hardhat local RPC (which forks Base Mainnet)
-    const provider = new ethers.JsonRpcProvider('http://127.0.0.1:8545')
-    
-    // Uses Hardhat default accounts (work with forked Base)
-    const wallet = new ethers.Wallet(HARDHAT_DEFAULT_PRIVATE_KEY, provider)
-    
-    // Verifies Hardhat network connection (forking Base)
-    const blockNumber = await provider.getBlockNumber()
-    console.log(`Connected to Hardhat (emulating Base Mainnet) at block ${blockNumber}`)
+  // Connects to Hardhat local RPC (which forks Base Mainnet)
+  const provider = new ethers.JsonRpcProvider('http://127.0.0.1:8545');
+
+  // Uses Hardhat default accounts (work with forked Base)
+  const wallet = new ethers.Wallet(HARDHAT_DEFAULT_PRIVATE_KEY, provider);
+
+  // Verifies Hardhat network connection (forking Base)
+  const blockNumber = await provider.getBlockNumber();
+  console.log(`Connected to Hardhat (emulating Base Mainnet) at block ${blockNumber}`);
 }
 ```
 
 ### Key Differences from Local Testing
 
-| Aspect | Local (Old) | Vercel (Current) |
-|--------|------------|------------------|
-| **Network** | `localhost:8545` | `localhost:8545` (Hardhat) |
-| **Forking** | None | Base Mainnet fork |
-| **Chain ID** | 31337 | 8453 (Base Mainnet, emulated) |
-| **Accounts** | Hardhat defaults | Hardhat defaults |
-| **Responses** | Simulated | Base Mainnet state (forked) |
-| **Execution** | Local machine | Vercel server |
+| Aspect        | Local (Old)      | Vercel (Current)              |
+| ------------- | ---------------- | ----------------------------- |
+| **Network**   | `localhost:8545` | `localhost:8545` (Hardhat)    |
+| **Forking**   | None             | Base Mainnet fork             |
+| **Chain ID**  | 31337            | 8453 (Base Mainnet, emulated) |
+| **Accounts**  | Hardhat defaults | Hardhat defaults              |
+| **Responses** | Simulated        | Base Mainnet state (forked)   |
+| **Execution** | Local machine    | Vercel server                 |
 
 ---
 
@@ -130,6 +130,7 @@ export async function setupHardhatNetwork() {
 ### Confirming Actual Network Usage
 
 Tests will log:
+
 ```
 🔗 Connecting to ACTUAL blockchain network: base_mainnet
 📍 RPC URL: https://mainnet.base.org
@@ -142,6 +143,7 @@ Tests will log:
 ### Confirming Vercel Execution
 
 Check test logs for:
+
 - Vercel environment variables loaded
 - Base Mainnet RPC connection
 - Actual blockchain block numbers
@@ -179,21 +181,23 @@ Check test logs for:
 ## Migration from Local Testing
 
 ### Before (Local, No Fork)
+
 ```typescript
 // Local Hardhat node (no fork)
-rpcUrl: 'http://127.0.0.1:8545'
-network: 'hardhat'
-chainId: 31337
+rpcUrl: 'http://127.0.0.1:8545';
+network: 'hardhat';
+chainId: 31337;
 ```
 
 ### After (Vercel, Forking Base)
+
 ```typescript
 // Hardhat forking Base Mainnet
-rpcUrl: 'http://127.0.0.1:8545' // Hardhat local
-network: 'hardhat'
-forkUrl: 'https://mainnet.base.org' // Base to fork
-chainId: 8453 // Base Mainnet (emulated)
-useForking: true
+rpcUrl: 'http://127.0.0.1:8545'; // Hardhat local
+network: 'hardhat';
+forkUrl: 'https://mainnet.base.org'; // Base to fork
+chainId: 8453; // Base Mainnet (emulated)
+useForking: true;
 ```
 
 ---
@@ -229,4 +233,3 @@ useForking: true
 
 **Last Updated**: January 2025  
 **Status**: ✅ Configured for Vercel server with actual Base Mainnet
-

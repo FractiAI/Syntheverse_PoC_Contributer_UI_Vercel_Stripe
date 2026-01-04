@@ -16,35 +16,41 @@ This document outlines the security upgrades implemented for the Syntheverse PoC
 **Location**: `utils/rate-limit.ts`
 
 **Features**:
+
 - Serverless-friendly (works with Vercel serverless functions)
 - Configurable limits per endpoint type
 - Sliding window algorithm
 - Graceful degradation (allows requests if Redis unavailable)
 
 **Rate Limits**:
+
 - **Submit Endpoint**: 5 requests per minute
 - **Evaluate Endpoint**: 10 requests per minute
 - **Register Endpoint**: 3 requests per minute (stricter due to gas costs)
 - **Default**: 20 requests per minute
 
 **Protected Endpoints**:
+
 - `/api/submit` - PoC submission
 - `/api/evaluate/[hash]` - AI evaluation
 - `/api/poc/[hash]/register` - Blockchain registration
 
 **Environment Variables**:
+
 ```env
 UPSTASH_REDIS_REST_URL=https://[database-name]-[region].upstash.io
 UPSTASH_REDIS_REST_TOKEN=your-token-here
 ```
 
 **Setup Instructions**:
+
 1. Create account at https://console.upstash.com/
 2. Create a Redis database
 3. Copy REST URL and REST Token
 4. Add to Vercel environment variables
 
 **Response Headers**:
+
 - `X-RateLimit-Limit`: Maximum requests allowed
 - `X-RateLimit-Remaining`: Remaining requests in window
 - `X-RateLimit-Reset`: Unix timestamp when limit resets
@@ -58,29 +64,34 @@ UPSTASH_REDIS_REST_TOKEN=your-token-here
 **Location**: `utils/cors.ts`
 
 **Features**:
+
 - Environment-based origin whitelist
 - Production/development mode handling
 - Preflight request handling (OPTIONS)
 - Configurable allowed methods, headers, and credentials
 
 **Configuration**:
+
 - **Allowed Methods**: GET, POST, PUT, DELETE, OPTIONS
 - **Allowed Headers**: Content-Type, Authorization, X-Requested-With
-- **Exposed Headers**: Rate limit headers (X-RateLimit-*)
+- **Exposed Headers**: Rate limit headers (X-RateLimit-\*)
 - **Credentials**: Enabled (for authenticated requests)
 - **Max Age**: 24 hours
 
 **Environment Variables**:
+
 ```env
 NEXT_PUBLIC_SITE_URL=https://your-domain.com
 ALLOWED_ORIGINS=https://example.com,https://app.example.com  # Optional
 ```
 
 **Development Mode**:
+
 - Automatically allows `localhost:3000` and `127.0.0.1:3000`
 - More permissive CORS (for local testing)
 
 **Applied To**:
+
 - All API routes with CORS support
 - OPTIONS preflight requests handled automatically
 
@@ -95,6 +106,7 @@ ALLOWED_ORIGINS=https://example.com,https://app.example.com  # Optional
 **Package**: `zod` (installed)
 
 **Future Implementation**:
+
 - Create validation schemas for request bodies
 - Validate query parameters
 - Type-safe request/response handling
@@ -106,36 +118,43 @@ ALLOWED_ORIGINS=https://example.com,https://app.example.com  # Optional
 ### Rate Limiting Integration
 
 **Example Usage**:
+
 ```typescript
-import { checkRateLimit, getRateLimitIdentifier, createRateLimitHeaders, RateLimitConfig } from '@/utils/rate-limit'
+import {
+  checkRateLimit,
+  getRateLimitIdentifier,
+  createRateLimitHeaders,
+  RateLimitConfig,
+} from '@/utils/rate-limit';
 
 // In API route handler
-const identifier = getRateLimitIdentifier(request)
-const rateLimitResult = await checkRateLimit(identifier, RateLimitConfig.SUBMIT)
+const identifier = getRateLimitIdentifier(request);
+const rateLimitResult = await checkRateLimit(identifier, RateLimitConfig.SUBMIT);
 
 if (!rateLimitResult.success) {
-    return NextResponse.json(
-        { error: 'Rate limit exceeded' },
-        { status: 429, headers: createRateLimitHeaders(rateLimitResult) }
-    )
+  return NextResponse.json(
+    { error: 'Rate limit exceeded' },
+    { status: 429, headers: createRateLimitHeaders(rateLimitResult) }
+  );
 }
 ```
 
 ### CORS Integration
 
 **Example Usage**:
+
 ```typescript
-import { handleCorsPreflight, createCorsHeaders } from '@/utils/cors'
+import { handleCorsPreflight, createCorsHeaders } from '@/utils/cors';
 
 // Handle OPTIONS preflight
 export async function OPTIONS(request: NextRequest) {
-    const corsPreflight = handleCorsPreflight(request)
-    return corsPreflight || new Response(null, { status: 204 })
+  const corsPreflight = handleCorsPreflight(request);
+  return corsPreflight || new Response(null, { status: 204 });
 }
 
 // Add CORS headers to responses
-const corsHeaders = createCorsHeaders(request)
-return NextResponse.json(data, { headers: corsHeaders })
+const corsHeaders = createCorsHeaders(request);
+return NextResponse.json(data, { headers: corsHeaders });
 ```
 
 ---
@@ -147,13 +166,16 @@ return NextResponse.json(data, { headers: corsHeaders })
 Add to Vercel Dashboard → Settings → Environment Variables:
 
 **Required for Rate Limiting**:
+
 - `UPSTASH_REDIS_REST_URL` - Upstash Redis REST URL
 - `UPSTASH_REDIS_REST_TOKEN` - Upstash Redis REST Token
 
 **Required for CORS**:
+
 - `NEXT_PUBLIC_SITE_URL` - Your site URL (already configured)
 
 **Optional for CORS**:
+
 - `ALLOWED_ORIGINS` - Comma-separated list of additional allowed origins
 
 ### Upstash Redis Setup
@@ -187,9 +209,9 @@ Add to Vercel Dashboard → Settings → Environment Variables:
 1. From browser console (different origin):
    ```javascript
    fetch('https://your-api.com/api/submit', {
-       method: 'POST',
-       headers: { 'Content-Type': 'application/json' }
-   })
+     method: 'POST',
+     headers: { 'Content-Type': 'application/json' },
+   });
    ```
 2. Should include CORS headers in response
 3. OPTIONS preflight should return 204 with CORS headers
@@ -199,11 +221,13 @@ Add to Vercel Dashboard → Settings → Environment Variables:
 ## 📊 Security Impact
 
 ### Before
+
 - ❌ No rate limiting (vulnerable to abuse)
 - ❌ No explicit CORS configuration
 - ❌ No request validation framework
 
 ### After
+
 - ✅ Rate limiting on critical endpoints (prevents spam/abuse)
 - ✅ Explicit CORS configuration (prevents unauthorized origins)
 - ✅ Rate limit headers exposed (transparent to clients)
@@ -214,16 +238,19 @@ Add to Vercel Dashboard → Settings → Environment Variables:
 ## 🔄 Future Enhancements
 
 1. **Request Validation**:
+
    - Add Zod schemas for all API endpoints
    - Validate request bodies, query parameters, path parameters
    - Type-safe request/response handling
 
 2. **Advanced Rate Limiting**:
+
    - Per-user rate limiting (using user ID instead of IP)
    - Different limits for authenticated vs anonymous users
    - Tiered rate limits based on user plan
 
 3. **CORS Improvements**:
+
    - Dynamic origin validation
    - Separate CORS config per endpoint
    - CORS logging/monitoring
@@ -259,4 +286,3 @@ Add to Vercel Dashboard → Settings → Environment Variables:
 **Last Updated**: January 2025  
 **Implemented By**: Security Upgrade Implementation  
 **Status**: ✅ **PRODUCTION READY**
-

@@ -33,11 +33,13 @@ tests/
 ## Running Tests
 
 ### Run All Tests
+
 ```bash
 npm run test:all
 ```
 
 ### Run Specific Test Suites
+
 ```bash
 # Hardhat/Blockchain tests
 npm run test:hardhat
@@ -56,6 +58,7 @@ npm run test
 ```
 
 ### Run Individual Test Files
+
 ```bash
 # Using mocha directly
 npx mocha --require tsx/cjs --timeout 300000 tests/hardhat/01-scoring-determinism.test.ts
@@ -64,6 +67,7 @@ npx mocha --require tsx/cjs --timeout 300000 tests/hardhat/01-scoring-determinis
 ## Test Suites
 
 ### Hardhat Tests
+
 - **Scoring Determinism**: Verifies that identical inputs produce identical scores
 - **Tokenomics Validation**: Tests token allocation formulas, epoch balances, and supply constraints
 - **Lens Consistency**: Tests HHF-AI lens scoring consistency, justifications, and edge cases
@@ -72,15 +76,18 @@ npx mocha --require tsx/cjs --timeout 300000 tests/hardhat/01-scoring-determinis
 - **Constants & Equations Validation**: Validates physical constants and equations against CODATA 2018
 
 ### Integration Tests
+
 - **PoC Submission Flow**: Tests submission hash generation, database storage, validation
 - **Evaluation Flow**: Tests Grok API integration, score calculation, qualification logic
 - **Registration Flow**: Tests blockchain registration, transaction structure, status tracking
 
 ### Security Tests
+
 - **Authentication Security**: Password strength, SQL injection prevention, XSS prevention
 - **API Security**: Authentication requirements, rate limiting, input validation, CORS, authorization
 
 ### Load Tests
+
 - **Concurrent Requests**: Tests handling of multiple simultaneous requests
 - **Response Times**: Verifies acceptable response times under load
 - **Error Rates**: Ensures low error rates under stress
@@ -106,6 +113,7 @@ Test reports are generated in `tests/reports/` directory:
 - **HTML Reports**: Human-readable test reports with visual summaries
 
 Reports include:
+
 - Test summary (passed/failed/skipped counts)
 - Pass rate percentage
 - Duration metrics
@@ -115,17 +123,20 @@ Reports include:
 ## Prerequisites
 
 1. **Environment Variables**: Ensure all required environment variables are set
+
    - Database connection (`DATABASE_URL`)
    - Grok API key (`NEXT_PUBLIC_GROK_API_KEY`)
    - Blockchain configuration (Base mainnet/testnet)
    - Supabase credentials
 
 2. **Dependencies**: Install all dependencies
+
    ```bash
    npm install
    ```
 
 3. **Database**: Ensure database is accessible and migrations are run
+
    ```bash
    npm run db:migrate
    ```
@@ -156,21 +167,25 @@ Tests can be integrated into CI/CD pipelines:
 ## Troubleshooting
 
 ### Tests Timeout
+
 - Increase timeout in test configuration
 - Check network connectivity
 - Verify API endpoints are accessible
 
 ### Database Connection Errors
+
 - Verify `DATABASE_URL` is set correctly
 - Check database is running and accessible
 - Ensure migrations are up to date
 
 ### Grok API Errors
+
 - Verify `NEXT_PUBLIC_GROK_API_KEY` is set
 - Check API rate limits
 - Verify network connectivity
 
 ### Hardhat Network Errors
+
 - Ensure Hardhat node is running
 - Check RPC URL configuration
 - Verify network connection
@@ -199,4 +214,3 @@ When adding new tests:
 **Last Updated**: January 2025  
 **Test Framework**: Mocha + Chai + TypeScript  
 **Test Runner**: Custom test orchestrator with automated reporting
-

@@ -36,12 +36,14 @@ The following files are kept for historical reference but are no longer used:
 ## Environment Variables Changed
 
 ### Old (Hardhat)
+
 ```env
 HARDHAT_RPC_URL=http://localhost:8545
 POC_REGISTRY_ADDRESS=0x...
 ```
 
 ### New (Base)
+
 ```env
 BLOCKCHAIN_NETWORK=base_mainnet  # or base_sepolia
 BASE_MAINNET_RPC_URL=https://mainnet.base.org
@@ -62,4 +64,3 @@ LENS_KERNEL_CONTRACT_ADDRESS=0xD9ABf9B19B4812A2fd06c5E8986B84040505B9D8
 ## Questions?
 
 See the migration documentation or open an issue on GitHub.
-

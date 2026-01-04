@@ -3,25 +3,30 @@
 ## Step-by-Step Instructions
 
 ### 1. Go to Google Cloud Console
+
 - Visit: https://console.cloud.google.com/
 - Sign in with your Google account
 
 ### 2. Create or Select Project
+
 - Click 'Select a project' dropdown (top left)
 - Click 'New Project'
 - Name: 'Syntheverse PoC'
 - Click 'Create'
 
 ### 3. Enable Google+ API
+
 - Go to 'APIs & Services' → 'Library'
 - Search for 'Google+ API'
 - Click on it and 'Enable'
 
 ### 4. Create OAuth 2.0 Credentials
+
 - Go to 'APIs & Services' → 'Credentials'
 - Click '+ CREATE CREDENTIALS' → 'OAuth 2.0 Client IDs'
 
 ### 5. Configure OAuth Consent Screen
+
 - If prompted, click 'Configure Consent Screen'
 - Choose 'External' user type
 - Fill in app information:
@@ -31,6 +36,7 @@
 - Click 'Save and Continue'
 
 ### 6. Create Credentials
+
 - Application type: 'Web application'
 - Name: 'Syntheverse Web App'
 - Authorized redirect URIs:
@@ -39,16 +45,19 @@
 - Click 'Create'
 
 ### 7. Copy Credentials
+
 - Copy 'Client ID' and 'Client Secret'
 - These will be used in Supabase configuration
 
 ## Supabase Configuration
 
 ### 1. Go to Supabase Dashboard
+
 - Visit: https://app.supabase.io/
 - Select your project
 
 ### 2. Enable Google OAuth
+
 - Go to 'Authentication' → 'Providers'
 - Find 'Google' and click to expand
 - Toggle 'Enable sign in with Google'
@@ -56,6 +65,7 @@
 - Click 'Save'
 
 ### 3. Update Redirect URLs
+
 - In Google Cloud Console, add production URL if deploying to Vercel
 - Format: https://your-app-name.vercel.app/auth/callback
 

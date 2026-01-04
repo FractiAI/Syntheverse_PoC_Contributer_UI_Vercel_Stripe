@@ -3,19 +3,23 @@
 ## Current Configuration
 
 ### Webhook Endpoint URL
+
 **Correct URL:** `https://syntheverse-poc.vercel.app/webhook/stripe`
 
 ## How to Update Webhook URL
 
 1. **Go to Stripe Dashboard**
+
    - Visit: https://dashboard.stripe.com/test/webhooks
    - Or: Dashboard → Developers → Webhooks
 
 2. **Edit Your Webhook**
+
    - Click on your webhook endpoint
    - Click "Edit" or the settings icon
 
 3. **Update Endpoint URL**
+
    - Change to: `https://syntheverse-poc.vercel.app/webhook/stripe`
    - Click "Save"
 
@@ -46,12 +50,14 @@ All Stripe keys should be configured in Vercel:
 After updating the webhook URL:
 
 1. **Test in Stripe Dashboard**
+
    - Go to your webhook
    - Click "Send test webhook"
    - Select an event type (e.g., `checkout.session.completed`)
    - Click "Send test webhook"
 
 2. **Check Vercel Logs**
+
    - Go to Vercel Dashboard → Your Project → Functions
    - Check `/webhook/stripe` function logs
    - Should see successful webhook processing
@@ -63,12 +69,14 @@ After updating the webhook URL:
 ## Troubleshooting
 
 ### Webhook Not Receiving Events
+
 - Verify endpoint URL is correct
 - Check that webhook secret matches in Vercel
 - Ensure events are selected in Stripe Dashboard
 - Check Vercel function logs for errors
 
 ### Connection Errors
+
 - Verify API keys are correct in Vercel
 - Check that keys match Stripe Dashboard
 - Ensure deployment has latest environment variables

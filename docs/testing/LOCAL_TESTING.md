@@ -64,11 +64,13 @@ The app will be available at: **http://localhost:3000**
 1. **Create a new project** at [Supabase](https://app.supabase.io/)
 
 2. **Get your project credentials**:
+
    - Go to Settings → API
    - Copy the Project URL and anon/public key
    - Copy the service_role key (keep this secret!)
 
 3. **Configure Site URL**:
+
    - Go to Authentication → URL Configuration
    - Set Site URL to: `http://localhost:3000`
 
@@ -83,11 +85,13 @@ The app will be available at: **http://localhost:3000**
 2. **Enable test mode** (stay in test mode for development)
 
 3. **Get your API keys**:
+
    - Go to Developers → API keys
    - Copy the "Publishable key" (starts with `pk_test_`)
    - Copy the "Secret key" (starts with `sk_test_`)
 
 4. **Create a webhook endpoint** (for subscription events):
+
    ```bash
    # Install Stripe CLI
    # Login to your Stripe account
@@ -96,6 +100,7 @@ The app will be available at: **http://localhost:3000**
    # Start webhook listener
    npm run stripe:listen
    ```
+
    This will forward webhooks to `http://localhost:3000/webhook/stripe`
 
 5. **Create products** (optional - for testing pricing):
@@ -108,15 +113,18 @@ The app will be available at: **http://localhost:3000**
 ### Core Functionality
 
 ✅ **Landing Page**: Visit http://localhost:3000
+
 - View Syntheverse branding and features
 - See pricing tiers (Copper, Silver, Gold)
 
 ✅ **Authentication**:
+
 - Sign up with email/password
 - Sign in with existing account
 - Google/GitHub OAuth (if configured)
 
 ✅ **Protected Routes**:
+
 - Dashboard at `/dashboard`
 - Account page at `/account`
 - Billing page at `/subscribe`
@@ -131,6 +139,7 @@ The app will be available at: **http://localhost:3000**
 ### Common Issues & Solutions
 
 #### Database Connection Issues
+
 ```bash
 # Reset database
 npm run db:push
@@ -140,6 +149,7 @@ npm run db:migrate
 ```
 
 #### Stripe Webhook Testing
+
 ```bash
 # Start webhook listener in one terminal
 npm run stripe:listen
@@ -149,6 +159,7 @@ npm run stripe:listen
 ```
 
 #### OAuth Redirect Issues
+
 - Make sure Site URL in Supabase matches exactly: `http://localhost:3000`
 - For production, update to your deployment URL
 
@@ -191,20 +202,24 @@ When ready for production:
 ## Troubleshooting
 
 ### Build Errors
+
 - Clear Next.js cache: `rm -rf .next`
 - Reinstall dependencies: `rm -rf node_modules && npm install`
 
 ### Database Issues
+
 - Check DATABASE_URL in environment variables
 - Verify Supabase project is active
 - Run migrations: `npm run db:migrate`
 
 ### Authentication Issues
+
 - Verify Supabase URL and keys
 - Check Site URL configuration in Supabase
 - Ensure OAuth providers are properly configured
 
 ### Stripe Issues
+
 - Confirm you're using test keys (not live)
 - Check webhook endpoint URL
 - Verify webhook signing secret
@@ -216,4 +231,3 @@ When ready for production:
 - Check browser console for detailed error messages
 
 Happy testing! 🎉
-

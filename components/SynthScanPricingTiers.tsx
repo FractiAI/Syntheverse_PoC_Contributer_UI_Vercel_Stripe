@@ -1,14 +1,14 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { ArrowRight } from 'lucide-react'
+import { useState } from 'react';
+import { ArrowRight } from 'lucide-react';
 
 interface PricingTier {
-  name: string
-  price: number
-  priceLabel: string
-  features: string[]
-  idealFor: string
+  name: string;
+  price: number;
+  priceLabel: string;
+  features: string[];
+  idealFor: string;
 }
 
 const tiers: PricingTier[] = [
@@ -16,11 +16,8 @@ const tiers: PricingTier[] = [
     name: 'SynthScan Light',
     price: 500,
     priceLabel: '$500',
-    features: [
-      'Targeted node scan access',
-      'Standard edge contrast analysis'
-    ],
-    idealFor: 'Independent researchers, early-stage PoCs'
+    features: ['Targeted node scan access', 'Standard edge contrast analysis'],
+    idealFor: 'Independent researchers, early-stage PoCs',
   },
   {
     name: 'SynthScan Pro',
@@ -29,9 +26,9 @@ const tiers: PricingTier[] = [
     features: [
       'Full nested-layer imaging',
       'Predictive resonance scoring',
-      'Integration with Syntheverse Sandbox'
+      'Integration with Syntheverse Sandbox',
     ],
-    idealFor: 'Medium-scale projects needing multi-layer insight'
+    idealFor: 'Medium-scale projects needing multi-layer insight',
   },
   {
     name: 'SynthScan Enterprise',
@@ -40,17 +37,17 @@ const tiers: PricingTier[] = [
     features: [
       'Multi-node access',
       'Full nested-layer coherence mapping',
-      'Proof-of-Contribution Vault integration'
+      'Proof-of-Contribution Vault integration',
     ],
-    idealFor: 'Large-scale or institutional teams, critical nodes'
-  }
-]
+    idealFor: 'Large-scale or institutional teams, critical nodes',
+  },
+];
 
 export default function SynthScanPricingTiers() {
-  const [loading, setLoading] = useState<string | null>(null)
+  const [loading, setLoading] = useState<string | null>(null);
 
   const handlePurchase = async (tier: PricingTier) => {
-    setLoading(tier.name)
+    setLoading(tier.name);
     try {
       const response = await fetch('/api/synthscan/create-checkout', {
         method: 'POST',
@@ -61,21 +58,21 @@ export default function SynthScanPricingTiers() {
           tier: tier.name,
           price: tier.price,
         }),
-      })
+      });
 
-      const data = await response.json()
-      
+      const data = await response.json();
+
       if (data.checkout_url) {
-        window.location.href = data.checkout_url
+        window.location.href = data.checkout_url;
       } else {
-        console.error('No checkout URL returned')
-        setLoading(null)
+        console.error('No checkout URL returned');
+        setLoading(null);
       }
     } catch (error) {
-      console.error('Error creating checkout session:', error)
-      setLoading(null)
+      console.error('Error creating checkout session:', error);
+      setLoading(null);
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -83,7 +80,7 @@ export default function SynthScanPricingTiers() {
         {tiers.map((tier, index) => (
           <div
             key={tier.name}
-            className={`cockpit-panel p-6 border ${
+            className={`cockpit-panel border p-6 ${
               index === 1
                 ? 'border-2 border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)]'
                 : 'border-[var(--keyline-primary)]'
@@ -91,17 +88,17 @@ export default function SynthScanPricingTiers() {
           >
             <div className="mb-4">
               <div className="cockpit-label mb-2">{tier.name}</div>
-              <div className="cockpit-title text-2xl mb-1">{tier.priceLabel}</div>
+              <div className="cockpit-title mb-1 text-2xl">{tier.priceLabel}</div>
               <div className="cockpit-text text-xs" style={{ opacity: 0.8 }}>
                 per node/month
               </div>
             </div>
 
             <div className="mb-4">
-              <div className="cockpit-text text-sm font-semibold mb-2">Deliverables</div>
+              <div className="cockpit-text mb-2 text-sm font-semibold">Deliverables</div>
               <ul className="space-y-1">
                 {tier.features.map((feature, idx) => (
-                  <li key={idx} className="cockpit-text text-xs flex items-start">
+                  <li key={idx} className="cockpit-text flex items-start text-xs">
                     <span className="mr-2">•</span>
                     <span style={{ opacity: 0.9 }}>{feature}</span>
                   </li>
@@ -109,8 +106,8 @@ export default function SynthScanPricingTiers() {
               </ul>
             </div>
 
-            <div className="mb-4 pt-4 border-t border-[var(--keyline-primary)]">
-              <div className="cockpit-text text-xs font-semibold mb-1">Ideal for</div>
+            <div className="mb-4 border-t border-[var(--keyline-primary)] pt-4">
+              <div className="cockpit-text mb-1 text-xs font-semibold">Ideal for</div>
               <div className="cockpit-text text-xs" style={{ opacity: 0.8 }}>
                 {tier.idealFor}
               </div>
@@ -119,14 +116,14 @@ export default function SynthScanPricingTiers() {
             <button
               onClick={() => handlePurchase(tier)}
               disabled={loading === tier.name}
-              className="cockpit-lever w-full text-center mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="cockpit-lever mt-4 w-full text-center disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loading === tier.name ? (
                 'Processing...'
               ) : (
                 <>
                   Subscribe
-                  <ArrowRight className="ml-2 h-4 w-4 inline" />
+                  <ArrowRight className="ml-2 inline h-4 w-4" />
                 </>
               )}
             </button>
@@ -134,18 +131,18 @@ export default function SynthScanPricingTiers() {
         ))}
       </div>
 
-      <div className="cockpit-panel p-6 bg-[rgba(255,184,77,0.05)] border border-[var(--hydrogen-amber)]">
+      <div className="cockpit-panel border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)] p-6">
         <div className="cockpit-label mb-3 text-[var(--hydrogen-amber)]">HOW IT WORKS</div>
-        <div className="cockpit-text text-sm space-y-2">
+        <div className="cockpit-text space-y-2 text-sm">
           <p>• Subscribe per node monthly</p>
           <p>• Run your own scans via HHF-AI MRI</p>
           <p>• Export reports, predictive scores, and PoC-ready data</p>
           <p className="mt-3">
-            SynthScan is for ongoing monitoring, testing, and discovery — a continuous tool for your awareness AI workflow.
+            SynthScan is for ongoing monitoring, testing, and discovery — a continuous tool for your
+            awareness AI workflow.
           </p>
         </div>
       </div>
     </div>
-  )
+  );
 }
-

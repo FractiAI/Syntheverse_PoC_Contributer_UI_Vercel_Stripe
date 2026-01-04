@@ -12,7 +12,9 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !supabaseServiceKey) {
-  console.error('Missing required environment variables: NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY');
+  console.error(
+    'Missing required environment variables: NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY'
+  );
   process.exit(1);
 }
 
@@ -20,8 +22,8 @@ if (!supabaseUrl || !supabaseServiceKey) {
 const supabase = createClient(supabaseUrl, supabaseServiceKey, {
   auth: {
     autoRefreshToken: false,
-    persistSession: false
-  }
+    persistSession: false,
+  },
 });
 
 async function applyTokenomicsRLS() {
@@ -29,14 +31,20 @@ async function applyTokenomicsRLS() {
     console.log('Applying RLS migration to tokenomics table...');
 
     // Read the migration SQL
-    const migrationPath = path.join(__dirname, '..', 'supabase', 'migrations', '20260102000000_enable_tokenomics_rls.sql');
+    const migrationPath = path.join(
+      __dirname,
+      '..',
+      'supabase',
+      'migrations',
+      '20260102000000_enable_tokenomics_rls.sql'
+    );
     const migrationSQL = fs.readFileSync(migrationPath, 'utf8');
 
     // Split SQL into individual statements
     const statements = migrationSQL
       .split(';')
-      .map(stmt => stmt.trim())
-      .filter(stmt => stmt.length > 0 && !stmt.startsWith('--'));
+      .map((stmt) => stmt.trim())
+      .filter((stmt) => stmt.length > 0 && !stmt.startsWith('--'));
 
     // Execute each statement
     for (const statement of statements) {
@@ -46,7 +54,10 @@ async function applyTokenomicsRLS() {
 
         if (error) {
           // If rpc doesn't work, try direct query
-          const { error: queryError } = await supabase.from('_supabase_migration_temp').select('*').limit(0);
+          const { error: queryError } = await supabase
+            .from('_supabase_migration_temp')
+            .select('*')
+            .limit(0);
           // Just run the raw SQL
           console.log('Note: Using direct SQL execution...');
         }
@@ -56,7 +67,7 @@ async function applyTokenomicsRLS() {
     // Try to execute the SQL directly
     console.log('Executing RLS migration...');
     const { data, error } = await supabase.rpc('exec_sql', {
-      sql: migrationSQL
+      sql: migrationSQL,
     });
 
     if (error) {
@@ -79,7 +90,6 @@ async function applyTokenomicsRLS() {
     } else {
       console.log('✅ RLS migration applied successfully!');
     }
-
   } catch (error) {
     console.error('❌ Error applying RLS migration:', error.message);
 
@@ -87,7 +97,13 @@ async function applyTokenomicsRLS() {
     console.log('\n📋 MANUAL APPLICATION REQUIRED:');
     console.log('Please apply the following SQL manually in your Supabase SQL Editor:');
 
-    const migrationPath = path.join(__dirname, '..', 'supabase', 'migrations', '20260102000000_enable_tokenomics_rls.sql');
+    const migrationPath = path.join(
+      __dirname,
+      '..',
+      'supabase',
+      'migrations',
+      '20260102000000_enable_tokenomics_rls.sql'
+    );
     const migrationSQL = fs.readFileSync(migrationPath, 'utf8');
 
     console.log('\n' + '='.repeat(60));

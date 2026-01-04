@@ -1,9 +1,11 @@
 # Database Connection Fix
 
 ## Issue
+
 Error: `getaddrinfo ENOTFOUND db.jfbgdxeumzqzigptbmvp.supabase.co`
 
 This means the DATABASE_URL environment variable in Vercel is either:
+
 1. Not set
 2. Set incorrectly
 3. Using wrong hostname format
@@ -33,12 +35,14 @@ This means the DATABASE_URL environment variable in Vercel is either:
 ### Step 3: Verify Connection
 
 After setting the DATABASE_URL, test the connection:
+
 - Visit: https://syntheverse-poc.vercel.app/api/test-db
 - You should see: `{"success":true,"connection":"ok",...}`
 
 ### Step 4: Redeploy (if needed)
 
 If the environment variable was just added/updated, you may need to redeploy:
+
 ```bash
 vercel --prod
 ```
@@ -46,11 +50,13 @@ vercel --prod
 ## Connection String Format
 
 The correct format is:
+
 ```
 postgresql://postgres:PASSWORD@db.jfbgdxeumzqzigptbmvp.supabase.co:5432/postgres
 ```
 
 Where:
+
 - `postgresql://` - protocol
 - `postgres` - username
 - `PASSWORD` - your database password (URL encoded if it contains special characters)
@@ -61,8 +67,8 @@ Where:
 ## Troubleshooting
 
 If you still get connection errors:
+
 1. Verify the password is correct
 2. Check if your Supabase project is active (not paused)
 3. Verify the project ID matches: `jfbgdxeumzqzigptbmvp`
 4. Check if database allows connections from external IPs (should be enabled by default)
-

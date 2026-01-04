@@ -90,4 +90,3 @@ To test locally:
 - Future improvement: Allow users to connect wallets for real addresses
 - Allocated amount defaults to 0 (can be updated via contract later)
 - First metal from array is used (contract takes single string)
-

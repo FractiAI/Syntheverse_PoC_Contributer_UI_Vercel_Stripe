@@ -11,11 +11,13 @@ The "Developers" option might be in a different location depending on your Strip
 ### Option A: Use the Direct URL
 
 **For Test Mode:**
+
 ```
 https://dashboard.stripe.com/test/webhooks
 ```
 
 **For Live Mode:**
+
 ```
 https://dashboard.stripe.com/webhooks
 ```
@@ -27,10 +29,12 @@ Just paste this URL in your browser and you'll go straight to webhooks!
 ### Option B: Navigate from Dashboard
 
 1. **Go to Stripe Dashboard**
+
    - Visit: https://dashboard.stripe.com/
    - Make sure you're in **Test mode** (toggle switch in top right should say "Test mode")
 
 2. **Find "Developers" in the Left Sidebar**
+
    - Look at the left sidebar menu
    - You should see these options:
      - Home
@@ -43,6 +47,7 @@ Just paste this URL in your browser and you'll go straight to webhooks!
      - etc.
 
 3. **Click "Developers"**
+
    - Click on **"Developers"** in the left sidebar
    - A submenu will appear or you'll see options including:
      - API keys
@@ -62,11 +67,13 @@ Just paste this URL in your browser and you'll go straight to webhooks!
 If the sidebar is collapsed or you're on mobile:
 
 1. **Look for a Menu Icon**
+
    - Click the hamburger menu (☰) or menu icon in the top left
    - This will expand the sidebar
    - Look for "Developers"
 
 2. **Search for "Webhooks"**
+
    - Use the search bar at the top of Stripe Dashboard
    - Type: "webhooks"
    - Click on the "Webhooks" result
@@ -82,6 +89,7 @@ If the sidebar is collapsed or you're on mobile:
 If you still can't find it, try these:
 
 1. **Go to Settings First**
+
    - Click **"Settings"** in the left sidebar
    - Look for "Developers" or "Webhooks" in the settings menu
 
@@ -134,20 +142,25 @@ You should see:
 1. **Click "+ Add endpoint"** or **"Add endpoint"** button
 
 2. **Enter Endpoint URL:**
+
    ```
    https://your-app-name.vercel.app/webhook/stripe
    ```
+
    ⚠️ **Note:** You'll need your Vercel URL first. If you haven't deployed yet, you can:
+
    - Create the webhook after deployment
    - OR use a placeholder URL for now and update it later
 
 3. **Add Description (optional):**
+
    ```
    Production webhook for Syntheverse PoC
    ```
 
 4. **Select Events:**
    Click **"Select events"** or **"Add events"** and check:
+
    - ✅ `checkout.session.completed`
    - ✅ `customer.subscription.created`
    - ✅ `customer.subscription.updated`
@@ -175,15 +188,19 @@ You should see:
 ## Quick Links
 
 **Test Mode Webhooks:**
+
 - Direct link: https://dashboard.stripe.com/test/webhooks
 
 **Live Mode Webhooks:**
+
 - Direct link: https://dashboard.stripe.com/webhooks
 
 **Test Mode Dashboard:**
+
 - https://dashboard.stripe.com/test
 
 **Live Mode Dashboard:**
+
 - https://dashboard.stripe.com
 
 ---
@@ -226,4 +243,3 @@ When you're in Stripe Dashboard, look for:
 **Can't find it?** Just use the direct URL: https://dashboard.stripe.com/test/webhooks
 
 This will take you straight to the webhooks page! 🎯
-

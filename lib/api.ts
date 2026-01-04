@@ -5,270 +5,278 @@
 // For SSR, use NEXT_PUBLIC_WEBSITE_URL or NEXT_PUBLIC_SITE_URL if available, otherwise use a default
 const getApiBase = () => {
   if (typeof window !== 'undefined') {
-    return window.location.origin  // Use same origin (internal API routes)
+    return window.location.origin; // Use same origin (internal API routes)
   }
   // For SSR, try to get the site URL from environment variables
-  return process.env.NEXT_PUBLIC_WEBSITE_URL || 
-         process.env.NEXT_PUBLIC_SITE_URL || 
-         'http://localhost:3000'  // Default for local development
-}
+  return (
+    process.env.NEXT_PUBLIC_WEBSITE_URL ||
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    'http://localhost:3000'
+  ); // Default for local development
+};
 
-const API_BASE = getApiBase()
+const API_BASE = getApiBase();
 
 interface RetryOptions {
-  maxRetries?: number
-  delayMs?: number
-  backoffMultiplier?: number
+  maxRetries?: number;
+  delayMs?: number;
+  backoffMultiplier?: number;
 }
 
 export interface Contribution {
-  submission_hash: string
-  title: string
-  contributor: string
-  content_hash: string
-  text_content: string
-  status: string
-  category?: string
-  metals: string[]
+  submission_hash: string;
+  title: string;
+  contributor: string;
+  content_hash: string;
+  text_content: string;
+  status: string;
+  category?: string;
+  metals: string[];
   metadata: {
-    coherence?: number
-    density?: number
-    redundancy?: number
-    pod_score?: number
-    [key: string]: any
-  }
-  created_at: string
-  updated_at: string
+    coherence?: number;
+    density?: number;
+    redundancy?: number;
+    pod_score?: number;
+    [key: string]: any;
+  };
+  created_at: string;
+  updated_at: string;
   contributor_stats?: {
-    submission_count: number
-    free_submissions_remaining: number
-    fee_required: boolean
-  }
+    submission_count: number;
+    free_submissions_remaining: number;
+    fee_required: boolean;
+  };
 }
 
 export interface EvaluationResult {
-  success: boolean
-  submission_hash: string
+  success: boolean;
+  submission_hash: string;
   evaluation?: {
-    coherence: number
-    density: number
-    redundancy: number
-    metals: string[]
-    pod_score: number
-    tier_justification?: string
-    redundancy_analysis?: string
-    status: string
-  }
-  status: string
-  qualified: boolean
+    coherence: number;
+    density: number;
+    redundancy: number;
+    metals: string[];
+    pod_score: number;
+    tier_justification?: string;
+    redundancy_analysis?: string;
+    status: string;
+  };
+  status: string;
+  qualified: boolean;
   allocations?: Array<{
-    metal: string
-    epoch: string
-    tier: string
+    metal: string;
+    epoch: string;
+    tier: string;
     allocation: {
-      reward: number
-      tier_multiplier: number
-      epoch_balance_before: number
-      epoch_balance_after: number
-    }
-  }>
-  redundancy_report?: any
-  error?: string
+      reward: number;
+      tier_multiplier: number;
+      epoch_balance_before: number;
+      epoch_balance_after: number;
+    };
+  }>;
+  redundancy_report?: any;
+  error?: string;
 }
 
 export interface ArchiveStatistics {
-  total_contributions: number
-  status_counts: Record<string, number>
-  metal_counts: Record<string, number>
-  unique_contributors: number
-  unique_content_hashes: number
-  last_updated: string
+  total_contributions: number;
+  status_counts: Record<string, number>;
+  metal_counts: Record<string, number>;
+  unique_contributors: number;
+  unique_content_hashes: number;
+  last_updated: string;
 }
 
 export interface SandboxMap {
   nodes: Array<{
-    submission_hash: string
-    title: string
-    contributor: string
-    status: string
-    metals: string[]
-    coherence?: number
-    density?: number
-    redundancy?: number
-    created_at?: string
-  }>
+    submission_hash: string;
+    title: string;
+    contributor: string;
+    status: string;
+    metals: string[];
+    coherence?: number;
+    density?: number;
+    redundancy?: number;
+    created_at?: string;
+  }>;
   edges: Array<{
-    source_hash: string
-    target_hash: string
-    similarity_score: number
-    overlap_type: string
-  }>
+    source_hash: string;
+    target_hash: string;
+    similarity_score: number;
+    overlap_type: string;
+  }>;
   metadata: {
-    total_nodes: number
-    total_edges: number
-    generated_at: string
-  }
-  statistics?: any
+    total_nodes: number;
+    total_edges: number;
+    generated_at: string;
+  };
+  statistics?: any;
 }
 
 export interface EpochInfo {
-  current_epoch: string
-  epochs: Record<string, {
-    balance: number
-    threshold: number
-    distribution_amount: number
-    distribution_percent: number
-    available_tiers: string[]
-  }>
+  current_epoch: string;
+  epochs: Record<
+    string,
+    {
+      balance: number;
+      threshold: number;
+      distribution_amount: number;
+      distribution_percent: number;
+      available_tiers: string[];
+    }
+  >;
 }
 
 export interface TokenomicsStatistics {
-  total_supply: number
-  total_distributed: number
-  total_remaining: number
-  epoch_balances: Record<string, number>
-  current_epoch: string
-  founder_halving_count: number
-  total_coherence_density: number
-  total_holders: number
-  total_allocations: number
+  total_supply: number;
+  total_distributed: number;
+  total_remaining: number;
+  epoch_balances: Record<string, number>;
+  current_epoch: string;
+  founder_halving_count: number;
+  total_coherence_density: number;
+  total_holders: number;
+  total_allocations: number;
 }
 
 class PoCApi {
-  private baseUrl: string
+  private baseUrl: string;
 
   constructor(baseUrl: string = API_BASE) {
-    this.baseUrl = baseUrl
+    this.baseUrl = baseUrl;
   }
 
   private async fetch(endpoint: string, options?: RequestInit, retryOptions?: RetryOptions) {
     // API is now internal (Next.js API routes), baseUrl should always be set
     if (!this.baseUrl) {
-      throw new Error('Unable to determine API base URL. This may be a configuration issue.')
+      throw new Error('Unable to determine API base URL. This may be a configuration issue.');
     }
 
-    const { maxRetries = 2, delayMs = 1000, backoffMultiplier = 1.5 } = retryOptions || {}
-    let lastError: Error = new Error('Unknown error')
+    const { maxRetries = 2, delayMs = 1000, backoffMultiplier = 1.5 } = retryOptions || {};
+    let lastError: Error = new Error('Unknown error');
 
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {
         const headers: Record<string, string> = {
           'Content-Type': 'application/json',
-          ...(options?.headers as Record<string, string> || {}),
-        }
+          ...((options?.headers as Record<string, string>) || {}),
+        };
 
         const response = await fetch(`${this.baseUrl}${endpoint}`, {
           ...options,
           headers,
-        })
+        });
 
         if (!response.ok) {
           // Only retry on server errors (5xx) or network errors, not client errors (4xx)
           if (response.status >= 500 || response.status === 0) {
             if (attempt < maxRetries) {
-              await new Promise(resolve => setTimeout(resolve, delayMs * Math.pow(backoffMultiplier, attempt)))
-              continue
+              await new Promise((resolve) =>
+                setTimeout(resolve, delayMs * Math.pow(backoffMultiplier, attempt))
+              );
+              continue;
             }
           }
-          throw new Error(`API error: ${response.status} ${response.statusText}`)
+          throw new Error(`API error: ${response.status} ${response.statusText}`);
         }
 
-        return response.json()
+        return response.json();
       } catch (error) {
-        lastError = error as Error
+        lastError = error as Error;
         if (attempt < maxRetries && (error as Error).message.includes('fetch')) {
           // Retry on network errors
-          await new Promise(resolve => setTimeout(resolve, delayMs * Math.pow(backoffMultiplier, attempt)))
-          continue
+          await new Promise((resolve) =>
+            setTimeout(resolve, delayMs * Math.pow(backoffMultiplier, attempt))
+          );
+          continue;
         }
-        break
+        break;
       }
     }
 
-    throw lastError
+    throw lastError;
   }
 
   // Archive operations
   async getArchiveStatistics(): Promise<ArchiveStatistics> {
-    return this.fetch('/api/archive/statistics')
+    return this.fetch('/api/archive/statistics');
   }
 
   async getContributions(params?: {
-    status?: string
-    contributor?: string
-    metal?: string
+    status?: string;
+    contributor?: string;
+    metal?: string;
   }): Promise<Contribution[]> {
-    const query = new URLSearchParams(params as any).toString()
-    const response = await this.fetch(`/api/archive/contributions?${query}`)
+    const query = new URLSearchParams(params as any).toString();
+    const response = await this.fetch(`/api/archive/contributions?${query}`);
     // API returns {contributions: [...], count: N} - extract the array
-    return response.contributions || response || []
+    return response.contributions || response || [];
   }
 
   async getContribution(submissionHash: string): Promise<Contribution> {
-    return this.fetch(`/api/archive/contributions/${submissionHash}`)
+    return this.fetch(`/api/archive/contributions/${submissionHash}`);
   }
 
   // Submission operations
   async submitContribution(data: {
-    submission_hash: string
-    title: string
-    contributor: string
-    text_content?: string
-    pdf_path?: string
-    category?: string
-    file?: File
+    submission_hash: string;
+    title: string;
+    contributor: string;
+    text_content?: string;
+    pdf_path?: string;
+    category?: string;
+    file?: File;
   }): Promise<{ success: boolean; submission_hash: string }> {
     if (data.file) {
       // Use FormData for file uploads
-      const formData = new FormData()
-      formData.append('submission_hash', data.submission_hash)
-      formData.append('title', data.title)
-      formData.append('contributor', data.contributor)
-      formData.append('category', data.category || 'scientific')
+      const formData = new FormData();
+      formData.append('submission_hash', data.submission_hash);
+      formData.append('title', data.title);
+      formData.append('contributor', data.contributor);
+      formData.append('category', data.category || 'scientific');
       if (data.text_content) {
-        formData.append('text_content', data.text_content)
+        formData.append('text_content', data.text_content);
       }
-      formData.append('file', data.file)
+      formData.append('file', data.file);
 
       const response = await fetch(`${this.baseUrl}/api/submit`, {
         method: 'POST',
         body: formData,
-      })
+      });
 
       if (!response.ok) {
-        throw new Error(`API error: ${response.statusText}`)
+        throw new Error(`API error: ${response.statusText}`);
       }
 
-      return response.json()
+      return response.json();
     } else {
       // Use JSON for text-only submissions
       return this.fetch('/api/submit', {
         method: 'POST',
         body: JSON.stringify(data),
-      })
+      });
     }
   }
 
   async evaluateContribution(submissionHash: string): Promise<EvaluationResult> {
     return this.fetch(`/api/evaluate/${submissionHash}`, {
       method: 'POST',
-    })
+    });
   }
 
   // Sandbox Map
   async getSandboxMap(): Promise<SandboxMap> {
-    return this.fetch('/api/sandbox-map')
+    return this.fetch('/api/sandbox-map');
   }
 
   // Tokenomics
   async getEpochInfo(): Promise<EpochInfo> {
-    return this.fetch('/api/tokenomics/epoch-info')
+    return this.fetch('/api/tokenomics/epoch-info');
   }
 
   async getTokenomicsStatistics(): Promise<TokenomicsStatistics> {
-    return this.fetch('/api/tokenomics/statistics')
+    return this.fetch('/api/tokenomics/statistics');
   }
 }
 
-export const api = new PoCApi()
-
+export const api = new PoCApi();

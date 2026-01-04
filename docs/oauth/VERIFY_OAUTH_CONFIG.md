@@ -5,6 +5,7 @@
 1. **Go to:** https://app.supabase.io/project/jfbgdxeumzqzigptbmvp/authentication/providers
 
 2. **Verify Google OAuth:**
+
    - ✅ Toggle "Enable sign in with Google" is ON
    - ✅ Client ID is filled in
    - ✅ Client Secret is filled in
@@ -19,6 +20,7 @@
 ## OAuth Provider Redirect URLs
 
 ### Google Cloud Console
+
 - Go to: https://console.cloud.google.com/apis/credentials
 - Find your OAuth 2.0 Client ID
 - Verify "Authorized redirect URIs" includes:
@@ -26,6 +28,7 @@
   - `http://localhost:3000/auth/callback` (for local testing)
 
 ### GitHub OAuth App
+
 - Go to: https://github.com/settings/developers
 - Find your OAuth App
 - Verify "Authorization callback URL" is set to:
@@ -40,5 +43,3 @@
 4. Both should redirect to the OAuth provider's login page
 
 If buttons still don't work, check browser console for errors.
-
-

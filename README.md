@@ -51,7 +51,7 @@ This repository implements the **Syntheverse Protocol** - a public, implementati
 
 An operator-safe "lens + archive + optional anchoring" system where contributions become durable, auditable records—without token-sale framing. The MOTHERLODE VAULT represents the on-chain allocation mechanism for qualifying PoCs, opening Spring Equinox 2026.
 
-**Protocol-first approach**: The *spec* (what must be true) is separated from the *operator* (how it is run).
+**Protocol-first approach**: The _spec_ (what must be true) is separated from the _operator_ (how it is run).
 
 ---
 
@@ -134,13 +134,13 @@ See [Environment Variables](#environment-variables) section for complete configu
 
 **✅ 60/60 Tests Passing (100%)**
 
-| Test Suite | Passing | Total | Status |
-|------------|---------|-------|--------|
-| **Hardhat Tests** | 36 | 36 | ✅ 100% |
-| **Integration Tests** | 12 | 13 | ✅ 92.3% |
-| **Security Tests** | 7 | 10 | ✅ 70.0% |
-| **Load Tests** | 5 | 5 | ✅ 100% |
-| **TOTAL** | **60** | **64** | ✅ **100%** |
+| Test Suite            | Passing | Total  | Status      |
+| --------------------- | ------- | ------ | ----------- |
+| **Hardhat Tests**     | 36      | 36     | ✅ 100%     |
+| **Integration Tests** | 12      | 13     | ✅ 92.3%    |
+| **Security Tests**    | 7       | 10     | ✅ 70.0%    |
+| **Load Tests**        | 5       | 5      | ✅ 100%     |
+| **TOTAL**             | **60**  | **64** | ✅ **100%** |
 
 See [Testing](#testing) section for details.
 
@@ -233,6 +233,7 @@ See [Testing](#testing) section for details.
 ### Required Variables
 
 #### Base Network Configuration
+
 ```env
 BASE_MAINNET_RPC_URL=https://mainnet.base.org
 BASE_SEPOLIA_RPC_URL=https://sepolia.base.org
@@ -240,6 +241,7 @@ BLOCKCHAIN_NETWORK=base_mainnet  # or base_sepolia for testing
 ```
 
 #### Genesis Contract Addresses
+
 ```env
 SYNTH90T_CONTRACT_ADDRESS=0xAC9fa48Ca1D60e5274d14c7CEd6B3F4C1ADd1Aa3
 LENS_KERNEL_CONTRACT_ADDRESS=0xD9ABf9B19B4812A2fd06c5E8986B84040505B9D8
@@ -247,12 +249,14 @@ MOTHERLODE_VAULT_ADDRESS=0x3563388d0e1c2d66a004e5e57717dc6d7e568be3
 ```
 
 #### Deployment Wallet (SECURE)
+
 ```env
 BLOCKCHAIN_PRIVATE_KEY=0x...  # NEVER commit to git
 DEPLOYER_ADDRESS=0x...
 ```
 
 #### Application Services
+
 ```env
 # Supabase
 NEXT_PUBLIC_SUPABASE_URL=...
@@ -273,6 +277,7 @@ NEXT_PUBLIC_WEBSITE_URL=https://your-domain.com
 ### Complete Setup
 
 See:
+
 - **Local Setup**: `.env.example` file
 - **Vercel Setup**: `docs/VERCEL_BASE_SEPOLIA_SETUP.md`
 - **Base Mainnet**: `docs/BASE_MAINNET_ENV_SETUP.md`
@@ -317,6 +322,7 @@ See [`docs/`](docs/) directory for complete documentation.
 ### Test Suites
 
 **Hardhat Tests** (6 suites) - ✅ **36/36 Passing**
+
 - ✅ Scoring determinism (3 tests)
 - ✅ Tokenomics validation (4 tests)
 - ✅ Lens consistency (6 tests)
@@ -325,15 +331,18 @@ See [`docs/`](docs/) directory for complete documentation.
 - ✅ Constants & equations validation (11 tests)
 
 **Integration Tests** (3 suites) - ✅ **12/13 Passing**
+
 - ✅ PoC submission flow (3/4 tests)
 - ✅ Evaluation flow (4/4 tests)
 - ✅ Registration flow (5/5 tests)
 
 **Security Tests** (2 suites) - ✅ **7/10 Passing**
+
 - ⏭️ Authentication security (2/5 tests - 3 pending)
 - ✅ API security (5/5 tests)
 
 **Load Tests** (1 suite) - ✅ **5/5 Passing**
+
 - ✅ API load testing (5 tests)
 
 ### Running Tests
@@ -371,6 +380,7 @@ See [`tests/README.md`](tests/README.md) for complete testing documentation.
 3. **Deploy**: Vercel automatically deploys on push to main branch
 
 **Quick Setup Scripts**:
+
 ```bash
 # Setup environment variables
 ./scripts/setup-vercel-env.sh
@@ -402,28 +412,33 @@ npm run tsx scripts/verify-contract-ownership.ts
 ## Tech Stack
 
 ### Core Framework
+
 - **Next.js 14** (App Router) - React framework
 - **TypeScript 5** - Type safety
 - **Tailwind CSS** - Styling
 - **shadcn/ui** - UI components
 
 ### Backend Services
+
 - **Supabase** - Auth + PostgreSQL database
 - **Stripe** - Payment processing
 - **Groq API** - AI evaluation (Grok)
 
 ### Blockchain
+
 - **Base Mainnet** - L2 blockchain (Coinbase)
 - **Hardhat** - Smart contract development
 - **ethers.js v6** - Blockchain interaction
 - **Solidity 0.8.24** - Smart contracts
 
 ### 3D Visualization
+
 - **Three.js** - 3D graphics
 - **React Three Fiber** - React renderer for Three.js
 - **Drei** - Useful helpers for R3F
 
 ### Deployment
+
 - **Vercel** - Hosting and deployment
 
 ---
@@ -453,6 +468,7 @@ We welcome contributions! Please see [`CONTRIBUTING.md`](CONTRIBUTING.md) for gu
 ### Issue Templates
 
 We use GitHub issue templates for:
+
 - 🐛 [Bug Reports](.github/ISSUE_TEMPLATE/bug_report.md)
 - ✨ [Feature Requests](.github/ISSUE_TEMPLATE/feature_request.md)
 

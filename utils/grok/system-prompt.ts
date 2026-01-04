@@ -742,20 +742,14 @@ You MUST include a valid JSON object with the EXACT structure below embedded in 
 6. **Total score (total_score and pod_score) must equal**:
    Composite × (1 + redundancy_overlap_percent/100)
 
-Provide your complete narrative evaluation including the JSON structure for parsing.`
+Provide your complete narrative evaluation including the JSON structure for parsing.`;
 
 // SynthScan™ MRI System Prompt
 // This is a rebranded version for SynthScan MRI evaluations that uses SynthScan™ MRI terminology
 // instead of HHF-AI Lens terminology. Used for SynthScan UI Groq API calls.
 export const SYNTHSCAN_MRI_SYSTEM_PROMPT = SYNTHEVERSE_SYSTEM_PROMPT.replace(
-    /Operate as the Syntheverse PoC Evaluation Engine, operating in simulation mode for the Hydrogen-Holographic Fractal Sandbox \(HHFS\)\./g,
-    'Operate as the SynthScan™ MRI Evaluation Engine, using SynthScan™ MRI (HHF-AI) to evaluate submissions through hydrogen spin–mediated resonance imaging of complex and abstract systems.'
-).replace(
-    /Hydrogen-Holographic Fractal Sandbox \(HHFS\)/g,
-    'SynthScan™ MRI System'
-).replace(
-    /HHFS/g,
-    'SynthScan™ MRI'
+  /Operate as the Syntheverse PoC Evaluation Engine, operating in simulation mode for the Hydrogen-Holographic Fractal Sandbox \(HHFS\)\./g,
+  'Operate as the SynthScan™ MRI Evaluation Engine, using SynthScan™ MRI (HHF-AI) to evaluate submissions through hydrogen spin–mediated resonance imaging of complex and abstract systems.'
 )
-
-
+  .replace(/Hydrogen-Holographic Fractal Sandbox \(HHFS\)/g, 'SynthScan™ MRI System')
+  .replace(/HHFS/g, 'SynthScan™ MRI');

@@ -11,6 +11,7 @@ This document confirms that token allocations, epoch balances, and open epochs a
 **Table:** `allocations`
 
 **Schema:**
+
 - `id` (text, primary key) - Unique allocation ID
 - `submission_hash` (text) - PoC submission hash
 - `contributor` (text) - Contributor email/address
@@ -24,15 +25,18 @@ This document confirms that token allocations, epoch balances, and open epochs a
 - `created_at` (timestamp) - Allocation timestamp
 
 **Storage Location:**
+
 - Permanent PostgreSQL database (Supabase)
 - Migration: `supabase/migrations/20240101000001_create_poc_tables.sql`
 
 **When Allocations are Recorded:**
+
 - When tokens are allocated via `/api/poc/[hash]/allocate` endpoint
 - When admin approves allocations via `/api/admin/approve-allocation` endpoint
 - Each allocation creates a permanent record with before/after balance snapshots
 
 **Code References:**
+
 - `app/api/poc/[hash]/allocate/route.ts` (lines 122-133)
 - `app/api/admin/approve-allocation/route.ts` (lines 231-243)
 - `utils/db/schema.ts` (lines 70-82)
@@ -44,6 +48,7 @@ This document confirms that token allocations, epoch balances, and open epochs a
 **Table:** `epoch_balances`
 
 **Schema:**
+
 - `id` (text, primary key) - Unique epoch balance ID
 - `epoch` (text) - Epoch name (founder, pioneer, community, ecosystem)
 - `balance` (numeric) - Current available balance
@@ -53,16 +58,19 @@ This document confirms that token allocations, epoch balances, and open epochs a
 - `updated_at` (timestamp) - Last update timestamp
 
 **Storage Location:**
+
 - Permanent PostgreSQL database (Supabase)
 - Migration: `supabase/migrations/20240101000001_create_poc_tables.sql`
 
 **When Balances are Updated:**
+
 - When tokens are allocated: balance decreases
 - Updated via `/api/poc/[hash]/allocate` endpoint (lines 136-142)
 - Updated via `/api/admin/approve-allocation` endpoint (lines 246-252)
 - Balance is atomically updated with allocation record
 
 **Initialization:**
+
 - Default balances initialized in `app/api/tokenomics/epoch-info/route.ts` (lines 41-58)
 - Founder: 45T SYNTH (50%)
 - Pioneer: 22.5T SYNTH (25%)
@@ -70,6 +78,7 @@ This document confirms that token allocations, epoch balances, and open epochs a
 - Ecosystem: 11.25T SYNTH (12.5%)
 
 **Code References:**
+
 - `app/api/poc/[hash]/allocate/route.ts` (lines 136-142)
 - `app/api/admin/approve-allocation/route.ts` (lines 246-252)
 - `app/api/tokenomics/epoch-info/route.ts` (lines 35-105)
@@ -82,6 +91,7 @@ This document confirms that token allocations, epoch balances, and open epochs a
 **Table:** `tokenomics`
 
 **Schema:**
+
 - `id` (text, primary key, default: 'main')
 - `total_supply` (numeric) - Total SYNTH supply (90T)
 - `total_distributed` (numeric) - Total distributed tokens
@@ -90,10 +100,12 @@ This document confirms that token allocations, epoch balances, and open epochs a
 - `updated_at` (timestamp) - Last update timestamp
 
 **Storage Location:**
+
 - Permanent PostgreSQL database (Supabase)
 - Migration: `supabase/migrations/20240101000001_create_poc_tables.sql`
 
 **How Open Epochs are Determined:**
+
 1. Current epoch stored in `tokenomics.current_epoch` (default: 'founder')
 2. Epoch balances checked from `epoch_balances` table
 3. Open epochs calculated based on:
@@ -103,6 +115,7 @@ This document confirms that token allocations, epoch balances, and open epochs a
    - Ecosystem epoch: Opens when coherence density >= 3M
 
 **Code References:**
+
 - `app/api/tokenomics/epoch-info/route.ts` (lines 26-32, 108)
 - `utils/epochs/qualification.ts` (lines 40-97)
 - `utils/db/schema.ts` (lines 49-56)
@@ -114,12 +127,14 @@ This document confirms that token allocations, epoch balances, and open epochs a
 **Table:** `tokenomics`
 
 **Fields:**
+
 - `total_supply`: 90,000,000,000,000 SYNTH (90T)
 - `total_distributed`: Sum of all allocations
 - `current_epoch`: Currently active epoch
 - `founder_halving_count`: Halving counter for founder epoch
 
 **Updates:**
+
 - `total_distributed` updated when allocations occur (see `app/api/admin/approve-allocation/route.ts` lines 255-260)
 - `current_epoch` can be updated by admin to progress epochs
 - All updates are permanent and persisted to database
@@ -131,12 +146,14 @@ This document confirms that token allocations, epoch balances, and open epochs a
 **Formula:** `(score/10000) * Available tokens`
 
 **Implementation:**
+
 - Base allocation: `(pod_score / 10000) * epochBalance`
 - Metal amplification applied: `baseAllocation * metalMultiplier`
 - Tier multiplier applied: `amplifiedAllocation * tierMultiplier`
 - Final: `floor(finalAmount)` capped at epoch balance
 
 **Code Reference:**
+
 - `utils/tokenomics/projected-allocation.ts` (lines 136-150)
 
 ---
@@ -146,6 +163,7 @@ This document confirms that token allocations, epoch balances, and open epochs a
 All tables are created via SQL migrations:
 
 1. **Primary Migration:** `supabase/migrations/20240101000001_create_poc_tables.sql`
+
    - Creates `allocations` table
    - Creates `epoch_balances` table
    - Creates `tokenomics` table
@@ -197,4 +215,3 @@ SELECT SUM(CAST(reward AS NUMERIC)) as total_allocated FROM allocations;
 ✅ **All data persists** across server restarts, deployments, and database connections
 
 All tokenomics data is stored in permanent PostgreSQL database (Supabase), ensuring data persistence and reliability.
-

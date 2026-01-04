@@ -33,6 +33,3 @@ The protocol defines **what must be true** (invariants, data contracts, lifecycl
 ### Status
 
 This spec is under active iteration. The “source of truth” for current behavior is the reference client implementation at the repo root (`app/`, `utils/`, `supabase/`).
-
-
-

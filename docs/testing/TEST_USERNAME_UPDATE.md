@@ -31,14 +31,14 @@ The test endpoint requires authentication. You must be logged in to use it.
 fetch('/api/test-username-update', {
   method: 'POST',
   headers: {
-    'Content-Type': 'application/json'
-  }
+    'Content-Type': 'application/json',
+  },
 })
-.then(res => res.json())
-.then(data => {
-  console.log('Test Results:', JSON.stringify(data, null, 2));
-})
-.catch(err => console.error('Error:', err));
+  .then((res) => res.json())
+  .then((data) => {
+    console.log('Test Results:', JSON.stringify(data, null, 2));
+  })
+  .catch((err) => console.error('Error:', err));
 ```
 
 **Option B: Using curl (with session cookie)**
@@ -83,7 +83,7 @@ The test endpoint performs several checks and returns detailed results:
         "userId": "...",
         "email": "..."
       }
-    },
+    }
     // ... more steps
   ],
   "summary": {
@@ -104,39 +104,47 @@ The test endpoint performs several checks and returns detailed results:
 ### 4. Common Issues and Solutions
 
 #### Error: "User not authenticated"
+
 - **Solution**: Make sure you are logged into the application before running the test
 
 #### Error: "Database table not found" or "relation does not exist"
+
 - **Solution**: Database migrations may not be applied. Run migrations on your Supabase database.
 
 #### Error: "Stripe customer creation failed"
-- **Solution**: 
+
+- **Solution**:
   - Check that `STRIPE_SECRET_KEY` is set in Vercel environment variables
   - Verify the Stripe API key is valid
   - Check Stripe API logs for more details
 
 #### Error: "Database connection timeout"
-- **Solution**: 
+
+- **Solution**:
   - Check `DATABASE_URL` environment variable in Vercel
   - Verify database connection settings in Supabase
   - Check if database is accessible from Vercel's IP addresses
 
 #### Error: "Failed to create user account"
+
 - **Solution**: Check the detailed error message in the results. The test endpoint will provide specific information about what failed.
 
 ### 5. Debugging in Production
 
 When testing on Vercel production/preview:
 
-1. **Check Vercel Logs**: 
+1. **Check Vercel Logs**:
+
    - Go to Vercel Dashboard → Your Project → Functions → View Function Logs
    - Look for error messages from the test endpoint or username update action
 
 2. **Check Supabase Logs**:
+
    - Go to Supabase Dashboard → Logs → Database Logs
    - Look for query errors or connection issues
 
 3. **Check Stripe Dashboard**:
+
    - Go to Stripe Dashboard → Developers → Logs
    - Look for API errors when creating customers
 
@@ -173,4 +181,3 @@ If you continue to experience issues after running the test:
 3. Check Supabase database logs for query errors
 4. Verify all environment variables are set correctly in Vercel
 5. Contact support with the test results and error logs
-

@@ -1,7 +1,7 @@
 name: Bug report
 description: Report a reproducible bug in the operator reference client or docs.
-title: "[Bug]: "
-labels: ["bug"]
+title: '[Bug]: '
+labels: ['bug']
 body:
   - type: dropdown
     id: area
@@ -31,6 +31,3 @@ body:
     attributes:
       label: Logs / screenshots
       description: Remove any secrets before pasting.
-
-
-

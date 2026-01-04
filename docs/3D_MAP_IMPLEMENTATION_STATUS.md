@@ -3,11 +3,13 @@
 ## ✅ Completed Components
 
 ### 1. Database Schema Updates
+
 - ✅ Added registration fields to `contributions` table schema
 - ✅ Created migration SQL file: `supabase/migrations/add_registration_fields.sql`
 - ✅ Fields: `registered`, `registration_date`, `registration_tx_hash`, `stripe_payment_id`
 
 ### 2. API Endpoints
+
 - ✅ `GET /api/poc/[hash]/projected-allocation` - Calculate projected token allocation
 - ✅ `GET /api/poc/[hash]/registration-status` - Get registration status
 - ✅ `POST /api/poc/[hash]/register` - Initiate Stripe checkout for registration
@@ -16,17 +18,20 @@
 - ✅ Updated Stripe webhook to handle PoC registration payments
 
 ### 3. Tokenomics Utilities
+
 - ✅ `utils/tokenomics/projected-allocation.ts` - Projected allocation calculator
 - ✅ Integrated with existing metal amplification logic
 - ✅ Uses epoch balances and qualification logic
 
 ### 4. Three.js Components
+
 - ✅ `components/3d/visualEncoding.ts` - Visual encoding utilities (size, color, shape, opacity)
 - ✅ `components/3d/PoCNode.tsx` - Individual PoC node component with 3D shapes
 - ✅ `components/3d/PoCDetailPanel.tsx` - Interactive detail panel with scores and actions
 - ✅ `components/SandboxMap3DUpgraded.tsx` - Main upgraded 3D map component
 
 ### 5. Visual Encoding Implementation
+
 - ✅ **Size**: Proportional to density score (0.3x to 3.0x)
 - ✅ **Color**: Novelty gradient (blue → green → red)
 - ✅ **Shape**: Metal-based (Icosahedron/Gold, Octahedron/Silver, Tetrahedron/Copper)
@@ -38,17 +43,21 @@
 ## 🔧 Remaining Tasks
 
 ### High Priority
+
 1. **Test Three.js Integration**
+
    - Verify components render correctly
    - Test node clicking and panel interactions
    - Check performance with multiple nodes
 
 2. **Nested Fractal Layers** (Phase 3)
+
    - Implement hierarchical layer structure
    - Add layer navigation controls
    - Position nodes within appropriate layers
 
 3. **Edge Rendering**
+
    - Render similarity connections between nodes
    - Style edges based on similarity type
 
@@ -57,12 +66,15 @@
    - Test in dashboard context
 
 ### Medium Priority
+
 5. **Enhanced Interactivity**
+
    - Hover tooltips for nodes
    - Better node selection feedback
    - Smooth camera transitions
 
 6. **Performance Optimization**
+
    - Implement LOD (Level of Detail) for large datasets
    - Optimize rendering for 100+ nodes
    - Add loading states
@@ -73,6 +85,7 @@
    - Smooth transitions between layers
 
 ### Low Priority
+
 8. **Advanced Features**
    - Node filtering (by status, category, metal)
    - Search functionality
@@ -97,23 +110,25 @@ Replace the old map component:
 
 ```tsx
 // In app/dashboard/page.tsx
-import { SandboxMap3DUpgraded } from '@/components/SandboxMap3DUpgraded'
+import { SandboxMap3DUpgraded } from '@/components/SandboxMap3DUpgraded';
 
 // Replace:
 // <SandboxMap3D />
 // With:
-<SandboxMap3DUpgraded />
+<SandboxMap3DUpgraded />;
 ```
 
 ### 3. Test the Implementation
 
 1. **Visual Encoding**:
+
    - Check nodes render with correct sizes (density)
    - Verify colors match novelty scores
    - Confirm shapes match metal types
    - Check opacity reflects coherence
 
 2. **Interactivity**:
+
    - Click nodes to open detail panel
    - Verify projected allocation displays correctly
    - Test "Allocate SYNTH" button (for qualified, registered PoCs)
@@ -130,14 +145,17 @@ import { SandboxMap3DUpgraded } from '@/components/SandboxMap3DUpgraded'
 ## 🐛 Known Issues / TODOs
 
 1. **Detail Panel API Integration**:
+
    - Currently fetches full sandbox-map data
    - Could optimize with dedicated PoC detail endpoint
 
 2. **Fractal Layers**:
+
    - Not yet implemented - nodes render in flat space
    - Need to add hierarchical structure
 
 3. **Edge Rendering**:
+
    - Edges calculated but not rendered in Three.js scene
    - Need to add edge visualization component
 
@@ -172,4 +190,3 @@ import { SandboxMap3DUpgraded } from '@/components/SandboxMap3DUpgraded'
 ---
 
 **Status**: Core functionality implemented, ready for testing and fractal layer enhancement
-

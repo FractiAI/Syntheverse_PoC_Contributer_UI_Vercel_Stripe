@@ -12,6 +12,7 @@ The Syntheverse Contributor Dashboard is a **production-ready Next.js 14 applica
 ### Key Findings
 
 ✅ **What's Working Well**:
+
 - Vector embedding generation (OpenAI API + fallback)
 - 3D coordinate calculation using HHF geometry
 - Database storage of vectors (embedding, vector_x, vector_y, vector_z)
@@ -20,6 +21,7 @@ The Syntheverse Contributor Dashboard is a **production-ready Next.js 14 applica
 - Authentication and user management
 
 🔧 **What Needs Improvement**:
+
 - 3D map visualization (canvas 2D projection, needs WebGL/Three.js)
 - Node selection in 3D map (currently broken - always selects first node)
 - Performance optimization for large datasets
@@ -30,6 +32,7 @@ The Syntheverse Contributor Dashboard is a **production-ready Next.js 14 applica
 ## Architecture Overview
 
 ### Tech Stack
+
 - **Framework**: Next.js 14 (App Router)
 - **Language**: TypeScript
 - **Database**: PostgreSQL (Supabase) with Drizzle ORM
@@ -46,12 +49,14 @@ The Syntheverse Contributor Dashboard is a **production-ready Next.js 14 applica
 
 The vector system is **fully implemented and working**:
 
-- **Embeddings** (`embeddings.ts`): 
+- **Embeddings** (`embeddings.ts`):
+
   - Uses OpenAI `text-embedding-3-small` (1536 dimensions)
   - Fallback to hash-based embeddings if no API key
   - Functions: `generateEmbedding()`, `cosineSimilarity()`, `euclideanDistance()`
 
 - **3D Mapping** (`hhf-3d-mapping.ts`):
+
   - Maps embeddings to 3D coordinates using HHF constant (Λᴴᴴ ≈ 1.12 × 10²²)
   - X-axis: Novelty, Y-axis: Density, Z-axis: Coherence
   - Functions: `mapTo3DCoordinates()`, `distance3D()`, `similarityFromDistance()`
@@ -61,11 +66,13 @@ The vector system is **fully implemented and working**:
   - Used during PoC evaluation
 
 **Integration Points**:
+
 - `app/api/submit/route.ts` - Generates vectors on submission
 - `app/api/evaluate/[hash]/route.ts` - Generates vectors during evaluation
 - `utils/grok/evaluate.ts` - Uses vectors for redundancy calculation
 
 **Database Schema**:
+
 - `contributions.embedding` (jsonb) - Full embedding array
 - `contributions.vector_x`, `vector_y`, `vector_z` (numeric) - 3D coordinates
 - `contributions.embedding_model` (text) - Model used
@@ -76,6 +83,7 @@ The vector system is **fully implemented and working**:
 **Location**: `components/SandboxMap3D.tsx`
 
 **Current Implementation**:
+
 - Canvas-based 2D projection of 3D coordinates
 - Isometric projection rendering
 - Basic camera controls (zoom, rotate, reset)
@@ -83,6 +91,7 @@ The vector system is **fully implemented and working**:
 - Edge rendering for similarity connections
 
 **Known Issues**:
+
 1. **Node selection broken**: `handleClick()` always selects first node instead of clicked node
 2. **2D canvas limitation**: Not true 3D, just 2D projection
 3. **No hover tooltips**: Limited interactivity
@@ -90,6 +99,7 @@ The vector system is **fully implemented and working**:
 5. **Simple rendering**: Basic circles, no advanced visualization
 
 **API Endpoint**: `/api/sandbox-map`
+
 - Returns nodes with 3D coordinates
 - Returns edges based on similarity
 - Calculates edges using O(n²) algorithm
@@ -99,6 +109,7 @@ The vector system is **fully implemented and working**:
 **Location**: `components/PoCDashboardStats.tsx`
 
 **Features**:
+
 - Total contributions count
 - Unique contributors count
 - Token distribution statistics
@@ -108,6 +119,7 @@ The vector system is **fully implemented and working**:
 - Epoch distribution visualization
 
 **Data Sources**:
+
 - `/api/archive` - Archive statistics
 - `/api/tokenomics` - Tokenomics data
 - `/api/epochs` - Epoch information
@@ -117,6 +129,7 @@ The vector system is **fully implemented and working**:
 **Location**: `app/dashboard/page.tsx`
 
 **Sections**:
+
 - Account overview
 - Quick actions
 - PoC statistics component
@@ -128,6 +141,7 @@ The vector system is **fully implemented and working**:
 ## Testing Checklist
 
 ### ✅ Ready for Testing
+
 - [x] Authentication flow
 - [x] Database queries
 - [x] API endpoints
@@ -136,6 +150,7 @@ The vector system is **fully implemented and working**:
 - [x] 3D coordinate calculation
 
 ### 🔧 Needs Testing/Tuning
+
 - [ ] 3D map node selection (broken)
 - [ ] 3D map performance with 100+ nodes
 - [ ] Edge calculation performance (O(n²))
@@ -148,7 +163,9 @@ The vector system is **fully implemented and working**:
 ## 3D Map Upgrade Roadmap
 
 ### Phase 1: Fix Critical Issues (Immediate)
+
 1. **Fix node selection**
+
    - Implement proper 3D-to-2D picking algorithm
    - Calculate closest node to click position in screen space
    - Update `handleClick()` in `SandboxMap3D.tsx`
@@ -159,7 +176,9 @@ The vector system is **fully implemented and working**:
    - Better visual feedback
 
 ### Phase 2: Enhanced Canvas Implementation (Short-term)
+
 1. **Performance optimization**
+
    - Optimize edge calculation (spatial indexing if needed)
    - View frustum culling for large datasets
    - Implement node/edge LOD (level of detail)
@@ -170,7 +189,9 @@ The vector system is **fully implemented and working**:
    - Better axis labels and legends
 
 ### Phase 3: WebGL/Three.js Migration (Medium-term)
+
 1. **Migrate to Three.js**
+
    - Replace canvas 2D with WebGL rendering
    - True 3D interaction (orbit controls)
    - Hardware acceleration
@@ -183,7 +204,9 @@ The vector system is **fully implemented and working**:
    - Cluster visualization
 
 ### Phase 4: Advanced Visualization (Long-term)
+
 1. **Multi-dimensional views**
+
    - Switch axis mappings
    - 4D visualization (time dimension)
    - Dimension filtering
@@ -198,20 +221,24 @@ The vector system is **fully implemented and working**:
 ## Key Files Reference
 
 ### Vector System
+
 - `utils/vectors/embeddings.ts` - Embedding generation
 - `utils/vectors/hhf-3d-mapping.ts` - 3D coordinate mapping
 - `utils/vectors/redundancy.ts` - Redundancy calculations
 - `utils/vectors/index.ts` - Unified exports
 
 ### 3D Map
+
 - `components/SandboxMap3D.tsx` - Main 3D map component (NEEDS UPGRADE)
 - `app/api/sandbox-map/route.ts` - API endpoint for map data
 
 ### Dashboard
+
 - `components/PoCDashboardStats.tsx` - Statistics component
 - `app/dashboard/page.tsx` - Main dashboard page
 
 ### Database
+
 - `utils/db/schema.ts` - Database schema (includes vector columns)
 - `supabase/migrations/add_vector_columns.sql` - Migration for vectors
 
@@ -220,12 +247,14 @@ The vector system is **fully implemented and working**:
 ## Environment Variables
 
 **Required for full functionality**:
+
 - `DATABASE_URL` - PostgreSQL connection string
 - `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase anonymous key
 - `SUPABASE_SERVICE_ROLE_KEY` - Service role key
 
 **Optional but recommended**:
+
 - `OPENAI_API_KEY` - For high-quality embeddings (has fallback if not set)
 
 ---
@@ -248,4 +277,3 @@ The vector system is **fully implemented and working**:
 - Database schema supports full vector storage
 
 **System is ready for testing and 3D map upgrade work.**
-

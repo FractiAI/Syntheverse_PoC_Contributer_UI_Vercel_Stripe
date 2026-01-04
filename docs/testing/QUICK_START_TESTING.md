@@ -3,6 +3,7 @@
 ## 4-Phase Testing Approach
 
 ### Phase 1: Authentication (Start Here)
+
 **Goal:** Verify user registration, login, and OAuth work
 **Time:** 15-30 minutes
 **Requirements:** Supabase project
@@ -22,6 +23,7 @@ node test-auth.js
 ```
 
 ### Phase 2: Stripe Billing
+
 **Goal:** Verify subscriptions, payments, and webhooks
 **Time:** 20-45 minutes
 **Requirements:** Stripe test account
@@ -41,6 +43,7 @@ node test-stripe.js
 ```
 
 ### Phase 3: PoC API Integration
+
 **Goal:** Verify contribution submission interface
 **Time:** 10-15 minutes
 **Requirements:** None (demo mode)
@@ -51,6 +54,7 @@ node test-poc-api.js
 ```
 
 ### Phase 4: Vercel Deployment
+
 **Goal:** Deploy to production and verify
 **Time:** 15-30 minutes
 **Requirements:** Vercel account
@@ -81,6 +85,7 @@ node run-all-tests.js
 ## 🔧 Quick Fixes
 
 ### Environment Issues
+
 ```bash
 # Copy example environment
 cp .env.example .env.local
@@ -90,6 +95,7 @@ nano .env.local
 ```
 
 ### Database Issues
+
 ```bash
 # Run migrations
 npm run db:migrate
@@ -99,6 +105,7 @@ npm run db:push
 ```
 
 ### Build Issues
+
 ```bash
 # Clear cache and rebuild
 rm -rf .next node_modules
@@ -124,4 +131,3 @@ npm run build
 ---
 
 **Ready to start? Run `node test-auth.js` and begin Phase 1! 🎉**
-

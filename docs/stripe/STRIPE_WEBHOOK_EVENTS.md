@@ -9,31 +9,37 @@ Based on your webhook handler code, here are the events you should select:
 ## ✅ Required Events (Select These)
 
 ### 1. `checkout.session.completed`
+
 - **When:** Customer successfully completes a checkout session
 - **Why:** Needed to track when users complete their subscription purchase
 - **Status:** ✅ Required
 
 ### 2. `customer.subscription.created`
+
 - **When:** A new subscription is created
 - **Why:** Your code handles this - updates user plan in database
 - **Status:** ✅ Required (handled in your code)
 
 ### 3. `customer.subscription.updated`
+
 - **When:** Subscription is updated (plan change, billing cycle, etc.)
 - **Why:** Your code handles this - updates user plan in database
 - **Status:** ✅ Required (handled in your code)
 
 ### 4. `customer.subscription.deleted`
+
 - **When:** Subscription is canceled or deleted
 - **Why:** Your code handles this - logs subscription deletion
 - **Status:** ✅ Required (handled in your code)
 
 ### 5. `invoice.payment_succeeded`
+
 - **When:** An invoice payment succeeds (recurring billing)
 - **Why:** Important for tracking successful recurring payments
 - **Status:** ✅ Recommended
 
 ### 6. `invoice.payment_failed`
+
 - **When:** An invoice payment fails (recurring billing)
 - **Why:** Important for handling failed payments and notifying users
 - **Status:** ✅ Recommended
@@ -68,14 +74,17 @@ When creating your webhook in Stripe Dashboard, select these events:
 ## Event Categories (Where to Find Them)
 
 ### Checkout Events
+
 - `checkout.session.completed` ← Find this here
 
 ### Customer Subscription Events
+
 - `customer.subscription.created` ← Find this here
 - `customer.subscription.updated` ← Find this here
 - `customer.subscription.deleted` ← Find this here
 
 ### Invoice Events
+
 - `invoice.payment_succeeded` ← Find this here
 - `invoice.payment_failed` ← Find this here
 
@@ -86,20 +95,24 @@ When creating your webhook in Stripe Dashboard, select these events:
 ### Your webhook handler (`app/webhook/stripe/route.ts`) handles:
 
 **`customer.subscription.created` & `customer.subscription.updated`:**
+
 ```typescript
 // Updates user's plan in database
-await db.update(usersTable)
-    .set({ plan: event.data.object.id })
-    .where(eq(usersTable.stripe_id, (event.data.object as any).customer));
+await db
+  .update(usersTable)
+  .set({ plan: event.data.object.id })
+  .where(eq(usersTable.stripe_id, (event.data.object as any).customer));
 ```
 
 **`customer.subscription.deleted`:**
+
 ```typescript
 // Logs subscription cancellation
-console.log('Subscription deleted:', event.data.object.id)
+console.log('Subscription deleted:', event.data.object.id);
 ```
 
 **Other events:**
+
 - `checkout.session.completed` - Useful for tracking completions
 - `invoice.payment_succeeded` - Track successful recurring payments
 - `invoice.payment_failed` - Handle failed payments (you may want to add logic for this)
@@ -145,4 +158,3 @@ In Stripe Dashboard when selecting events:
 ---
 
 **These 6 events are all you need for your Syntheverse PoC Contributor UI!** ✅
-

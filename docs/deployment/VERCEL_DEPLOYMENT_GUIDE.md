@@ -14,15 +14,18 @@
 ## Step 1: Connect Repository to Vercel
 
 1. **Go to Vercel Dashboard**
+
    - Visit https://vercel.com/dashboard
    - Click **"New Project"** or **"Add New..." → Project**
 
 2. **Import Git Repository**
+
    - If your code is on GitHub/GitLab/Bitbucket, connect your Git provider
    - Select your repository: `Syntheverse_PoC_Contributer_UI_Vercel_Stripe`
    - Vercel will auto-detect Next.js framework
 
 3. **Configure Project Settings**
+
    - **Framework Preset**: Next.js (auto-detected)
    - **Root Directory**: `./` (root of repository)
    - **Build Command**: `npm run build` (default)
@@ -40,6 +43,7 @@ Go to **Project Settings → Environment Variables** in your Vercel project dash
 ### Required Environment Variables
 
 #### Supabase Configuration
+
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
@@ -48,19 +52,23 @@ DATABASE_URL=postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-ID].supabase
 ```
 
 **How to get these:**
+
 - Go to your Supabase project dashboard
 - Settings → API → Copy Project URL and anon key
 - Settings → API → Copy service_role key (keep secret!)
 - Settings → Database → Connection string → Copy URI connection string
 
 #### Site Configuration
+
 ```
 NEXT_PUBLIC_SITE_URL=https://your-app.vercel.app
 NEXT_PUBLIC_WEBSITE_URL=https://your-app.vercel.app
 ```
+
 **Note**: Replace `your-app.vercel.app` with your actual Vercel deployment URL (you'll get this after first deployment)
 
 #### Stripe Configuration
+
 ```
 STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key
 STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret
@@ -69,6 +77,7 @@ NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID=prctbl_your_pricing_table_id
 ```
 
 **How to get these:**
+
 - Go to Stripe Dashboard → Developers → API keys
 - Copy Test mode Secret key (starts with `sk_test_`)
 - Copy Test mode Publishable key (starts with `pk_test_`)
@@ -77,12 +86,14 @@ NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID=prctbl_your_pricing_table_id
 ### Optional Environment Variables (if using OAuth)
 
 #### Google OAuth
+
 ```
 GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
 ```
 
 #### GitHub OAuth
+
 ```
 GITHUB_CLIENT_ID=your-github-client-id
 GITHUB_CLIENT_SECRET=your-github-client-secret
@@ -91,11 +102,13 @@ GITHUB_CLIENT_SECRET=your-github-client-secret
 ### Environment Variable Settings
 
 For each variable, select which environments it applies to:
+
 - ✅ **Production**
-- ✅ **Preview** 
+- ✅ **Preview**
 - ✅ **Development**
 
-**Important**: 
+**Important**:
+
 - Variables starting with `NEXT_PUBLIC_` are exposed to the browser
 - Never expose `SUPABASE_SERVICE_ROLE_KEY` or `STRIPE_SECRET_KEY` in client-side code
 - `STRIPE_WEBHOOK_SECRET` will be different for production (see Step 4)
@@ -107,9 +120,11 @@ For each variable, select which environments it applies to:
 ### Update Site URL in Supabase
 
 1. **Go to Supabase Dashboard**
+
    - Your project → Authentication → URL Configuration
 
 2. **Update Site URL**
+
    - Change from `http://localhost:3000` to your Vercel URL: `https://your-app.vercel.app`
 
 3. **Update Redirect URLs** (if using OAuth)
@@ -122,6 +137,7 @@ For each variable, select which environments it applies to:
 ### Update OAuth Provider Redirect URIs
 
 #### Google OAuth
+
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
 2. APIs & Services → Credentials
 3. Edit your OAuth 2.0 Client ID
@@ -131,6 +147,7 @@ For each variable, select which environments it applies to:
    ```
 
 #### GitHub OAuth
+
 1. Go to GitHub → Settings → Developer settings → OAuth Apps
 2. Edit your OAuth App
 3. Add to **Authorization callback URL**:
@@ -143,14 +160,17 @@ For each variable, select which environments it applies to:
 ## Step 4: Configure Stripe Webhooks for Production
 
 1. **Go to Stripe Dashboard**
+
    - Developers → Webhooks
 
 2. **Add Endpoint**
+
    - Click **"Add endpoint"**
    - Endpoint URL: `https://your-app.vercel.app/webhook/stripe`
    - Description: "Production webhook for Syntheverse PoC"
 
 3. **Select Events to Listen To**
+
    - `checkout.session.completed`
    - `customer.subscription.created`
    - `customer.subscription.updated`
@@ -172,11 +192,13 @@ After your first deployment, you need to run database migrations. You have two o
 ### Option A: Run migrations via Vercel (Recommended)
 
 1. **Add a migration script to package.json** (if not already there):
+
    ```json
    "scripts": {
      "postbuild": "drizzle-kit migrate"
    }
    ```
+
    This runs migrations automatically after build.
 
 2. **Or run migrations manually:**
@@ -201,6 +223,7 @@ npm run db:migrate
 ## Step 6: Redeploy with Updated Configuration
 
 1. **Trigger a new deployment**
+
    - Go to Vercel Dashboard → Your Project
    - Click **"Redeploy"** on the latest deployment
    - Or push a new commit to trigger automatic deployment
@@ -228,21 +251,25 @@ npm run db:migrate
 ### Common Issues
 
 **Build fails:**
+
 - Check build logs in Vercel
 - Verify all environment variables are set
 - Ensure Node.js version is compatible (18+)
 
 **Database connection fails:**
+
 - Verify `DATABASE_URL` is correct
 - Check Supabase database is running
 - Verify IP restrictions in Supabase settings
 
 **OAuth redirects fail:**
+
 - Verify Site URL in Supabase matches Vercel URL
 - Check redirect URLs in OAuth provider settings
 - Ensure callback route exists: `/auth/callback`
 
 **Stripe webhooks fail:**
+
 - Verify webhook URL is correct in Stripe Dashboard
 - Check `STRIPE_WEBHOOK_SECRET` matches production webhook secret
 - Test webhook events in Stripe Dashboard → Webhooks → Send test webhook
@@ -252,9 +279,11 @@ npm run db:migrate
 ## Step 8: Set Up Custom Domain (Optional)
 
 1. **Go to Vercel Project Settings**
+
    - Settings → Domains
 
 2. **Add Domain**
+
    - Enter your custom domain (e.g., `app.yourdomain.com`)
    - Follow Vercel's DNS configuration instructions
 
@@ -268,15 +297,18 @@ npm run db:migrate
 ## 📊 Monitoring & Maintenance
 
 ### Vercel Analytics
+
 - Enable Vercel Analytics in Project Settings
 - Monitor performance metrics and Core Web Vitals
 
 ### Error Tracking
+
 - Check Function Logs in Vercel Dashboard
 - Monitor Supabase logs for database issues
 - Check Stripe Dashboard for webhook failures
 
 ### Performance Optimization
+
 - Monitor build times
 - Check function execution times
 - Optimize bundle size if needed
@@ -286,11 +318,13 @@ npm run db:migrate
 ## 🔄 Continuous Deployment
 
 Vercel automatically deploys on:
+
 - Push to main/master branch → Production
 - Push to other branches → Preview deployment
 - Pull requests → Preview deployment with unique URL
 
 To disable auto-deployment:
+
 - Project Settings → Git → Configure Git Integration
 
 ---
@@ -298,6 +332,7 @@ To disable auto-deployment:
 ## 🆘 Troubleshooting
 
 ### Build Errors
+
 ```bash
 # Check build logs in Vercel Dashboard
 # Common issues:
@@ -307,6 +342,7 @@ To disable auto-deployment:
 ```
 
 ### Runtime Errors
+
 ```bash
 # Check Function Logs in Vercel Dashboard
 # Check browser console for client-side errors
@@ -314,6 +350,7 @@ To disable auto-deployment:
 ```
 
 ### Database Issues
+
 ```bash
 # Verify DATABASE_URL is correct
 # Check Supabase connection pooling settings
@@ -325,6 +362,7 @@ To disable auto-deployment:
 ## ✅ Success Criteria
 
 Your deployment is successful when:
+
 - ✅ Application loads without errors
 - ✅ Users can sign up and log in
 - ✅ Database operations work correctly
@@ -358,4 +396,3 @@ Your deployment is successful when:
 ---
 
 **Congratulations! 🎉 Your Syntheverse PoC Contributor UI is now live on Vercel!**
-

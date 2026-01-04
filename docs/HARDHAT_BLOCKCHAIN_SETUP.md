@@ -11,24 +11,29 @@ This document describes how to configure the actual Hardhat blockchain integrati
 Add these environment variables to your Vercel project (or `.env.local` for local development):
 
 ### 1. HARDHAT_RPC_URL
+
 **Required**: Hardhat network RPC endpoint URL
 
 **Example values**:
+
 - Local Hardhat node: `http://localhost:8545`
 - Hardhat network (fork): `https://eth-mainnet.alchemyapi.io/v2/YOUR_API_KEY`
 - Custom RPC: `https://your-rpc-endpoint.com`
 
 **How to get**:
+
 - If running local Hardhat node: Use `http://localhost:8545` (default Hardhat port)
 - For deployed Hardhat node: Use your node's RPC endpoint URL
 - For testing: You can use a forked mainnet via Alchemy/Infura
 
 ### 2. POC_REGISTRY_ADDRESS
+
 **Required**: Deployed POCRegistry contract address
 
 **Example**: `0x5FbDB2315678afecb367f032d93F642f64180aa3`
 
 **How to get**:
+
 1. Deploy the POCRegistry contract using Hardhat:
    ```bash
    cd syntheverse-ui/src/blockchain/contracts
@@ -38,9 +43,11 @@ Add these environment variables to your Vercel project (or `.env.local` for loca
 3. Set this as `POC_REGISTRY_ADDRESS` in your environment variables
 
 ### 3. BLOCKCHAIN_PRIVATE_KEY
+
 **Required**: Private key of the wallet that owns the POCRegistry contract
 
-**Security Warning**: 
+**Security Warning**:
+
 - ⚠️ **NEVER commit this to git**
 - ⚠️ Store securely in Vercel environment variables
 - ⚠️ This wallet must be the owner of the POCRegistry contract (contract deployer)
@@ -49,6 +56,7 @@ Add these environment variables to your Vercel project (or `.env.local` for loca
 **Example**: `0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80` (Hardhat default account #0)
 
 **How to get**:
+
 - For local testing: Use Hardhat's default accounts (in `hardhat.config.js` or `hardhat.config.ts`)
 - For production: Generate a secure wallet and use its private key
 - The wallet must be funded with ETH to pay for gas fees
@@ -78,6 +86,7 @@ This will deploy the contract and output the contract address.
 ### 3. Verify Configuration
 
 The integration will automatically:
+
 - ✅ Connect to Hardhat network
 - ✅ Create transactions to register PoCs
 - ✅ Wait for transaction confirmation
@@ -88,17 +97,20 @@ The integration will automatically:
 ### Local Testing
 
 1. Start local Hardhat node:
+
    ```bash
    cd syntheverse-ui/src/blockchain/contracts
    npx hardhat node
    ```
 
 2. Deploy contract to local node:
+
    ```bash
    npx hardhat deploy --network localhost
    ```
 
 3. Set environment variables in `.env.local`:
+
    ```env
    HARDHAT_RPC_URL=http://localhost:8545
    POC_REGISTRY_ADDRESS=0x5FbDB2315678afecb367f032d93F642f64180aa3
@@ -117,6 +129,7 @@ The integration will automatically:
 ## How It Works
 
 1. **PoC Registration Flow**:
+
    - User pays $500 fee via Stripe
    - Stripe webhook triggers `registerPoCOnBlockchain()`
    - Function connects to Hardhat network
@@ -125,6 +138,7 @@ The integration will automatically:
    - Returns transaction hash for database storage
 
 2. **Contract Parameters**:
+
    - `submissionHash`: bytes32 (converted from hex string)
    - `contributor`: address (derived from email hash - see note below)
    - `metal`: string (first metal from array: "gold", "silver", or "copper")
@@ -139,27 +153,33 @@ The integration will automatically:
 ## Troubleshooting
 
 ### Error: "Hard Hat RPC URL not configured"
+
 - Set `HARDHAT_RPC_URL` environment variable
 - Verify the URL is accessible from your deployment
 
 ### Error: "POC Registry contract address not configured"
+
 - Set `POC_REGISTRY_ADDRESS` environment variable
 - Verify the contract is deployed at this address
 
 ### Error: "Blockchain private key not configured"
+
 - Set `BLOCKCHAIN_PRIVATE_KEY` environment variable
 - Ensure the wallet is the contract owner
 
 ### Error: "Transaction reverted"
+
 - Check contract owner permissions
 - Verify contract is deployed correctly
 - Check gas limit (default: 500000)
 
 ### Error: "Insufficient funds"
+
 - Ensure wallet has ETH for gas fees
 - Check gas price on network
 
 ### Error: "Network error"
+
 - Verify RPC URL is correct and accessible
 - Check network connectivity
 - For local testing, ensure Hardhat node is running
@@ -167,12 +187,14 @@ The integration will automatically:
 ## Security Considerations
 
 1. **Private Key Security**:
+
    - Store `BLOCKCHAIN_PRIVATE_KEY` only in environment variables
    - Never commit to git
    - Use separate wallets for testnet/mainnet
    - Consider using a hardware wallet for production
 
 2. **Contract Ownership**:
+
    - The wallet used must be the contract owner
    - Consider multi-sig for production deployments
    - Document ownership transfers
@@ -189,4 +211,3 @@ The integration will automatically:
 3. **Gas Optimization**: Optimize contract and transaction gas usage
 4. **Event Indexing**: Index contract events for faster queries
 5. **Transaction Monitoring**: Add monitoring/alerting for failed transactions
-

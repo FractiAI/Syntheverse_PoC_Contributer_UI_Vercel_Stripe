@@ -3,9 +3,11 @@
 ## Google OAuth Setup
 
 ### Where: Google Cloud Console
+
 **URL:** https://console.cloud.google.com/
 
 ### Steps:
+
 1. Create/select project → 'Syntheverse PoC'
 2. Enable Google+ API
 3. Create OAuth 2.0 credentials
@@ -16,6 +18,7 @@
 6. Copy Client ID and Client Secret
 
 ### Supabase Config:
+
 - Go to Authentication → Providers → Google
 - Enable and paste credentials
 - Save
@@ -25,9 +28,11 @@
 ## GitHub OAuth Setup
 
 ### Where: GitHub Developer Settings
+
 **URL:** https://github.com/settings/developers
 
 ### Steps:
+
 1. Go to OAuth Apps → New OAuth App
 2. Fill details:
    - Name: 'Syntheverse PoC'
@@ -37,6 +42,7 @@
 4. Copy Client ID and generate Client Secret
 
 ### Supabase Config:
+
 - Go to Authentication → Providers → GitHub
 - Enable and paste credentials
 - Save
@@ -66,6 +72,7 @@ npm run dev
 ## Next Steps
 
 After OAuth setup:
+
 1. Test authentication locally
 2. Move to Stripe testing
 3. Deploy to Vercel

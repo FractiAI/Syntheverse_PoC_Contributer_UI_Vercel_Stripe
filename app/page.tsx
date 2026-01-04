@@ -1,7 +1,7 @@
-import FractiAILanding from '@/components/FractiAILanding'
-import './dashboard-cockpit.css'
+import FractiAILanding from '@/components/FractiAILanding';
+import './dashboard-cockpit.css';
 
-export const dynamic = 'force-dynamic'
+export const dynamic = 'force-dynamic';
 
 export default async function LandingPage() {
   return (
@@ -14,5 +14,5 @@ export default async function LandingPage() {
         secondaryLabel: 'Log in',
       }}
     />
-  )
+  );
 }

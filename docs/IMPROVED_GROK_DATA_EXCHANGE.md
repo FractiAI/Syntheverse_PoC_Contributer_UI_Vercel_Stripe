@@ -14,17 +14,18 @@
 
 Instead of a single regex match, use multiple parsing strategies:
 
-```typescript
+````typescript
 // Strategy 1: Direct JSON parse
 // Strategy 2: Extract from ```json ... ``` blocks
-// Strategy 3: Extract from ``` ... ``` blocks  
+// Strategy 3: Extract from ``` ... ``` blocks
 // Strategy 4: Find first JSON object
 // Strategy 5: Find JSON between markers
-```
+````
 
 ### 2. **Explicit JSON Schema in Prompt**
 
 Provide Grok with:
+
 - **Exact JSON schema** showing required structure
 - **Example response** showing correct format
 - **Explicit instructions** to return ONLY JSON (no markdown)
@@ -32,6 +33,7 @@ Provide Grok with:
 ### 3. **Response Validation**
 
 Validate responses before use:
+
 - Check required fields exist
 - Verify scores are numbers (not strings)
 - Ensure arrays are properly formatted
@@ -40,6 +42,7 @@ Validate responses before use:
 ### 4. **Robust Score Extraction**
 
 Extract scores from multiple formats:
+
 - Direct numbers: `"density": 2000`
 - Score objects: `"density": { "base_score": 2000, "final_score": 1800 }`
 - Nested structures: `"scoring": { "density": { "score": 2000 } }`
@@ -48,6 +51,7 @@ Extract scores from multiple formats:
 ### 5. **Retry Logic with Exponential Backoff**
 
 Retry failed requests:
+
 - Up to 3 attempts
 - Exponential backoff (1s, 2s, 3s delays)
 - Different parsing strategies on each retry
@@ -80,12 +84,12 @@ const systemPrompt = `You are an expert evaluator.
 **Rules:**
 - All scores must be NUMBERS (0-2500 for dimensions, 0-10000 for total)
 - Return ONLY the JSON object - no markdown code blocks
-- Verify JSON is valid before returning`
+- Verify JSON is valid before returning`;
 ```
 
 ### Multi-Strategy Parser
 
-```typescript
+````typescript
 function parseGrokResponse(responseText: string): any {
     // Try 5 different parsing strategies
     const strategies = [
@@ -99,7 +103,7 @@ function parseGrokResponse(responseText: string): any {
             return JSON.parse(responseText.substring(start, end + 1))
         }
     ]
-    
+
     for (const strategy of strategies) {
         try {
             return strategy()
@@ -109,32 +113,34 @@ function parseGrokResponse(responseText: string): any {
     }
     throw new Error('Failed to parse JSON')
 }
-```
+````
 
 ### Score Extraction with Fallbacks
 
 ```typescript
 function extractScore(value: any, maxValue: number = 2500): number {
-    // Direct number
-    if (typeof value === 'number') {
-        return Math.max(0, Math.min(maxValue, value))
-    }
-    
-    // Score object
-    if (typeof value === 'object' && value !== null) {
-        const score = value.final_score ?? value.score ?? value.base_score ?? value.value ?? 0
-        return typeof score === 'number' 
-            ? Math.max(0, Math.min(maxValue, score))
-            : (typeof score === 'string' ? parseFloat(score) || 0 : 0)
-    }
-    
-    // String number
-    if (typeof value === 'string') {
-        const parsed = parseFloat(value)
-        return isNaN(parsed) ? 0 : Math.max(0, Math.min(maxValue, parsed))
-    }
-    
-    return 0
+  // Direct number
+  if (typeof value === 'number') {
+    return Math.max(0, Math.min(maxValue, value));
+  }
+
+  // Score object
+  if (typeof value === 'object' && value !== null) {
+    const score = value.final_score ?? value.score ?? value.base_score ?? value.value ?? 0;
+    return typeof score === 'number'
+      ? Math.max(0, Math.min(maxValue, score))
+      : typeof score === 'string'
+        ? parseFloat(score) || 0
+        : 0;
+  }
+
+  // String number
+  if (typeof value === 'string') {
+    const parsed = parseFloat(value);
+    return isNaN(parsed) ? 0 : Math.max(0, Math.min(maxValue, parsed));
+  }
+
+  return 0;
 }
 ```
 
@@ -142,33 +148,33 @@ function extractScore(value: any, maxValue: number = 2500): number {
 
 ```typescript
 function validateEvaluation(evaluation: any): { valid: boolean; errors: string[] } {
-    const errors: string[] = []
-    
-    // Check required fields
-    const required = ['novelty', 'density', 'coherence', 'alignment', 'pod_score', 'metals']
-    for (const field of required) {
-        if (!(field in evaluation)) {
-            errors.push(`Missing: ${field}`)
-        }
+  const errors: string[] = [];
+
+  // Check required fields
+  const required = ['novelty', 'density', 'coherence', 'alignment', 'pod_score', 'metals'];
+  for (const field of required) {
+    if (!(field in evaluation)) {
+      errors.push(`Missing: ${field}`);
     }
-    
-    // Validate scores are numbers
-    const scores = ['novelty', 'density', 'coherence', 'alignment', 'pod_score']
-    for (const field of scores) {
-        const value = evaluation[field]
-        if (value !== undefined) {
-            if (typeof value === 'object') {
-                const score = value.base_score ?? value.final_score ?? value.score
-                if (typeof score !== 'number' || isNaN(score)) {
-                    errors.push(`${field} is not a valid number`)
-                }
-            } else if (typeof value !== 'number' || isNaN(value)) {
-                errors.push(`${field} is not a valid number`)
-            }
+  }
+
+  // Validate scores are numbers
+  const scores = ['novelty', 'density', 'coherence', 'alignment', 'pod_score'];
+  for (const field of scores) {
+    const value = evaluation[field];
+    if (value !== undefined) {
+      if (typeof value === 'object') {
+        const score = value.base_score ?? value.final_score ?? value.score;
+        if (typeof score !== 'number' || isNaN(score)) {
+          errors.push(`${field} is not a valid number`);
         }
+      } else if (typeof value !== 'number' || isNaN(value)) {
+        errors.push(`${field} is not a valid number`);
+      }
     }
-    
-    return { valid: errors.length === 0, errors }
+  }
+
+  return { valid: errors.length === 0, errors };
 }
 ```
 
@@ -193,6 +199,7 @@ Replace calls to `evaluateWithGrok` with `evaluateWithGrokImproved` from `utils/
 ## Testing
 
 Test with various Grok response formats:
+
 - JSON wrapped in markdown
 - Plain JSON
 - JSON with extra text
@@ -206,4 +213,3 @@ Test with various Grok response formats:
 3. Implement retry logic
 4. Update error logging
 5. Test with real submissions
-

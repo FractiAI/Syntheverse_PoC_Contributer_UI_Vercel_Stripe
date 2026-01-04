@@ -9,6 +9,7 @@
 ## Changes Deployed
 
 ### New Features
+
 - ✅ Three.js-based 3D visualization
 - ✅ Visual encoding (size, color, shape, transparency)
 - ✅ Interactive PoC detail panel
@@ -17,6 +18,7 @@
 - ✅ PoC registration via Stripe ($500)
 
 ### New Files (24 files changed)
+
 - `components/SandboxMap3DUpgraded.tsx` - Main upgraded component
 - `components/3d/` - Three.js sub-components
 - `app/api/poc/[hash]/` - New API endpoints
@@ -25,6 +27,7 @@
 - Documentation files
 
 ### Modified Files
+
 - `README.md` - Updated with new features
 - `app/api/sandbox-map/route.ts` - Added registration/allocation status
 - `app/webhook/stripe/route.ts` - Added PoC registration handling
@@ -41,14 +44,17 @@
 ### Next Steps
 
 1. **Monitor Vercel Deployment**
+
    - Check: https://vercel.com/dashboard/fractiais-projects/syntheverse-poc/deployments
    - Latest deployment should show the new commit
 
 2. **Run Database Migration**
+
    - Execute: `supabase/migrations/add_registration_fields.sql`
    - In Supabase Dashboard → SQL Editor
 
 3. **Test New Features**
+
    - Visit: https://syntheverse-poc.vercel.app
    - Test 3D map visualization
    - Test token allocation
@@ -79,4 +85,3 @@ All existing environment variables should be sufficient. No new variables requir
 ---
 
 **Status**: ✅ Code committed and pushed. Vercel should auto-deploy.
-

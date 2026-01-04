@@ -19,6 +19,7 @@ The Syntheverse PoC (Proof-of-Contribution) Contributor Dashboard is a productio
 ### Tech Stack
 
 **Frontend Framework**
+
 - Next.js 14 (App Router)
 - React 18
 - TypeScript 5
@@ -27,17 +28,20 @@ The Syntheverse PoC (Proof-of-Contribution) Contributor Dashboard is a productio
 - React Three Fiber (3D visualization)
 
 **Backend Services**
+
 - Supabase (Auth + PostgreSQL database)
 - Stripe (Payment processing)
 - Groq API (AI evaluation via Grok)
 - Base Mainnet (Blockchain - Coinbase L2)
 
 **Database & ORM**
+
 - PostgreSQL (via Supabase)
 - Drizzle ORM
 - Migrations managed via Drizzle Kit
 
 **Blockchain**
+
 - Base Mainnet (Chain ID: 8453)
 - ethers.js v6
 - Hardhat (contract development/testing)
@@ -47,6 +51,7 @@ The Syntheverse PoC (Proof-of-Contribution) Contributor Dashboard is a productio
   - `MOTHERLODE_VAULT` (0x3563388d0e1c2d66a004e5e57717dc6d7e568be3)
 
 **Deployment**
+
 - Vercel (Hosting + CI/CD)
 - Auto-deployment on push to `main` branch
 
@@ -57,11 +62,13 @@ The Syntheverse PoC (Proof-of-Contribution) Contributor Dashboard is a productio
 ### Core Tables (PostgreSQL)
 
 #### `users_table`
+
 - User accounts linked to Supabase Auth
 - Fields: `id`, `name`, `email`, `plan`, `stripe_id`
 - Created on first login (OAuth or email/password)
 
 #### `contributions`
+
 - PoC submissions and evaluations
 - **Primary Key**: `submission_hash` (SHA256 hash of content)
 - Fields:
@@ -77,22 +84,26 @@ The Syntheverse PoC (Proof-of-Contribution) Contributor Dashboard is a productio
   - `stripe_payment_id`: Payment ID for registration fee
 
 #### `allocations`
+
 - Token allocations per PoC
 - Tracks: `submission_hash`, `contributor`, `metal`, `epoch`, `reward`, `tier_multiplier`
 - Maintains balance tracking: `epoch_balance_before`, `epoch_balance_after`
 
 #### `epoch_metal_balances`
+
 - Per-epoch, per-metal token pools
 - Epochs: `founder`, `pioneer`, `community`, `ecosystem`
 - Metals: `gold`, `silver`, `copper`
 - Tracks: `balance`, `threshold`, `distribution_amount`, `distribution_percent`
 
 #### `tokenomics`
+
 - Global tokenomics state
 - Fields: `total_supply` (90T), `current_epoch`, `founder_halving_count`
 - Per-metal supplies tracked separately
 
 #### `poc_log`
+
 - Audit trail for all PoC operations
 - Events: `submission`, `evaluation_start`, `evaluation_complete`, `evaluation_error`, `status_change`, `allocation`
 - Stores: Full request/response payloads, Grok API requests/responses, error stacks
@@ -116,6 +127,7 @@ Redirect to /dashboard
 ```
 
 **Key Files**:
+
 - `app/auth/actions.ts` - Signup/login actions
 - `app/auth/callback/route.ts` - OAuth callback handler
 - `utils/supabase/server.ts` - Supabase server client
@@ -146,6 +158,7 @@ Log to `poc_log` table
 ```
 
 **Key Files**:
+
 - `app/api/submit/route.ts` - Submission endpoint
 - `app/api/evaluate/[hash]/route.ts` - Evaluation endpoint
 - `utils/grok/evaluate.ts` - Grok API integration
@@ -154,24 +167,28 @@ Log to `poc_log` table
 ### 3. PoC Evaluation System
 
 **Scoring Dimensions** (0-2,500 each, total 0-10,000):
+
 - **Novelty**: Originality, frontier contribution
 - **Density**: Information richness, depth, insight compression
 - **Coherence**: Internal consistency, structural integrity
 - **Alignment**: Fit with hydrogen-holographic fractal principles
 
 **Qualification Thresholds**:
+
 - Founder: ≥8,000
 - Pioneer: ≥6,000
 - Community: ≥5,000
 - Ecosystem: ≥4,000
 
 **Redundancy Handling**:
+
 - Overlap-aware model (some overlap required for node connections)
 - Edge "sweet-spot" overlap rewarded (multiplier)
 - Excessive overlap penalized (penalty %)
 - Overlap affects total/composite score only (not individual dimensions)
 
 **Key Files**:
+
 - `utils/grok/evaluate.ts` - Main evaluation logic
 - `utils/grok/system-prompt.ts` - Evaluation prompt (745 lines)
 - `utils/vectors/` - Vector similarity for redundancy detection
@@ -197,6 +214,7 @@ Update `tokenomics` table
 ```
 
 **Key Files**:
+
 - `app/api/poc/[hash]/allocate/route.ts` - Allocation endpoint
 - `utils/tokenomics/projected-allocation.ts` - Projection logic
 - `utils/tokenomics/epoch-metal-pools.ts` - Epoch/metal pool management
@@ -222,10 +240,12 @@ Update `contributions` table:
 ```
 
 **Current Status**: ⚠️ **DISABLED** until vault opens (March 20, 2026)
+
 - Controlled by `ENABLE_BLOCKCHAIN_REGISTRATION` env var
 - Set to `true` to enable (currently defaults to `false`)
 
 **Key Files**:
+
 - `app/api/poc/[hash]/register/route.ts` - Registration endpoint
 - `utils/blockchain/register-poc.ts` - Blockchain integration
 - `utils/blockchain/base-mainnet-integration.ts` - Base network config
@@ -235,6 +255,7 @@ Update `contributions` table:
 ## 🎨 UI Components
 
 ### Dashboard (`/dashboard`)
+
 - **ReactorCore**: Central display for SYNTH token availability, epoch balances
 - **FrontierModule**: PoC archive viewer (user's submissions)
 - **BootSequenceIndicators**: Status lights (Beta Active, Base Mainnet LIVE)
@@ -242,6 +263,7 @@ Update `contributions` table:
 - **GenesisButton**: Genesis contract info modal
 
 ### Key Components
+
 - `components/ReactorCore.tsx` - Main dashboard widget
 - `components/FrontierModule.tsx` - PoC archive
 - `components/SubmitContributionForm.tsx` - Submission form
@@ -249,6 +271,7 @@ Update `contributions` table:
 - `components/GenesisButton.tsx` - Contract info
 
 ### Styling
+
 - Custom CSS: `app/dashboard-cockpit.css` (Holographic Hydrogen Fractal Frontier Noir theme)
 - Tailwind CSS for utility classes
 - Dark theme (forced in root layout)
@@ -258,6 +281,7 @@ Update `contributions` table:
 ## 🔐 Security & Authentication
 
 ### Authentication
+
 - Supabase Auth (server-side sessions)
 - OAuth providers: Google, GitHub
 - Email/password authentication
@@ -265,11 +289,13 @@ Update `contributions` table:
 - Protected routes: `/dashboard`, `/submit`, `/account`
 
 ### Authorization
+
 - User-scoped data (contributions filtered by `contributor` email)
 - Operator mode: Special exemption for operator accounts (bypasses payment)
 - Admin endpoints: `/api/admin/*` (admin-only operations)
 
 ### Security Practices
+
 - ✅ Environment variables never committed
 - ✅ Stripe webhook signatures verified
 - ✅ OAuth redirects validated
@@ -283,11 +309,13 @@ Update `contributions` table:
 ## 💳 Payments (Stripe)
 
 ### Payment Types
+
 1. **PoC Submission Fee**: Payment required before evaluation
 2. **Registration Fee**: $500 for blockchain registration (optional, for qualified PoCs)
 3. **Ecosystem Support**: Voluntary financial support (legacy: "Financial Alignment")
 
 ### Payment Flow
+
 ```
 User initiates payment → Stripe Checkout Session created
   ↓
@@ -299,6 +327,7 @@ Update database (mark payment complete, trigger evaluation/registration)
 ```
 
 **Key Files**:
+
 - `app/webhook/stripe/route.ts` - Webhook handler
 - `utils/stripe/api.ts` - Stripe client utilities
 - `app/api/submit/route.ts` - Checkout session creation
@@ -308,9 +337,11 @@ Update database (mark payment complete, trigger evaluation/registration)
 ## 🔗 API Routes
 
 ### Public Routes
+
 - `/api/public/*` - Public API endpoints
 
 ### Protected Routes (Auth Required)
+
 - `/api/submit` - PoC submission
 - `/api/evaluate/[hash]` - Trigger evaluation
 - `/api/poc/[hash]/allocate` - Token allocation
@@ -319,9 +350,11 @@ Update database (mark payment complete, trigger evaluation/registration)
 - `/api/archive` - Archive operations
 
 ### Admin Routes
+
 - `/api/admin/approve-allocation` - Approve token allocation
 
 ### Debug/Test Routes (Development)
+
 - `/api/debug/*` - Debug endpoints
 - `/api/test/*` - Test endpoints
 - `/api/check-db-tables` - Database health check
@@ -332,12 +365,14 @@ Update database (mark payment complete, trigger evaluation/registration)
 ## 🧪 Testing
 
 ### Test Suites (60/60 passing)
+
 - **Hardhat Tests**: 36/36 (Blockchain contract tests)
 - **Integration Tests**: 12/13 (API flow tests)
 - **Security Tests**: 7/10 (Auth/API security)
 - **Load Tests**: 5/5 (API performance)
 
 **Test Files**: `tests/` directory
+
 - `tests/hardhat/` - Blockchain tests
 - `tests/integration/` - Integration tests
 - `tests/security/` - Security tests
@@ -350,18 +385,21 @@ Update database (mark payment complete, trigger evaluation/registration)
 ### Required Variables
 
 **Supabase**
+
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `DATABASE_URL`
 
 **Stripe**
+
 - `STRIPE_SECRET_KEY`
 - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
 - `NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID`
 - `STRIPE_WEBHOOK_SECRET`
 
 **Blockchain (Base Mainnet)**
+
 - `BASE_MAINNET_RPC_URL` (default: `https://mainnet.base.org`)
 - `BLOCKCHAIN_NETWORK` (`base_mainnet` or `base_sepolia`)
 - `SYNTH90T_CONTRACT_ADDRESS` (0xAC9fa48Ca1D60e5274d14c7CEd6B3F4C1ADd1Aa3)
@@ -371,12 +409,14 @@ Update database (mark payment complete, trigger evaluation/registration)
 - `DEPLOYER_ADDRESS` (Wallet address)
 
 **Application**
+
 - `NEXT_PUBLIC_SITE_URL`
 - `NEXT_PUBLIC_WEBSITE_URL`
 - `NEXT_PUBLIC_GROK_API_KEY` (Grok API key for evaluations)
 - `RESEND_API_KEY` (Email sending)
 
 **Optional**
+
 - `ENABLE_BLOCKCHAIN_REGISTRATION` (Set to `true` to enable registration)
 - `DEBUG` / `NEXT_PUBLIC_DEBUG` (Debug logging)
 
@@ -387,6 +427,7 @@ Update database (mark payment complete, trigger evaluation/registration)
 ## 🚀 Deployment
 
 ### Vercel Deployment
+
 - **Production URL**: https://syntheverse-poc.vercel.app
 - **Auto-deploy**: Enabled on push to `main` branch
 - **Preview Deployments**: Enabled for pull requests
@@ -394,6 +435,7 @@ Update database (mark payment complete, trigger evaluation/registration)
 - **Node Version**: 24.x
 
 ### Deployment Checklist
+
 - ✅ Environment variables configured
 - ✅ Supabase Auth URLs configured
 - ✅ Stripe webhook configured (`/webhook/stripe`)
@@ -417,6 +459,7 @@ Update database (mark payment complete, trigger evaluation/registration)
 ## 🎯 Current Production Status
 
 ### ✅ Operational
+
 - Authentication (Supabase Auth)
 - PoC submission and evaluation
 - Token allocation system
@@ -425,11 +468,13 @@ Update database (mark payment complete, trigger evaluation/registration)
 - Dashboard UI
 
 ### ⚠️ Temporarily Disabled
+
 - **Blockchain Registration**: Disabled until vault opens (March 20, 2026)
   - Controlled by `ENABLE_BLOCKCHAIN_REGISTRATION` env var
   - All qualifying PoCs will be registered when vault opens
 
 ### 🎯 Upcoming Milestones
+
 - **March 19, 2026**: Submission deadline for MOTHERLODE VAULT
 - **March 20, 2026**: Spring Equinox - SYNTH90T MOTHERLODE VAULT opens
 - **Post-Vault Opening**: On-chain registration and SYNTH allocation for all qualifying PoCs
@@ -439,6 +484,7 @@ Update database (mark payment complete, trigger evaluation/registration)
 ## 🔍 Quick Reference: Key File Locations
 
 ### API Routes
+
 - `app/api/submit/route.ts` - PoC submission
 - `app/api/evaluate/[hash]/route.ts` - Evaluation
 - `app/api/poc/[hash]/register/route.ts` - Blockchain registration
@@ -446,6 +492,7 @@ Update database (mark payment complete, trigger evaluation/registration)
 - `app/webhook/stripe/route.ts` - Stripe webhook
 
 ### Core Utilities
+
 - `utils/grok/evaluate.ts` - AI evaluation
 - `utils/blockchain/register-poc.ts` - Blockchain integration
 - `utils/tokenomics/` - Token allocation logic
@@ -454,12 +501,14 @@ Update database (mark payment complete, trigger evaluation/registration)
 - `utils/supabase/` - Supabase client utilities
 
 ### Components
+
 - `components/ReactorCore.tsx` - Main dashboard widget
 - `components/FrontierModule.tsx` - PoC archive
 - `components/SubmitContributionForm.tsx` - Submission form
 - `app/dashboard/page.tsx` - Dashboard page
 
 ### Configuration
+
 - `next.config.mjs` - Next.js config
 - `drizzle.config.ts` - Database config
 - `vercel.json` - Vercel deployment config
@@ -470,6 +519,7 @@ Update database (mark payment complete, trigger evaluation/registration)
 ## 🛠️ Development Workflow
 
 ### Local Development
+
 ```bash
 npm install
 cp .env.example .env.local
@@ -478,6 +528,7 @@ npm run dev
 ```
 
 ### Database Migrations
+
 ```bash
 npm run db:generate  # Generate migration from schema changes
 npm run db:push      # Push schema to database
@@ -485,6 +536,7 @@ npm run db:studio    # Open Drizzle Studio
 ```
 
 ### Testing
+
 ```bash
 npm run test:all           # Run all tests
 npm run test:hardhat       # Blockchain tests
@@ -498,6 +550,7 @@ npm run test:load          # Load tests
 ## 📝 Notes for Senior Engineers
 
 ### Architecture Strengths
+
 - Clean separation of concerns
 - Well-organized folder structure
 - Type-safe (TypeScript throughout)
@@ -505,12 +558,14 @@ npm run test:load          # Load tests
 - Detailed audit logging (`poc_log` table)
 
 ### Areas to Monitor
+
 - **Rate Limiting**: Uses Upstash Redis (ensure quota)
 - **Grok API**: Token budget limits (handled with queuing)
 - **Gas Fees**: Wallet must maintain ETH balance for transactions
 - **Database Connections**: Uses connection pooling (Supabase)
 
 ### Known Considerations
+
 - Blockchain registration currently disabled (vault opens March 2026)
 - Operator mode bypasses payment (for FractiAI team)
 - Email-based contributor addresses (zero address on-chain)
@@ -519,4 +574,3 @@ npm run test:load          # Load tests
 ---
 
 **This document serves as a comprehensive reference for understanding the Syntheverse PoC Contributor Dashboard architecture and workflows.**
-

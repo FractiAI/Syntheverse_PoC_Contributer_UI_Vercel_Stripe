@@ -45,21 +45,27 @@ When testing PoC registration in Stripe test mode, use these test card numbers. 
 ### 💳 Other Test Cards
 
 **Visa (Success):**
+
 - `4242 4242 4242 4242`
 
 **Visa (Decline):**
+
 - `4000 0000 0000 0002`
 
 **Visa (Insufficient Funds):**
+
 - `4000 0000 0000 9995`
 
 **Visa (3D Secure):**
+
 - `4000 0025 0000 3155`
 
 **Mastercard (Success):**
+
 - `5555 5555 5555 4444`
 
 **American Express (Success):**
+
 - `3782 822463 10005`
 
 ---
@@ -67,19 +73,23 @@ When testing PoC registration in Stripe test mode, use these test card numbers. 
 ## Testing Registration Flow
 
 1. **Navigate to Dashboard**
+
    - Log in as PoC contributor
    - Find qualified PoC in "My Submissions"
 
 2. **Click "Anchor PoC on-chain - $500"**
+
    - Should redirect to Stripe checkout
 
 3. **Use Test Card**
+
    - Enter: `4242 4242 4242 4242`
    - Expiry: `12/34`
    - CVC: `123`
    - ZIP: `12345`
 
 4. **Complete Payment**
+
    - Click "Pay $500.00"
    - Should process successfully in test mode
 
@@ -116,13 +126,15 @@ When testing PoC registration in Stripe test mode, use these test card numbers. 
 ## Troubleshooting
 
 **Issue:** Card is declined even with test card
+
 - **Solution:** Verify Stripe is in test mode, not live mode
 
 **Issue:** Payment processes but registration doesn't update
+
 - **Solution:** Check Stripe webhook configuration in Vercel
 - Verify `STRIPE_WEBHOOK_SECRET` is set correctly
 
 **Issue:** 3D Secure authentication required
+
 - **Solution:** Use card `4000 0025 0000 3155` to test 3D Secure flow
 - Or use `4242 4242 4242 4242` which doesn't require 3D Secure
-

@@ -2,31 +2,37 @@
  * Email utility for sending welcome emails to new users
  */
 
-import { Resend } from 'resend'
-import { debug, debugError } from '@/utils/debug'
+import { Resend } from 'resend';
+import { debug, debugError } from '@/utils/debug';
 
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 const BASE_URL =
-    (process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_WEBSITE_URL)?.trim() ||
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '') ||
-    'http://localhost:3000'
+  (process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_WEBSITE_URL)?.trim() ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '') ||
+  'http://localhost:3000';
 
 export interface WelcomeEmailData {
-    userEmail: string
-    userName?: string
+  userEmail: string;
+  userName?: string;
 }
 
-export async function sendWelcomeEmail(data: WelcomeEmailData): Promise<{ success: boolean, error?: string }> {
-    if (!resend) {
-        debugError('SendWelcomeEmail', 'Resend API key not configured', new Error('RESEND_API_KEY not set'))
-        return { success: false, error: 'Email service not configured' }
-    }
-    
-    const userName = data.userName || 'Explorer'
-    
-    try {
-        const emailHtml = `
+export async function sendWelcomeEmail(
+  data: WelcomeEmailData
+): Promise<{ success: boolean; error?: string }> {
+  if (!resend) {
+    debugError(
+      'SendWelcomeEmail',
+      'Resend API key not configured',
+      new Error('RESEND_API_KEY not set')
+    );
+    return { success: false, error: 'Email service not configured' };
+  }
+
+  const userName = data.userName || 'Explorer';
+
+  try {
+    const emailHtml = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -229,27 +235,26 @@ export async function sendWelcomeEmail(data: WelcomeEmailData): Promise<{ succes
     </div>
 </body>
 </html>
-        `
-        
-        const result = await resend.emails.send({
-            from: 'Pru "El Taino" - Syntheverse <info@fractiai.com>', // Founder's welcome email
-            to: data.userEmail,
-            subject: 'Founder\'s Welcome to Syntheverse — Your Holographic Hydrogen Frontier',
-            html: emailHtml,
-        })
-        
-        debug('SendWelcomeEmail', 'Welcome email sent', {
-            userEmail: data.userEmail,
-            email_id: result.data?.id
-        })
-        
-        return { success: true }
-    } catch (error) {
-        debugError('SendWelcomeEmail', 'Failed to send welcome email', error)
-        return { 
-            success: false, 
-            error: error instanceof Error ? error.message : String(error) 
-        }
-    }
-}
+        `;
 
+    const result = await resend.emails.send({
+      from: 'Pru "El Taino" - Syntheverse <info@fractiai.com>', // Founder's welcome email
+      to: data.userEmail,
+      subject: "Founder's Welcome to Syntheverse — Your Holographic Hydrogen Frontier",
+      html: emailHtml,
+    });
+
+    debug('SendWelcomeEmail', 'Welcome email sent', {
+      userEmail: data.userEmail,
+      email_id: result.data?.id,
+    });
+
+    return { success: true };
+  } catch (error) {
+    debugError('SendWelcomeEmail', 'Failed to send welcome email', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}

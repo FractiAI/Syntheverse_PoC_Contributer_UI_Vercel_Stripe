@@ -16,37 +16,39 @@ console.log('📋 Environment Check:');
 console.log('---------------------');
 
 const requiredEnvVars = [
-    'NEXT_PUBLIC_SUPABASE_URL',
-    'NEXT_PUBLIC_SUPABASE_ANON_KEY',
-    'SUPABASE_SERVICE_ROLE_KEY',
-    'NEXT_PUBLIC_SITE_URL'
+  'NEXT_PUBLIC_SUPABASE_URL',
+  'NEXT_PUBLIC_SUPABASE_ANON_KEY',
+  'SUPABASE_SERVICE_ROLE_KEY',
+  'NEXT_PUBLIC_SITE_URL',
 ];
 
 const envPath = '.env.local';
 let envExists = false;
 
 try {
-    if (fs.existsSync(envPath)) {
-        envExists = true;
-        console.log('✅ .env.local file exists');
+  if (fs.existsSync(envPath)) {
+    envExists = true;
+    console.log('✅ .env.local file exists');
 
-        const envContent = fs.readFileSync(envPath, 'utf8');
-        const envLines = envContent.split('\n');
+    const envContent = fs.readFileSync(envPath, 'utf8');
+    const envLines = envContent.split('\n');
 
-        requiredEnvVars.forEach(varName => {
-            const hasVar = envLines.some(line => line.startsWith(`${varName}=`) && line.length > varName.length + 1);
-            if (hasVar) {
-                console.log(`✅ ${varName} configured`);
-            } else {
-                console.log(`❌ ${varName} missing or empty`);
-            }
-        });
-    } else {
-        console.log('❌ .env.local file missing');
-        console.log('   Run: cp .env.example .env.local');
-    }
+    requiredEnvVars.forEach((varName) => {
+      const hasVar = envLines.some(
+        (line) => line.startsWith(`${varName}=`) && line.length > varName.length + 1
+      );
+      if (hasVar) {
+        console.log(`✅ ${varName} configured`);
+      } else {
+        console.log(`❌ ${varName} missing or empty`);
+      }
+    });
+  } else {
+    console.log('❌ .env.local file missing');
+    console.log('   Run: cp .env.example .env.local');
+  }
 } catch (error) {
-    console.log('❌ Error reading .env.local:', error.message);
+  console.log('❌ Error reading .env.local:', error.message);
 }
 
 console.log('\n🗂️  Database Check:');
@@ -54,24 +56,24 @@ console.log('------------------');
 
 // Check if database schema exists
 if (fs.existsSync('utils/db/schema.ts')) {
-    console.log('✅ Database schema exists');
+  console.log('✅ Database schema exists');
 } else {
-    console.log('❌ Database schema missing');
+  console.log('❌ Database schema missing');
 }
 
 // Check if auth actions exist
 const authFiles = [
-    'app/auth/actions.ts',
-    'app/auth/callback/route.ts',
-    'components/ProviderSigninBlock.tsx'
+  'app/auth/actions.ts',
+  'app/auth/callback/route.ts',
+  'components/ProviderSigninBlock.tsx',
 ];
 
-authFiles.forEach(file => {
-    if (fs.existsSync(file)) {
-        console.log(`✅ ${file} exists`);
-    } else {
-        console.log(`❌ ${file} missing`);
-    }
+authFiles.forEach((file) => {
+  if (fs.existsSync(file)) {
+    console.log(`✅ ${file} exists`);
+  } else {
+    console.log(`❌ ${file} missing`);
+  }
 });
 
 console.log('\n🧪 Manual Testing Steps:');
@@ -134,8 +136,7 @@ console.log('');
 console.log('✅ Ready to test authentication! Run "npm run dev" and start testing.');
 
 if (!envExists) {
-    console.log('\n⚠️  WARNING: Set up .env.local first!');
-    console.log('   cp .env.example .env.local');
-    console.log('   # Then edit with your Supabase credentials');
+  console.log('\n⚠️  WARNING: Set up .env.local first!');
+  console.log('   cp .env.example .env.local');
+  console.log('   # Then edit with your Supabase credentials');
 }
-

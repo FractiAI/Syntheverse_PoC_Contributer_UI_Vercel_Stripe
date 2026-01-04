@@ -3,6 +3,7 @@
 Quick checklist to track your deployment progress.
 
 ## Prerequisites
+
 - [x] Vercel account created
 - [ ] Git repository ready (GitHub/GitLab/Bitbucket)
 - [ ] Supabase project created
@@ -12,6 +13,7 @@ Quick checklist to track your deployment progress.
 ---
 
 ## Step 1: Connect Repository
+
 - [ ] Go to https://vercel.com/dashboard
 - [ ] Click "New Project"
 - [ ] Import Git repository
@@ -27,6 +29,7 @@ Quick checklist to track your deployment progress.
 Add these in: **Project Settings → Environment Variables**
 
 ### Supabase (Required)
+
 - [ ] `NEXT_PUBLIC_SUPABASE_URL` = `https://_______.supabase.co`
 - [ ] `NEXT_PUBLIC_SUPABASE_ANON_KEY` = `eyJ...`
 - [ ] `SUPABASE_SERVICE_ROLE_KEY` = `eyJ...`
@@ -35,10 +38,12 @@ Add these in: **Project Settings → Environment Variables**
 **Where to find**: Supabase Dashboard → Settings → API
 
 ### Site URLs (Required)
+
 - [ ] `NEXT_PUBLIC_SITE_URL` = `https://your-app.vercel.app` (use your actual Vercel URL)
 - [ ] `NEXT_PUBLIC_WEBSITE_URL` = `https://your-app.vercel.app` (same as above)
 
 ### Stripe (Required for billing)
+
 - [ ] `STRIPE_SECRET_KEY` = `sk_test_...`
 - [ ] `STRIPE_WEBHOOK_SECRET` = `whsec_...` (get after Step 4)
 - [ ] `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` = `pk_test_...`
@@ -47,6 +52,7 @@ Add these in: **Project Settings → Environment Variables**
 **Where to find**: Stripe Dashboard → Developers → API keys
 
 ### OAuth (Optional - only if using)
+
 - [ ] `GOOGLE_CLIENT_ID` = `...`
 - [ ] `GOOGLE_CLIENT_SECRET` = `...`
 - [ ] `GITHUB_CLIENT_ID` = `...`
@@ -59,10 +65,12 @@ Add these in: **Project Settings → Environment Variables**
 ## Step 3: Update Supabase
 
 ### Site URL
+
 - [ ] Supabase Dashboard → Authentication → URL Configuration
 - [ ] Change Site URL to: `https://your-app.vercel.app`
 
 ### Redirect URLs (if using OAuth)
+
 - [ ] Add: `https://your-app.vercel.app/auth/callback`
 - [ ] Add: `https://your-app.vercel.app/**`
 
@@ -90,10 +98,12 @@ Add these in: **Project Settings → Environment Variables**
 Choose one method:
 
 **Option A: Automatic (recommended)**
+
 - [ ] Verify `package.json` has: `"build": "drizzle-kit migrate && next build"`
 - [ ] Migrations run automatically on build
 
 **Option B: Manual**
+
 - [ ] Set `DATABASE_URL` locally to production Supabase URL
 - [ ] Run: `npm run db:migrate`
 - [ ] Verify migrations completed
@@ -126,11 +136,13 @@ Choose one method:
 ## Step 8: OAuth Provider Updates (if using)
 
 ### Google OAuth
+
 - [ ] Google Cloud Console → APIs & Services → Credentials
 - [ ] Edit OAuth 2.0 Client
 - [ ] Add redirect URI: `https://[PROJECT-ID].supabase.co/auth/v1/callback`
 
 ### GitHub OAuth
+
 - [ ] GitHub → Settings → Developer settings → OAuth Apps
 - [ ] Edit OAuth App
 - [ ] Update Authorization callback URL: `https://[PROJECT-ID].supabase.co/auth/v1/callback`
@@ -170,9 +182,10 @@ Your app is live at: `https://_____________________.vercel.app`
 
 **Vercel Dashboard**: https://vercel.com/dashboard  
 **Supabase Dashboard**: https://app.supabase.io/  
-**Stripe Dashboard**: https://dashboard.stripe.com/  
+**Stripe Dashboard**: https://dashboard.stripe.com/
 
 **Project Structure**:
+
 - Frontend: Next.js 14 (App Router)
 - Auth: Supabase Auth
 - Database: PostgreSQL (Supabase)
@@ -180,4 +193,3 @@ Your app is live at: `https://_____________________.vercel.app`
 - Deployment: Vercel
 
 **Support**: See `VERCEL_DEPLOYMENT_GUIDE.md` for detailed instructions
-

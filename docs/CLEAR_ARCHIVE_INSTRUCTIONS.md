@@ -10,15 +10,15 @@
 ```javascript
 fetch('/api/admin/clear-archive', {
   method: 'DELETE',
-  credentials: 'include'
+  credentials: 'include',
 })
-.then(res => res.json())
-.then(data => {
-  console.log('✅ Archive cleared:', data);
-  console.log('Deleted:', data.deleted);
-  console.log('Remaining:', data.remaining);
-})
-.catch(err => console.error('❌ Error:', err));
+  .then((res) => res.json())
+  .then((data) => {
+    console.log('✅ Archive cleared:', data);
+    console.log('Deleted:', data.deleted);
+    console.log('Remaining:', data.remaining);
+  })
+  .catch((err) => console.error('❌ Error:', err));
 ```
 
 ## Method 2: Script (Requires DATABASE_URL)
@@ -58,10 +58,9 @@ After clearing, check the archive:
 
 ```javascript
 fetch('/api/archive/contributions')
-.then(res => res.json())
-.then(data => {
-  console.log('Contributions count:', data.count);
-  console.log('Contributions:', data.contributions);
-});
+  .then((res) => res.json())
+  .then((data) => {
+    console.log('Contributions count:', data.count);
+    console.log('Contributions:', data.contributions);
+  });
 ```
-

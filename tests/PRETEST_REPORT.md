@@ -1,4 +1,5 @@
 # Pre-Test Report: Syntheverse PoC Contributor Dashboard
+
 ## Executive Summary & Testing Readiness Assessment
 
 **Report Date**: January 2025  
@@ -118,6 +119,7 @@ hardhat: {
 ```
 
 **Benefits**:
+
 - ✅ Base-compatible testing (forked Base Mainnet state)
 - ✅ Fast, deterministic testing
 - ✅ No real gas costs
@@ -130,11 +132,13 @@ hardhat: {
 ### Components (36 total)
 
 #### ✅ Tested (3)
+
 - `ReactorCore.tsx` - SYNTH token display
 - `FrontierModule.tsx` - PoC archive
 - `BootSequenceIndicators.tsx` - Boot status lights
 
 #### 📋 Pending (33)
+
 - Core Dashboard: `PoCDashboardStats.tsx`, `SandboxMap3D.tsx`, `CockpitHeader.tsx`
 - Forms: `SubmitContributionForm.tsx`, `LoginForm.tsx`, `SignupForm.tsx`
 - Navigation: `Navigation.tsx`, `Footer.tsx`, `OnboardingNavigator.tsx`
@@ -144,9 +148,11 @@ hardhat: {
 ### Pages (20 total)
 
 #### ✅ Tested (0)
+
 - All pages pending testing
 
 #### 📋 Pending (20)
+
 - Public: `app/page.tsx`, `app/fractiai/page.tsx`, `app/fractiai/hhf-ai/page.tsx`
 - Auth: `app/login/page.tsx`, `app/signup/page.tsx`, `app/forgot-password/page.tsx`
 - Protected: `app/dashboard/page.tsx`, `app/submit/page.tsx`, `app/account/page.tsx`
@@ -154,9 +160,11 @@ hardhat: {
 ### API Routes (15+ total)
 
 #### ✅ Tested (0)
+
 - All API routes pending testing
 
 #### 📋 Pending (15+)
+
 - PoC: `/api/evaluate`, `/api/submit`, `/api/archive`
 - Tokenomics: `/api/tokenomics/epoch-info`, `/api/tokenomics`
 - Blockchain: `/api/blockchain/register`, `/api/blockchain/status`
@@ -166,6 +174,7 @@ hardhat: {
 ### Utility Functions (33 total)
 
 #### ✅ Tested (12)
+
 - Blockchain: `base-mainnet-integration.ts`, `register-poc.ts`
 - Database: `db.ts`, `schema.ts`
 - Evaluation: `evaluate.ts`, `evaluate-improved.ts`, `system-prompt.ts`
@@ -175,6 +184,7 @@ hardhat: {
 - Supabase: `server.ts`, `client.ts`
 
 #### 📋 Pending (21)
+
 - Archive: `extract.ts`, `find-matches.ts`
 - Email: `send-welcome-email.ts`, `send-approval-request.ts`
 - Stripe: `api.ts`
@@ -189,28 +199,33 @@ hardhat: {
 **Location**: `tests/hardhat/`
 
 1. ✅ **Scoring Determinism** (`01-scoring-determinism.test.ts`)
+
    - Identical inputs → identical scores
    - Boundary conditions
    - Ordering stability
 
 2. ✅ **Tokenomics Validation** (`02-tokenomics-validation.test.ts`)
+
    - Initial supply (90T SYNTH)
    - Epoch balances
    - Allocation calculations
 
 3. ✅ **Lens Consistency** (`03-lens-consistency.test.ts`)
+
    - Score justifications
    - LLM metadata capture
    - Edge sweet-spot overlap
    - Redundancy application
 
 4. ✅ **Sandbox Vector Mapping** (`04-sandbox-vector-mapping.test.ts`)
+
    - Embedding generation
    - 3D coordinate mapping
    - Vector similarity
    - Redundancy detection
 
 5. ✅ **Calibration** (`05-calibration-peer-reviewed.test.ts`)
+
    - Peer-reviewed paper scoring
    - Similar quality consistency
    - Qualification recognition
@@ -225,11 +240,13 @@ hardhat: {
 **Location**: `tests/integration/`
 
 1. 📋 **PoC Submission Flow** (`01-poc-submission-flow.test.ts`)
+
    - Hash generation
    - Database storage
    - Validation
 
 2. 📋 **Evaluation Flow** (`02-evaluation-flow.test.ts`)
+
    - Grok API integration
    - Score calculation
    - Qualification logic
@@ -244,6 +261,7 @@ hardhat: {
 **Location**: `tests/security/`
 
 1. 📋 **Authentication Security** (`01-auth-security.test.ts`)
+
    - Password strength
    - SQL injection prevention
    - XSS prevention
@@ -288,11 +306,13 @@ hardhat: {
 ## 5. Test Execution Plan
 
 ### Phase 1: Core Functionality (Week 1)
+
 - ✅ Hardhat tests (6 suites) - **COMPLETE**
 - 📋 Integration tests (3 suites)
 - 📋 Security tests (2 suites)
 
 ### Phase 2: Components & Pages (Week 2-3)
+
 - 📋 Core dashboard components
 - 📋 Authentication components
 - 📋 Form components
@@ -300,6 +320,7 @@ hardhat: {
 - 📋 Protected pages
 
 ### Phase 3: API Routes (Week 3-4)
+
 - 📋 PoC APIs
 - 📋 Tokenomics APIs
 - 📋 Blockchain APIs
@@ -307,12 +328,14 @@ hardhat: {
 - 📋 User APIs
 
 ### Phase 4: Utilities & Edge Cases (Week 4-5)
+
 - 📋 Remaining utility functions
 - 📋 Edge case coverage
 - 📋 Performance optimization
 - 📋 Load testing
 
 ### Phase 5: Final Validation (Week 5)
+
 - 📋 End-to-end integration
 - 📋 Production readiness
 - 📋 Documentation updates
@@ -324,6 +347,7 @@ hardhat: {
 ### Prerequisites
 
 1. **Environment Variables** (Vercel):
+
    ```env
    BASE_MAINNET_RPC_URL=https://mainnet.base.org
    DATABASE_URL=postgresql://...
@@ -332,11 +356,13 @@ hardhat: {
    ```
 
 2. **Hardhat Node**:
+
    ```bash
    npx hardhat node --fork https://mainnet.base.org
    ```
 
 3. **Dependencies**:
+
    ```bash
    npm install
    ```
@@ -349,11 +375,13 @@ hardhat: {
 ### Test Execution
 
 **Run All Tests**:
+
 ```bash
 npm run test:all
 ```
 
 **Run Specific Suites**:
+
 ```bash
 npm run test:hardhat      # Hardhat/blockchain tests
 npm run test:integration  # Integration tests
@@ -362,6 +390,7 @@ npm run test:load         # Load tests
 ```
 
 **Run Individual Tests**:
+
 ```bash
 npx mocha --require tsx/cjs tests/hardhat/01-scoring-determinism.test.ts
 ```
@@ -401,11 +430,13 @@ Tests generate comprehensive reports:
 ## 8. Risk Assessment
 
 ### Low Risk ✅
+
 - Hardhat test infrastructure (established)
 - Test framework setup (complete)
 - Configuration management (centralized)
 
 ### Medium Risk ⚠️
+
 - Component test coverage (30% → 90%+)
 - API route testing (pending)
 - Integration test completeness
@@ -555,4 +586,3 @@ tests/
 ---
 
 **Status**: ✅ **READY TO PROCEED WITH TESTING**
-

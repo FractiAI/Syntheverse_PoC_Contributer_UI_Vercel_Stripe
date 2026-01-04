@@ -17,17 +17,19 @@ Deployment errors occurred when implementing the register button with Stripe and
 Added explicit dynamic rendering configuration to prevent static generation:
 
 **File: `app/api/poc/[hash]/register/route.ts`**
+
 ```typescript
 // Force dynamic rendering - this route must be server-side only
-export const dynamic = 'force-dynamic'
-export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 ```
 
 **File: `app/webhook/stripe/route.ts`**
+
 ```typescript
 // Force dynamic rendering - webhooks must be server-side only
-export const dynamic = 'force-dynamic'
-export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 ```
 
 ### 2. Enhanced Next.js Configuration
@@ -48,7 +50,7 @@ Improved `next.config.mjs` to better exclude Hardhat dependencies:
 ## Files Modified
 
 1. ✅ `app/api/poc/[hash]/register/route.ts` - Added dynamic/runtime exports
-2. ✅ `app/webhook/stripe/route.ts` - Added dynamic/runtime exports  
+2. ✅ `app/webhook/stripe/route.ts` - Added dynamic/runtime exports
 3. ✅ `next.config.mjs` - Enhanced webpack configuration with externals
 
 ## Testing Recommendations
@@ -76,4 +78,3 @@ After deployment, verify:
 - [ ] Verify API endpoints work in production
 - [ ] Test Stripe webhook integration
 - [ ] Verify blockchain registration flow
-

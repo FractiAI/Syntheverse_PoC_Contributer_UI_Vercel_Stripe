@@ -11,6 +11,7 @@ This document describes the validation of all physical constants and equations u
 ### Data Sources
 
 All constants are validated against:
+
 - **CODATA 2018**: Committee on Data for Science and Technology (NIST)
 - **NIST Physical Constants**: National Institute of Standards and Technology
 - **Public Online Access**: All sources accessible via web URLs
@@ -29,6 +30,7 @@ All constants are validated against:
 ### Fundamental Constants (CODATA 2018)
 
 #### 1. Planck Length (Lₚ)
+
 - **Symbol**: Lₚ
 - **Value**: 1.616255 × 10⁻³⁵ m
 - **Source**: CODATA 2018 (NIST)
@@ -36,6 +38,7 @@ All constants are validated against:
 - **Status**: ✅ Validated
 
 #### 2. Proton Mass (mₚ)
+
 - **Symbol**: mₚ
 - **Value**: 1.67262192369 × 10⁻²⁷ kg
 - **Source**: CODATA 2018 (NIST)
@@ -43,6 +46,7 @@ All constants are validated against:
 - **Status**: ✅ Validated
 
 #### 3. Fine-Structure Constant (α)
+
 - **Symbol**: α
 - **Value**: 7.2973525693 × 10⁻³ (dimensionless)
 - **Source**: CODATA 2018 (NIST)
@@ -50,6 +54,7 @@ All constants are validated against:
 - **Status**: ✅ Validated
 
 #### 4. Speed of Light (c)
+
 - **Symbol**: c
 - **Value**: 299,792,458 m/s (exact, by definition)
 - **Source**: CODATA 2018 (NIST)
@@ -57,6 +62,7 @@ All constants are validated against:
 - **Status**: ✅ Validated (exact value)
 
 #### 5. Planck Constant (h)
+
 - **Symbol**: h
 - **Value**: 6.62607015 × 10⁻³⁴ J·s (exact since 2019 SI redefinition)
 - **Source**: CODATA 2018 (NIST)
@@ -64,6 +70,7 @@ All constants are validated against:
 - **Status**: ✅ Validated (exact value)
 
 #### 6. Reduced Planck Constant (ħ)
+
 - **Symbol**: ħ
 - **Value**: 1.054571817 × 10⁻³⁴ J·s
 - **Formula**: ħ = h / (2π)
@@ -79,12 +86,14 @@ All constants are validated against:
 **Formula**: Rᴴ = h / (mₚ c α)
 
 **Calculation**:
+
 ```
 Rᴴ = (6.62607015 × 10⁻³⁴) / ((1.67262192369 × 10⁻²⁷) × (299792458) × (7.2973525693 × 10⁻³))
 Rᴴ ≈ 1.81 × 10⁻¹³ m
 ```
 
 **Validation**:
+
 - ✅ Formula verified
 - ✅ Calculation matches expected value (~1.81 × 10⁻¹³ m)
 - ✅ Precision maintained
@@ -98,12 +107,14 @@ Rᴴ ≈ 1.81 × 10⁻¹³ m
 **Formula**: Λᴴᴴ = Rᴴ / Lₚ
 
 **Calculation**:
+
 ```
 Λᴴᴴ = (1.81 × 10⁻¹³) / (1.616255 × 10⁻³⁵)
 Λᴴᴴ ≈ 1.12 × 10²²
 ```
 
 **Validation**:
+
 - ✅ Formula verified
 - ✅ Calculation matches expected value (~1.12 × 10²²)
 - ✅ System constant matches calculated value
@@ -118,6 +129,7 @@ Rᴴ ≈ 1.81 × 10⁻¹³ m
 **Formula**: scale_factor = log₁₀(Λᴴᴴ) / 10
 
 **Calculation**:
+
 ```
 scale_factor = log₁₀(1.12 × 10²²) / 10
 scale_factor = 22.049 / 10
@@ -125,6 +137,7 @@ scale_factor ≈ 2.05
 ```
 
 **Validation**:
+
 - ✅ Formula verified
 - ✅ Calculation matches expected value (~2.05)
 - ✅ Used correctly in 3D coordinate mapping
@@ -140,12 +153,14 @@ scale_factor ≈ 2.05
 **Equation**: Rᴴ = h / (mₚ c α)
 
 **Components**:
+
 - h: Planck constant
 - mₚ: Proton mass
 - c: Speed of light
 - α: Fine-structure constant
 
 **Validation**:
+
 - ✅ All components from CODATA 2018
 - ✅ Formula mathematically correct
 - ✅ Result matches expected value
@@ -160,10 +175,12 @@ scale_factor ≈ 2.05
 **Equation**: Λᴴᴴ = Rᴴ / Lₚ
 
 **Components**:
+
 - Rᴴ: Hydrogen holographic radius (derived)
 - Lₚ: Planck length (CODATA 2018)
 
 **Validation**:
+
 - ✅ Formula mathematically correct
 - ✅ Result matches expected value
 - ✅ Dimensionless (ratio of lengths)
@@ -178,9 +195,11 @@ scale_factor ≈ 2.05
 **Equation**: scale_factor = log₁₀(Λᴴᴴ) / 10
 
 **Components**:
+
 - Λᴴᴴ: HHF constant (derived)
 
 **Validation**:
+
 - ✅ Formula mathematically correct
 - ✅ Result matches expected value (~2.05)
 - ✅ Used correctly in coordinate mapping
@@ -230,6 +249,7 @@ scale_factor ≈ 2.05
 ## Validation Results
 
 ### Fundamental Constants
+
 - ✅ Planck length: Matches CODATA 2018
 - ✅ Proton mass: Matches CODATA 2018
 - ✅ Fine-structure constant: Matches CODATA 2018
@@ -237,11 +257,13 @@ scale_factor ≈ 2.05
 - ✅ Planck constant: Exact value (6.62607015 × 10⁻³⁴ J·s)
 
 ### Derived Constants
+
 - ✅ Hydrogen holographic radius: ~1.81 × 10⁻¹³ m
 - ✅ HHF constant: ~1.12 × 10²²
 - ✅ HHF scale factor: ~2.05
 
 ### Equations
+
 - ✅ Rᴴ = h / (mₚ c α): Validated
 - ✅ Λᴴᴴ = Rᴴ / Lₚ: Validated
 - ✅ scale_factor = log₁₀(Λᴴᴴ) / 10: Validated
@@ -283,7 +305,7 @@ npm run test:hardhat
 
 ### Official Sources
 
-- **CODATA 2018**: Mohr, P. J., Newell, D. B., & Taylor, B. N. (2018). CODATA recommended values of the fundamental physical constants: 2018. *Reviews of Modern Physics*, 93(2), 025010.
+- **CODATA 2018**: Mohr, P. J., Newell, D. B., & Taylor, B. N. (2018). CODATA recommended values of the fundamental physical constants: 2018. _Reviews of Modern Physics_, 93(2), 025010.
 - **NIST Constants**: https://physics.nist.gov/cuu/Constants/
 - **SI Redefinition 2019**: https://www.nist.gov/si-redefinition
 
@@ -298,4 +320,3 @@ npm run test:hardhat
 **Data Source**: CODATA 2018 (NIST)  
 **Test Coverage**: 11 comprehensive test cases  
 **Status**: ✅ All constants and equations validated against public data
-

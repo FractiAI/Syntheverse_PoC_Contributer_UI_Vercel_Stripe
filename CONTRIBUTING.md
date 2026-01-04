@@ -25,6 +25,3 @@ npm run dev
 ### Security
 
 Please do not open public issues for sensitive reports. See `SECURITY.md`.
-
-
-

@@ -25,10 +25,5 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "types/**/*.d.ts"],
-  "exclude": [
-    "scripts/**/*",
-    "node_modules",
-    "syntheverse-ui",
-    "tests/**/*"
-  ]
+  "exclude": ["scripts/**/*", "node_modules", "syntheverse-ui", "tests/**/*"]
 }

@@ -14,6 +14,7 @@ Upgrade the current basic 3D map visualization to a fully interactive, nested fr
 **Upgrade to**: Three.js for true 3D rendering
 
 **Dependencies to Add**:
+
 ```json
 {
   "three": "^0.160.0",
@@ -58,21 +59,25 @@ Layer 3+: Operational layers
 Each PoC node is a 3D object with:
 
 1. **Position (x, y, z)**:
+
    - Based on current vector_x, vector_y, vector_z coordinates
    - Adjusted to reflect fractal layer hierarchy
    - Clustering within appropriate layer
 
 2. **Size (Scale)**:
+
    - Proportional to `density` score
    - Formula: `scale = min(max(density / 2500, 0.3), 3.0)`
    - Range: 30% to 300% of base size
 
 3. **Color**:
+
    - Represents `novelty` score
    - Gradient: Low (blue) → Medium (green) → High (red/orange)
    - Formula: `hue = (novelty / 2500) * 360` (HSV color space)
 
 4. **Shape**:
+
    - **Gold**: Icosahedron (20-sided)
    - **Silver**: Octahedron (8-sided)
    - **Copper**: Tetrahedron (4-sided)
@@ -102,11 +107,13 @@ When a PoC node is clicked, open a detail panel showing:
 #### Panel Content
 
 **Header**:
+
 - PoC Title
 - Submission Hash (shortened)
 - Contributor email/ID
 
 **Scores Section**:
+
 - Novelty: `{novelty}/2500`
 - Density: `{density}/2500`
 - Coherence: `{coherence}/2500`
@@ -115,17 +122,20 @@ When a PoC node is clicked, open a detail panel showing:
 - Redundancy Penalty: `{redundancy}%`
 
 **Status Section**:
+
 - Epoch Qualification Status: "Qualified for {epoch}" or "Not qualified"
 - Registration Status: "Registered" / "Unregistered"
 - Allocation Status: "Allocated: {amount} SYNTH" / "Unallocated"
 
 **Metals Section**:
+
 - Badges for Gold, Silver, Copper
 - Metal justification text
 
 **Contributor-Specific Actions** (if current user is contributor):
 
 1. **Projected SYNTH Allocation**:
+
    - Display: "Projected: {amount} SYNTH"
    - Calculated dynamically based on:
      - Current pod_score
@@ -134,6 +144,7 @@ When a PoC node is clicked, open a detail panel showing:
      - Tier multipliers
 
 2. **Allocate SYNTH Button**:
+
    - Enabled only if:
      - PoC is qualified
      - PoC is not yet allocated
@@ -150,6 +161,7 @@ When a PoC node is clicked, open a detail panel showing:
    - After payment: Enable allocation button if not already allocated
 
 **Non-Contributor View**:
+
 - Read-only panel
 - All buttons hidden
 - Scores and status visible
@@ -159,14 +171,17 @@ When a PoC node is clicked, open a detail panel showing:
 ## API Endpoints Needed
 
 ### 1. Enhanced Sandbox Map Data
+
 **Endpoint**: `GET /api/sandbox-map`
 
 **Query Parameters**:
+
 - `layer` (optional): Filter by fractal layer
 - `contributor` (optional): Filter by contributor (for contributor view)
 - `include_projected_allocation` (optional): Include projected token amounts
 
 **Response**:
+
 ```typescript
 {
   nodes: PoCNode[],
@@ -185,9 +200,11 @@ When a PoC node is clicked, open a detail panel showing:
 ```
 
 ### 2. Projected Token Allocation
+
 **Endpoint**: `GET /api/poc/{submission_hash}/projected-allocation`
 
 **Response**:
+
 ```typescript
 {
   submission_hash: string,
@@ -205,11 +222,13 @@ When a PoC node is clicked, open a detail panel showing:
 ```
 
 ### 3. Allocate SYNTH Tokens
+
 **Endpoint**: `POST /api/poc/{submission_hash}/allocate`
 
 **Auth**: Required (contributor only)
 
 **Body**:
+
 ```typescript
 {
   epoch?: string, // Optional: specify epoch, defaults to current
@@ -218,6 +237,7 @@ When a PoC node is clicked, open a detail panel showing:
 ```
 
 **Response**:
+
 ```typescript
 {
   success: boolean,
@@ -229,11 +249,13 @@ When a PoC node is clicked, open a detail panel showing:
 ```
 
 ### 4. Register PoC (Stripe Checkout)
+
 **Endpoint**: `POST /api/poc/{submission_hash}/register`
 
 **Auth**: Required (contributor only)
 
 **Response**: Stripe checkout session
+
 ```typescript
 {
   checkout_url: string,
@@ -242,9 +264,11 @@ When a PoC node is clicked, open a detail panel showing:
 ```
 
 ### 5. Registration Status
+
 **Endpoint**: `GET /api/poc/{submission_hash}/registration-status`
 
 **Response**:
+
 ```typescript
 {
   submission_hash: string,
@@ -274,44 +298,44 @@ import { useState } from 'react'
 export function SandboxMap3D() {
   const [selectedNode, setSelectedNode] = useState<string | null>(null)
   const [currentLayer, setCurrentLayer] = useState(1) // Default to Layer 1 (Syntheverse)
-  
+
   return (
     <div className="relative w-full h-[800px]">
       <Canvas camera={{ position: [0, 0, 100], fov: 75 }}>
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} />
-        
+
         {/* Nested Fractal Layers */}
-        <FractalLayers 
+        <FractalLayers
           currentLayer={currentLayer}
           onLayerChange={setCurrentLayer}
         />
-        
+
         {/* PoC Nodes */}
-        <PoCNodes 
+        <PoCNodes
           onNodeClick={setSelectedNode}
           selectedNode={selectedNode}
           currentLayer={currentLayer}
         />
-        
+
         {/* Camera Controls */}
-        <OrbitControls 
+        <OrbitControls
           enableDamping
           dampingFactor={0.05}
           minDistance={50}
           maxDistance={500}
         />
       </Canvas>
-      
+
       {/* Layer Navigation */}
-      <LayerNavigator 
+      <LayerNavigator
         currentLayer={currentLayer}
         onLayerChange={setCurrentLayer}
       />
-      
+
       {/* PoC Detail Panel */}
       {selectedNode && (
-        <PoCDetailPanel 
+        <PoCDetailPanel
           submissionHash={selectedNode}
           onClose={() => setSelectedNode(null)}
         />
@@ -334,12 +358,14 @@ export function SandboxMap3D() {
 ## Implementation Phases
 
 ### Phase 1: Foundation (Week 1)
+
 - [ ] Install Three.js dependencies
 - [ ] Set up basic Three.js canvas
 - [ ] Create base component structure
 - [ ] Implement basic node rendering
 
 ### Phase 2: Visual Encoding (Week 1-2)
+
 - [ ] Implement size scaling (density)
 - [ ] Implement color mapping (novelty)
 - [ ] Implement shape selection (metals)
@@ -347,30 +373,35 @@ export function SandboxMap3D() {
 - [ ] Add node state styling (qualified, allocated, etc.)
 
 ### Phase 3: Fractal Layers (Week 2)
+
 - [ ] Design layer hierarchy structure
 - [ ] Implement nested Group objects
 - [ ] Add layer navigation/zooming
 - [ ] Position nodes within appropriate layers
 
 ### Phase 4: Interactivity (Week 2-3)
+
 - [ ] Implement node click detection
 - [ ] Create PoC detail panel component
 - [ ] Add hover effects and highlighting
 - [ ] Implement panel animations
 
 ### Phase 5: Token Allocation (Week 3)
+
 - [ ] Create projected allocation API endpoint
 - [ ] Calculate and display projected amounts
 - [ ] Implement Allocate SYNTH button
 - [ ] Add allocation API endpoint
 
 ### Phase 6: Registration (Week 3-4)
+
 - [ ] Create registration API endpoint
 - [ ] Integrate Stripe checkout
 - [ ] Implement Register PoC button
 - [ ] Handle registration webhook
 
 ### Phase 7: Polish & Testing (Week 4)
+
 - [ ] Add visual cues and badges
 - [ ] Implement contributor-specific views
 - [ ] Performance optimization
@@ -383,18 +414,21 @@ export function SandboxMap3D() {
 ### Database Schema Updates
 
 **contributions table** (already has):
+
 - `vector_x`, `vector_y`, `vector_z` ✅
 - `metadata` (scores) ✅
 - `metals` ✅
 - `status` ✅
 
 **New fields needed**:
+
 - `registered`: boolean (is PoC registered on blockchain)
 - `registration_date`: timestamp
 - `registration_tx_hash`: text (blockchain transaction)
 - `stripe_payment_id`: text (Stripe payment ID)
 
 **allocations table** (already exists):
+
 - Already tracks token allocations ✅
 
 ---
@@ -404,16 +438,19 @@ export function SandboxMap3D() {
 ### Color Scheme
 
 **Novelty Gradient** (HSL):
+
 - Low (0-833): `hsl(240, 100%, 50%)` (Blue)
 - Medium (834-1666): `hsl(120, 100%, 50%)` (Green)
 - High (1667-2500): `hsl(0, 100%, 50%)` (Red)
 
 **Metal Colors** (for badges/shapes):
+
 - Gold: `#FFD700`
 - Silver: `#C0C0C0`
 - Copper: `#CD7F32`
 
 **Status Colors**:
+
 - Qualified: Green glow
 - Non-qualified: Gray, dimmed
 - Allocated: Gold border
@@ -457,6 +494,7 @@ export function SandboxMap3D() {
 ## Files to Create/Modify
 
 ### New Files
+
 - `components/SandboxMap3DUpgraded.tsx` - Main upgraded component
 - `components/3d/FractalLayers.tsx` - Fractal layer rendering
 - `components/3d/PoCNodes.tsx` - PoC nodes container
@@ -469,6 +507,7 @@ export function SandboxMap3D() {
 - `app/api/poc/[hash]/registration-status/route.ts` - Registration status API
 
 ### Modified Files
+
 - `app/api/sandbox-map/route.ts` - Enhance with layer data, projected allocations
 - `utils/db/schema.ts` - Add registration fields to contributions table
 - `utils/tokenomics/calculate-allocation.ts` - Token allocation calculation logic
@@ -488,4 +527,3 @@ export function SandboxMap3D() {
 **Status**: Planning Complete - Ready for Implementation  
 **Estimated Timeline**: 4 weeks  
 **Priority**: High
-

@@ -1,6 +1,7 @@
 # Supabase Pooled Connection String
 
 ## Issue
+
 The direct connection hostname `db.jfbgdxeumzqzigptbmvp.supabase.co` no longer resolves (ENOTFOUND error).
 
 ## Solution: Use Pooled Connection
@@ -21,11 +22,13 @@ Supabase now uses **pooled connections** instead of direct connections. The host
 ### Step 2: Update DATABASE_URL in Vercel
 
 The pooled connection string format is:
+
 ```
 postgresql://postgres.[project-ref]:[password]@aws-0-[region].pooler.supabase.com:5432/postgres
 ```
 
 For your project, it should be:
+
 ```
 postgresql://postgres.jfbgdxeumzqzigptbmvp:5J4gmVYTLuWZeOBT@aws-0-[region].pooler.supabase.com:5432/postgres
 ```
@@ -33,8 +36,8 @@ postgresql://postgres.jfbgdxeumzqzigptbmvp:5J4gmVYTLuWZeOBT@aws-0-[region].poole
 **Note:** Replace `[region]` with your actual region (e.g., `us-west-1`, `us-east-1`, etc.) - this will be shown in the Supabase dashboard.
 
 ### Key Differences:
+
 - **Old (Direct):** `postgresql://postgres:password@db.[ref].supabase.co:5432/postgres`
 - **New (Pooled):** `postgresql://postgres.[ref]:password@aws-0-[region].pooler.supabase.com:5432/postgres`
 
 The username format changed from `postgres` to `postgres.[project-ref]`!
-

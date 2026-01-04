@@ -4,45 +4,46 @@
  * Holographic Hydrogen Fractal Frontier Noir styling
  */
 
-import DashboardHeaderProfileDropdown from './DashboardHeaderProfileDropdown'
-import { StatusIndicators } from './StatusIndicators'
+import DashboardHeaderProfileDropdown from './DashboardHeaderProfileDropdown';
+import { StatusIndicators } from './StatusIndicators';
 
 export default function CockpitHeader() {
-    return (
-        <header className="cockpit-panel border-b-0 border-t-0 border-l-0 border-r-0 rounded-none">
-            <div className="container mx-auto px-6 py-4">
-                <div className="flex items-center justify-between">
-                    {/* Syntheverse Insignia */}
-                    <div className="flex items-center gap-4">
-                        <div className="relative">
-                            {/* Symbol: Spiral / Origin / Hydrogen Lattice */}
-                            <div className="cockpit-symbol">🌀</div>
-                            <div className="absolute -top-1 -right-1 w-2 h-2 rounded-full animate-pulse" 
-                                 style={{ backgroundColor: '#ffb84d', boxShadow: '0 0 10px #ffb84d' }}></div>
-                        </div>
-                        <div>
-                            <div className="cockpit-title text-2xl">SYNTHEVERSE</div>
-                            <div className="cockpit-label mt-0.5">SYNTH 90T ERC-20 MOTHERLODE BLOCKMINE</div>
-                            <div className="mt-3 pt-3 border-t border-[var(--keyline-primary)]">
-                                <div className="cockpit-label text-xs mb-1">AWARENESS KEY</div>
-                                <div className="cockpit-text text-xs font-semibold" style={{ opacity: 0.95 }}>
-                                    AWARENESSVERSE v2.0 · Fractal Holographic Hydrogen Awareness · Outcast Hero Story
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Syntheverse Status & Profile */}
-                    <div className="flex items-center gap-6">
-                        {/* Status Indicators */}
-                        <div className="hidden md:flex items-center gap-3">
-                            <StatusIndicators />
-                        </div>
-                        <DashboardHeaderProfileDropdown />
-                    </div>
-                </div>
+  return (
+    <header className="cockpit-panel rounded-none border-b-0 border-l-0 border-r-0 border-t-0">
+      <div className="container mx-auto px-6 py-4">
+        <div className="flex items-center justify-between">
+          {/* Syntheverse Insignia */}
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              {/* Symbol: Spiral / Origin / Hydrogen Lattice */}
+              <div className="cockpit-symbol">🌀</div>
+              <div
+                className="absolute -right-1 -top-1 h-2 w-2 animate-pulse rounded-full"
+                style={{ backgroundColor: '#ffb84d', boxShadow: '0 0 10px #ffb84d' }}
+              ></div>
             </div>
-        </header>
-    )
-}
+            <div>
+              <div className="cockpit-title text-2xl">SYNTHEVERSE</div>
+              <div className="cockpit-label mt-0.5">SYNTH 90T ERC-20 MOTHERLODE BLOCKMINE</div>
+              <div className="mt-3 border-t border-[var(--keyline-primary)] pt-3">
+                <div className="cockpit-label mb-1 text-xs">AWARENESS KEY</div>
+                <div className="cockpit-text text-xs font-semibold" style={{ opacity: 0.95 }}>
+                  AWARENESSVERSE v2.0 · Fractal Holographic Hydrogen Awareness · Outcast Hero Story
+                </div>
+              </div>
+            </div>
+          </div>
 
+          {/* Syntheverse Status & Profile */}
+          <div className="flex items-center gap-6">
+            {/* Status Indicators */}
+            <div className="hidden items-center gap-3 md:flex">
+              <StatusIndicators />
+            </div>
+            <DashboardHeaderProfileDropdown />
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+}

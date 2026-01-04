@@ -21,6 +21,7 @@ All papers in the calibration dataset meet these criteria:
 ### Expected Score Ranges
 
 Each paper has defined expected score ranges based on:
+
 - **Novelty**: Originality and frontier contribution (0-2500)
 - **Density**: Information richness and depth (0-2500)
 - **Coherence**: Internal consistency and structure (0-2500)
@@ -173,23 +174,27 @@ To add new papers to the calibration dataset:
 ## Validation Process
 
 ### Step 1: Paper Selection
+
 - Verify peer-review status
 - Confirm online accessibility
 - Check relevance to HHF-AI validation
 
 ### Step 2: Expected Score Definition
+
 - Analyze paper quality and contribution
 - Define expected score ranges for each dimension
 - Set expected qualification status
 - Assign expected metals
 
 ### Step 3: Test Execution
+
 - Run evaluation on calibration papers
 - Compare actual scores to expected ranges
 - Validate justifications and metadata
 - Verify qualification and metal assignment
 
 ### Step 4: Calibration Adjustment
+
 - If scores deviate significantly, investigate:
   - System prompt clarity
   - Scoring rubric alignment
@@ -238,4 +243,3 @@ All calibration papers are accessible online:
 **Dataset Size**: 5 peer-reviewed papers  
 **Test Coverage**: 6 comprehensive test cases  
 **Status**: ✅ Active calibration dataset
-

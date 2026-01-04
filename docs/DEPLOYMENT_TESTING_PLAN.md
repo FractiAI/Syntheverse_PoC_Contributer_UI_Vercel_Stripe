@@ -8,6 +8,7 @@
 ## ✅ Completed Steps
 
 1. ✅ **Environment Variables Added** (via CLI)
+
    - NEXT_PUBLIC_SUPABASE_URL → Production, Preview, Development
    - NEXT_PUBLIC_SUPABASE_ANON_KEY → Production, Preview, Development
    - SUPABASE_SERVICE_ROLE_KEY → Production, Preview
@@ -30,6 +31,7 @@
 The current deployment is 21 hours old and was built **before** we added the environment variables. We need to trigger a new deployment so the new variables are available.
 
 **Option A: Redeploy via Vercel Dashboard** (Easiest)
+
 1. Go to: https://vercel.com/dashboard/fractiais-projects/syntheverse-poc/deployments
 2. Find the latest deployment (Ready status)
 3. Click the "⋯" (three dots) menu
@@ -37,11 +39,13 @@ The current deployment is 21 hours old and was built **before** we added the env
 5. Wait 1-2 minutes for build to complete
 
 **Option B: Redeploy via CLI**
+
 ```bash
 vercel --prod --token fzO8FQHd6KWOZPRH5uleceIi
 ```
 
 **Option C: Trigger via Git Push** (if repo is connected)
+
 - Push any commit to trigger automatic deployment
 
 **Expected Result**: New deployment builds successfully with all environment variables
@@ -53,12 +57,14 @@ vercel --prod --token fzO8FQHd6KWOZPRH5uleceIi
 **✅ CONFIRMED: DATABASE_URL is REQUIRED**
 
 Found usage in these files:
+
 - `app/auth/actions.ts` - Authentication actions
 - `app/webhook/stripe/route.ts` - Stripe webhook handler
 - `app/dashboard/layout.tsx` - Dashboard layout
 - `app/auth/callback/route.ts` - OAuth callback handler
 
 **Without DATABASE_URL, these features will fail:**
+
 - ❌ Authentication actions (signup, login)
 - ❌ Stripe webhook processing
 - ❌ Dashboard data loading
@@ -67,6 +73,7 @@ Found usage in these files:
 **How to add DATABASE_URL:**
 
 1. **Get connection string from Supabase Dashboard:**
+
    - Go to: https://app.supabase.io/project/jfbgdxeumzqzigptbmvp/settings/database
    - Scroll to **"Connection string"** section
    - Click on **"URI"** tab
@@ -79,6 +86,7 @@ Found usage in these files:
      - URL-encode any special characters in password
 
 2. **Add to Vercel via CLI:**
+
    ```bash
    # Replace YOUR_CONNECTION_STRING with actual connection string
    echo "YOUR_CONNECTION_STRING" | vercel env add DATABASE_URL production --sensitive --token fzO8FQHd6KWOZPRH5uleceIi
@@ -86,6 +94,7 @@ Found usage in these files:
    ```
 
 3. **Verify it was added:**
+
    ```bash
    vercel env ls production --token fzO8FQHd6KWOZPRH5uleceIi | grep DATABASE_URL
    ```
@@ -97,12 +106,14 @@ Found usage in these files:
 ### Step 3: Update Supabase Configuration 🔧
 
 **Update Site URL:**
+
 1. Go to: https://app.supabase.io/project/jfbgdxeumzqzigptbmvp
 2. Navigate to: **Authentication** → **URL Configuration**
 3. Update **Site URL** to: `https://syntheverse-poc.vercel.app`
 4. Click **Save**
 
 **Update Redirect URLs (for OAuth):**
+
 1. In same section, find **Redirect URLs**
 2. Add the following URLs (one per line):
    ```
@@ -112,6 +123,7 @@ Found usage in these files:
 3. Click **Save**
 
 **This enables:**
+
 - ✅ Authentication callbacks to work correctly
 - ✅ OAuth redirects to function
 - ✅ Session management to work
@@ -123,16 +135,19 @@ Found usage in these files:
 **After redeploy completes, test these endpoints:**
 
 1. **Homepage** (Should load)
+
    - Visit: https://syntheverse-poc.vercel.app
    - ✅ Should load without errors
    - ❌ Check browser console for errors
 
 2. **Login Page** (Should render)
+
    - Visit: https://syntheverse-poc.vercel.app/login
    - ✅ Should show login form
    - ✅ Should not show environment variable errors
 
 3. **Signup Page** (Should render)
+
    - Visit: https://syntheverse-poc.vercel.app/signup
    - ✅ Should show signup form
 
@@ -145,6 +160,7 @@ Found usage in these files:
 ### Step 5: Functional Testing (After Basic Tests Pass) ✅
 
 **Authentication Flow:**
+
 - [ ] Create a new account via signup
 - [ ] Verify email (if email verification enabled)
 - [ ] Login with credentials
@@ -152,12 +168,14 @@ Found usage in these files:
 - [ ] Access protected routes (dashboard, account)
 
 **Subscription Flow:**
+
 - [ ] Visit `/subscribe` page
 - [ ] Verify Stripe pricing table loads
 - [ ] Test checkout flow (test mode)
 - [ ] Verify redirect to success page
 
 **Dashboard:**
+
 - [ ] Access `/dashboard` after login
 - [ ] Verify data loads correctly
 - [ ] Check for any errors in console
@@ -169,6 +187,7 @@ Found usage in these files:
 **Only needed if you want webhook functionality:**
 
 1. **Create Webhook in Stripe:**
+
    - Go to: https://dashboard.stripe.com/test/webhooks
    - Click **"Add endpoint"**
    - Endpoint URL: `https://syntheverse-poc.vercel.app/webhook/stripe`
@@ -176,10 +195,12 @@ Found usage in these files:
    - Click **"Add endpoint"**
 
 2. **Get Webhook Signing Secret:**
+
    - After creating, click on the webhook endpoint
    - Copy the **"Signing secret"** (starts with `whsec_`)
 
 3. **Add to Vercel:**
+
    ```bash
    echo "whsec_YOUR_SECRET" | vercel env add STRIPE_WEBHOOK_SECRET production --sensitive --token fzO8FQHd6KWOZPRH5uleceIi
    echo "whsec_YOUR_SECRET" | vercel env add STRIPE_WEBHOOK_SECRET preview --sensitive --token fzO8FQHd6KWOZPRH5uleceIi
@@ -197,17 +218,20 @@ Found usage in these files:
 ### Step 7: Monitor & Verify 🎯
 
 **Check Deployment Logs:**
+
 - Go to: https://vercel.com/dashboard/fractiais-projects/syntheverse-poc/deployments
 - Click on latest deployment
 - Review **"Build Logs"** for any warnings or errors
 - Review **"Function Logs"** for runtime errors
 
 **Check Runtime Errors:**
+
 - Open browser console on your site
 - Look for any red errors
 - Check Network tab for failed API calls
 
 **Verify Environment Variables:**
+
 - Run: `vercel env ls --token fzO8FQHd6KWOZPRH5uleceIi`
 - Verify all expected variables are present
 
@@ -216,39 +240,38 @@ Found usage in these files:
 ## 🎯 Priority Order
 
 **High Priority (Do First):**
+
 1. ✅ Redeploy to pick up environment variables
 2. ✅ Update Supabase Site URL
 3. ✅ Basic deployment testing (homepage, login, signup)
 
-**Medium Priority (Do Next):**
-4. ⚠️ **Add DATABASE_URL** (REQUIRED - app won't work without it)
-5. ⚠️ Functional testing (authentication, subscriptions)
-6. ⚠️ Fix any errors found during testing
+**Medium Priority (Do Next):** 4. ⚠️ **Add DATABASE_URL** (REQUIRED - app won't work without it) 5. ⚠️ Functional testing (authentication, subscriptions) 6. ⚠️ Fix any errors found during testing
 
-**Low Priority (Can Do Later):**
-7. 🔔 Configure Stripe webhook
-8. 🔔 OAuth setup (if using)
-9. 🔔 Advanced testing
+**Low Priority (Can Do Later):** 7. 🔔 Configure Stripe webhook 8. 🔔 OAuth setup (if using) 9. 🔔 Advanced testing
 
 ---
 
 ## 🔗 Quick Links
 
 **Vercel:**
+
 - Dashboard: https://vercel.com/dashboard/fractiais-projects/syntheverse-poc
 - Deployments: https://vercel.com/dashboard/fractiais-projects/syntheverse-poc/deployments
 - Environment Variables: https://vercel.com/dashboard/fractiais-projects/syntheverse-poc/settings/environment-variables
 
 **Supabase:**
+
 - Dashboard: https://app.supabase.io/project/jfbgdxeumzqzigptbmvp
 - Auth Settings: https://app.supabase.io/project/jfbgdxeumzqzigptbmvp/auth/url-configuration
 - Database Settings: https://app.supabase.io/project/jfbgdxeumzqzigptbmvp/settings/database
 
 **Stripe:**
+
 - Dashboard: https://dashboard.stripe.com/
 - Webhooks: https://dashboard.stripe.com/test/webhooks
 
 **Your App:**
+
 - Production URL: https://syntheverse-poc.vercel.app
 
 ---
@@ -256,6 +279,7 @@ Found usage in these files:
 ## 📊 Success Criteria
 
 **Deployment is successful when:**
+
 - ✅ New deployment builds without errors
 - ✅ Homepage loads without errors
 - ✅ Login/signup pages render correctly
@@ -269,17 +293,20 @@ Found usage in these files:
 ## 🐛 Troubleshooting
 
 **If deployment fails:**
+
 1. Check build logs in Vercel Dashboard
 2. Verify all required environment variables are set
 3. Check for syntax errors in code
 
 **If app loads but shows errors:**
+
 1. Check browser console for errors
 2. Verify environment variables are set correctly
 3. Check Supabase Site URL matches Vercel URL
 4. Verify API keys are correct
 
 **If authentication doesn't work:**
+
 1. Verify Supabase Site URL is updated
 2. Check redirect URLs are configured
 3. Verify Supabase keys are correct
@@ -288,4 +315,3 @@ Found usage in these files:
 ---
 
 **Ready to proceed?** Start with **Step 1: Redeploy** to get the new environment variables active! 🚀
-

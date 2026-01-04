@@ -1,7 +1,9 @@
 # Fix Vercel Environment Variable with Newline Character
 
 ## Problem
+
 The logs show that `NEXT_PUBLIC_WEBSITE_URL` or `NEXT_PUBLIC_SITE_URL` contains a newline character:
+
 ```
 redirectTo: 'https://syntheverse-poc.vercel.app\n/auth/callback'
 fallbackUrl: 'https://syntheverse-poc.vercel.app\n'
@@ -18,9 +20,11 @@ fallbackUrl: 'https://syntheverse-poc.vercel.app\n'
 3. Click "Edit" or the value field
 
 4. **Remove any trailing spaces or newlines** - the value should be exactly:
+
    ```
    https://syntheverse-poc.vercel.app
    ```
+
    (No newline, no trailing space)
 
 5. Click "Save"
@@ -43,6 +47,7 @@ echo -n "https://syntheverse-poc.vercel.app" | vercel env add NEXT_PUBLIC_WEBSIT
 ### Option 3: Use NEXT_PUBLIC_SITE_URL Instead
 
 If `NEXT_PUBLIC_WEBSITE_URL` is problematic, you can:
+
 1. Delete `NEXT_PUBLIC_WEBSITE_URL`
 2. Set `NEXT_PUBLIC_SITE_URL` to: `https://syntheverse-poc.vercel.app` (no newline)
 3. The code will automatically use `NEXT_PUBLIC_SITE_URL` as fallback
@@ -50,6 +55,7 @@ If `NEXT_PUBLIC_WEBSITE_URL` is problematic, you can:
 ## Verification
 
 After fixing, check the logs again. The redirect URL should show:
+
 ```
 redirectTo: 'https://syntheverse-poc.vercel.app/auth/callback'
 fallbackUrl: 'https://syntheverse-poc.vercel.app'
@@ -60,4 +66,3 @@ fallbackUrl: 'https://syntheverse-poc.vercel.app'
 ## Note
 
 The code now includes `.trim()` to automatically remove whitespace, but it's better to fix the environment variable at the source to avoid any issues.
-

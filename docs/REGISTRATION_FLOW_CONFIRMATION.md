@@ -1,11 +1,13 @@
 # PoC Registration Flow - Complete Confirmation
 
 ## Overview
+
 This document confirms that the entire PoC registration flow is properly implemented, from Stripe payment processing through token allocation, blockchain registration, and dashboard status updates.
 
 ## ✅ Registration Flow Steps
 
 ### 1. Stripe Payment Processing
+
 **Location**: `app/webhook/stripe/route.ts` - `handleCheckoutSessionCompleted()`
 
 - ✅ Webhook receives `checkout.session.completed` event from Stripe
@@ -15,6 +17,7 @@ This document confirms that the entire PoC registration flow is properly impleme
 - ✅ Retrieves contribution data from database
 
 ### 2. Hard Hat Blockchain Registration
+
 **Location**: `app/webhook/stripe/route.ts` (lines 112-146) → `utils/blockchain/register-poc.ts`
 
 - ✅ Calls `registerPoCOnBlockchain()` function
@@ -27,6 +30,7 @@ This document confirms that the entire PoC registration flow is properly impleme
 **Note**: Currently uses mock transactions if `HARDHAT_RPC_URL` is not configured. The structure is in place for actual blockchain integration.
 
 ### 3. Database Registration Update
+
 **Location**: `app/webhook/stripe/route.ts` (lines 148-158)
 
 - ✅ Updates `contributionsTable` with:
@@ -37,6 +41,7 @@ This document confirms that the entire PoC registration flow is properly impleme
   - `updated_at = current timestamp`
 
 ### 4. SYNTH Token Allocation
+
 **Location**: `app/webhook/stripe/route.ts` (lines 160-305)
 
 - ✅ Checks if allocation already exists (prevents duplicates)
@@ -58,9 +63,11 @@ This document confirms that the entire PoC registration flow is properly impleme
   - Closes Founder epoch when 45T tokens allocated
 
 ### 5. Registration Details Response
+
 **Location**: `app/api/archive/contributions/route.ts` and `app/api/archive/contributions/[hash]/route.ts`
 
 **Archive API** returns:
+
 - ✅ `registered: boolean`
 - ✅ `registration_date: ISO string`
 - ✅ `registration_tx_hash: string | null`
@@ -68,19 +75,23 @@ This document confirms that the entire PoC registration flow is properly impleme
 - ✅ `allocated: boolean` (based on allocations table)
 
 **Detail API** returns:
+
 - ✅ All registration fields as above
 - ✅ Complete PoC metadata and scores
 
 ### 6. Dashboard Status Updates
+
 **Location**: `components/PoCArchive.tsx`
 
 **Status Badge** (`getStatusBadge()` function):
+
 - ✅ Shows "Allocated" (green) if `submission.allocated === true`
 - ✅ Shows "Registered" (blue) if `submission.registered === true`
 - ✅ Shows "Qualified" (purple) if `submission.qualified === true`
 - ✅ Priority order: Allocated > Registered > Qualified
 
 **Detail Dialog**:
+
 - ✅ Displays registration status badge
 - ✅ Shows "Blockchain Registration Certificate" section when registered:
   - Transaction Hash (clickable for blockchain explorer - can be enhanced)
@@ -91,6 +102,7 @@ This document confirms that the entire PoC registration flow is properly impleme
 - ✅ Shows "Tokens allocated" message when allocated
 
 **Auto-refresh**:
+
 - ✅ Detects `registration=success` in URL parameters after Stripe redirect
 - ✅ Automatically refreshes submissions list to show updated status
 - ✅ Uses `useEffect` hook to trigger `fetchSubmissions()` on URL param change
@@ -135,6 +147,7 @@ This document confirms that the entire PoC registration flow is properly impleme
 ## Database Schema Fields Used
 
 ### `contributionsTable`
+
 - `registered: boolean`
 - `registration_date: timestamp`
 - `registration_tx_hash: string | null`
@@ -144,6 +157,7 @@ This document confirms that the entire PoC registration flow is properly impleme
 - `metadata.pod_score: number`
 
 ### `allocationsTable`
+
 - `submission_hash: string`
 - `contributor: string`
 - `epoch: string`
@@ -155,10 +169,12 @@ This document confirms that the entire PoC registration flow is properly impleme
 - `epoch_balance_after: string`
 
 ### `epochBalancesTable`
+
 - `epoch: string` (founder/pioneer/community/ecosystem)
 - `balance: string` (available SYNTH tokens)
 
 ### `tokenomicsTable`
+
 - `total_distributed: string` (cumulative SYNTH tokens allocated)
 
 ## Token Allocation Formula
@@ -172,9 +188,10 @@ finalAllocation = min(amplifiedAllocation, available_epoch_balance)
 ```
 
 **Example**: 10,000 score PoC in Founder epoch with 45T available:
-- baseAllocation = (10000 / 10000) * 45T = 45T
+
+- baseAllocation = (10000 / 10000) \* 45T = 45T
 - If Gold+Silver+Copper: metal_multiplier = 1.5
-- amplifiedAllocation = 45T * 1.5 = 67.5T
+- amplifiedAllocation = 45T \* 1.5 = 67.5T
 - finalAllocation = min(67.5T, 45T) = 45T (capped at available balance)
 
 **Note**: The allocation uses `Math.floor()` to ensure integer token amounts.
@@ -182,6 +199,7 @@ finalAllocation = min(amplifiedAllocation, available_epoch_balance)
 ## Epoch Transition Logic
 
 When epoch balance is exhausted (≤ 1000 tokens remaining after allocation):
+
 - ✅ Calls `getOpenEpochInfo()` to check and update epoch states
 - ✅ Closes current epoch
 - ✅ Opens next epoch in sequence:
@@ -210,4 +228,3 @@ When epoch balance is exhausted (≤ 1000 tokens remaining after allocation):
 - [ ] Verify dashboard shows "Registered" status
 - [ ] Verify blockchain certificate displayed in detail dialog
 - [ ] Verify auto-refresh after Stripe redirect
-

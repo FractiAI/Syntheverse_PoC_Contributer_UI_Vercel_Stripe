@@ -1,6 +1,7 @@
 # GitHub OAuth 404 Error Fix
 
 ## Issue
+
 When clicking "Continue with GitHub", users are redirected to a GitHub 404 page instead of the OAuth authorization page.
 
 ## Root Causes
@@ -12,11 +13,13 @@ When clicking "Continue with GitHub", users are redirected to a GitHub 404 page 
 ## Fixes Applied
 
 ### Code Changes
+
 - Updated `/app/auth/github/route.ts` to use request origin instead of relying solely on environment variable
 - Added better error handling and logging
 - Same fix applied to Google OAuth for consistency
 
 ### How It Works Now
+
 1. Uses the request origin (automatically detects localhost or production domain)
 2. Falls back to environment variables if needed
 3. Logs redirect URLs for debugging
@@ -46,6 +49,7 @@ When clicking "Continue with GitHub", users are redirected to a GitHub 404 page 
    (Replace `jfbgdxeumzqzigptbmvp` with your actual Supabase project ID)
 
 **Why?** The OAuth flow works like this:
+
 1. User clicks "Continue with GitHub" → App redirects to Supabase
 2. Supabase redirects to GitHub login
 3. User authorizes → **GitHub redirects to Supabase** (not your app)
@@ -78,17 +82,20 @@ When clicking "Continue with GitHub", users are redirected to a GitHub 404 page 
 ## Common Issues
 
 ### Still Getting 404?
+
 - Check browser console for errors
 - Check Vercel function logs for OAuth errors
 - Verify GitHub OAuth app callback URL matches exactly
 - Ensure Supabase GitHub provider is enabled
 
 ### "Redirect URI mismatch" Error
+
 - The callback URL in GitHub OAuth app must match exactly what Supabase sends
 - Check Supabase redirect URL configuration
 - Update GitHub OAuth app callback URL to match
 
 ### OAuth Button Not Working
+
 - Check that Supabase GitHub provider is enabled
 - Verify Client ID and Secret are correct in Supabase
 - Check Vercel environment variables are set
@@ -96,14 +103,15 @@ When clicking "Continue with GitHub", users are redirected to a GitHub 404 page 
 ## Debugging
 
 Check Vercel function logs:
+
 1. Go to Vercel Dashboard → Functions → `/auth/github`
 2. Look for log messages showing redirect URLs
 3. Compare with GitHub OAuth app callback URL
 
 The logs will show:
+
 ```
 GitHub OAuth redirect: { origin: '...', callbackUrl: '...', redirectTo: '...' }
 ```
 
 Use this to verify the redirect URL matches your GitHub OAuth app configuration.
-

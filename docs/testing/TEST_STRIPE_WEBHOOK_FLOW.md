@@ -99,6 +99,7 @@ Run the SQL script `scripts/test_webhook_status.sql` in Supabase:
 ```
 
 **Expected Results:**
+
 - ✅ Contribution shows `registered = true`
 - ✅ `registration_date` is set
 - ✅ `stripe_payment_id` is not null
@@ -140,10 +141,12 @@ Run the SQL script `scripts/test_webhook_status.sql` in Supabase:
 ### Problem: Webhook Not Being Called
 
 **Symptoms:**
+
 - Stripe shows no events in recent events
 - Vercel function logs show no invocations
 
 **Solutions:**
+
 1. Verify webhook URL is correct in Stripe Dashboard
 2. Check that `STRIPE_WEBHOOK_SECRET` matches the signing secret in Stripe
 3. Verify webhook is enabled (not disabled) in Stripe
@@ -152,10 +155,12 @@ Run the SQL script `scripts/test_webhook_status.sql` in Supabase:
 ### Problem: Webhook Returns 400/500 Error
 
 **Symptoms:**
+
 - Stripe shows failed webhook deliveries
 - Vercel logs show error messages
 
 **Solutions:**
+
 1. Check Vercel function logs for specific error messages
 2. Verify `STRIPE_WEBHOOK_SECRET` is correct
 3. Check database connection (`DATABASE_URL` is valid)
@@ -164,10 +169,12 @@ Run the SQL script `scripts/test_webhook_status.sql` in Supabase:
 ### Problem: Database Not Updated
 
 **Symptoms:**
+
 - Webhook succeeds (200 OK) but database shows no changes
 - Registration status remains false
 
 **Solutions:**
+
 1. Run `scripts/test_webhook_status.sql` to check database state
 2. Check Vercel logs for database errors
 3. Verify `DATABASE_URL` is correct and database is accessible
@@ -176,10 +183,12 @@ Run the SQL script `scripts/test_webhook_status.sql` in Supabase:
 ### Problem: UI Not Updating
 
 **Symptoms:**
+
 - Database shows registered = true
 - But dashboard still shows "Qualified"
 
 **Solutions:**
+
 1. Hard refresh the browser (Cmd+Shift+R / Ctrl+Shift+R)
 2. Check browser console for errors
 3. Verify polling is working (check console logs for polling messages)
@@ -189,11 +198,13 @@ Run the SQL script `scripts/test_webhook_status.sql` in Supabase:
 ### Problem: Allocation Not Happening
 
 **Symptoms:**
+
 - Registration succeeds
 - But no allocation record created
 - Epoch balance not decreased
 
 **Solutions:**
+
 1. Check Vercel logs for allocation errors
 2. Verify contribution has valid scores (novelty, density, coherence, alignment, pod_score)
 3. Check if contribution is qualified for current epoch
@@ -229,6 +240,7 @@ After completing a test registration, verify:
 ### SQL Verification Script
 
 Run `scripts/test_webhook_status.sql` in Supabase SQL Editor to check:
+
 - Recent contributions and registration status
 - Recent allocations
 - Epoch balances
@@ -238,6 +250,7 @@ Run `scripts/test_webhook_status.sql` in Supabase SQL Editor to check:
 ### Console Debugging
 
 Open browser console and look for:
+
 - `[Poll X/15] Registration status:` messages (should show `registered: true` eventually)
 - `[EpochInfo Poll X/15] Refreshing epoch info` messages
 - Any error messages
@@ -252,6 +265,7 @@ Open browser console and look for:
 - **10-15 seconds**: Frontend polling detects changes, UI updates
 
 If updates don't appear within 30 seconds, check:
+
 1. Webhook delivery in Stripe Dashboard
 2. Vercel function logs for errors
 3. Database state using SQL script
@@ -267,4 +281,3 @@ After successful testing:
 3. ✅ Monitor Vercel function logs for errors
 4. ✅ Test with multiple submissions to verify tokenomics calculations
 5. ✅ Test epoch transitions when allocations exhaust epoch balance
-

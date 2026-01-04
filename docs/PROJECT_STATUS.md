@@ -5,6 +5,7 @@
 A production-ready Next.js 14 web application for the Syntheverse Proof of Contribution system, featuring authentication, payment processing, and a modern dashboard interface.
 
 **Tech Stack:**
+
 - **Framework**: Next.js 14 (App Router)
 - **Styling**: Tailwind CSS + shadcn/ui components
 - **Authentication**: Supabase Auth (OAuth + email/password)
@@ -17,6 +18,7 @@ A production-ready Next.js 14 web application for the Syntheverse Proof of Contr
 ## Current Status
 
 ### ✅ Completed
+
 - [x] Next.js 14 application structure
 - [x] Supabase authentication integration
 - [x] Database schema with Drizzle ORM
@@ -29,12 +31,14 @@ A production-ready Next.js 14 web application for the Syntheverse Proof of Contr
 - [x] Vercel account created
 
 ### 🚧 In Progress
+
 - [ ] Vercel deployment configuration
 - [ ] Production environment variables setup
 - [ ] Database migrations on production
 - [ ] Production webhook configuration
 
 ### 📋 Pending
+
 - [ ] Production deployment verification
 - [ ] Custom domain setup (optional)
 - [ ] Production Stripe account setup (move from test mode)
@@ -69,24 +73,28 @@ A production-ready Next.js 14 web application for the Syntheverse Proof of Contr
 ## Required Environment Variables
 
 ### Core Configuration
+
 - `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase anonymous key
 - `SUPABASE_SERVICE_ROLE_KEY` - Supabase service role key (server-side only)
 - `DATABASE_URL` - PostgreSQL connection string
 
 ### Site URLs
+
 - `NEXT_PUBLIC_WEBSITE_URL` - Public website URL (used in code)
 - `NEXT_PUBLIC_SITE_URL` - Alternative site URL (documented in some places)
 
 **Note**: The code primarily uses `NEXT_PUBLIC_WEBSITE_URL`. Set both to your Vercel URL to avoid confusion.
 
 ### Stripe
+
 - `STRIPE_SECRET_KEY` - Stripe secret key (starts with `sk_test_` or `sk_live_`)
 - `STRIPE_WEBHOOK_SECRET` - Webhook signing secret (starts with `whsec_`)
 - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` - Publishable key (starts with `pk_test_` or `pk_live_`)
 - `NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID` - Stripe Pricing Table ID (starts with `prctbl_`)
 
 ### OAuth (Optional)
+
 - `GOOGLE_CLIENT_ID` - Google OAuth client ID
 - `GOOGLE_CLIENT_SECRET` - Google OAuth client secret
 - `GITHUB_CLIENT_ID` - GitHub OAuth client ID
@@ -97,26 +105,33 @@ A production-ready Next.js 14 web application for the Syntheverse Proof of Contr
 ## Deployment Status
 
 ### Vercel Account
+
 - ✅ Account created
 
 ### Next Steps
+
 1. **Connect Repository**
+
    - Import Git repository to Vercel
    - Auto-detect Next.js configuration
 
 2. **Configure Environment Variables**
+
    - Add all required env vars in Vercel dashboard
    - Set for Production, Preview, and Development environments
 
 3. **Update Supabase Configuration**
+
    - Update Site URL to Vercel deployment URL
    - Update OAuth redirect URLs
 
 4. **Configure Stripe Webhooks**
+
    - Create production webhook endpoint
    - Update webhook secret in environment variables
 
 5. **Run Database Migrations**
+
    - Execute migrations on production database
    - Verify schema matches local development
 
@@ -131,6 +146,7 @@ A production-ready Next.js 14 web application for the Syntheverse Proof of Contr
 ## Key Features
 
 ### Authentication
+
 - Email/password signup and login
 - OAuth providers (Google, GitHub)
 - Password reset via email
@@ -138,6 +154,7 @@ A production-ready Next.js 14 web application for the Syntheverse Proof of Contr
 - Protected routes with middleware
 
 ### Payments
+
 - Stripe Checkout integration
 - Subscription management
 - Pricing table display
@@ -145,6 +162,7 @@ A production-ready Next.js 14 web application for the Syntheverse Proof of Contr
 - Webhook handling for subscription events
 
 ### User Management
+
 - User profile dashboard
 - Account settings
 - Subscription status
@@ -155,6 +173,7 @@ A production-ready Next.js 14 web application for the Syntheverse Proof of Contr
 ## Database Schema
 
 Uses Drizzle ORM with PostgreSQL. Key tables:
+
 - `users` - User accounts and profiles
 - Additional tables as defined in `utils/db/schema.ts`
 
@@ -163,6 +182,7 @@ Uses Drizzle ORM with PostgreSQL. Key tables:
 ## Local Development
 
 ### Setup
+
 ```bash
 # Install dependencies
 npm install
@@ -179,6 +199,7 @@ npm run dev
 ```
 
 ### Available Scripts
+
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
 - `npm run start` - Start production server
@@ -202,16 +223,19 @@ npm run dev
 ## External Services
 
 ### Supabase
+
 - **Purpose**: Authentication and database
 - **Status**: Required for production
 - **Configuration**: Needs production URL updates
 
 ### Stripe
+
 - **Purpose**: Payment processing
 - **Status**: Required for billing features
 - **Mode**: Currently in test mode (needs production setup later)
 
 ### Vercel
+
 - **Purpose**: Hosting and deployment
 - **Status**: Account created, deployment pending
 - **URL**: Will be assigned after first deployment
@@ -239,4 +263,3 @@ npm run dev
 
 **Last Updated**: Based on current codebase review  
 **Next Review**: After Vercel deployment completion
-

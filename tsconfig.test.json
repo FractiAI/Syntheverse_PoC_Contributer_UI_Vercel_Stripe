@@ -8,17 +8,6 @@
     "moduleResolution": "node",
     "esModuleInterop": true
   },
-  "include": [
-    "tests/**/*",
-    "utils/**/*",
-    "app/**/*",
-    "components/**/*",
-    "types/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "syntheverse-ui",
-    ".next"
-  ]
+  "include": ["tests/**/*", "utils/**/*", "app/**/*", "components/**/*", "types/**/*"],
+  "exclude": ["node_modules", "syntheverse-ui", ".next"]
 }
-

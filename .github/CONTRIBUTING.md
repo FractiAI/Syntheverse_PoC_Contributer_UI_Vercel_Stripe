@@ -27,6 +27,7 @@ See the main [README.md](../README.md) for setup instructions.
 ## Commit Messages
 
 Follow conventional commits:
+
 - `feat:` for new features
 - `fix:` for bug fixes
 - `docs:` for documentation
@@ -55,4 +56,3 @@ Use the [Feature Request template](.github/ISSUE_TEMPLATE/feature_request.md) to
 ## Questions?
 
 Open an issue or contact the maintainers.
-

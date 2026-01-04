@@ -1,80 +1,97 @@
-'use client'
+'use client';
 
-import { useEffect, useState } from 'react'
-import { api, type ArchiveStatistics, type TokenomicsStatistics, type EpochInfo } from '@/lib/api'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { formatNumber, formatDate } from '@/lib/utils'
-import { Award, Users, FileText, TrendingUp, Coins, RefreshCw, AlertCircle } from 'lucide-react'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
-import { Button } from '@/components/ui/button'
+import { useEffect, useState } from 'react';
+import { api, type ArchiveStatistics, type TokenomicsStatistics, type EpochInfo } from '@/lib/api';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { formatNumber, formatDate } from '@/lib/utils';
+import { Award, Users, FileText, TrendingUp, Coins, RefreshCw, AlertCircle } from 'lucide-react';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+} from 'recharts';
+import { Button } from '@/components/ui/button';
 
 const COLORS = {
   gold: '#FCD34D',
   silver: '#94A3B8',
   copper: '#CD7F32',
-}
+};
 
 export function PoCDashboardStats() {
-  const [stats, setStats] = useState<ArchiveStatistics | null>(null)
-  const [tokenomics, setTokenomics] = useState<TokenomicsStatistics | null>(null)
-  const [epochInfo, setEpochInfo] = useState<EpochInfo | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [stats, setStats] = useState<ArchiveStatistics | null>(null);
+  const [tokenomics, setTokenomics] = useState<TokenomicsStatistics | null>(null);
+  const [epochInfo, setEpochInfo] = useState<EpochInfo | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     // API is now internal (Next.js API routes), no need to check for external API URL
-    loadData()
-  }, [])
+    loadData();
+  }, []);
 
   async function loadData() {
     try {
-      setLoading(true)
-      setError(null)
+      setLoading(true);
+      setError(null);
 
       // Use Promise.allSettled to see which APIs succeed/fail
       const results = await Promise.allSettled([
         api.getArchiveStatistics(),
         api.getTokenomicsStatistics(),
-        api.getEpochInfo()
-      ])
+        api.getEpochInfo(),
+      ]);
 
-      const [archiveResult, tokenomicsResult, epochResult] = results
+      const [archiveResult, tokenomicsResult, epochResult] = results;
 
       if (archiveResult.status === 'fulfilled') {
-        setStats(archiveResult.value)
+        setStats(archiveResult.value);
       } else {
-        console.error('Dashboard: Archive stats failed:', archiveResult.reason)
+        console.error('Dashboard: Archive stats failed:', archiveResult.reason);
       }
 
       if (tokenomicsResult.status === 'fulfilled') {
-        setTokenomics(tokenomicsResult.value)
+        setTokenomics(tokenomicsResult.value);
       } else {
-        console.error('Dashboard: Tokenomics stats failed:', tokenomicsResult.reason)
+        console.error('Dashboard: Tokenomics stats failed:', tokenomicsResult.reason);
       }
 
       if (epochResult.status === 'fulfilled') {
-        setEpochInfo(epochResult.value)
+        setEpochInfo(epochResult.value);
       } else {
-        console.error('Dashboard: Epoch info failed:', epochResult.reason)
+        console.error('Dashboard: Epoch info failed:', epochResult.reason);
       }
 
       // If all APIs failed, just log the errors but don't throw
       // PoC functionality is now internal, so we'll show empty state gracefully
-      if (results.every(r => r.status === 'rejected')) {
-        console.warn('PoC API endpoints not available:', results.map(r => 
-          r.status === 'rejected' ? (r.reason instanceof Error ? r.reason.message : String(r.reason)) : 'OK'
-        ))
+      if (results.every((r) => r.status === 'rejected')) {
+        console.warn(
+          'PoC API endpoints not available:',
+          results.map((r) =>
+            r.status === 'rejected'
+              ? r.reason instanceof Error
+                ? r.reason.message
+                : String(r.reason)
+              : 'OK'
+          )
+        );
         // Don't set error - just show empty state
       }
 
-      setLoading(false)
+      setLoading(false);
     } catch (err) {
-      console.error('Dashboard: Error loading data:', err)
-      setError(err instanceof Error ? err.message : 'Failed to load PoC evaluation data')
-      setLoading(false)
+      console.error('Dashboard: Error loading data:', err);
+      setError(err instanceof Error ? err.message : 'Failed to load PoC evaluation data');
+      setLoading(false);
     }
   }
-
 
   if (loading) {
     return (
@@ -83,8 +100,8 @@ export function PoCDashboardStats() {
           <CardTitle>PoC Evaluation Statistics</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center min-h-[200px]">
-            <div className="text-center space-y-4">
+          <div className="flex min-h-[200px] items-center justify-center">
+            <div className="space-y-4 text-center">
               <div className="text-muted-foreground">Loading PoC evaluation data...</div>
               <div className="text-sm text-muted-foreground">
                 Fetching archive statistics, tokenomics data, and epoch information
@@ -93,13 +110,13 @@ export function PoCDashboardStats() {
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   // Don't show error state - PoC functionality is optional
   // If there's an error, just show empty state
   if (error) {
-    console.warn('PoC Dashboard Stats error:', error)
+    console.warn('PoC Dashboard Stats error:', error);
   }
 
   // If no data loaded and not loading, show empty state
@@ -110,17 +127,17 @@ export function PoCDashboardStats() {
           <CardTitle>PoC Evaluation Statistics</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-8 text-muted-foreground">
+          <div className="py-8 text-center text-muted-foreground">
             <p className="text-sm">No PoC data available yet.</p>
-            <p className="text-xs mt-2">Submit your first contribution to see statistics here.</p>
+            <p className="mt-2 text-xs">Submit your first contribution to see statistics here.</p>
             <Button onClick={() => loadData()} variant="outline" size="sm" className="mt-4">
-              <RefreshCw className="h-4 w-4 mr-2" />
+              <RefreshCw className="mr-2 h-4 w-4" />
               Refresh
             </Button>
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   const statusData = stats
@@ -128,7 +145,7 @@ export function PoCDashboardStats() {
         status: status.charAt(0).toUpperCase() + status.slice(1),
         count,
       }))
-    : []
+    : [];
 
   const metalData = stats
     ? Object.entries(stats.metal_counts).map(([metal, count]) => ({
@@ -136,7 +153,7 @@ export function PoCDashboardStats() {
         value: count,
         color: COLORS[metal as keyof typeof COLORS] || '#888',
       }))
-    : []
+    : [];
 
   return (
     <div className="space-y-4">
@@ -144,19 +161,19 @@ export function PoCDashboardStats() {
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>PoC Evaluation Statistics</CardTitle>
           <Button onClick={() => loadData()} variant="outline" size="sm">
-            <RefreshCw className="h-4 w-4 mr-2" />
+            <RefreshCw className="mr-2 h-4 w-4" />
             Refresh
           </Button>
         </CardHeader>
         <CardContent>
           {/* Key Metrics */}
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-6">
+          <div className="mb-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <Card>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">Total Contributions</p>
-                    <p className="text-2xl font-bold mt-1">{stats?.total_contributions || 0}</p>
+                    <p className="mt-1 text-2xl font-bold">{stats?.total_contributions || 0}</p>
                   </div>
                   <FileText className="h-8 w-8 text-muted-foreground" />
                 </div>
@@ -168,7 +185,7 @@ export function PoCDashboardStats() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">Contributors</p>
-                    <p className="text-2xl font-bold mt-1">{stats?.unique_contributors || 0}</p>
+                    <p className="mt-1 text-2xl font-bold">{stats?.unique_contributors || 0}</p>
                   </div>
                   <Users className="h-8 w-8 text-muted-foreground" />
                 </div>
@@ -180,7 +197,7 @@ export function PoCDashboardStats() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">Total Distributed</p>
-                    <p className="text-2xl font-bold mt-1">
+                    <p className="mt-1 text-2xl font-bold">
                       {tokenomics ? formatNumber(tokenomics.total_distributed / 1e12) : '0'}T
                     </p>
                   </div>
@@ -194,7 +211,7 @@ export function PoCDashboardStats() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">Current Epoch</p>
-                    <p className="text-2xl font-bold mt-1 capitalize">
+                    <p className="mt-1 text-2xl font-bold capitalize">
                       {epochInfo?.current_epoch || 'N/A'}
                     </p>
                   </div>
@@ -206,7 +223,7 @@ export function PoCDashboardStats() {
 
           {/* Charts */}
           {stats && (statusData.length > 0 || metalData.length > 0) && (
-            <div className="grid gap-4 md:grid-cols-2 mb-6">
+            <div className="mb-6 grid gap-4 md:grid-cols-2">
               {statusData.length > 0 && (
                 <Card>
                   <CardHeader>
@@ -239,7 +256,9 @@ export function PoCDashboardStats() {
                           cx="50%"
                           cy="50%"
                           labelLine={false}
-                          label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
+                          label={({ name, percent }) =>
+                            `${name} ${((percent || 0) * 100).toFixed(0)}%`
+                          }
                           outerRadius={80}
                           fill="#8884d8"
                           dataKey="value"
@@ -259,13 +278,12 @@ export function PoCDashboardStats() {
 
           {/* Last Updated */}
           {stats && (
-            <div className="text-sm text-muted-foreground text-center mt-4">
+            <div className="mt-4 text-center text-sm text-muted-foreground">
               Last updated: {formatDate(stats.last_updated)}
             </div>
           )}
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
-

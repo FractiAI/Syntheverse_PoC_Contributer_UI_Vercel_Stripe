@@ -40,7 +40,3 @@ node scripts/run-all-tests.js
 - Some scripts require environment variables to be set
 - Check individual script files for specific requirements
 - Test scripts are for development/testing purposes only
-
-
-
-
