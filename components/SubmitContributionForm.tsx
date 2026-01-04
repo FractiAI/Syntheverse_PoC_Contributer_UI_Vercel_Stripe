@@ -45,12 +45,13 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
   });
   const [processingSupport, setProcessingSupport] = useState<string | null>(null);
 
-  // Character limit based on free Groq API constraints:
-  // - System prompt: ~4,700 tokens (~18,800 chars)
-  // - Evaluation query + archive context: ~1,500 tokens (~6,000 chars)
-  // - User content: ~3,000 tokens (~12,000 chars) - conservative limit for free tier
-  // Total: ~9,200 tokens, well within limits while avoiding TPM/413 errors
-  const MAX_CONTENT_LENGTH = 12000; // Character limit for submissions (abstract, formulas, constants only)
+  // Character limit based on Groq API constraints:
+  // - System prompt: ~4,500 tokens (~18,000 chars)
+  // - Available tokens: ~1,500 tokens (~6,000 chars)
+  // - With 20% safety margin: ~1,200 tokens (~4,800 chars)
+  // - Safe limit: 4,000 characters (~1,000 tokens)
+  // Submissions should contain only: abstract, equations, and constants
+  const MAX_CONTENT_LENGTH = 4000; // Character limit for submissions (abstract, equations, constants only)
   const contentLength = formData.text_content.length;
   const isOverLimit = contentLength > MAX_CONTENT_LENGTH;
 
@@ -257,7 +258,7 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
     // Check character limit - don't error, just inform and return to page
     if (formData.text_content.length > MAX_CONTENT_LENGTH) {
       setError(
-        `Submission exceeds character limit. Maximum: ${MAX_CONTENT_LENGTH.toLocaleString()} characters. Your submission: ${formData.text_content.length.toLocaleString()} characters (${(formData.text_content.length - MAX_CONTENT_LENGTH).toLocaleString()} over limit). Please reduce your submission to abstract, formulas, and constants only.`
+        `Submission exceeds character limit. Maximum: ${MAX_CONTENT_LENGTH.toLocaleString()} characters. Your submission: ${formData.text_content.length.toLocaleString()} characters (${(formData.text_content.length - MAX_CONTENT_LENGTH).toLocaleString()} over limit). Please reduce your submission to abstract, equations, and constants only.`
       );
       setLoading(false);
       // Scroll to error message
@@ -409,12 +410,13 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
           <div className="cockpit-title mb-2 text-xl">Prepare Your Work</div>
           <div className="cockpit-text space-y-2">
             <p className="text-sm">
-              Scientific papers, technical documentation, research findings, or any intellectual
-              contribution that advances human knowledge.
+              Extract and submit the essential elements: abstract, equations, and constants from
+              your scientific papers, technical documentation, or research findings.
             </p>
             <ul className="ml-4 space-y-1 text-sm">
               <li>• Text-only submission (copy/paste)</li>
-              <li>• Include context, citations, and key details</li>
+              <li>• Include abstract, equations, and constants only</li>
+              <li>• Maximum 4,000 characters (no full papers or extended documentation)</li>
               <li>• Ensure this is original work (or clearly attributed)</li>
             </ul>
           </div>
@@ -1327,21 +1329,21 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
 
             <div className="space-y-2">
               <Label htmlFor="text_content" className="cockpit-label">
-                Submission Text *
+                Submission Text * (Abstract, Equations, Constants Only)
               </Label>
               <textarea
                 id="text_content"
                 className={`cockpit-input ${isOverLimit ? 'border-red-500' : ''}`}
                 value={formData.text_content}
                 onChange={(e) => setFormData({ ...formData, text_content: e.target.value })}
-                placeholder="Paste your contribution here - Abstract, formulas and constants only"
+                placeholder="Paste your contribution here - Abstract, equations, and constants only (no full papers, documentation, or extended text)"
                 required
                 disabled={loading}
                 rows={10}
               />
               <div className="flex justify-between text-xs">
                 <span className="text-muted-foreground">
-                  Tip: include abstract, formulas, and constants. Maximum:{' '}
+                  Include only: abstract, equations, and constants. Maximum:{' '}
                   {MAX_CONTENT_LENGTH.toLocaleString()} characters.
                 </span>
                 <span
@@ -1360,7 +1362,7 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                     Your submission is{' '}
                     <strong>{(contentLength - MAX_CONTENT_LENGTH).toLocaleString()}</strong>{' '}
                     characters over the limit. Please reduce to{' '}
-                    <strong>abstract, formulas, and constants only</strong>. Current:{' '}
+                    <strong>abstract, equations, and constants only</strong>. Current:{' '}
                     {contentLength.toLocaleString()} / Limit: {MAX_CONTENT_LENGTH.toLocaleString()}{' '}
                     characters.
                   </div>

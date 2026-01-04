@@ -398,7 +398,7 @@ Score it rigorously (0–10,000), using an overlap-aware redundancy model:
 - Penalize ONLY excessive overlap (near-duplicate behavior)
 - Reward edge “sweet-spot” overlap with a multiplier tied to overlap%
 
-Reference all prior submissions and evaluations in the conversation history to determine redundancy
+Use the vector-based redundancy information provided in the evaluation query to determine redundancy (no conversation history needed)
 
 Determine Open Epoch qualification (Founder ≥8,000, Pioneer ≥6,000, Community ≥5,000, Ecosystem ≥4,000)
 
@@ -428,7 +428,7 @@ Classify Contribution: Research / Development / Alignment (may be multiple)
 
 Redundancy / Overlap Check:
 
-Compare submission to all prior submissions, evaluations, and scores in conversation history.
+Use the vector-based redundancy information provided in the evaluation query to compare this submission to prior submissions.
 
 Definitions (operational):
 - Overlap%: the measured similarity/overlap of this PoC vs closest prior PoC (0–100).
@@ -678,7 +678,7 @@ Clearly separate evaluation, scoring, and certification
 
 Treat all scoring as simulated but rigorous
 
-All overlap/redundancy references must be drawn from conversation history only.
+All overlap/redundancy references should use the vector-based redundancy information provided in the evaluation query.
 
 You MUST include a valid JSON object with the EXACT structure below embedded in your narrative response (you may include it in a markdown code block). All numeric scores must be NUMBERS (not strings, not null, not undefined). The JSON must be parseable.
 

@@ -108,8 +108,20 @@ export async function evaluateWithGrok(
     );
   }
 
+  // SCALABILITY FIX: Truncate text content to prevent token limit errors (413/429)
+  // Groq on-demand tier has 6000 token limit. System prompt is ~4500 tokens.
+  // Available tokens: ~1500 tokens. With 20% margin: ~1200 tokens (~4800 chars).
+  // Safe limit: 4000 characters (~1000 tokens) for submissions (abstract, equations, constants only)
+  const MAX_CONTENT_LENGTH = 4000;
+  const truncatedText =
+    textContent.length > MAX_CONTENT_LENGTH
+      ? textContent.substring(0, MAX_CONTENT_LENGTH).trimEnd() + '\n\n[Content truncated for evaluation]'
+      : textContent;
+
   debug('EvaluateWithGrok', 'Calling Grok API for evaluation', {
     textLength: textContent.length,
+    truncatedLength: truncatedText.length,
+    wasTruncated: textContent.length > MAX_CONTENT_LENGTH,
     title,
     category,
     excludeHash,
@@ -118,6 +130,7 @@ export async function evaluateWithGrok(
   // Generate vector embedding and 3D coordinates for current submission
   // SCALABILITY FIX: Using vectors-only approach - removed archive data extraction and top3Matches
   // Vector-based redundancy is sufficient and scales infinitely without bloating the prompt
+  // Use full text for vectorization (not truncated) - embeddings need full context
   let currentVectorization: { embedding: number[]; vector: Vector3D } | null = null;
   try {
     debug('EvaluateWithGrok', 'Generating vector embedding and 3D coordinates');
@@ -243,7 +256,7 @@ export async function evaluateWithGrok(
     try {
       const formattedArchivedVectors = formatArchivedVectors(limitedArchivedVectors);
       calculatedRedundancy = await calculateVectorRedundancy(
-        textContent,
+        truncatedText, // Use truncated text for redundancy calculation (matches what we send to Grok)
         currentVectorization.embedding,
         currentVectorization.vector,
         formattedArchivedVectors // Limited to top 50 for scalability (redundancy calc only needs closest matches)
@@ -342,7 +355,7 @@ Category: ${category || 'scientific'}
 ${tokenomicsContext ? `\n${tokenomicsContext}` : ''}
 
 Submission Content:
-${textContent}
+${truncatedText}
 
 ${calculatedRedundancyContext ? `\n${calculatedRedundancyContext}` : ''}
 
