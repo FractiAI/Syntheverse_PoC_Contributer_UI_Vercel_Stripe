@@ -159,6 +159,11 @@ export function OnboardingNavigator() {
               </div>
               <div className="border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-4">
                 <div className="cockpit-label mb-2">Internal ERC‑20 Coordination Layer</div>
+                <div className="mb-3 border-l-2 border-amber-500 bg-amber-500/10 px-3 py-2 text-xs text-amber-400">
+                  <strong>ERC-20 BOUNDARY:</strong> SYNTH tokens are internal coordination units
+                  only. Not an investment, security, or financial instrument. No guaranteed value,
+                  no profit expectation.
+                </div>
                 <p className="cockpit-text mb-3 text-sm">
                   Syntheverse uses a fixed‑supply ERC‑20 ledger as an{' '}
                   <strong>internal coordination primitive</strong>—anchored by the 90T SYNTH

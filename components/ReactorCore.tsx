@@ -241,6 +241,14 @@ export function ReactorCore() {
           <div>
             <div className="cockpit-label">CORE INSTRUMENT PANEL</div>
             <div className="cockpit-title mt-2 text-3xl">SYNTH 90T ERC-20 MOTHERLODE BLOCKMINE</div>
+            <div
+              className="cockpit-text mt-2 border-l-2 border-amber-500 bg-amber-500/10 px-3 py-2 text-xs"
+              style={{ color: '#fbbf24' }}
+            >
+              <strong>ERC-20 BOUNDARY:</strong> SYNTH tokens are internal coordination units for
+              protocol accounting only. Not an investment, security, or financial instrument. No
+              guaranteed value, no profit expectation, no external exchange planned.
+            </div>
             {error ? (
               <div
                 className="cockpit-text mt-2 text-xs"

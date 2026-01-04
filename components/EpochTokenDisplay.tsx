@@ -324,6 +324,10 @@ export function EpochTokenDisplay() {
               <span className="text-sm font-semibold">SYNTH 90T MOTHERLODE RESERVE REMAINING</span>
               <span className="text-2xl font-bold">{formatTokens(totalAvailable)} SYNTH</span>
             </div>
+            <div className="mt-3 border-l-2 border-amber-500 bg-amber-500/10 px-3 py-2 text-xs text-amber-400">
+              <strong>ERC-20 BOUNDARY:</strong> Internal coordination units only. Not an investment
+              or financial instrument. No guaranteed value.
+            </div>
           </div>
         </div>
       </CardContent>

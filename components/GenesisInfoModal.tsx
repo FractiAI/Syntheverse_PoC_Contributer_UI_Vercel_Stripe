@@ -145,6 +145,11 @@ export function GenesisInfoModal({ isOpen, onClose }: GenesisInfoModalProps) {
                         </div>
                       </div>
                     </div>
+                    <div className="mt-3 border-l-2 border-amber-500 bg-amber-500/10 px-3 py-2 text-xs text-amber-400">
+                      <strong>ERC-20 BOUNDARY:</strong> SYNTH tokens are internal coordination units
+                      for protocol accounting only. Not an investment, security, or financial
+                      instrument. No guaranteed value, no profit expectation.
+                    </div>
                   </div>
                 )}
 
