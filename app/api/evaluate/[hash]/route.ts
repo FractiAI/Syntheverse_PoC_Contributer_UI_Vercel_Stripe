@@ -108,6 +108,61 @@ export async function POST(
             grokResponse = { success: true, evaluation }
         } catch (error) {
             evaluationError = error instanceof Error ? error : new Error(String(error))
+            const errorMessage = error instanceof Error ? error.message : String(error)
+            
+            // If evaluation failed (e.g., all scores are 0), mark status as evaluation_failed
+            if (errorMessage.includes('All scores are 0') || errorMessage.includes('evaluation did not return valid scores')) {
+                // Update status to evaluation_failed and store error details
+                await db
+                    .update(contributionsTable)
+                    .set({ 
+                        status: 'evaluation_failed',
+                        metadata: {
+                            ...(contrib.metadata as any || {}),
+                            evaluation_error: errorMessage,
+                            evaluation_failed_at: new Date().toISOString(),
+                            evaluation_error_type: 'zero_scores'
+                        } as any,
+                        updated_at: new Date()
+                    })
+                    .where(eq(contributionsTable.submission_hash, submissionHash))
+                
+                // Log evaluation failure
+                await db.insert(pocLogTable).values({
+                    id: crypto.randomUUID(),
+                    submission_hash: submissionHash,
+                    contributor: contrib.contributor,
+                    event_type: 'evaluation_failed',
+                    event_status: 'error',
+                    title: contrib.title,
+                    category: contrib.category || null,
+                    request_data: {
+                        error: errorMessage,
+                        error_type: 'zero_scores',
+                        text_content_length: textContent.length
+                    },
+                    created_at: new Date(),
+                })
+                
+                debugError('EvaluateContribution', 'Evaluation failed - all scores are 0', {
+                    submissionHash,
+                    error: errorMessage
+                })
+                
+                // Return error response instead of throwing (so frontend can handle it)
+                const corsHeaders = createCorsHeaders(request)
+                corsHeaders.forEach((value, key) => rateLimitHeaders.set(key, value))
+                return NextResponse.json(
+                    { 
+                        error: 'Evaluation failed',
+                        message: errorMessage,
+                        submission_hash: submissionHash,
+                        status: 'evaluation_failed'
+                    },
+                    { status: 500, headers: rateLimitHeaders }
+                )
+            }
+            
             throw error
         }
         
