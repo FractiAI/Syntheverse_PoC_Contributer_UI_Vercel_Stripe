@@ -380,7 +380,7 @@ export function OnboardingNavigator() {
     },
     {
       id: 'lens-sandbox',
-      title: 'Syntheverse Lens and Sandbox (HHF-AI)',
+      title: 'SynthScan™ MRI: HHF-AI Lens and Sandbox',
       label: 'MODULE 03',
       icon: <Layers className="h-6 w-6" />,
       content: (
