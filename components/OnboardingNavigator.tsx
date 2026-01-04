@@ -2326,6 +2326,33 @@ export function OnboardingNavigator() {
       ),
     },
   ];
+
+  const nextModule = () => {
+    setCurrentModule((prev) => (prev + 1) % modules.length);
+  };
+
+  const prevModule = () => {
+    setCurrentModule((prev) => (prev - 1 + modules.length) % modules.length);
+  };
+
+  const goToModule = (index: number) => {
+    setCurrentModule(index);
+  };
+
+  return (
+    <div className="cockpit-bg min-h-screen">
+      <div ref={topRef} className="container mx-auto px-6 py-8">
+        {/* Header */}
+        <div className="cockpit-panel mb-8 p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="cockpit-label">ONBOARDING NAVIGATOR</div>
+              <div className="cockpit-title mt-2 text-3xl">SYNTHEVERSE TRAINING MODULES</div>
+              <div className="cockpit-text mt-2">
+                <strong>A new way to collaborate independently</strong> while building a{' '}
+                <strong>regenerative PoC-based internal ERC-20 crypto ecosystem</strong> on the
+                blockchain
+              </div>
               <div className="cockpit-text mt-3" style={{ opacity: 0.8 }}>
                 Master the Motherlode Blockmine, Holographic Hydrogen, and the Fractal Frontier
               </div>
