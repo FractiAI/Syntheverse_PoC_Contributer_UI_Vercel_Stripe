@@ -171,13 +171,13 @@ export async function POST(
         // Check if blockchain registration is enabled
         const registrationEnabled = process.env.ENABLE_BLOCKCHAIN_REGISTRATION === 'true'
         if (!registrationEnabled) {
-            debug('RegisterPoC', 'Blockchain registration is temporarily disabled', {
+            debug('RegisterPoC', 'Vault opens Spring Equinox, March 20, 2026', {
                 submissionHash,
-                reason: 'ENABLE_BLOCKCHAIN_REGISTRATION is not set to true'
+                reason: 'ENABLE_BLOCKCHAIN_REGISTRATION is not set to true - Vault opens Spring Equinox, March 20, 2026'
             })
             return NextResponse.json(
                 { 
-                    error: 'Blockchain registration is temporarily disabled',
+                    error: 'The Vault opens Spring Equinox, March 20, 2026. Blockchain registration will be enabled then.',
                     message: 'SYNTH90T MOTHERLODE VAULT opens Spring Equinox, March 20, 2026. On-chain registration will be available when the vault opens. All qualifying PoCs will be registered on-chain and allocated SYNTH, by score.'
                 },
                 { status: 503 } // Service Unavailable
