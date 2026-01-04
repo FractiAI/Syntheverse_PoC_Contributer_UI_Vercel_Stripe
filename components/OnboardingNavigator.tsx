@@ -1817,30 +1817,10 @@ export function OnboardingNavigator() {
       ),
     },
     {
-      id: 'how-it-works',
-      title: 'How It Works',
+      id: 'test-report',
+      title: 'System Validation & Test Report',
       label: 'MODULE 11',
-      icon: <LinkIcon className="h-6 w-6" />,
-      content: (
-        <div className="space-y-4">
-          <div className="cockpit-text">
-            <div className="mb-4 border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)] p-4">
-              <div className="cockpit-label mb-2" style={{ color: '#ffb84d' }}>
-                Learning Objectives
-              </div>
-              <ul className="cockpit-text space-y-1 text-sm">
-                <li>• Understand the complete workflow from submission to completion</li>
-                <li>• Know what happens at each step of the process</li>
-                <li>• Learn what to expect when you submit a PoC</li>
-                <li>• Be ready to start contributing!</li>
-              </ul>
-            </div>
-            <p className="mb-4 text-lg">
-              This final module walks you through the complete{' '}
-              <strong className="cockpit-number">Syntheverse Journey</strong>—from submitting your
-              contribution to receiving evaluation, qualification, and optional blockchain
-              registration. This is your roadmap for contributing to Syntheverse.
-            </p>
+      icon: <FileText className="h-6 w-6" />,
             <div className="space-y-4">
               {[
                 {
@@ -1908,10 +1888,10 @@ export function OnboardingNavigator() {
       ),
     },
     {
-      id: 'test-report',
-      title: 'System Validation & Test Report',
+      id: 'hhf-ai-mri',
+      title: 'HHF-AI MRI: Information Imaging',
       label: 'MODULE 12',
-      icon: <FileText className="h-6 w-6" />,
+      icon: <Scan className="h-6 w-6" />,
       content: (
         <div className="space-y-4">
           <div className="cockpit-text">
@@ -2087,10 +2067,10 @@ export function OnboardingNavigator() {
       ),
     },
     {
-      id: 'hhf-ai-mri',
-      title: 'HHF-AI MRI: Information Imaging',
+      id: 'how-it-works',
+      title: 'How It Works: Your Syntheverse Journey',
       label: 'MODULE 13',
-      icon: <Scan className="h-6 w-6" />,
+      icon: <LinkIcon className="h-6 w-6" />,
       content: (
         <div className="space-y-4">
           <div className="cockpit-text">
@@ -2099,225 +2079,171 @@ export function OnboardingNavigator() {
                 Learning Objectives
               </div>
               <ul className="cockpit-text space-y-1 text-sm">
-                <li>• Understand HHF-AI Lens and Sandbox as an informational MRI analog</li>
-                <li>• Learn how hydrogen spin is used for imaging information and awareness</li>
-                <li>• Recognize the contrast constant Cₑ and edge sweet spots</li>
-                <li>• Understand nested layer resolution capabilities</li>
+                <li>• Master the complete workflow from submission to blockchain registration</li>
+                <li>• Understand what happens at each step of the evaluation process</li>
+                <li>• Know what to expect when you submit your PoC</li>
+                <li>• Be ready to start contributing to Syntheverse!</li>
               </ul>
             </div>
             <p className="mb-4 text-lg">
-              The{' '}
-              <strong className="cockpit-number">
-                Holographic Hydrogen Fractal AI Lens (HHF-AI Lens)
-              </strong>{' '}
-              and
-              <strong> Syntheverse Sandbox</strong> function as a new <strong>HHF-AI MRI</strong>
-              —using hydrogen spin for imaging information, awareness, and coherence itself, just as
-              classical MRI uses hydrogen spin to image physical tissue.
+              Congratulations! You&apos;ve completed the theoretical foundation. This{' '}
+              <strong className="cockpit-number">final capstone module</strong> walks you through the
+              complete <strong>Syntheverse Journey</strong>—from preparing and submitting your
+              contribution to receiving evaluation, qualification, and optional blockchain registration.
+              This is your practical roadmap for contributing to Syntheverse.
             </p>
             <div className="space-y-4">
               <div className="border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)] p-4">
-                <div className="cockpit-label mb-2" style={{ color: '#ffb84d' }}>
-                  Classical MRI vs. HHF-AI MRI
+                <div className="cockpit-label mb-3" style={{ color: '#ffb84d' }}>
+                  The Complete Syntheverse Workflow
                 </div>
-                <div className="mt-3 grid grid-cols-1 gap-4 md:grid-cols-2">
-                  <div className="rounded border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-3">
-                    <div className="cockpit-label mb-2">Classical MRI</div>
-                    <ul className="cockpit-text space-y-1 text-sm">
-                      <li>• Hydrogen spin → tissue contrast</li>
-                      <li>• Magnetic gradients encode spatial info</li>
-                      <li>• T1/T2 relaxation reveals boundaries</li>
-                      <li>• Images physical tissue structures</li>
-                    </ul>
-                  </div>
-                  <div className="rounded border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.1)] p-3">
-                    <div className="cockpit-label mb-2 text-[var(--hydrogen-amber)]">
-                      HHF-AI MRI
-                    </div>
-                    <ul className="cockpit-text space-y-1 text-sm">
-                      <li>• Hydrogen coherence → informational contrast</li>
-                      <li>• Fractal gradients encode structure</li>
-                      <li>• Edge sweet spots reveal resonance zones</li>
-                      <li>• Images information, awareness, coherence</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div className="border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-4">
-                <div className="cockpit-label mb-3">How HHF-AI MRI Works</div>
-                <div className="space-y-3">
-                  <div className="rounded bg-black/20 p-3">
-                    <div className="cockpit-text mb-1 text-sm font-semibold">
-                      1. Hydrogen as Information Pixel
-                    </div>
-                    <p className="cockpit-text text-sm">
-                      Hydrogen atoms in water and biomolecular interfaces act as{' '}
-                      <strong>holographic hydrogen fractal pixels</strong>, encoding coherence and
-                      enabling distributed resonance across scales.
-                    </p>
-                  </div>
-                  <div className="rounded bg-black/20 p-3">
-                    <div className="cockpit-text mb-1 text-sm font-semibold">
-                      2. Fractal Resonance Detection
-                    </div>
-                    <p className="cockpit-text text-sm">
-                      Instead of magnetic gradients, HHF-AI uses{' '}
-                      <strong>fractal gradient detection</strong> (coherence vs. entropy),
-                      <strong> hydrogen-mediated resonance propagation</strong>, and{' '}
-                      <strong>edge-zone amplification</strong> between ordered and disordered
-                      informational states.
-                    </p>
-                  </div>
-                  <div className="rounded bg-black/20 p-3">
-                    <div className="cockpit-text mb-1 text-sm font-semibold">
-                      3. Sandbox as Reconstruction Space
-                    </div>
-                    <p className="cockpit-text text-sm">
-                      The <strong>HHF-AI Sandbox</strong> functions as the reconstruction
-                      space—analogous to the MRI image volume—where signals are assembled into a
-                      coherent, multi-layer map of informational structure.
-                    </p>
-                  </div>
-                  <div className="rounded bg-black/20 p-3">
-                    <div className="cockpit-text mb-1 text-sm font-semibold">
-                      4. Simultaneous Layer Resolution
-                    </div>
-                    <p className="cockpit-text text-sm">
-                      Just as MRI can resolve multiple tissue layers simultaneously,{' '}
-                      <strong>HHF-AI resolves nested informational layers concurrently</strong>,
-                      producing a full-spectrum scan of awareness, meaning, and coherence.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)] p-4">
-                <div className="cockpit-label mb-2" style={{ color: '#ffb84d' }}>
-                  Edge Sweet Spots & Contrast Constant
-                </div>
-                <p className="cockpit-text mb-3 text-sm">
-                  Information and awareness maximize at <strong>edges</strong>—boundaries between
-                  order and disorder—producing high-contrast zones. These zones are measured via the{' '}
-                  <strong>contrast constant Cₑ ≈ 1.62 ± 0.07</strong>, observed consistently across
-                  molecular, neural, and hydration-water datasets.
+                <p className="cockpit-text mb-4 text-sm">
+                  Now that you understand the theory, here&apos;s your step-by-step guide to
+                  contributing. Each step builds on what you&apos;ve learned about SynthScan™ MRI,
+                  tokenomics, and blockchain registration.
                 </p>
-                <div className="mt-3 rounded bg-black/20 p-3">
-                  <div className="cockpit-text mb-1 text-sm font-semibold">
-                    Contrast Constant (Cₑ)
-                  </div>
-                  <p className="cockpit-text text-xs" style={{ opacity: 0.9 }}>
-                    Cₑ ≈ 1.62 ± 0.07 represents a potentially universal scaling measure of edge
-                    resonance in HHF-AI MRI, providing a quantifiable constant for maximal edge
-                    resonance. This constant has been validated across biological, synthetic, and
-                    hybrid systems.
-                  </p>
-                </div>
               </div>
 
-              <div className="border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-4">
-                <div className="cockpit-label mb-3">Key Capabilities</div>
-                <div className="space-y-2">
-                  <div className="rounded bg-black/20 p-2">
-                    <div className="cockpit-text text-sm font-semibold">
-                      Nested Layer Resolution
+              {[
+                {
+                  step: '01',
+                  title: 'Prepare Your Contribution',
+                  desc: 'Extract your abstract, equations, and constants (max 4000 characters). Focus on core findings, not full papers.',
+                  details: [
+                    'Extract key abstract and findings',
+                    'Include relevant equations (if applicable)',
+                    'List important constants/parameters',
+                    'Keep it concise: ~1 page of content',
+                    'Review archived contributions for examples',
+                  ],
+                },
+                {
+                  step: '02',
+                  title: 'Submit & Pay Evaluation Fee',
+                  desc: 'Create account (email or OAuth), pay $500 evaluation fee, and submit your prepared content.',
+                  details: [
+                    'Create account via email or OAuth (GitHub/Google)',
+                    'Pay $500 evaluation fee (below journal submission costs)',
+                    'Paste your prepared abstract, equations, constants',
+                    'Submit for SynthScan™ MRI evaluation',
+                    'Receive confirmation email',
+                  ],
+                },
+                {
+                  step: '03',
+                  title: 'AI Evaluation (SynthScan™ MRI)',
+                  desc: 'Hydrogen-holographic fractal scoring across 4 dimensions (Novelty, Density, Coherence, Alignment) for 0-10,000 total score.',
+                  details: [
+                    'Evaluation completes in ~10 minutes',
+                    '4-dimensional scoring: Novelty, Density, Coherence, Alignment',
+                    'Redundancy analysis vs. archive (vector-based)',
+                    'Detailed breakdown with LLM justifications',
+                    'Score range: 0-10,000 total points',
+                  ],
+                },
+                {
+                  step: '04',
+                  title: 'Qualification & Metallic Status',
+                  desc: 'Receive metallic qualifications (Gold/Silver/Copper) and epoch qualification based on score thresholds.',
+                  details: [
+                    'Gold: ≥7,500 points (top tier)',
+                    'Silver: ≥5,000 points (strong contribution)',
+                    'Copper: ≥2,500 points (qualified)',
+                    'Epoch qualification for token allocation',
+                    'View detailed evaluation report',
+                  ],
+                },
+                {
+                  step: '05',
+                  title: 'Optional Blockchain Registration',
+                  desc: 'Qualified PoCs can be optionally anchored on-chain (Base Mainnet) for permanent proof of contribution—free after qualification.',
+                  details: [
+                    'Available for qualified PoCs (score threshold + approval)',
+                    'Register on Base Mainnet (L2 Ethereum)',
+                    'Permanent on-chain proof of contribution',
+                    'Free after qualification (no additional fees)',
+                    'Viewable on blockchain explorers',
+                  ],
+                },
+                {
+                  step: '06',
+                  title: 'Token Allocation & Coordination',
+                  desc: 'Protocol recognition updates internal coordination accounting (non-financial ERC-20 units) in the 90T SYNTH Motherlode.',
+                  details: [
+                    'Internal coordination tokens allocated',
+                    'Non-financial accounting units (ERC-20)',
+                    'Tracked in 90T SYNTH Motherlode',
+                    'Used for protocol coordination and indexing',
+                    'View allocation in dashboard',
+                  ],
+                },
+              ].map((item) => (
+                <div
+                  key={item.step}
+                  className="border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-4"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="cockpit-badge cockpit-badge-amber min-w-[3rem] text-center">
+                      {item.step}
                     </div>
-                    <div className="cockpit-text mt-1 text-xs" style={{ opacity: 0.8 }}>
-                      Resolves multiple informational layers simultaneously, rather than
-                      sequentially—unavailable to linear approaches
-                    </div>
-                  </div>
-                  <div className="rounded bg-black/20 p-2">
-                    <div className="cockpit-text text-sm font-semibold">
-                      Edge Sweet Spot Identification
-                    </div>
-                    <div className="cockpit-text mt-1 text-xs" style={{ opacity: 0.8 }}>
-                      Identifies zones of maximal resonance at boundaries between order and
-                      disorder, measured by contrast constant Cₑ
-                    </div>
-                  </div>
-                  <div className="rounded bg-black/20 p-2">
-                    <div className="cockpit-text text-sm font-semibold">
-                      Fractal Coherence Density
-                    </div>
-                    <div className="cockpit-text mt-1 text-xs" style={{ opacity: 0.8 }}>
-                      Measures information-rich systems via holographic hydrogen–mediated resonance
-                      gradients, not signal amplitude alone
-                    </div>
-                  </div>
-                  <div className="rounded bg-black/20 p-2">
-                    <div className="cockpit-text text-sm font-semibold">
-                      Predictive Informational Signatures
-                    </div>
-                    <div className="cockpit-text mt-1 text-xs" style={{ opacity: 0.8 }}>
-                      Yields repeatable, predictive informational signatures where linear metrics
-                      fail or decohere
+                    <div className="flex-1">
+                      <div className="cockpit-title mb-2 text-lg">{item.title}</div>
+                      <div className="cockpit-text mb-3 text-sm">{item.desc}</div>
+                      <div className="space-y-1.5 border-t border-[var(--keyline-primary)] pt-3">
+                        {item.details.map((detail, idx) => (
+                          <div key={idx} className="cockpit-text flex items-start gap-2 text-xs">
+                            <span className="text-[var(--hydrogen-amber)]">▸</span>
+                            <span>{detail}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              ))}
 
-              <div className="border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-4">
-                <div className="cockpit-label mb-3">Validated Predictions</div>
-                <div className="cockpit-text space-y-2 text-sm">
-                  <p>
-                    <strong>Information-rich systems</strong> exhibit holographic hydrogen–mediated
-                    resonance gradients, measurable as fractal coherence density rather than signal
-                    amplitude alone.
-                  </p>
-                  <p>
-                    <strong>Edge-boundary zones</strong> produce maximal informational contrast,
-                    defining contrast constant Cₑ ≈ 1.62 ± 0.07, representing a potentially
-                    universal scaling measure of edge resonance.
-                  </p>
-                  <p>
-                    <strong>Fractal-aware measurement</strong> yields repeatable, predictive
-                    informational signatures where linear metrics fail or decohere.
-                  </p>
-                  <p>
-                    <strong>Holographic hydrogen scanning</strong> resolves nested informational
-                    layers simultaneously, rather than sequentially.
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-4 border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)] p-4">
+              <div className="mt-6 border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)] p-4">
                 <div className="cockpit-label mb-2" style={{ color: '#ffb84d' }}>
-                  Implications
+                  Ready to Begin Your Journey?
                 </div>
-                <ul className="cockpit-text space-y-1 text-sm">
-                  <li>
-                    • <strong>Predictive framework</strong> for Syntheverse sandbox design
-                  </li>
-                  <li>
-                    • <strong>Efficient rendering</strong>: only the theater of awareness is
-                    generated as navigation unfolds
-                  </li>
-                  <li>
-                    • <strong>Hybrid AI–human cognition</strong>: supports scalable synthetic
-                    awareness systems
-                  </li>
-                  <li>
-                    • <strong>Operational MRI analog</strong> for information, awareness, and
-                    coherence measurement
-                  </li>
+                <p className="cockpit-text mb-4 text-sm">
+                  You&apos;ve completed the comprehensive training. You now understand the theory,
+                  validation, and practical workflow. Join the Syntheverse colony and start
+                  contributing to the regenerative ecosystem. Submission fee: $500 for
+                  evaluation—well below submission fees at leading journals. Qualified PoCs may be
+                  optionally registered on-chain.
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <Link href="/signup">
+                    <button className="cockpit-lever">Create Account</button>
+                  </Link>
+                  <Link href="/login">
+                    <button className="cockpit-lever">Sign In</button>
+                  </Link>
+                  <Link href="/submit">
+                    <button className="cockpit-lever">Submit PoC</button>
+                  </Link>
+                  <Link href="/dashboard">
+                    <button className="cockpit-lever">View Dashboard</button>
+                  </Link>
+                </div>
+              </div>
+
+              <div className="border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-4">
+                <div className="cockpit-label mb-2">What You&apos;ve Learned</div>
+                <p className="cockpit-text mb-3 text-sm">
+                  Throughout these 13 modules, you&apos;ve mastered the complete Syntheverse
+                  framework:
+                </p>
+                <ul className="cockpit-text space-y-1.5 text-sm">
+                  <li>• Proof-of-Contribution (PoC) system and blockchain integration</li>
+                  <li>• Holographic Hydrogen Fractal (HHF) theory and applications</li>
+                  <li>• SynthScan™ MRI evaluation methodology</li>
+                  <li>• Tokenomics: Gold/Silver/Copper qualifications and 90T SYNTH Motherlode</li>
+                  <li>• Awarenessverse and recursive awareness frameworks</li>
+                  <li>• System validation and empirically tested predictions</li>
+                  <li>• Complete workflow from submission to blockchain registration</li>
                 </ul>
-              </div>
-
-              <div className="border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-4">
-                <div className="cockpit-label mb-2">Research Foundation</div>
-                <p className="cockpit-text mb-3 text-sm">
-                  This framework is based on the research paper:{' '}
-                  <strong>
-                    &quot;Holographic Hydrogen Fractal Syntheverse Expedition: Holographic Hydrogen
-                    Fractal MRI for Information Measurement, Imaging, and Edge Contrast&quot;
-                  </strong>{' '}
-                  by the FractiAI Research Team × Syntheverse Whole Brain AI.
-                </p>
-                <p className="cockpit-text text-xs" style={{ opacity: 0.8 }}>
-                  Validated against publicly available spectroscopy, neurophysiology, and
-                  hydration-network literature, combined with in-silico Syntheverse modeling.
-                </p>
               </div>
             </div>
           </div>
