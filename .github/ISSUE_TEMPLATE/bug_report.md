@@ -25,13 +25,13 @@ A clear and concise description of what actually happened.
 If applicable, add screenshots to help explain your problem.
 
 ## Environment
-- **Browser**: [e.g. Chrome, Firefox, Safari]
-- **OS**: [e.g. macOS, Windows, Linux]
-- **Version**: [e.g. 1.0.0]
+- **OS**: [e.g. macOS 14.0]
+- **Browser**: [e.g. Chrome 120]
+- **Node Version**: [e.g. 20.10.0]
+- **Deployment**: [e.g. Local / Vercel Production]
 
 ## Additional Context
 Add any other context about the problem here.
 
-## Related Issues
-Link to any related issues.
-
+## Logs
+If applicable, add relevant logs or error messages.

@@ -13,14 +13,13 @@ A clear and concise description of the feature you'd like to see.
 What problem does this feature solve? What use case does it address?
 
 ## Proposed Solution
-Describe how you envision this feature working.
+A clear and concise description of what you want to happen.
 
 ## Alternatives Considered
-Describe any alternative solutions or features you've considered.
+A clear and concise description of any alternative solutions or features you've considered.
 
 ## Additional Context
 Add any other context, mockups, or examples about the feature request here.
 
-## Related Issues
-Link to any related issues.
-
+## Implementation Notes
+If you have ideas about how this could be implemented, please share them here.
