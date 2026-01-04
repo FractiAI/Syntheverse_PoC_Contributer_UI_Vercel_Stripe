@@ -139,6 +139,14 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
                                 error: 'Payment processing is taking longer than expected. Please check your dashboard.'
                             })
                         }
+                    } else if (submission.status === 'evaluation_failed' || submission.status === 'error') {
+                        // Evaluation failed
+                        clearInterval(pollInterval)
+                        const metadata = submission.metadata || {}
+                        setEvaluationStatus({
+                            completed: false,
+                            error: metadata.evaluation_error || 'Evaluation failed. Please try submitting again.'
+                        })
                     }
                 } else if (pollCount >= maxPolls) {
                     clearInterval(pollInterval)
@@ -298,11 +306,14 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
 
             // Check if submission was successful - operator mode or payment required
             if (result.operator_mode && result.submission_hash) {
-                // Operator mode: submission accepted, evaluation in progress
+                // Operator mode: submission accepted, wait for evaluation
                 setSubmissionHash(result.submission_hash)
                 setSuccess(true)
                 setLoading(false)
-                // Show success message via success state
+                
+                // Show loading dialog and poll for evaluation (same as payment flow)
+                setEvaluationStatus({ completed: false })
+                checkEvaluationStatusAfterPayment(result.submission_hash)
                 return
             } else if (result.checkout_url && result.submission_hash) {
                 // Redirect to Stripe checkout for payment ($500 submission fee)
