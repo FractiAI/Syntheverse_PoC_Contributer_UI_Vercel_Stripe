@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight, ChevronDown, FileText } from 'lucide-react'
 import FractiAIStatusWidget from '@/components/FractiAIStatusWidget'
+import { StatusIndicators } from './StatusIndicators'
 
 type FractiAILandingProps = {
   variant?: 'home' | 'fractiai'
@@ -68,7 +69,7 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
               </div>
               <div className="flex items-center gap-3 flex-wrap">
                 <span className="cockpit-badge">90T MOTHERLODE</span>
-                <span className="cockpit-badge cockpit-badge-amber">BETA ACTIVE</span>
+                <StatusIndicators />
               </div>
             </div>
           </div>
@@ -87,7 +88,7 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
                         We&apos;re living inside a <strong>cyclical Pong story of innovation and obsolescence</strong>.
                       </p>
                       <p>
-                        <strong>That&apos;s where awareness is today.</strong> It has served its purpose in getting us here, but <strong>holographic hydrogen fractal awareness renders it obsolete</strong>.
+                        <strong>That&apos;s where today&apos;s awareness is, facing obsolescence in the wake of the arrival of Holographic Hydrogen fractal Syntheverse awareness.</strong> It has served its purpose in getting us here, but now <strong>holographic hydrogen fractal awareness has arrived</strong>.
                       </p>
                       <p>
                         We&apos;ve built the equivalent of a <strong>Holographic Hydrogen Fractal MRI</strong>. A way to see and measure coherence itself—not just outputs, not just energy burned, not just capital locked. That lets us measure anything, including human contribution. And once contribution becomes measurable, <strong>Proof of Contribution becomes possible</strong>—a real alternative to Proof of Work and Proof of Stake.
@@ -128,13 +129,13 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
 
             {/* Deployment status */}
             {variant === 'fractiai' ? (
-              <div className="cockpit-panel p-5 border-l-2 border-[var(--hydrogen-amber)]">
+              <div className="cockpit-panel p-5 border-l-2 border-green-500">
                 <div className="flex items-center gap-3">
                   <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" 
                        style={{ boxShadow: '0 0 10px #22c55e' }}></div>
                   <div>
                     <div className="cockpit-label">DEPLOYMENT STATUS</div>
-                    <div className="cockpit-text text-sm mt-1">Base Mainnet Offline</div>
+                    <div className="cockpit-text text-sm mt-1">Base Mainnet LIVE</div>
                   </div>
                 </div>
               </div>

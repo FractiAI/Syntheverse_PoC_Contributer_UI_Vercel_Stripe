@@ -5,6 +5,7 @@
  */
 
 import DashboardHeaderProfileDropdown from './DashboardHeaderProfileDropdown'
+import { StatusIndicators } from './StatusIndicators'
 
 export default function CockpitHeader() {
     return (
@@ -33,13 +34,9 @@ export default function CockpitHeader() {
 
                     {/* Syntheverse Status & Profile */}
                     <div className="flex items-center gap-6">
-                        {/* Syntheverse Deployment Status */}
-                        <div className="hidden md:flex items-center gap-2">
-                            <div className="w-2 h-2 bg-red-500 rounded-full" 
-                                 style={{ boxShadow: '0 0 8px #ef4444' }}></div>
-                            <div className="cockpit-badge">
-                                <span>BASE MAINNET OFFLINE</span>
-                            </div>
+                        {/* Status Indicators */}
+                        <div className="hidden md:flex items-center gap-3">
+                            <StatusIndicators />
                         </div>
                         <DashboardHeaderProfileDropdown />
                     </div>
