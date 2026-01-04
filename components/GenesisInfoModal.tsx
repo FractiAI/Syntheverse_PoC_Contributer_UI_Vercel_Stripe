@@ -118,7 +118,7 @@ export function GenesisInfoModal({ isOpen, onClose }: GenesisInfoModalProps) {
                 </div>
 
                 {/* Additional Info */}
-                {name === 'SyntheverseGenesisSYNTH90T' && (
+                {name === 'SyntheverseGenesisSYNTH90T' && 'totalSupply' in contract && (
                   <div className="mt-3 pt-3 border-t border-[var(--keyline-primary)]">
                     <div className="cockpit-label text-xs mb-2">Token Details:</div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
@@ -136,7 +136,7 @@ export function GenesisInfoModal({ isOpen, onClose }: GenesisInfoModalProps) {
                   </div>
                 )}
 
-                {name === 'SyntheverseGenesisLensKernel' && (
+                {name === 'SyntheverseGenesisLensKernel' && 'lensName' in contract && (
                   <div className="mt-3 pt-3 border-t border-[var(--keyline-primary)]">
                     <div className="cockpit-label text-xs mb-2">Protocol Details:</div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
