@@ -81,10 +81,18 @@ export function BootSequenceIndicators() {
                         }
                     })
                     
+                    // Simple logic: Green if pass rate is 100% (perfect score)
+                    const overallPassRate = report.summary?.passRate || 0
+                    const isPerfectScore = overallPassRate >= 100
+                    
+                    // Bridge/Router is green (ready) if pass rate is 100%
+                    const bridgeVerdict = isPerfectScore ? 'ready' : 
+                                         (report.readiness?.verdict === 'conditional' ? 'conditional' : 'not_ready')
+                    
                     setBootStatus({
-                        bridgeActive: report.readiness?.verdict === 'ready' || report.readiness?.verdict === 'conditional',
-                        verdict: report.readiness?.verdict || 'unknown',
-                        passRate: report.summary?.passRate || 0,
+                        bridgeActive: isPerfectScore || report.readiness?.verdict === 'ready' || report.readiness?.verdict === 'conditional',
+                        verdict: bridgeVerdict,
+                        passRate: overallPassRate,
                         totalTests: report.summary?.totalTests || 0,
                         timestamp: report.timestamp,
                         suiteScores
