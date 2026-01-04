@@ -14,8 +14,8 @@ import * as path from 'path'
 
 const execAsync = promisify(exec)
 
-// Maximum execution time: 10 minutes (Vercel serverless function limit)
-export const maxDuration = 600
+// Maximum execution time: 5 minutes (Vercel hobby plan limit: 1-300 seconds)
+export const maxDuration = 300
 
 export async function GET(request: NextRequest) {
     try {
@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
         console.log(`📝 Command: ${testCommand}`)
 
         // Run tests with timeout
-        const timeout = 9 * 60 * 1000 // 9 minutes (leave 1 minute buffer)
+        const timeout = 4 * 60 * 1000 // 4 minutes (leave 1 minute buffer for 5 min maxDuration)
         const startTime = Date.now()
 
         try {
