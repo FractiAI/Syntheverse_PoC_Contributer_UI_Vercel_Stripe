@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
 import { hasActiveSubscription } from '@/utils/stripe/check-subscription'
-import '../dashboard-cockpit.css'
+import '../../dashboard-cockpit.css'
 import Link from 'next/link'
 import { ArrowLeft, Scan, Activity, BarChart3, Settings } from 'lucide-react'
 
