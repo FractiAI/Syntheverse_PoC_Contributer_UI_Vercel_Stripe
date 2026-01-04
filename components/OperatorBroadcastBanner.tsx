@@ -57,7 +57,7 @@ export function OperatorBroadcastBanner({
             switch (nature) {
                 case 'announcement':
                     return {
-                        bg: 'bg-gradient-to-r from-amber-900/40 to-orange-900/40',
+                        bg: 'bg-gradient-to-r from-amber-900/60 to-orange-900/60',
                         border: 'border-amber-500',
                         text: 'text-amber-200',
                         icon: 'text-amber-400',
@@ -66,7 +66,7 @@ export function OperatorBroadcastBanner({
                     }
                 case 'milestone':
                     return {
-                        bg: 'bg-gradient-to-r from-yellow-900/40 to-amber-900/40',
+                        bg: 'bg-gradient-to-r from-yellow-900/60 to-amber-900/60',
                         border: 'border-yellow-500',
                         text: 'text-yellow-200',
                         icon: 'text-yellow-400',
@@ -75,7 +75,7 @@ export function OperatorBroadcastBanner({
                     }
                 case 'warning':
                     return {
-                        bg: 'bg-gradient-to-r from-orange-900/30 to-red-900/30',
+                        bg: 'bg-gradient-to-r from-orange-900/60 to-red-900/60',
                         border: 'border-orange-500',
                         text: 'text-orange-200',
                         icon: 'text-orange-400',
@@ -84,7 +84,7 @@ export function OperatorBroadcastBanner({
                     }
                 case 'alert':
                     return {
-                        bg: 'bg-gradient-to-r from-red-900/50 to-red-800/50',
+                        bg: 'bg-gradient-to-r from-red-900/70 to-red-800/70',
                         border: 'border-red-500',
                         text: 'text-red-200',
                         icon: 'text-red-400',
@@ -93,7 +93,7 @@ export function OperatorBroadcastBanner({
                     }
                 case 'success':
                     return {
-                        bg: 'bg-gradient-to-r from-green-900/30 to-emerald-900/30',
+                        bg: 'bg-gradient-to-r from-green-900/60 to-emerald-900/60',
                         border: 'border-green-500',
                         text: 'text-green-200',
                         icon: 'text-green-400',
@@ -102,7 +102,7 @@ export function OperatorBroadcastBanner({
                     }
                 case 'info':
                     return {
-                        bg: 'bg-gradient-to-r from-blue-900/30 to-cyan-900/30',
+                        bg: 'bg-gradient-to-r from-blue-900/60 to-cyan-900/60',
                         border: 'border-blue-500',
                         text: 'text-blue-200',
                         icon: 'text-blue-400',
@@ -111,7 +111,7 @@ export function OperatorBroadcastBanner({
                     }
                 case 'update':
                     return {
-                        bg: 'bg-gradient-to-r from-cyan-900/30 to-blue-900/30',
+                        bg: 'bg-gradient-to-r from-cyan-900/60 to-blue-900/60',
                         border: 'border-cyan-500',
                         text: 'text-cyan-200',
                         icon: 'text-cyan-400',
@@ -134,7 +134,7 @@ export function OperatorBroadcastBanner({
         switch (urgency) {
             case 'critical':
                 return {
-                    bg: 'bg-red-900/50',
+                    bg: 'bg-red-900/70',
                     border: 'border-red-500/50',
                     text: 'text-red-100',
                     icon: 'text-red-400',
@@ -143,7 +143,7 @@ export function OperatorBroadcastBanner({
                 }
             case 'high':
                 return {
-                    bg: 'bg-orange-900/20',
+                    bg: 'bg-orange-900/60',
                     border: 'border-orange-500/50',
                     text: 'text-orange-100',
                     icon: 'text-orange-400',
@@ -152,7 +152,7 @@ export function OperatorBroadcastBanner({
                 }
             case 'medium':
                 return {
-                    bg: 'bg-[var(--hydrogen-amber)]/10',
+                    bg: 'bg-[var(--hydrogen-amber)]/40',
                     border: 'border-[var(--hydrogen-amber)]/50',
                     text: 'text-[var(--hydrogen-amber)]',
                     icon: 'text-[var(--hydrogen-amber)]',
@@ -161,7 +161,7 @@ export function OperatorBroadcastBanner({
                 }
             case 'low':
                 return {
-                    bg: 'bg-blue-900/20',
+                    bg: 'bg-blue-900/60',
                     border: 'border-blue-500/50',
                     text: 'text-blue-100',
                     icon: 'text-blue-400',
@@ -201,8 +201,8 @@ export function OperatorBroadcastBanner({
 
                 {/* Message Content */}
                 <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                        <div className="cockpit-label text-xs uppercase tracking-wider">
+                    <div className="flex items-center gap-2 mb-3">
+                        <div className={`${styles.bg} ${styles.border} border px-3 py-1.5 rounded cockpit-label text-xs uppercase tracking-wider font-bold`}>
                             OPERATOR BROADCAST
                         </div>
                         <div className={`w-2 h-2 rounded-full ${styles.icon.replace('text-', 'bg-')}`}></div>
