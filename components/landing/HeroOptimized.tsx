@@ -34,8 +34,8 @@ export function HeroOptimized() {
         </p>
 
         <p className="cockpit-text mb-8 text-base opacity-75">
-          An evaluation system that scores novelty, density, coherence, and alignment — then
-          anchors proofs on Base
+          An evaluation system that scores novelty, density, coherence, and alignment — then anchors
+          proofs on Base
         </p>
 
         {/* CTAs */}
@@ -84,4 +84,3 @@ export function HeroOptimized() {
     </section>
   );
 }
-

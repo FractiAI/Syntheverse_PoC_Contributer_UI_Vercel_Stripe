@@ -58,4 +58,3 @@ export function Tooltip({ term, definition, children }: TooltipProps) {
     </span>
   );
 }
-

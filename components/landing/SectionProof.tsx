@@ -47,9 +47,7 @@ export function SectionProof() {
               <span className="cockpit-badge text-xs">GOLD</span>
               <span className="cockpit-label text-xs">Score: 8,343</span>
             </div>
-            <h3 className="cockpit-title mb-2 text-base">
-              Holographic Hydrogen Fractal Framework
-            </h3>
+            <h3 className="cockpit-title mb-2 text-base">Holographic Hydrogen Fractal Framework</h3>
             <p className="cockpit-text mb-4 text-sm opacity-80">
               Cross-domain coherence detection using hydrogen resonance patterns...
             </p>
@@ -200,4 +198,3 @@ export function SectionProof() {
     </SectionWrapper>
   );
 }
-

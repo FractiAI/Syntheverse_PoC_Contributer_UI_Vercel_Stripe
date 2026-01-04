@@ -46,18 +46,13 @@ export function SectionWhat() {
         {features.map((feature, idx) => (
           <Card key={idx} hover={true}>
             <div className="flex items-start gap-4">
-              <div
-                className="rounded-lg p-3"
-                style={{ backgroundColor: 'rgba(255,184,77,0.1)' }}
-              >
+              <div className="rounded-lg p-3" style={{ backgroundColor: 'rgba(255,184,77,0.1)' }}>
                 <feature.icon className="h-6 w-6" style={{ color: 'var(--hydrogen-amber)' }} />
               </div>
               <div className="flex-1">
                 <h3 className="cockpit-title mb-2 text-base">
                   {feature.title}
-                  {feature.optional && (
-                    <span className="ml-2 text-xs opacity-60">(optional)</span>
-                  )}
+                  {feature.optional && <span className="ml-2 text-xs opacity-60">(optional)</span>}
                 </h3>
                 <p className="cockpit-text text-sm opacity-80">{feature.description}</p>
               </div>
@@ -75,4 +70,3 @@ export function SectionWhat() {
     </SectionWrapper>
   );
 }
-

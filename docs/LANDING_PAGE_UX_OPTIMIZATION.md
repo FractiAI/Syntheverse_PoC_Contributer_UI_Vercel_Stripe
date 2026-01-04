@@ -1,4 +1,5 @@
 # Syntheverse PoC Landing Page Optimization
+
 ## Conversion-Focused UX/Product Design Strategy
 
 **Date**: January 2025  
@@ -12,11 +13,13 @@
 **Current Problem**: Complex concepts (fractal, holographic hydrogen, PoC, SYNTH, MOTHERLODE VAULT) create cognitive overload. Dense narrative-first approach buries actionable paths. No clear contributor journey.
 
 **Solution**: Progressive disclosure architecture with three cognitive layers:
+
 1. **Instant clarity** (3-second scan): What it is, why it matters, what to do
 2. **Technical credibility** (30-second scan): Evidence, validation, system architecture
 3. **Deep exploration** (3+ minutes): Full narrative, papers, proof library
 
 **Key Metrics to Track**:
+
 - Time to first CTA click
 - Scroll depth at section breaks
 - Secondary CTA engagement (onboarding, examples, papers)
@@ -31,6 +34,7 @@
 **Visual Hierarchy**: Large, centered, maximum 40% of viewport height
 
 **Layout**:
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │                                                     │
@@ -58,16 +62,19 @@
 `An evaluation system that scores novelty, density, coherence, and alignment — then anchors proofs on Base`
 
 **CTAs**:
+
 - **Primary**: `Submit Your PoC` → `/signup` (then `/submit`)
 - **Secondary**: `See How It Works` → scroll to #how-it-works
 - **Tertiary**: `View Examples` → scroll to #proof-papers
 
 **Visual Elements**:
+
 - Subtle fractal background animation (slow morph, 60s cycle, low opacity ~0.08)
 - Sticky CTA bar on scroll (mobile-first)
 - Trust indicators: "Base Mainnet LIVE" • "90T SYNTH" • "Beta Active"
 
 **Mobile Optimizations**:
+
 - Stack CTAs vertically
 - Reduce headline to 32px
 - Single primary CTA above fold
@@ -79,6 +86,7 @@
 **Purpose**: 60-second comprehension for newcomers. No jargon until concepts are defined.
 
 **Layout**:
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │  [Eyebrow: OVERVIEW]                               │
@@ -124,13 +132,14 @@
    Icon: 🗺️  
    `Your work becomes vector-searchable and comparable in the sandbox`
 
-4. **Register On-Chain** *(optional)*  
+4. **Register On-Chain** _(optional)_  
    Icon: ⛓️  
    `Anchor proof on Base Mainnet for permanence (free after qualification)`
 
 **CTA**: `Submit Your PoC` → `/signup`
 
-**Progressive Disclosure**: 
+**Progressive Disclosure**:
+
 - Expandable "What's a PoC?" tooltip (inline, tap/hover)
 - Expandable "What gets evaluated?" drawer
 
@@ -143,6 +152,7 @@
 **Purpose**: Problem → Consequence → Solution (30 seconds)
 
 **Layout**:
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │  [Eyebrow: THE PROBLEM]                            │
@@ -200,6 +210,7 @@ Text: `SynthScan™ MRI scores contributions objectively (novelty, density, cohe
 **Purpose**: Clear contributor journey (45 seconds)
 
 **Layout**:
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │  [Eyebrow: YOUR JOURNEY]                           │
@@ -230,7 +241,7 @@ Text: `SynthScan™ MRI scores contributions objectively (novelty, density, cohe
 **Eyebrow**: `YOUR JOURNEY`  
 **H2**: `How It Works: 5 Steps`
 
-**Step 1 - Prepare** *(Default expanded)*:  
+**Step 1 - Prepare** _(Default expanded)_:  
 `Extract your abstract, equations, and constants. Max 4000 characters (about 1 page).`  
 **CTA**: `See Example PoC` → Opens example in modal
 
@@ -246,11 +257,12 @@ Text: `SynthScan™ MRI scores contributions objectively (novelty, density, cohe
 `Review redundancy feedback. Refine your work to reduce overlap and improve scores. Resubmit if needed.`  
 **CTA**: `Learn About Scoring` → `/onboarding`
 
-**Step 5 - Register** *(optional)*:  
+**Step 5 - Register** _(optional)_:  
 `Qualifying PoCs (score threshold + operator approval) can be registered on Base Mainnet for permanent proof. Free after qualification.`  
 **CTA**: `Check Eligibility` → Calculator/checker tool
 
 **Visual**:
+
 - Horizontal timeline on desktop, vertical accordion on mobile
 - Active step highlighted with accent color
 - Progress indicator: "You are here" pointer
@@ -263,6 +275,7 @@ Text: `SynthScan™ MRI scores contributions objectively (novelty, density, cohe
 **Purpose**: Show validation without overwhelming newcomers (clustered, expandable)
 
 **Layout**:
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │  [Eyebrow: VALIDATION]                             │
@@ -300,6 +313,7 @@ Text: `SynthScan™ MRI scores contributions objectively (novelty, density, cohe
 **Label**: `Physics & Holographic Hydrogen`  
 **One-liner**: `Uses hydrogen holographic framing as a coherence lens — detects measurable patterns conceptually and empirically.`  
 **Expand reveals**:
+
 - CERN data analysis (ALICE): 5.8σ event-type bifurcation
 - Fractal dimension measurements (2.73 ± 0.11)
 - Multi-detector cross-validation
@@ -309,6 +323,7 @@ Text: `SynthScan™ MRI scores contributions objectively (novelty, density, cohe
 **Label**: `Biological & Fractal Structure`  
 **One-liner**: `Fractal self-similarity as a compression signal — organizational patterns that repeat across scales.`  
 **Expand reveals**:
+
 - Biological proxy validation (PFD 1.024, HFD 0.871)
 - Genome-as-conditions model (not instructions)
 - Cross-scale pattern detection
@@ -318,6 +333,7 @@ Text: `SynthScan™ MRI scores contributions objectively (novelty, density, cohe
 **Label**: `Materials & Cross-Domain Systems`  
 **One-liner**: `Universal constants and equation structure as contribution fingerprints — detecting alignment across fields.`  
 **Expand reveals**:
+
 - Isotopologue scaling (deviation < 2.4%)
 - Molecular/photonic validation (error < 10⁻⁶)
 - PEFF seismic/EEG coherence
@@ -334,6 +350,7 @@ Text: `SynthScan™ MRI scores contributions objectively (novelty, density, cohe
 **Purpose**: Centralize all token/risk/legal info in one scannable block
 
 **Layout**:
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │  [Eyebrow: TOKEN & SANDBOX]                        │
@@ -369,6 +386,7 @@ Text: `SynthScan™ MRI scores contributions objectively (novelty, density, cohe
 **Title**: `What is SYNTH?`
 
 **Bullets**:
+
 - **Supply**: Fixed 90 trillion ERC-20 tokens
 - **Chain**: Base Mainnet (Chain ID: 8453)
 - **Purpose**: Coordination primitive for allocation accounting
@@ -383,6 +401,7 @@ Text: `SynthScan™ MRI scores contributions objectively (novelty, density, cohe
 **Title**: `How the Sandbox Works`
 
 **Bullets**:
+
 - **PoC Definition**: Abstract (findings) + equations (if any) + constants/parameters
 - **Evaluation Criteria**: Novelty, density, coherence, alignment (4 dimensions)
 - **What's Stored**: Vector embeddings, metadata, scores (NOT full text)
@@ -391,7 +410,8 @@ Text: `SynthScan™ MRI scores contributions objectively (novelty, density, cohe
 
 **CTA**: `Read Full Sandbox Rules` → Opens modal with complete terms
 
-**Visual**: 
+**Visual**:
+
 - Amber border on warning banner (3px, `border-warning`)
 - Use monospace font for token supply ("90,000,000,000,000")
 - Red asterisk on "No promises" line
@@ -403,6 +423,7 @@ Text: `SynthScan™ MRI scores contributions objectively (novelty, density, cohe
 **Purpose**: Drive conversion for vault opening deadline
 
 **Layout**:
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │  [Dark bg, amber accents, subtle glow]             │
@@ -438,11 +459,13 @@ Text: `SynthScan™ MRI scores contributions objectively (novelty, density, cohe
 `All qualifying PoCs submitted by March 19, 2026 will be registered on-chain and allocated SYNTH by score.`
 
 **3-Line Explainer**:
+
 - **What**: Allocation mechanism for the fixed-supply 90T SYNTH system
 - **Deadline**: Submit your best work by **March 19, 2026**
 - **How**: Score-based allocation after operator review (no promises)
 
 **Eligibility Checklist** (4 items):
+
 - ✓ PoC score above threshold (varies by epoch)
 - ✓ Redundancy percentage below limit
 - ✓ Operator approval (discretionary)
@@ -452,11 +475,13 @@ Text: `SynthScan™ MRI scores contributions objectively (novelty, density, cohe
 `Submitting a PoC does not guarantee SYNTH allocation, value, or profit. Operator reserves full discretion.`
 
 **CTAs**:
+
 - **Primary**: `Submit Your PoC Now` → `/signup`
 - **Secondary**: `Check Eligibility` → Calculator tool
 - **Tertiary**: `Read Vault FAQ` → Modal
 
 **Visual**:
+
 - Dark background (almost black: `#0a0a0a`)
 - Amber/gold accent color for borders and text highlights
 - Subtle box-shadow glow: `0 0 24px rgba(255,184,77,0.3)`
@@ -470,6 +495,7 @@ Text: `SynthScan™ MRI scores contributions objectively (novelty, density, cohe
 **Purpose**: Build credibility with examples and validation
 
 **Layout**:
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │  [Eyebrow: PROOF LIBRARY]                          │
@@ -499,8 +525,9 @@ Text: `SynthScan™ MRI scores contributions objectively (novelty, density, cohe
 
 **3-Tab Layout**:
 
-**Tab 1 - Examples** *(default active)*:  
+**Tab 1 - Examples** _(default active)_:  
 Show 3-6 example PoC submissions in card grid:
+
 - **Card format**:
   - Title (truncated to 60 chars)
   - 1-line abstract preview
@@ -510,6 +537,7 @@ Show 3-6 example PoC submissions in card grid:
 
 **Tab 2 - Papers**:  
 Show 3-4 key research papers/validation reports:
+
 - **Card format**:
   - Paper title
   - Authors + date
@@ -519,6 +547,7 @@ Show 3-4 key research papers/validation reports:
 
 **Tab 3 - On-Chain Proofs**:  
 Show registered PoCs on Base:
+
 - **Card format**:
   - PoC hash (truncated)
   - Registration date
@@ -527,7 +556,8 @@ Show registered PoCs on Base:
 
 **CTA**: `Browse Full Archive` → `/dashboard` (public archive view)
 
-**Visual**: 
+**Visual**:
+
 - Use horizontal tab bar (underline active tab)
 - Cards: white background, 1px border, 16px padding, 8px gap
 - Monospace font for hashes and scores
@@ -540,6 +570,7 @@ Show registered PoCs on Base:
 **Purpose**: Direct visitors to role-specific paths
 
 **Layout**:
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │  [Eyebrow: GET STARTED]                            │
@@ -579,6 +610,7 @@ Show registered PoCs on Base:
 **Title**: `For Researchers`
 
 **Journey** (5 steps):
+
 1. Read the 2-minute explainer
 2. View example evaluation
 3. Submit abstract + equations + constants
@@ -595,6 +627,7 @@ Show registered PoCs on Base:
 **Title**: `For Developers`
 
 **Journey** (4 steps):
+
 1. Read integration docs
 2. Explore API endpoints
 3. Build tool/visualization
@@ -610,6 +643,7 @@ Show registered PoCs on Base:
 **Title**: `For Alignment Work`
 
 **Journey** (5 steps):
+
 1. Read alignment track overview
 2. View framework examples
 3. Submit alignment PoC
@@ -621,6 +655,7 @@ Show registered PoCs on Base:
 ---
 
 **Visual**:
+
 - 3-column card grid on desktop, stacked on mobile
 - Icon at top-center of each card
 - Numbered list inside each card
@@ -634,11 +669,13 @@ Show registered PoCs on Base:
 ### Grid System & Spacing
 
 **Container**:
+
 - Max width: `1200px`
 - Padding: `48px` (desktop), `24px` (mobile)
 - Section vertical gap: `96px` (desktop), `64px` (mobile)
 
 **Typography Scale**:
+
 - H1 (Hero): `56px` / `32px` (mobile)
 - H2 (Section): `40px` / `28px` (mobile)
 - H3 (Subsection): `28px` / `20px` (mobile)
@@ -646,6 +683,7 @@ Show registered PoCs on Base:
 - Small/Meta: `14px` / `12px` (mobile)
 
 **Color Palette**:
+
 - **Primary (Accent)**: `#ffb84d` (hydrogen amber)
 - **Background**: `#0a0a0a` (near-black)
 - **Surface**: `#1a1a1a` (panel background)
@@ -657,6 +695,7 @@ Show registered PoCs on Base:
 - **Danger**: `#ef4444` (red)
 
 **Component Hierarchy** (visual weight order):
+
 1. **Hero CTA** (largest, accent color, 3D depth)
 2. **MOTHERLODE VAULT block** (glowing border, dark bg)
 3. **Section H2s** (large, bold)
@@ -688,23 +727,24 @@ Show registered PoCs on Base:
 
 **Terms to define inline**:
 
-| Term | Plain-Language Explanation |
-|------|----------------------------|
-| **Proof-of-Contribution (PoC)** | A compact submission: abstract + equations + constants—enough to evaluate originality and structure. |
-| **Fractal** | A pattern that repeats at different scales. Used as a signal for organization and compressibility. |
-| **Holographic Hydrogen (HHF)** | A measurement lens using hydrogen resonance as a metaphor and method for detecting coherence. |
-| **SynthScan™ MRI** | An evaluation system that scores contribution quality (novelty, density, coherence, alignment) and overlap. |
-| **Coherence** | How well ideas connect internally—like signal-to-noise for logic. |
-| **Novelty** | How new the contribution is compared to what already exists. |
-| **Density** | How much valuable information is packed into the work. |
-| **Alignment** | How well the work fits the Syntheverse sandbox principles. |
-| **Redundancy** | Overlap with existing archived contributions (measured via vectors). |
-| **SYNTH Token** | A coordination primitive for allocation accounting—on Base—explicitly not a profit promise. |
-| **MOTHERLODE VAULT** | The allocation mechanism tied to qualifying contributions (opens March 20, 2026). |
-| **Base Mainnet** | An Ethereum Layer 2 blockchain (Coinbase) where proofs are anchored. |
-| **Vector / Embedding** | A numerical representation of your work that allows similarity comparison. |
+| Term                            | Plain-Language Explanation                                                                                  |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| **Proof-of-Contribution (PoC)** | A compact submission: abstract + equations + constants—enough to evaluate originality and structure.        |
+| **Fractal**                     | A pattern that repeats at different scales. Used as a signal for organization and compressibility.          |
+| **Holographic Hydrogen (HHF)**  | A measurement lens using hydrogen resonance as a metaphor and method for detecting coherence.               |
+| **SynthScan™ MRI**              | An evaluation system that scores contribution quality (novelty, density, coherence, alignment) and overlap. |
+| **Coherence**                   | How well ideas connect internally—like signal-to-noise for logic.                                           |
+| **Novelty**                     | How new the contribution is compared to what already exists.                                                |
+| **Density**                     | How much valuable information is packed into the work.                                                      |
+| **Alignment**                   | How well the work fits the Syntheverse sandbox principles.                                                  |
+| **Redundancy**                  | Overlap with existing archived contributions (measured via vectors).                                        |
+| **SYNTH Token**                 | A coordination primitive for allocation accounting—on Base—explicitly not a profit promise.                 |
+| **MOTHERLODE VAULT**            | The allocation mechanism tied to qualifying contributions (opens March 20, 2026).                           |
+| **Base Mainnet**                | An Ethereum Layer 2 blockchain (Coinbase) where proofs are anchored.                                        |
+| **Vector / Embedding**          | A numerical representation of your work that allows similarity comparison.                                  |
 
 **Design**:
+
 - Dotted underline on glossary terms
 - Tooltip appears above term (desktop) or below (mobile)
 - Max width: `300px`
@@ -801,17 +841,20 @@ Engage with other alignment contributors
 ### CTA Hierarchy (Priority Order)
 
 **Primary CTAs** (accent color, large, sticky on scroll):
+
 1. `Submit Your PoC` (Hero + Section 2 + Section 7)
 2. `See How It Works` (Hero)
 3. `Check Eligibility` (Section 7 - MOTHERLODE)
 
 **Secondary CTAs** (outline style, medium):
+
 1. `View Examples` (Hero + Section 8)
 2. `Read Short Paper` (Section 5)
 3. `Browse Archive` (Section 8)
 4. `Start Onboarding` (Section 9)
 
 **Tertiary CTAs** (text link, small):
+
 1. `Learn About Scoring` (tooltips, modals)
 2. `View Developer Docs` (Section 9)
 3. `Read Vault FAQ` (Section 7)
@@ -824,23 +867,27 @@ Engage with other alignment contributors
 ### Readability
 
 **Typography**:
+
 - Use system font stack: `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, ...`
 - Line height: `1.7` for body text
 - Letter spacing: `-0.02em` for headlines
 - Max line length: `70ch` (characters) for body text
 
 **Contrast**:
+
 - Text on background: minimum 7:1 ratio (AAA standard)
 - Use `#f5f5f5` (near-white) on `#0a0a0a` (near-black)
 - Muted text: `#a0a0a0` (4.5:1 ratio minimum)
 
 **Whitespace**:
+
 - Section padding: `96px` vertical (desktop), `64px` (mobile)
 - Card padding: `24px` internal
 - Paragraph spacing: `16px` between paragraphs
 - List item spacing: `8px` between items
 
 **Scannability**:
+
 - Use bullet lists instead of paragraphs where possible
 - Eyebrow labels (small caps, `12px`, `#a0a0a0`) above every section
 - Bold keywords in body text
@@ -851,26 +898,31 @@ Engage with other alignment contributors
 ### Engagement & Retention
 
 **Progressive Disclosure**:
+
 - Default: Show 3-5 bullets + "Expand for more"
 - Expanded: Show full content + references
 - Use `<details>` HTML element for semantic collapse/expand
 
 **Micro-Interactions**:
+
 - CTA hover: 2px lift + shadow
 - Card hover: border color change (subtle)
 - Tab switch: underline slide animation (200ms ease)
 - Scroll indicator: bounce animation (2s loop)
 
 **Loading States**:
+
 - Skeleton screens for data-heavy sections (e.g., archive)
 - Spinner for CTA clicks (prevent double-submit)
 - Progress bar for multi-step onboarding
 
 **Empty States**:
+
 - If archive is empty: "No PoCs yet. Be the first to submit."
 - If user has no submissions: "Ready to contribute? Submit your first PoC."
 
 **Error States**:
+
 - Form validation: Inline error messages (red, below field)
 - API errors: Toast notification (top-right, auto-dismiss 5s)
 - Retry button for failed loads
@@ -880,21 +932,25 @@ Engage with other alignment contributors
 ### Mobile Optimizations
 
 **Navigation**:
+
 - Sticky header with hamburger menu (collapse sections)
 - Floating CTA button (bottom-right, `Submit PoC`)
 - Breadcrumb trail (show current section in header)
 
 **Touch Targets**:
+
 - Minimum 44×44px for all interactive elements
 - Increase spacing between CTAs on mobile (16px gap)
 
 **Content Reflow**:
+
 - Stack cards vertically on mobile (<768px)
 - Collapse multi-column layouts to single column
 - Reduce font sizes (see typography scale above)
 - Hide secondary CTAs on mobile (show only primary)
 
 **Performance**:
+
 - Lazy-load images below the fold
 - Defer non-critical JS (animations, analytics)
 - Use `srcset` for responsive images
@@ -905,17 +961,20 @@ Engage with other alignment contributors
 ### Accessibility (WCAG 2.1 AA Minimum)
 
 **Keyboard Navigation**:
+
 - All interactive elements focusable via Tab
 - Focus indicator: 3px accent-color outline
 - Skip-to-content link (visible on Tab focus)
 
 **Screen Readers**:
+
 - Semantic HTML (`<header>`, `<nav>`, `<main>`, `<section>`, `<article>`)
 - `aria-label` on icon-only buttons
 - `alt` text on all images (descriptive, <125 chars)
 - `aria-expanded` on expandable sections
 
 **Motion**:
+
 - Respect `prefers-reduced-motion` media query
 - Disable animations if user prefers reduced motion
 - Provide pause button for auto-playing content (countdown timer)
@@ -929,6 +988,7 @@ Engage with other alignment contributors
 **Concept**: Slow-morphing fractal field (reinforces fractal theme)
 
 **Implementation**:
+
 - SVG or Canvas-based
 - 60-second loop
 - Low opacity: `0.08` (barely visible, atmospheric)
@@ -942,18 +1002,21 @@ Engage with other alignment contributors
 ### Scroll-Triggered Animations
 
 **Fade-in-up** (sections enter from below):
+
 - Trigger: Section enters viewport (IntersectionObserver)
 - Animation: `opacity 0 → 1`, `translateY(20px → 0)`
 - Duration: `600ms`
 - Easing: `cubic-bezier(0.4, 0, 0.2, 1)`
 
 **Counter animation** (MOTHERLODE countdown):
+
 - Trigger: Section enters viewport
 - Animation: Numbers count up from 0 to target
 - Duration: `1200ms`
 - Use `requestAnimationFrame` for smooth counting
 
 **Progress bar** (How It Works timeline):
+
 - Trigger: User scrolls through steps
 - Animation: Bar fills left-to-right as steps complete
 - Color: Accent color gradient
@@ -963,12 +1026,14 @@ Engage with other alignment contributors
 ### CTA Micro-Interactions
 
 **Primary button hover**:
+
 - Scale: `1.0 → 1.02`
 - Shadow: `0 2px 4px → 0 8px 16px` (accent color)
 - Duration: `200ms`
 - Cursor: `pointer`
 
 **Primary button click**:
+
 - Scale: `1.02 → 0.98` (momentary press)
 - Duration: `100ms`
 - Haptic feedback (if supported)
@@ -978,12 +1043,14 @@ Engage with other alignment contributors
 ### Card Interactions
 
 **Hover** (desktop):
+
 - Border color: `#2a2a2a → accent color`
 - Lift: `translateY(0 → -4px)`
 - Shadow: `0 2px 8px → 0 8px 24px`
 - Duration: `300ms`
 
 **Tap** (mobile):
+
 - Background: `#1a1a1a → #2a2a2a` (slightly lighter)
 - Duration: `100ms`
 - No lift on mobile (performance)
@@ -993,12 +1060,14 @@ Engage with other alignment contributors
 ### Tooltip Animations
 
 **Entry**:
+
 - Opacity: `0 → 1`
 - Scale: `0.9 → 1`
 - Duration: `150ms`
 - Easing: `ease-out`
 
 **Exit**:
+
 - Opacity: `1 → 0`
 - Duration: `100ms`
 
@@ -1007,16 +1076,19 @@ Engage with other alignment contributors
 ### Modal Animations
 
 **Backdrop**:
+
 - Opacity: `0 → 0.8` (dark overlay)
 - Duration: `200ms`
 
 **Modal panel**:
+
 - Scale: `0.95 → 1`
 - Opacity: `0 → 1`
 - Duration: `250ms`
 - Easing: `cubic-bezier(0.4, 0, 0.2, 1)`
 
 **Close**:
+
 - Reverse of entry (200ms)
 
 ---
@@ -1026,18 +1098,21 @@ Engage with other alignment contributors
 ### Page Load Optimization
 
 **Critical Rendering Path**:
+
 1. Inline critical CSS (above-the-fold styles)
 2. Defer non-critical CSS
 3. Async load web fonts (with fallback)
 4. Lazy-load images below fold
 
 **Target Metrics**:
+
 - First Contentful Paint (FCP): <1.5s
 - Largest Contentful Paint (LCP): <2.5s
 - Time to Interactive (TTI): <3.5s
 - Cumulative Layout Shift (CLS): <0.1
 
 **Bundle Size**:
+
 - HTML + Critical CSS: <14KB (1 TCP roundtrip)
 - JS bundle (initial): <50KB gzipped
 - Total page weight: <500KB (excluding videos)
@@ -1047,6 +1122,7 @@ Engage with other alignment contributors
 ### Component Architecture (React/Next.js)
 
 **Recommended Structure**:
+
 ```
 components/
 ├── landing/
@@ -1069,11 +1145,13 @@ components/
 ```
 
 **Prop Types**:
+
 - Use TypeScript for all components
 - Define interfaces for props
 - Export component + props interface
 
 **Accessibility Props**:
+
 - `aria-label`, `aria-describedby`, `role` on all interactive elements
 
 ---
@@ -1083,21 +1161,25 @@ components/
 **Key Events to Track**:
 
 **Engagement**:
+
 - Hero CTA click (`cta_hero_submit`)
 - Section scroll depth (25%, 50%, 75%, 100%)
 - Tab switch (Proof & Papers)
 - Expandable panel open (Technical Signals)
 
 **Conversion**:
+
 - Primary CTA click (`cta_submit_poc`)
 - Secondary CTA click (`cta_see_how_it_works`, `cta_view_examples`)
 - Modal open (`modal_scoring_criteria`, `modal_example_poc`)
 - Tooltip hover (`tooltip_${term}`)
 
 **Persona Selection**:
+
 - Persona card click (`persona_researcher`, `persona_developer`, `persona_alignment`)
 
 **Technical**:
+
 - Page load time (custom metric)
 - Error events (API failures, modal errors)
 
@@ -1108,16 +1190,19 @@ components/
 ### A/B Test Variants
 
 **Hero Headline** (3 variants):
+
 1. **Variant A** (current): "Proof-of-Contribution for Frontier Research"
 2. **Variant B** (action): "Turn Your Research into Verifiable On-Chain Proofs"
 3. **Variant C** (benefit): "Get Your Work Evaluated, Archived, and Anchored — No Gatekeeping"
 
 **Primary CTA Label** (3 variants):
+
 1. **Variant A**: "Submit Your PoC"
 2. **Variant B**: "Get Evaluated Now"
 3. **Variant C**: "Start Contributing"
 
 **MOTHERLODE Position** (2 variants):
+
 1. **Variant A**: Section 7 (current)
 2. **Variant B**: Section 2 (move up for urgency)
 
@@ -1127,22 +1212,26 @@ components/
 
 **Test 1: 5-Second Test**  
 Show hero for 5 seconds, ask:
+
 - "What is this website about?"
 - "What would you do next?"
 - Target: 80% correctly identify "research evaluation system"
 
 **Test 2: First-Click Test**  
 Where do users click first?
+
 - Expected: Primary CTA or "See How It Works"
 - Red flag: Clicking glossary terms or ignoring CTAs
 
 **Test 3: Task Completion**  
 Give task: "You're a researcher. How would you submit work?"
+
 - Expected path: Hero → How It Works → Submit CTA
 - Target: 90% completion rate
 
 **Test 4: Comprehension Test**  
 After reading landing page, ask:
+
 - "What is Syntheverse in one sentence?"
 - "What happens when you submit a PoC?"
 - "Is SYNTH an investment?"
@@ -1155,12 +1244,14 @@ After reading landing page, ask:
 **Tools**: Hotjar, Microsoft Clarity, or Crazy Egg
 
 **Metrics to Track**:
+
 - Scroll depth by section
 - Click heatmap (where users click most)
 - Rage clicks (repeated clicks on non-interactive elements)
 - Dead zones (sections with no engagement)
 
 **Red Flags**:
+
 - <50% scroll past hero
 - <10% CTA click rate
 - High rage click rate on glossary terms (improve tooltips)
@@ -1172,10 +1263,12 @@ After reading landing page, ask:
 ### Hero Headline Variants
 
 **Scientific Tone**:
+
 > **Syntheverse: A Proof-of-Contribution Protocol for Frontier Research**  
 > _Evaluate, archive, and anchor scientific contributions using holographic hydrogen fractal coherence measurement — no institutional gatekeeping._
 
 **Builder/Frontier Tone**:
+
 > **Syntheverse: Turn Research into Verifiable On-Chain Proofs**  
 > _Submit your work. Get scored on coherence. Archive it forever. No gatekeeping. No waiting._
 
@@ -1184,9 +1277,11 @@ After reading landing page, ask:
 ### Section 2 Intro Variants
 
 **Scientific Tone**:
+
 > Syntheverse is an evaluation and archival system that applies holographic hydrogen fractal (HHF) coherence measurement to scientific contributions, replacing traditional peer review with objective, multi-dimensional scoring and permanent on-chain anchoring.
 
 **Builder/Frontier Tone**:
+
 > Syntheverse scores your research on what matters—novelty, coherence, density, alignment—then saves it to an auditable archive. Optionally anchor your proof on-chain. No committees. No delays.
 
 ---
@@ -1240,15 +1335,15 @@ After reading landing page, ask:
 
 ## 11. Success Metrics (30-Day Goals)
 
-| Metric | Current (Baseline) | Target (30 Days) |
-|--------|-------------------|------------------|
-| **Bounce Rate** | TBD | <40% |
-| **Avg. Time on Page** | TBD | >3 min |
-| **Scroll Depth (75%)** | TBD | >60% |
-| **Primary CTA Click Rate** | TBD | >15% |
-| **Secondary CTA Click Rate** | TBD | >25% |
-| **Signup Conversion** | TBD | >5% |
-| **Mobile Bounce Rate** | TBD | <50% |
+| Metric                       | Current (Baseline) | Target (30 Days) |
+| ---------------------------- | ------------------ | ---------------- |
+| **Bounce Rate**              | TBD                | <40%             |
+| **Avg. Time on Page**        | TBD                | >3 min           |
+| **Scroll Depth (75%)**       | TBD                | >60%             |
+| **Primary CTA Click Rate**   | TBD                | >15%             |
+| **Secondary CTA Click Rate** | TBD                | >25%             |
+| **Signup Conversion**        | TBD                | >5%              |
+| **Mobile Bounce Rate**       | TBD                | <50%             |
 
 ---
 
@@ -1390,6 +1485,7 @@ export function Tooltip({ term, definition, children }: TooltipProps) {
 ## End of Document
 
 **Next Steps**:
+
 1. Review this document with team
 2. Create wireframes/mockups for each section
 3. Implement Hero + Section 2-3 first (MVP)
@@ -1405,4 +1501,3 @@ export function Tooltip({ term, definition, children }: TooltipProps) {
 **Document Version**: 1.0  
 **Last Updated**: January 2025  
 **Author**: UX/Product Design Strategy Team
-

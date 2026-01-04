@@ -72,8 +72,8 @@ export function SectionToken() {
               <strong>Eligibility:</strong> Score threshold + low redundancy + operator approval
             </li>
             <li>
-              <strong>Your Rights:</strong> You retain all rights; you grant
-              evaluation/archival permission only
+              <strong>Your Rights:</strong> You retain all rights; you grant evaluation/archival
+              permission only
             </li>
           </ul>
 
@@ -83,4 +83,3 @@ export function SectionToken() {
     </SectionWrapper>
   );
 }
-

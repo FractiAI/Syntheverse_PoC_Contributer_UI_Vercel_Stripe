@@ -81,9 +81,7 @@ export function SectionEngage() {
                     />
                   </div>
                   <h3 className="cockpit-title text-lg">{persona.title}</h3>
-                  <p className="cockpit-label mt-1 text-xs">
-                    {persona.steps.length} steps
-                  </p>
+                  <p className="cockpit-label mt-1 text-xs">{persona.steps.length} steps</p>
                 </div>
               </Card>
             </button>
@@ -126,4 +124,3 @@ export function SectionEngage() {
     </SectionWrapper>
   );
 }
-

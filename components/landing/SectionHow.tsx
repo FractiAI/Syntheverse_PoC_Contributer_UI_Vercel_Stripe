@@ -94,7 +94,7 @@ export function SectionHow() {
             onClick={() => setActiveStep(step.number)}
             className={`flex flex-1 items-center gap-3 border-l-4 p-4 text-left transition-colors md:flex-col md:border-b-4 md:border-l-0 md:text-center ${
               activeStep === step.number
-                ? 'border-[var(--hydrogen-amber)] bg-[var(--hydrogen-amber)]/10'
+                ? 'bg-[var(--hydrogen-amber)]/10 border-[var(--hydrogen-amber)]'
                 : 'border-[var(--keyline-primary)] opacity-60 hover:opacity-100'
             }`}
           >
@@ -117,9 +117,7 @@ export function SectionHow() {
       {/* Active Step Details */}
       <div className="cockpit-panel p-6">
         <div className="mb-4">
-          <div className="cockpit-label mb-2 text-xs">
-            STEP {steps[activeStep - 1].number} OF 5
-          </div>
+          <div className="cockpit-label mb-2 text-xs">STEP {steps[activeStep - 1].number} OF 5</div>
           <h3 className="cockpit-title mb-2 text-2xl">
             {steps[activeStep - 1].number}. {steps[activeStep - 1].title}
           </h3>
@@ -148,4 +146,3 @@ export function SectionHow() {
     </SectionWrapper>
   );
 }
-

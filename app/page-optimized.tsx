@@ -12,4 +12,3 @@ export const metadata = {
 export default async function LandingPage() {
   return <LandingPageOptimized />;
 }
-
