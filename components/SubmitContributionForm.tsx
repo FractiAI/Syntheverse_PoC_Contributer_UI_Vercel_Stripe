@@ -296,8 +296,15 @@ export default function SubmitContributionForm({ userEmail, defaultCategory = 's
                 throw new Error(fullError)
             }
 
-            // Check if submission was successful - should return checkout_url for payment
-            if (result.checkout_url && result.submission_hash) {
+            // Check if submission was successful - operator mode or payment required
+            if (result.operator_mode && result.submission_hash) {
+                // Operator mode: submission accepted, evaluation in progress
+                setSubmissionHash(result.submission_hash)
+                setSuccess(true)
+                setLoading(false)
+                setMessage('Operator submission accepted. Evaluation in progress.')
+                return
+            } else if (result.checkout_url && result.submission_hash) {
                 // Redirect to Stripe checkout for payment ($500 submission fee)
                 // Evaluation will start after payment is completed via webhook
                 window.location.href = result.checkout_url
