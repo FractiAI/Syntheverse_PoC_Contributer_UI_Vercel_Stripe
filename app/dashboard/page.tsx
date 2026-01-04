@@ -7,6 +7,7 @@ import { eq } from "drizzle-orm"
 import { FrontierModule } from '@/components/FrontierModule'
 import { ReactorCore } from '@/components/ReactorCore'
 import { BootSequenceIndicators } from '@/components/BootSequenceIndicators'
+import { OperatorBroadcastBanner } from '@/components/OperatorBroadcastBanner'
 // Optional ecosystem support is intentionally not placed in the primary beta cockpit.
 // The reference client stays protocol-first and avoids any "package" framing in the main dashboard.
 import { BookOpen } from 'lucide-react'
