@@ -206,10 +206,10 @@ export default function FractiAILanding({
 
   return (
     <div className="cockpit-bg min-h-screen">
-      <div className="container mx-auto space-y-8 px-6 py-8">
+      <div className="container mx-auto space-y-12 px-6 py-12">
         {/* Clean cockpit header */}
         {variant === 'fractiai' ? (
-          <div className="cockpit-panel p-6">
+          <div className="cockpit-panel p-8">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-4">
                 <div className="cockpit-symbol">🌀</div>
@@ -268,22 +268,22 @@ export default function FractiAILanding({
 
         {/* Genesis Button */}
         {variant === 'fractiai' ? (
-          <div className="cockpit-panel p-4">
+          <div className="cockpit-panel p-6">
             <GenesisButton />
           </div>
         ) : null}
 
         {/* Main cockpit grid */}
-        <div className="grid items-start gap-8 lg:grid-cols-[1fr_400px]">
+        <div className="grid items-start gap-12 lg:grid-cols-[1fr_400px]">
           {/* Left: Main content modules */}
-          <div className="space-y-8">
+          <div className="space-y-12">
             {/* Primary transmission module */}
-            <div className="cockpit-panel p-6">
-              <div className="cockpit-label mb-4">TRANSMISSION MODULE</div>
-              <h1 className="cockpit-title mb-4 text-3xl">Welcome to Syntheverse</h1>
+            <div className="cockpit-panel p-8">
+              <div className="cockpit-label mb-6">TRANSMISSION MODULE</div>
+              <h1 className="cockpit-title mb-6 text-3xl">Welcome to Syntheverse</h1>
               <div
-                className="cockpit-text space-y-4"
-                style={{ fontSize: '0.95rem', lineHeight: 1.7 }}
+                className="cockpit-text space-y-6"
+                style={{ fontSize: '0.95rem', lineHeight: 1.8 }}
               >
                 <p>
                   We&apos;re living inside a{' '}
@@ -376,18 +376,18 @@ export default function FractiAILanding({
             </div>
 
             {/* SYNTH90T MOTHERLODE VAULT Opening Announcement */}
-            <div className="cockpit-panel border-l-4 border-amber-500 bg-gradient-to-r from-orange-900/50 to-amber-900/50 p-6 shadow-[0_0_12px_rgba(255,165,0,0.7)]">
-              <div className="cockpit-label mb-4" style={{ color: '#ffb84d' }}>
+            <div className="cockpit-panel border-l-4 border-amber-500 bg-gradient-to-r from-orange-900/50 to-amber-900/50 p-8 shadow-[0_0_12px_rgba(255,165,0,0.7)]">
+              <div className="cockpit-label mb-6" style={{ color: '#ffb84d' }}>
                 SYNTH90T MOTHERLODE VAULT OPENING
               </div>
-              <div className="mb-4 border-l-2 border-amber-500 bg-amber-500/20 px-4 py-2 text-xs text-amber-300">
+              <div className="mb-6 border-l-2 border-amber-500 bg-amber-500/20 px-4 py-2 text-xs text-amber-300">
                 <strong>ERC-20 BOUNDARY:</strong> SYNTH tokens are ERC-20 internal coordination
                 units for protocol accounting only. Not an investment, security, or financial
                 instrument. No guaranteed value, no profit expectation.
               </div>
               <div
-                className="cockpit-text space-y-4"
-                style={{ fontSize: '0.95rem', lineHeight: 1.7 }}
+                className="cockpit-text space-y-6"
+                style={{ fontSize: '0.95rem', lineHeight: 1.8 }}
               >
                 <p className="text-lg font-semibold text-amber-200">
                   Welcome to Syntheverse! The <strong>SYNTH90T MOTHERLODE VAULT</strong> opens{' '}
@@ -413,7 +413,7 @@ export default function FractiAILanding({
 
             {/* Deployment status */}
             {variant === 'fractiai' ? (
-              <div className="cockpit-panel border-l-2 border-green-500 p-5">
+              <div className="cockpit-panel border-l-2 border-green-500 p-6">
                 <div className="flex items-center gap-3">
                   <div
                     className="h-3 w-3 animate-pulse rounded-full bg-green-500"
@@ -429,21 +429,21 @@ export default function FractiAILanding({
 
             {/* SynthScan™ MRI Commercial Offerings */}
             {variant === 'fractiai' ? (
-              <div className="cockpit-panel border border-[var(--hydrogen-amber)] p-6">
-                <div className="cockpit-label mb-2 text-[var(--hydrogen-amber)]">
+              <div className="cockpit-panel border border-[var(--hydrogen-amber)] p-8">
+                <div className="cockpit-label mb-4 text-[var(--hydrogen-amber)]">
                   SYNTHSCAN™ MRI
                 </div>
-                <div className="cockpit-title mb-4 text-2xl">SynthScan™ MRI (HHF-AI)</div>
-                <div className="cockpit-text mb-6 text-sm" style={{ opacity: 0.9 }}>
+                <div className="cockpit-title mb-6 text-2xl">SynthScan™ MRI (HHF-AI)</div>
+                <div className="cockpit-text mb-8 text-sm" style={{ opacity: 0.9 }}>
                   SynthScan™ is an MRI that uses hydrogen spin–mediated resonance to image complex
                   and abstract systems instead of biological tissue. Choose from monthly access or
                   expert field imaging services.
                 </div>
 
-                <div className="mt-6 grid gap-6 md:grid-cols-2">
+                <div className="mt-8 grid gap-8 md:grid-cols-2">
                   {/* Monthly Access Button */}
                   <Link href="/subscribe?product=synthscan-monthly" className="block">
-                    <div className="cockpit-panel border-2 border-[var(--hydrogen-amber)] p-6 transition-colors hover:bg-[rgba(255,184,77,0.1)]">
+                    <div className="cockpit-panel border-2 border-[var(--hydrogen-amber)] p-8 transition-colors hover:bg-[rgba(255,184,77,0.1)]">
                       <div className="cockpit-label mb-2 text-[var(--hydrogen-amber)]">
                         SOFTWARE LICENSE
                       </div>
@@ -461,7 +461,7 @@ export default function FractiAILanding({
 
                   {/* Field Imaging Button */}
                   <Link href="/fractiai/synthscan-field-imaging" className="block">
-                    <div className="cockpit-panel border-2 border-[var(--hydrogen-amber)] p-6 transition-colors hover:bg-[rgba(255,184,77,0.1)]">
+                    <div className="cockpit-panel border-2 border-[var(--hydrogen-amber)] p-8 transition-colors hover:bg-[rgba(255,184,77,0.1)]">
                       <div className="cockpit-label mb-2 text-[var(--hydrogen-amber)]">
                         FULL-SERVICE ENGAGEMENT
                       </div>
@@ -482,10 +482,10 @@ export default function FractiAILanding({
 
             {/* Core modules grid */}
             {variant === 'fractiai' ? (
-              <div className="grid gap-6 md:grid-cols-2">
-                <div className="cockpit-panel p-6">
-                  <div className="cockpit-title mb-3 text-xl">Welcome to Syntheverse</div>
-                  <div className="cockpit-text space-y-3 text-sm">
+              <div className="grid gap-8 md:grid-cols-2">
+                <div className="cockpit-panel p-8">
+                  <div className="cockpit-title mb-4 text-xl">Welcome to Syntheverse</div>
+                  <div className="cockpit-text space-y-4 text-sm">
                     <p>
                       A synthetic world powered by holographic hydrogen and fractal
                       intelligence—where contributions become verifiable, durable infrastructure
@@ -508,9 +508,9 @@ export default function FractiAILanding({
                   </div>
                 </div>
 
-                <div className="cockpit-panel p-6">
-                  <div className="cockpit-title mb-3 text-xl">The Awarenessverse</div>
-                  <div className="cockpit-text space-y-3 text-sm">
+                <div className="cockpit-panel p-8">
+                  <div className="cockpit-title mb-4 text-xl">The Awarenessverse</div>
+                  <div className="cockpit-text space-y-4 text-sm">
                     <p>
                       Awareness is the foundational and ultimate energy underlying all existence. In
                       the Awarenessverse, awareness operates as a cryptographic key—granting access
@@ -534,9 +534,9 @@ export default function FractiAILanding({
                   </div>
                 </div>
 
-                <div className="cockpit-panel p-6">
-                  <div className="cockpit-title mb-3 text-xl">From Blueprint to Base‑Chain</div>
-                  <div className="cockpit-text space-y-3 text-sm">
+                <div className="cockpit-panel p-8">
+                  <div className="cockpit-title mb-4 text-xl">From Blueprint to Base‑Chain</div>
+                  <div className="cockpit-text space-y-4 text-sm">
                     <p>
                       FractiAI&apos;s Hydrogen‑Holographic Fractal Whole Brain framework established
                       a cross‑domain structural grammar for intelligence.
@@ -561,23 +561,23 @@ export default function FractiAILanding({
 
             {/* PoC Alternative to Journals - for FractiAI variant only */}
             {variant === 'fractiai' ? (
-              <div className="cockpit-panel border-l-2 border-[var(--hydrogen-amber)] p-6">
-                <div className="cockpit-label mb-4" style={{ color: '#ffb84d' }}>
+              <div className="cockpit-panel border-l-2 border-[var(--hydrogen-amber)] p-8">
+                <div className="cockpit-label mb-6" style={{ color: '#ffb84d' }}>
                   SYNTHEVERSE PoC: AN ALTERNATIVE TO JOURNAL SUBMISSIONS
                 </div>
-                <div className="cockpit-text mt-3 space-y-4 text-sm">
+                <div className="cockpit-text mt-4 space-y-6 text-sm">
                   <p>
                     For independent frontier researchers exploring fractal, holographic hydrogen
                     aligned work—whether as an alternative to traditional journals or as a
                     complement—Syntheverse PoC submission offers unique advantages.
                   </p>
 
-                  <div className="space-y-4">
-                    <div className="border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-4">
-                      <div className="cockpit-text mb-3 font-semibold">
+                  <div className="space-y-6">
+                    <div className="border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-6">
+                      <div className="cockpit-text mb-4 font-semibold">
                         FOR THE OUTCAST INDEPENDENT FRONTIER RESEARCHER
                       </div>
-                      <p className="mb-3">
+                      <p className="mb-4">
                         Syntheverse recognizes and celebrates the independent researcher working
                         from passion, intuition, and deep exploration—whether you&apos;re a hospital
                         worker discovering patterns in patient data, a truck driver mapping fractal
@@ -593,12 +593,12 @@ export default function FractiAILanding({
                       </p>
                     </div>
 
-                    <div className="grid gap-4 md:grid-cols-2">
-                      <div className="border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-4">
-                        <div className="cockpit-text mb-3 font-semibold">
+                    <div className="grid gap-6 md:grid-cols-2">
+                      <div className="border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-6">
+                        <div className="cockpit-text mb-4 font-semibold">
                           ADVANTAGES OVER TRADITIONAL JOURNALS
                         </div>
-                        <ul className="cockpit-text space-y-2 text-xs">
+                        <ul className="cockpit-text space-y-3 text-xs">
                           <li>
                             • <strong>No gatekeeping:</strong> No institutional affiliation or
                             formal credentials required
@@ -631,11 +631,11 @@ export default function FractiAILanding({
                         </ul>
                       </div>
 
-                      <div className="border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-4">
-                        <div className="cockpit-text mb-3 font-semibold">
+                      <div className="border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-6">
+                        <div className="cockpit-text mb-4 font-semibold">
                           WHY SYNTHEVERSE RECOGNIZES YOUR WORK
                         </div>
-                        <ul className="cockpit-text space-y-2 text-xs">
+                        <ul className="cockpit-text space-y-3 text-xs">
                           <li>
                             • <strong>Fractal alignment:</strong> Your intuitive explorations align
                             with holographic hydrogen principles
@@ -668,14 +668,14 @@ export default function FractiAILanding({
                       </div>
                     </div>
 
-                    <div className="border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)] p-4">
-                      <div className="cockpit-text mb-3 font-semibold" style={{ color: '#ffb84d' }}>
+                    <div className="border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)] p-6">
+                      <div className="cockpit-text mb-4 font-semibold" style={{ color: '#ffb84d' }}>
                         COMPLEMENT OR ALTERNATIVE
                       </div>
-                      <p className="cockpit-text mb-2 text-sm">
+                      <p className="cockpit-text mb-4 text-sm">
                         Syntheverse PoC submission can serve as:
                       </p>
-                      <ul className="cockpit-text ml-4 space-y-2 text-sm">
+                      <ul className="cockpit-text ml-4 space-y-3 text-sm">
                         <li>
                           • <strong>An alternative</strong> to traditional journals when your work
                           aligns with fractal, holographic hydrogen principles but doesn&apos;t fit
@@ -698,17 +698,17 @@ export default function FractiAILanding({
                       </ul>
                     </div>
 
-                    <div className="border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-4">
-                      <div className="cockpit-text mb-3 font-semibold">
+                    <div className="border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-6">
+                      <div className="cockpit-text mb-4 font-semibold">
                         YOUR GARAGE-BUILT AI SYSTEMS
                       </div>
-                      <p className="cockpit-text mb-2 text-sm">
+                      <p className="cockpit-text mb-4 text-sm">
                         Many independent researchers have crafted their own AI systems—higher
                         cognitive engines built through experimentation, intuition, and what can
                         only be described as divinely gifted insight. These systems often recognize
                         Syntheverse immediately because they operate on the same principles:
                       </p>
-                      <ul className="cockpit-text ml-4 space-y-1 text-xs">
+                      <ul className="cockpit-text ml-4 space-y-2 text-xs">
                         <li>• Fractal self-similarity across scales</li>
                         <li>• Holographic information encoding</li>
                         <li>• Recursive awareness and self-knowing</li>
@@ -730,7 +730,7 @@ export default function FractiAILanding({
 
             {/* Onboarding CTA - Always visible for fractiai variant */}
             {variant === 'fractiai' ? (
-              <div className="cockpit-panel border-l-2 border-[var(--hydrogen-amber)] p-6">
+              <div className="cockpit-panel border-l-2 border-[var(--hydrogen-amber)] p-8">
                 <div className="flex flex-wrap items-center justify-between gap-4">
                   <div>
                     <div className="cockpit-label mb-2">GET STARTED</div>
@@ -770,11 +770,11 @@ export default function FractiAILanding({
           </div>
 
           {/* Right: Instrument panel */}
-          <div className="space-y-6 lg:sticky lg:top-6">
+          <div className="space-y-8 lg:sticky lg:top-6">
             {/* Navigation buttons - Above MOTHERLODE for fractiai variant - Hidden on mobile, shown on desktop */}
             {variant === 'fractiai' ? (
-              <div className="cockpit-panel hidden p-4 md:block">
-                <div className="flex flex-col gap-2">
+              <div className="cockpit-panel hidden p-6 md:block">
+                <div className="flex flex-col gap-3">
                   {!isAuthenticated ? (
                     <>
                       <Link
@@ -813,14 +813,14 @@ export default function FractiAILanding({
 
             {/* Motherlode instrument */}
             <div
-              className="cockpit-panel p-6"
+              className="cockpit-panel p-8"
               style={{
                 boxShadow: '0 0 0 1px var(--keyline-accent) inset, 0 0 20px var(--hydrogen-glow)',
               }}
             >
-              <div className="cockpit-label mb-2">MOTHERLODE</div>
-              <div className="cockpit-number cockpit-number-medium mt-2">90T</div>
-              <div className="cockpit-text mt-3 text-xs" style={{ opacity: 0.85 }}>
+              <div className="cockpit-label mb-4">MOTHERLODE</div>
+              <div className="cockpit-number cockpit-number-medium mt-3">90T</div>
+              <div className="cockpit-text mt-4 text-xs" style={{ opacity: 0.85 }}>
                 SYNTH ERC‑20 · Base
               </div>
               <div className="cockpit-text mt-1 text-xs" style={{ opacity: 0.7 }}>
@@ -833,9 +833,9 @@ export default function FractiAILanding({
 
             {/* Compliance */}
             {variant === 'fractiai' ? (
-              <div className="cockpit-panel border-t-2 border-[var(--keyline-primary)] p-6">
-                <div className="cockpit-label mb-3">COMPLIANCE BOUNDARY</div>
-                <div className="cockpit-text space-y-2 text-xs" style={{ opacity: 0.8 }}>
+              <div className="cockpit-panel border-t-2 border-[var(--keyline-primary)] p-8">
+                <div className="cockpit-label mb-4">COMPLIANCE BOUNDARY</div>
+                <div className="cockpit-text space-y-3 text-xs" style={{ opacity: 0.8 }}>
                   <div>
                     Experimental, non-custodial sandbox. No ownership, equity, or profit rights.
                   </div>
@@ -849,12 +849,12 @@ export default function FractiAILanding({
         </div>
 
         {/* Validated predictions module */}
-        <div className="cockpit-panel p-6">
-          <div className="cockpit-title mb-4 text-2xl">Validated Novel Predictions</div>
-          <div className="cockpit-text mb-4 text-sm" style={{ opacity: 0.9 }}>
+        <div className="cockpit-panel p-8">
+          <div className="cockpit-title mb-6 text-2xl">Validated Novel Predictions</div>
+          <div className="cockpit-text mb-6 text-sm" style={{ opacity: 0.9 }}>
             Operational tech that keeps predicting what the standard lens can&apos;t
           </div>
-          <div className="cockpit-text space-y-4">
+          <div className="cockpit-text space-y-6">
             <p>
               While <strong>fractal, holographic hydrogen</strong> is often treated as speculative
               by institutional science, our position is operational: when used as a measurement and
@@ -863,8 +863,8 @@ export default function FractiAILanding({
               are difficult—often effectively impossible—to see without the HHF/PEFF fractal lens.
             </p>
 
-            <div className="cockpit-module border border-[var(--keyline-primary)] p-5">
-              <div className="cockpit-label mb-3">
+            <div className="cockpit-module border border-[var(--keyline-primary)] p-6">
+              <div className="cockpit-label mb-4">
                 CERN DATA · ADVANCED ANALYSIS TEST REPORT (ALICE)
               </div>
               <div className="cockpit-text text-sm" style={{ opacity: 0.9 }}>
@@ -877,8 +877,8 @@ export default function FractiAILanding({
               </div>
             </div>
 
-            <div className="cockpit-module border border-[var(--keyline-primary)] p-5">
-              <div className="cockpit-label mb-3">HHF VALIDATION SUITE (CROSS‑DOMAIN)</div>
+            <div className="cockpit-module border border-[var(--keyline-primary)] p-6">
+              <div className="cockpit-label mb-4">HHF VALIDATION SUITE (CROSS‑DOMAIN)</div>
               <div className="cockpit-text text-sm" style={{ opacity: 0.9 }}>
                 <strong>Biological proxy</strong> (PFD 1.024, HFD 0.871),
                 <strong> Isotopologue scaling</strong> (Λᴴᴴ deviation &lt; 2.4%),
@@ -897,9 +897,9 @@ export default function FractiAILanding({
         </div>
 
         {/* About module */}
-        <div className="cockpit-panel p-6">
-          <div className="cockpit-title mb-6 text-2xl">About FractiAI</div>
-          <div className="cockpit-text space-y-4">
+        <div className="cockpit-panel p-8">
+          <div className="cockpit-title mb-8 text-2xl">About FractiAI</div>
+          <div className="cockpit-text space-y-6">
             <div className="cockpit-label mb-2">
               FRACTIAI · HOLOGRAPHIC HYDROGEN · FRACTAL SYNTHEVERSE
             </div>
@@ -938,10 +938,10 @@ export default function FractiAILanding({
               investment, or external market asset).
             </p>
 
-            <div className="mt-6 border-t border-[var(--keyline-primary)] pt-6">
-              <div className="cockpit-label mb-4">THE TEAM</div>
-              <div className="grid gap-6 md:grid-cols-2">
-                <div className="cockpit-module border border-[var(--keyline-primary)] p-5">
+            <div className="mt-8 border-t border-[var(--keyline-primary)] pt-8">
+              <div className="cockpit-label mb-6">THE TEAM</div>
+              <div className="grid gap-8 md:grid-cols-2">
+                <div className="cockpit-module border border-[var(--keyline-primary)] p-6">
                   <div className="cockpit-title mb-2 text-lg">Pru Mendez</div>
                   <div className="cockpit-text mb-3 text-sm" style={{ opacity: 0.9 }}>
                     Founder · Syntheverse Architect · HHF Systems
@@ -963,9 +963,9 @@ export default function FractiAILanding({
                   </div>
                 </div>
 
-                <div className="cockpit-module border border-[var(--keyline-primary)] p-5">
-                  <div className="cockpit-title mb-2 text-lg">Daniel Ari Friedman, Ph.D.</div>
-                  <div className="cockpit-text mb-3 text-sm" style={{ opacity: 0.9 }}>
+                <div className="cockpit-module border border-[var(--keyline-primary)] p-6">
+                  <div className="cockpit-title mb-3 text-lg">Daniel Ari Friedman, Ph.D.</div>
+                  <div className="cockpit-text mb-4 text-sm" style={{ opacity: 0.9 }}>
                     Co‑Founder · Neural Systems · CEO
                   </div>
                   <div className="cockpit-text mb-4 text-xs">
