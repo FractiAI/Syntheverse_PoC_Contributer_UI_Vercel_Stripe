@@ -6,6 +6,7 @@ import { ArrowRight, ChevronDown, FileText } from 'lucide-react'
 import { useEffect, useState, useMemo } from 'react'
 import FractiAIStatusWidget from '@/components/FractiAIStatusWidget'
 import { StatusIndicators } from './StatusIndicators'
+import { GenesisButton } from './GenesisButton'
 
 type FractiAILandingProps = {
   variant?: 'home' | 'fractiai'
@@ -182,6 +183,7 @@ function ExpandablePanel({
 
 export default function FractiAILanding({ variant = 'home', isAuthenticated = false, cta }: FractiAILandingProps) {
   const showAuthButtons = variant === 'fractiai' && !isAuthenticated
+  
   return (
     <div className="cockpit-bg min-h-screen">
       <div className="container mx-auto px-6 py-8 space-y-8">
@@ -232,6 +234,13 @@ export default function FractiAILanding({ variant = 'home', isAuthenticated = fa
 
         {/* Motherlode Vault Status - Epoch and SYNTH Available */}
         {variant === 'fractiai' ? <MotherlodeVaultStatus /> : null}
+
+        {/* Genesis Button */}
+        {variant === 'fractiai' ? (
+          <div className="cockpit-panel p-4">
+            <GenesisButton />
+          </div>
+        ) : null}
 
         {/* Main cockpit grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_400px] items-start">

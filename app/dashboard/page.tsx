@@ -8,6 +8,7 @@ import { FrontierModule } from '@/components/FrontierModule'
 import { ReactorCore } from '@/components/ReactorCore'
 import { BootSequenceIndicators } from '@/components/BootSequenceIndicators'
 import { OperatorBroadcastBanner } from '@/components/OperatorBroadcastBanner'
+import { GenesisButton } from '@/components/GenesisButton'
 // Optional ecosystem support is intentionally not placed in the primary beta cockpit.
 // The reference client stays protocol-first and avoids any "package" framing in the main dashboard.
 import { BookOpen } from 'lucide-react'
@@ -84,6 +85,11 @@ export default async function Dashboard() {
 
                 {/* Core Instrument Panel - Reactor Core */}
                 <ReactorCore />
+
+                {/* Genesis Button */}
+                <div className="cockpit-panel p-4">
+                    <GenesisButton />
+                </div>
 
                 {/* Frontier Modules - PoC Archive */}
                 <FrontierModule userEmail={user.email!} />
