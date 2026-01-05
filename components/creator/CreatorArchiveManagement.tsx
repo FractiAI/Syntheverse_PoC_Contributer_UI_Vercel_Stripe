@@ -129,12 +129,14 @@ export function CreatorArchiveManagement() {
               <div className="cockpit-number text-2xl">{stats.archived_resettable}</div>
               <div className="cockpit-text text-xs opacity-60">Archived (not on-chain)</div>
             </div>
-            {stats.by_status.map((s) => (
-              <div key={s.status} className="cockpit-panel p-4 bg-[var(--cockpit-carbon)]">
-                <div className="cockpit-label text-xs mb-1">{s.status}</div>
-                <div className="cockpit-number text-2xl">{s.count}</div>
-              </div>
-            ))}
+            {stats.by_status
+              .filter((s) => s.status === 'qualified' || s.status === 'unqualified')
+              .map((s) => (
+                <div key={s.status} className="cockpit-panel p-4 bg-[var(--cockpit-carbon)]">
+                  <div className="cockpit-label text-xs mb-1">{s.status}</div>
+                  <div className="cockpit-number text-2xl">{s.count}</div>
+                </div>
+              ))}
           </div>
         )}
 
