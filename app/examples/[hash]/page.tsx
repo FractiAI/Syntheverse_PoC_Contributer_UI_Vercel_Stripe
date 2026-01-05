@@ -30,11 +30,19 @@ async function getExampleDetails(hash: string) {
 
     const md: any = (contrib.metadata as any) || {};
 
+    // Get full evaluation response
+    const grokDetails = md.grok_evaluation_details || {};
+    const rawGrokResponse =
+      grokDetails.raw_grok_response ||
+      grokDetails.full_evaluation?.raw_grok_response ||
+      null;
+
     return {
       submission_hash: contrib.submission_hash,
       title: contrib.title,
       contributor: contrib.contributor,
       category: contrib.category,
+      text_content: contrib.text_content || null, // Full submission content
       metals: (contrib.metals as any) || null,
       status: contrib.status,
       created_at: contrib.created_at ? new Date(contrib.created_at).toISOString() : null,
@@ -49,6 +57,7 @@ async function getExampleDetails(hash: string) {
         redundancy_analysis: md.redundancy_analysis || null,
         metal_justification: md.metal_justification || null,
         grok_evaluation_details: md.grok_evaluation_details || null,
+        raw_grok_response: rawGrokResponse, // Full evaluation response
       },
     };
   } catch (error) {
@@ -196,6 +205,30 @@ export default async function ExampleDetailPage({ params }: { params: { hash: st
               <p className="cockpit-text whitespace-pre-wrap text-sm opacity-90">
                 {example.metadata.redundancy_analysis}
               </p>
+            </Card>
+          )}
+
+          {/* Full Submission Content */}
+          {example.text_content && (
+            <Card hover={false} className="mb-8 border-l-4 border-blue-500/50">
+              <h3 className="cockpit-title mb-2 text-lg">Full Submission</h3>
+              <div className="cockpit-panel max-h-96 overflow-y-auto p-4">
+                <p className="cockpit-text whitespace-pre-wrap text-sm opacity-90">
+                  {example.text_content}
+                </p>
+              </div>
+            </Card>
+          )}
+
+          {/* Full Evaluation Response */}
+          {example.metadata.raw_grok_response && (
+            <Card hover={false} className="mb-8 border-l-4 border-green-500/50">
+              <h3 className="cockpit-title mb-2 text-lg">Full Evaluation Response</h3>
+              <div className="cockpit-panel max-h-96 overflow-y-auto p-4">
+                <pre className="cockpit-text whitespace-pre-wrap text-xs opacity-90 font-mono">
+                  {example.metadata.raw_grok_response}
+                </pre>
+              </div>
             </Card>
           )}
 

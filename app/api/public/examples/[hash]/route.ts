@@ -42,6 +42,13 @@ export async function GET(request: NextRequest, { params }: { params: { hash: st
 
     const md: any = (contrib.metadata as any) || {};
 
+    // Get full evaluation response
+    const grokDetails = md.grok_evaluation_details || {};
+    const rawGrokResponse =
+      grokDetails.raw_grok_response ||
+      grokDetails.full_evaluation?.raw_grok_response ||
+      null;
+
     // Return public-safe data (no sensitive information)
     return NextResponse.json(
       {
@@ -49,6 +56,7 @@ export async function GET(request: NextRequest, { params }: { params: { hash: st
         title: contrib.title,
         contributor: contrib.contributor,
         category: contrib.category,
+        text_content: contrib.text_content || null, // Full submission content
         metals: (contrib.metals as any) || null,
         status: contrib.status,
         created_at: contrib.created_at ? new Date(contrib.created_at).toISOString() : null,
@@ -64,6 +72,7 @@ export async function GET(request: NextRequest, { params }: { params: { hash: st
           metal_justification: md.metal_justification || null,
           // Include evaluation details if available
           grok_evaluation_details: md.grok_evaluation_details || null,
+          raw_grok_response: rawGrokResponse, // Full evaluation response
         },
       },
       { headers }
