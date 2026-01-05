@@ -30,17 +30,17 @@ export function CreatorCockpitNavigation() {
   const [searchTerm, setSearchTerm] = useState('');
 
   const tabs = [
-    { id: 'archive' as NavigationTab, label: 'Archive', icon: Archive, color: 'amber' },
-    { id: 'users' as NavigationTab, label: 'Authorized Users', icon: Users, color: 'purple' },
-    { id: 'blockchain' as NavigationTab, label: 'Base Mainnet', icon: LinkIcon, color: 'blue' },
-    { id: 'database' as NavigationTab, label: 'Database', icon: Database, color: 'green' },
+    { id: 'archive' as NavigationTab, label: 'PoC Archive', icon: Archive, color: 'amber' },
+    { id: 'users' as NavigationTab, label: 'Operators', icon: Users, color: 'purple' },
+    { id: 'blockchain' as NavigationTab, label: 'On-Chain Proofs', icon: LinkIcon, color: 'blue' },
+    { id: 'database' as NavigationTab, label: 'System', icon: Database, color: 'green' },
   ];
 
   return (
     <div className="cockpit-panel p-6">
       {/* Navigation Header */}
       <div className="mb-6 border-b border-[var(--keyline-primary)] pb-4">
-        <div className="cockpit-label mb-2">NAVIGATION WINDOW</div>
+        <div className="cockpit-label mb-2">CONTROL PANELS</div>
         <div className="flex flex-wrap items-center gap-2">
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -77,7 +77,7 @@ export function CreatorCockpitNavigation() {
         <div className="relative">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform opacity-50" />
           <Input
-            placeholder={`Search ${activeTab === 'archive' ? 'contributions' : activeTab === 'users' ? 'users' : activeTab === 'blockchain' ? 'on-chain records' : 'database tables'}...`}
+            placeholder={`Search ${activeTab === 'archive' ? 'PoCs' : activeTab === 'users' ? 'operators' : activeTab === 'blockchain' ? 'on-chain proofs' : 'system data'}...`}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="cockpit-input pl-10"

@@ -40,11 +40,10 @@ export default async function CreatorDashboard() {
                 <Shield className="h-4 w-4 text-red-400" />
                 CREATOR COCKPIT
               </div>
-              <h1 className="cockpit-title mb-2 text-3xl">Syntheverse Command Center</h1>
+              <h1 className="cockpit-title mb-2 text-3xl">Awareness Bridge/Router</h1>
               <p className="cockpit-text opacity-80">
-                Awareness Bridge/Router control interface. Creator-only access to PoC archive, user
-                administration, Base Mainnet contents, and database operations. All actions are
-                logged and auditable.
+                Creator control interface for liberated contributions, on-chain proofs, and system
+                coherence. All actions are logged and auditable.
               </p>
             </div>
             <div className="flex items-center gap-2">
@@ -57,14 +56,11 @@ export default async function CreatorDashboard() {
           </div>
         </div>
 
-        {/* Cockpit Statistics */}
+        {/* Core Metrics */}
         <CreatorCockpitStats />
 
-        {/* Navigation Window */}
+        {/* Control Panels */}
         <CreatorCockpitNavigation />
-
-        {/* Sales Tracking */}
-        <SalesTracking />
       </div>
     </div>
   );
