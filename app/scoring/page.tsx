@@ -173,6 +173,17 @@ export default function ScoringCriteriaPage() {
                 </div>
               </div>
             </div>
+
+            <div className="mt-6 rounded-lg border-2 border-[var(--hydrogen-amber)]/30 bg-[var(--hydrogen-amber)]/5 p-4">
+              <h4 className="cockpit-title mb-2 text-sm">All Submissions Contribute</h4>
+              <p className="cockpit-text text-sm opacity-90">
+                Every submission, regardless of score, contributes to the Syntheverse ecosystem. Your
+                work becomes part of the archive, helps train and refine the AI evaluation system,
+                enables redundancy detection for future submissions, and expands the knowledge graph.
+                Even if your score doesn&apos;t meet qualification thresholds, your contribution
+                strengthens the ecosystem and helps map the frontier of research.
+              </p>
+            </div>
           </Card>
 
           <Card hover={false} className="mb-8 border-l-4 border-amber-500/50">
