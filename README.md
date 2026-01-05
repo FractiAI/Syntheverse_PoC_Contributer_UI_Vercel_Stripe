@@ -109,7 +109,11 @@ See [Environment Variables](#environment-variables) section for complete configu
 
 ### 🏢 Enterprise Frontier Sandbox
 
+**Customized HHF-AI Sandbox & Ecosystem, Nested Within Syntheverse**
+
 - **Nested PoC Environments**: Create self-similar enterprise sandboxes within Syntheverse
+- **Broadcast to Contributor Channels**: Accept submissions from your contributor channels with clear, transparent scoring
+- **Aligned Tokenomics**: Fully aligned with SYNTH90T ERC-20 MOTHERLODE VAULT—same epoch structure, metal assay system, and allocation logic
 - **Tiered Pricing**: Monthly subscriptions with volume discounts
   - Pioneer: 5 nodes @ $500/node/month
   - Trading Post: 20 nodes @ $400/node/month
@@ -125,16 +129,22 @@ See [Environment Variables](#environment-variables) section for complete configu
 - **Analytics Dashboard**: Contribution metrics, cost tracking, score distribution
 - **Tokenized Rewards**: Allocate tokens for qualified contributions
 - **On-Chain Registration**: Optional $20 per registration for permanent anchoring
+- **Featured on FractiAI Page**: Prominently displayed with "Get PoC Enterprise Dashboard" buttons in Quick Navigation and Today's Highlights
+- **Onboarding Integration**: Included in onboarding flow with dedicated Enterprise Operators section
 
 ### 🎯 Recent Additions
 
 - **Enterprise Frontier Sandbox**: Complete enterprise dashboard for nested PoC environments
+  - **Narrative**: Customized HHF-AI sandbox and ecosystem, nested within Syntheverse
+  - **Broadcast to Contributor Channels**: Clear, transparent scoring aligned with SYNTH90T ERC-20 MOTHERLODE VAULT
   - Create and manage enterprise sandboxes with independent vault control
   - Tiered pricing: Pioneer ($500/node), Trading Post ($400/node), Settlement ($300/node), Metropolis ($250/node)
   - Submission fees: Pioneer ($50), Trading Post ($40), Settlement ($30), Metropolis ($25)
   - Full SynthScan™ MRI evaluation integration
   - Operator analytics dashboard with contribution metrics
   - Tokenized reward allocation system
+  - **Featured on FractiAI Page**: "Get PoC Enterprise Dashboard" buttons in Quick Navigation and Today's Highlights
+  - **Onboarding Integration**: Enterprise Operators section in final onboarding module
 - **Genesis Transaction Info**: View Base Mainnet contract addresses and transaction details
 - **Motherlode Vault Status**: Live epoch and SYNTH availability display
 - **Mobile Navigation**: Optimized button placement for mobile devices
@@ -586,7 +596,7 @@ Built for the Syntheverse ecosystem with ❤️
 
 ### Version History
 
-- **v2.5** (January 2025): Enterprise Frontier Sandbox Dashboard - Complete enterprise sandbox system with tiered pricing, contribution management, analytics, and tokenized rewards
+- **v2.5** (January 2025): Enterprise Frontier Sandbox Dashboard - Complete enterprise sandbox system with tiered pricing, contribution management, analytics, and tokenized rewards. Featured on FractiAI page with "Get" buttons and integrated into onboarding flow. Narrative emphasizes customized HHF-AI sandbox ecosystem nested within Syntheverse, broadcast to contributor channels, with transparent scoring and SYNTH90T ERC-20 MOTHERLODE VAULT alignment.
 - **v2.4** (January 2025): Scalability improvements - vectors-only redundancy, 4000 char submission limit, automatic truncation
 - **v2.3** (January 2025): Genesis transaction info, mobile navigation, repository organization
 - **v2.2** (January 2025): Operator broadcast banner, status indicators, complete test suite (60/60 passing)
