@@ -118,6 +118,8 @@ See [Environment Variables](#environment-variables) section for complete configu
 - **LLM Metadata**: Full capture of evaluation metadata (timestamp, model, version, prompts)
 - **Operator Mode**: Special exemption for operator accounts
 - **Creator Dashboard**: Creator-only destructive controls for PoC lifecycle management and user administration
+- **Sales Tracking**: Real-time revenue, subscription, and payment analytics for operators and creators
+- **Activity Stats**: Page activity, new users, submissions, chat sessions, and problems reported tracking
 - **Genesis Info**: On-chain transaction information display
 - **Submission Limits**: 4000 character limit (abstract, equations, constants only) with automatic truncation
 - **Scalability**: Vector-based redundancy detection scales to 10,000+ submissions without performance degradation
@@ -149,9 +151,24 @@ See [Environment Variables](#environment-variables) section for complete configu
 
 ### 🎯 Recent Additions
 
+- **Sales Tracking Dashboard**: Real-time sales analytics for operators and creators
+  - **Revenue Tracking**: Total revenue, monthly revenue, revenue by product (Enterprise, SynthScan, FieldScan, PoC Registration, Enterprise Submission, Financial Alignment)
+  - **Subscription Analytics**: Total, active, and canceled subscriptions by tier (Pioneer, Trading Post, Settlement, Metropolis)
+  - **Payment Metrics**: Total payments, monthly payments, average payment amount
+  - **Customer Stats**: Total customers, active customers, new customers this month
+  - **Auto-refresh**: Updates every 60 seconds
+  - **Access Control**: Operator and Creator only, server-side permission enforcement
+- **Activity Stats Dashboard**: Comprehensive activity tracking for operators and creators
+  - **Page Activity**: Total events tracked from system logs (today, this week, this month)
+  - **New Users**: User registration tracking (total, today, this week, this month)
+  - **Submissions**: Submission tracking with status breakdown (evaluating, qualified, unqualified, payment_pending)
+  - **Chat Sessions**: Chat session tracking (placeholder for future chat system)
+  - **Problems Reported**: Error and issue tracking with type categorization (errors, evaluation_errors, payment_errors, other)
+  - **Auto-refresh**: Updates every 30 seconds
+  - **Access Control**: Operator and Creator only, server-side permission enforcement
 - **Creator Dashboard**: Creator-controlled destructive operations for PoC archive management and user administration
-  - **PoC Archive Reset**: Soft (timestamp) and Hard (delete) modes with safeguards
-  - **User Management**: View all users, soft/hard delete, grant/revoke operator roles
+  - **PoC Archive Reset**: Hard reset mode with safeguards and confirmation phrases
+  - **User Management**: View all users, hard delete, grant/revoke operator roles
   - **Audit Logging**: Complete audit trail of all destructive actions
   - **Access Control**: Creator-only (info@fractiai.com), server-side permission enforcement
   - **Safeguards**: Creator account protection, on-chain PoC preservation, confirmation phrases required
@@ -613,12 +630,13 @@ Built for the Syntheverse ecosystem with ❤️
 
 ---
 
-**Last Updated**: January 6, 2025  
-**Version**: 2.6 (Creator Dashboard - Destructive Controls)
+**Last Updated**: January 7, 2025  
+**Version**: 2.7 (Sales Tracking & Activity Stats)
 
 ### Version History
 
-- **v2.6** (January 2025): Creator Dashboard - Creator-controlled destructive operations for PoC archive management and user administration. Includes PoC archive reset (soft/hard), user deletion (soft/hard), operator role management, and complete audit logging. Creator-only access (info@fractiai.com) with server-side permission enforcement and safeguards.
+- **v2.7** (January 2025): Sales Tracking & Activity Stats - Added comprehensive sales tracking dashboard with revenue, subscription, payment, and customer analytics. Added activity stats dashboard tracking page activity, new users, submissions, chat sessions, and problems reported. Both dashboards are accessible to operators and creators with auto-refresh capabilities. Sales tracking integrates with Stripe API and database records for real-time analytics.
+- **v2.6** (January 2025): Creator Dashboard - Creator-controlled destructive operations for PoC archive management and user administration. Includes PoC archive reset (hard mode), user deletion (hard mode), operator role management, and complete audit logging. Creator-only access (info@fractiai.com) with server-side permission enforcement and safeguards.
 - **v2.5** (January 2025): Enterprise Frontier Sandbox Dashboard - Complete enterprise sandbox system with tiered pricing, contribution management, analytics, and tokenized rewards. Featured on FractiAI page with "Get" buttons and integrated into onboarding flow. Narrative emphasizes customized HHF-AI sandbox ecosystem nested within Syntheverse, broadcast to contributor channels, with transparent scoring and SYNTH90T ERC-20 MOTHERLODE VAULT alignment.
 - **v2.4** (January 2025): Scalability improvements - vectors-only redundancy, 4000 char submission limit, automatic truncation
 - **v2.3** (January 2025): Genesis transaction info, mobile navigation, repository organization

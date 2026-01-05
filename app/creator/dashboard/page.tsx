@@ -10,6 +10,7 @@ import { getAuthenticatedUserWithRole } from '@/utils/auth/permissions';
 import { CreatorCockpitStats } from '@/components/creator/CreatorCockpitStats';
 import { CreatorCockpitNavigation } from '@/components/creator/CreatorCockpitNavigation';
 import { BootSequenceIndicators } from '@/components/BootSequenceIndicators';
+import { SalesTracking } from '@/components/SalesTracking';
 import { Shield, Activity } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -61,6 +62,9 @@ export default async function CreatorDashboard() {
 
         {/* Navigation Window */}
         <CreatorCockpitNavigation />
+
+        {/* Sales Tracking */}
+        <SalesTracking />
       </div>
     </div>
   );
