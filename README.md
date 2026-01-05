@@ -281,10 +281,13 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 SUPABASE_SERVICE_ROLE_KEY=...
 DATABASE_URL=...
 
-# Stripe
-STRIPE_SECRET_KEY=sk_...
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_...
-STRIPE_WEBHOOK_SECRET=whsec_...
+# Stripe (Live Mode - Production)
+STRIPE_SECRET_KEY=sk_live_...  # Live mode secret key
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_...  # Live mode publishable key
+STRIPE_WEBHOOK_SECRET=whsec_...  # Live mode webhook secret
+
+# Note: Stripe is configured for live/production mode
+# See docs/STRIPE_LIVE_MIGRATION.md for migration details
 
 # Site URLs
 NEXT_PUBLIC_SITE_URL=https://your-domain.com
@@ -325,6 +328,7 @@ See:
 
 - **Vercel Deployment**: [`docs/deployment/VERCEL_DEPLOYMENT_GUIDE.md`](docs/deployment/VERCEL_DEPLOYMENT_GUIDE.md)
 - **Base Sepolia**: [`docs/VERCEL_BASE_SEPOLIA_SETUP.md`](docs/VERCEL_BASE_SEPOLIA_SETUP.md)
+- **Stripe Live Mode**: [`docs/STRIPE_LIVE_MIGRATION.md`](docs/STRIPE_LIVE_MIGRATION.md) - Stripe production setup
 
 See [`docs/`](docs/) directory for complete documentation.
 
@@ -412,7 +416,7 @@ npm run tsx scripts/verify-contract-ownership.ts
 ### Post-Deploy Checklist
 
 - [ ] Supabase Auth URLs configured (Site URL + Redirect URLs)
-- [ ] Stripe webhook configured (`/webhook/stripe`)
+- [x] Stripe webhook configured (`/webhook/stripe`) - **Live mode active**
 - [ ] Base mainnet environment variables set (without trailing newlines)
 - [ ] Contract addresses verified in Vercel
 - [ ] Wallet funded with ETH for gas fees
@@ -438,7 +442,7 @@ npm run tsx scripts/verify-contract-ownership.ts
 ### Backend Services
 
 - **Supabase** - Auth + PostgreSQL database
-- **Stripe** - Payment processing
+- **Stripe** - Payment processing (Live mode - Production)
 - **Groq API** - AI evaluation (Grok)
 
 ### Blockchain
