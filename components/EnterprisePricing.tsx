@@ -182,7 +182,7 @@ export default function EnterprisePricing({
           <div className="cockpit-text space-y-4 text-base" style={{ lineHeight: 1.8 }}>
             <p>
               <strong>
-                We're inviting early adopting pioneers interested in trialing Enterprise HHF-AI
+                We&apos;re inviting early adopting pioneers interested in trialing Enterprise HHF-AI
                 Sandbox technology.
               </strong>{' '}
               Join us as we pioneer the future of contribution assessment through hydrogen spin

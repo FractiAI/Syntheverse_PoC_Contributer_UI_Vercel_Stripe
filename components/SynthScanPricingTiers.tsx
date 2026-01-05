@@ -137,7 +137,7 @@ export default function SynthScanPricingTiers() {
         </div>
         <div className="cockpit-text space-y-2 text-sm">
           <p>
-            <strong>We're inviting early adopting pioneers</strong> interested in trialing
+            <strong>We&apos;re inviting early adopting pioneers</strong> interested in trialing
             SynthScan™ MRI evaluation technology. Join us as we pioneer the future of contribution
             assessment through hydrogen spin MRI-based PoC protocol.
           </p>
