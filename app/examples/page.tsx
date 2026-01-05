@@ -10,7 +10,6 @@ export const dynamic = 'force-dynamic';
 
 async function getPublicExamples() {
   try {
-
     const rows = await db
       .select({
         submission_hash: contributionsTable.submission_hash,
@@ -95,9 +94,7 @@ export default async function ExamplesPage() {
                 return (
                   <Card key={example.submission_hash} hover={true}>
                     <div className="mb-2 flex items-center justify-between">
-                      <span className="cockpit-badge text-xs">
-                        {primaryMetal.toUpperCase()}
-                      </span>
+                      <span className="cockpit-badge text-xs">{primaryMetal.toUpperCase()}</span>
                       <span className="cockpit-label text-xs">Score: {score.toLocaleString()}</span>
                     </div>
                     <h3 className="cockpit-title mb-2 text-base">{example.title || 'Untitled'}</h3>
@@ -149,4 +146,3 @@ export default async function ExamplesPage() {
     </div>
   );
 }
-

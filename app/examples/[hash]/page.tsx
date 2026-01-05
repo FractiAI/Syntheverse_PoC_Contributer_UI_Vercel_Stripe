@@ -57,11 +57,7 @@ async function getExampleDetails(hash: string) {
   }
 }
 
-export default async function ExampleDetailPage({
-  params,
-}: {
-  params: { hash: string };
-}) {
+export default async function ExampleDetailPage({ params }: { params: { hash: string } }) {
   const example = await getExampleDetails(params.hash);
 
   if (!example) {
@@ -122,9 +118,7 @@ export default async function ExampleDetailPage({
             <Card hover={false} className="border-l-4 border-[var(--hydrogen-amber)]">
               <div className="cockpit-label mb-1 text-xs">SUBMITTED</div>
               <div className="cockpit-title text-lg">
-                {example.created_at
-                  ? new Date(example.created_at).toLocaleDateString()
-                  : 'Unknown'}
+                {example.created_at ? new Date(example.created_at).toLocaleDateString() : 'Unknown'}
               </div>
               <div className="cockpit-text mt-1 text-xs opacity-75">
                 {example.category || 'Research'}
@@ -133,7 +127,7 @@ export default async function ExampleDetailPage({
           </div>
 
           {/* Score Breakdown */}
-          <Card hover={false} className="mb-8 border-2 border-[var(--hydrogen-amber)]/30">
+          <Card hover={false} className="border-[var(--hydrogen-amber)]/30 mb-8 border-2">
             <h3 className="cockpit-title mb-4 text-lg">Score Breakdown</h3>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               <div>
@@ -189,7 +183,7 @@ export default async function ExampleDetailPage({
           {example.metadata.metal_justification && (
             <Card hover={false} className="mb-8">
               <h3 className="cockpit-title mb-2 text-lg">Metal Alignment Justification</h3>
-              <p className="cockpit-text text-sm opacity-90 whitespace-pre-wrap">
+              <p className="cockpit-text whitespace-pre-wrap text-sm opacity-90">
                 {example.metadata.metal_justification}
               </p>
             </Card>
@@ -199,7 +193,7 @@ export default async function ExampleDetailPage({
           {example.metadata.redundancy_analysis && (
             <Card hover={false} className="mb-8 border-l-4 border-amber-500/50">
               <h3 className="cockpit-title mb-2 text-lg">Redundancy Analysis</h3>
-              <p className="cockpit-text text-sm opacity-90 whitespace-pre-wrap">
+              <p className="cockpit-text whitespace-pre-wrap text-sm opacity-90">
                 {example.metadata.redundancy_analysis}
               </p>
             </Card>
@@ -223,4 +217,3 @@ export default async function ExampleDetailPage({
     </div>
   );
 }
-

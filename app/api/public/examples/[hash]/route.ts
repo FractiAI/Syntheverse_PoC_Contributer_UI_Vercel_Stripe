@@ -7,10 +7,7 @@ import { debug } from '@/utils/debug';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { hash: string } }
-) {
+export async function GET(request: NextRequest, { params }: { params: { hash: string } }) {
   const headers = new Headers();
   headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
   headers.set('Pragma', 'no-cache');
@@ -73,10 +70,6 @@ export async function GET(
     );
   } catch (err) {
     debug('PublicExample', 'Failed to fetch example', err);
-    return NextResponse.json(
-      { error: 'Failed to fetch example' },
-      { headers, status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch example' }, { headers, status: 500 });
   }
 }
-
