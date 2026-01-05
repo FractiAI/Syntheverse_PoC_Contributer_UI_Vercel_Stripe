@@ -138,7 +138,7 @@ export function BootSequenceIndicators() {
           title={`Awareness Bridge/Router: ${bootStatus.verdict.toUpperCase()}`}
         />
         <span className="cockpit-text text-xs" style={{ opacity: 0.8 }}>
-          BRIDGE/ROUTER
+          Awareness Bridge/Router
         </span>
       </div>
 

@@ -35,9 +35,9 @@ export default function ScoringCriteriaPage() {
                 <span className="cockpit-badge text-xs">0-2,500 points</span>
               </div>
               <p className="cockpit-text mb-4 text-sm opacity-80">
-                Measures originality, frontier contribution, and non-derivative insight. High novelty
-                indicates work that breaks new ground or introduces concepts not previously explored
-                in the archive.
+                Measures originality, frontier contribution, and non-derivative insight. High
+                novelty indicates work that breaks new ground or introduces concepts not previously
+                explored in the archive.
               </p>
               <div className="space-y-2 text-xs">
                 <div className="flex justify-between">
@@ -202,7 +202,10 @@ export default function ScoringCriteriaPage() {
             <Link href="/signup" className="cockpit-lever inline-flex items-center gap-2">
               Submit Your PoC
             </Link>
-            <Link href="/onboarding" className="cockpit-lever inline-flex items-center gap-2 bg-transparent">
+            <Link
+              href="/onboarding"
+              className="cockpit-lever inline-flex items-center gap-2 bg-transparent"
+            >
               Learn More About Syntheverse
             </Link>
           </div>
@@ -211,4 +214,3 @@ export default function ScoringCriteriaPage() {
     </div>
   );
 }
-
