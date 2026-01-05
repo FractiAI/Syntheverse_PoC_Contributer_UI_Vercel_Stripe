@@ -45,9 +45,7 @@ export async function GET(request: NextRequest, { params }: { params: { hash: st
     // Get full evaluation response
     const grokDetails = md.grok_evaluation_details || {};
     const rawGrokResponse =
-      grokDetails.raw_grok_response ||
-      grokDetails.full_evaluation?.raw_grok_response ||
-      null;
+      grokDetails.raw_grok_response || grokDetails.full_evaluation?.raw_grok_response || null;
 
     // Return public-safe data (no sensitive information)
     return NextResponse.json(

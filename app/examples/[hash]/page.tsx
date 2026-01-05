@@ -33,9 +33,7 @@ async function getExampleDetails(hash: string) {
     // Get full evaluation response
     const grokDetails = md.grok_evaluation_details || {};
     const rawGrokResponse =
-      grokDetails.raw_grok_response ||
-      grokDetails.full_evaluation?.raw_grok_response ||
-      null;
+      grokDetails.raw_grok_response || grokDetails.full_evaluation?.raw_grok_response || null;
 
     return {
       submission_hash: contrib.submission_hash,
@@ -225,7 +223,7 @@ export default async function ExampleDetailPage({ params }: { params: { hash: st
             <Card hover={false} className="mb-8 border-l-4 border-green-500/50">
               <h3 className="cockpit-title mb-2 text-lg">Full Evaluation Response</h3>
               <div className="cockpit-panel max-h-96 overflow-y-auto p-4">
-                <pre className="cockpit-text whitespace-pre-wrap text-xs opacity-90 font-mono">
+                <pre className="cockpit-text whitespace-pre-wrap font-mono text-xs opacity-90">
                   {example.metadata.raw_grok_response}
                 </pre>
               </div>

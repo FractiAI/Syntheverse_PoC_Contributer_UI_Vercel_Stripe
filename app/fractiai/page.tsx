@@ -1,4 +1,4 @@
-import FractiAILanding from '@/components/FractiAILanding';
+import FractiAIBulletin from '@/components/FractiAIBulletin';
 import { createClient } from '@/utils/supabase/server';
 import '../dashboard-cockpit.css';
 
@@ -9,11 +9,5 @@ export default async function FractiAIPage() {
   const { data } = await supabase.auth.getUser();
   const user = data?.user;
 
-  return (
-    <FractiAILanding
-      variant="fractiai"
-      isAuthenticated={!!user}
-      cta={user ? { primaryHref: '/dashboard', primaryLabel: 'Go to Dashboard' } : undefined}
-    />
-  );
+  return <FractiAIBulletin isAuthenticated={!!user} />;
 }
