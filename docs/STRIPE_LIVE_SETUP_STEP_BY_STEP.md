@@ -72,7 +72,7 @@ If you want extra security with a restricted key:
    - Click **"+ Add endpoint"** button (top right)
 
 3. **Configure Endpoint**
-   - **Endpoint URL:** 
+   - **Endpoint URL:**
      ```
      https://syntheverse-poc.vercel.app/webhook/stripe
      ```
@@ -80,7 +80,7 @@ If you want extra security with a restricted key:
 
 4. **Select Events**
    Click **"Select events"** or **"Add events"** and select:
-   
+
    **Required Events:**
    - ✅ `checkout.session.completed`
    - ✅ `customer.subscription.created`
@@ -88,7 +88,7 @@ If you want extra security with a restricted key:
    - ✅ `customer.subscription.deleted`
    - ✅ `invoice.payment_succeeded`
    - ✅ `invoice.payment_failed`
-   
+
    (You can also select "Select all events" if you want to capture everything)
 
 5. **Create the Endpoint**
@@ -189,4 +189,3 @@ From Stripe Dashboard (Live mode):
 ---
 
 **You're almost there! Follow the steps above and you'll be on live mode.** 🎉
-

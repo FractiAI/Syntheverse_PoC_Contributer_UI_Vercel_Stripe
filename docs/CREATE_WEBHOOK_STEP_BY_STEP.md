@@ -38,9 +38,11 @@
 
 1. **Find the "Endpoint URL" field**
 2. **Enter this URL:**
+
    ```
    https://syntheverse-poc.vercel.app/webhook/stripe
    ```
+
    - Copy and paste this exactly
    - Make sure there are no extra spaces
 
@@ -59,7 +61,7 @@
 2. **A dialog/modal will open** showing a list of events
 
 3. **Search for and select these events** (check the boxes):
-   
+
    **Required Events:**
    - ✅ `checkout.session.completed`
    - ✅ `customer.subscription.created`
@@ -141,7 +143,7 @@
 
 ✅ **Webhook Endpoint Created** in Live mode  
 ✅ **Webhook URL:** `https://syntheverse-poc.vercel.app/webhook/stripe`  
-✅ **6 Events Selected:** checkout.session.completed, customer.subscription.*, invoice.*  
+✅ **6 Events Selected:** checkout.session.completed, customer.subscription._, invoice._  
 ✅ **Webhook Signing Secret:** `whsec_...` (you copied this)
 
 ---
@@ -153,6 +155,7 @@ Once you have the webhook secret (`whsec_...`), we'll update it in Vercel.
 **Just paste the secret here and I'll update it for you using the Vercel CLI!**
 
 Or if you prefer to do it yourself:
+
 ```bash
 echo "whsec_YOUR_SECRET_HERE" | vercel env add STRIPE_WEBHOOK_SECRET production --force --token sFGpBCc64T0Qn5aGCOksY7zm
 ```
@@ -162,20 +165,24 @@ echo "whsec_YOUR_SECRET_HERE" | vercel env add STRIPE_WEBHOOK_SECRET production 
 ## Troubleshooting
 
 ### Can't find "Developers" in sidebar?
+
 - Scroll down the sidebar - it's usually at the bottom
 - Or use the search bar at the top of the dashboard
 
 ### Can't see "Live mode" toggle?
+
 - Look in the top right corner of the Stripe Dashboard
 - It should be a toggle switch or button
 - Make sure you're logged into the correct account
 
 ### Events not showing up?
+
 - Try using the search box in the events dialog
 - Make sure you're selecting the exact event names listed above
 - You can select more events if you want - these 6 are the minimum required
 
 ### Webhook secret not showing?
+
 - Make sure you've actually created the endpoint (clicked "Add endpoint")
 - Scroll down on the webhook details page
 - Look for "Signing secret" section
@@ -184,4 +191,3 @@ echo "whsec_YOUR_SECRET_HERE" | vercel env add STRIPE_WEBHOOK_SECRET production 
 ---
 
 **Take your time and follow each step. Once you have the `whsec_...` secret, paste it here and I'll help you update Vercel!** 🎉
-

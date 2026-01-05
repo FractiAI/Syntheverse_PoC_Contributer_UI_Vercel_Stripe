@@ -11,17 +11,17 @@
 fetch('/api/test/stripe-small', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ amount_cents: 50 })
+  body: JSON.stringify({ amount_cents: 50 }),
 })
-  .then(res => res.json())
-  .then(data => {
+  .then((res) => res.json())
+  .then((data) => {
     console.log('✅ Success!', data);
     if (data.checkout_url) {
       window.open(data.checkout_url, '_blank');
       console.log('🔗 Opening Stripe Checkout...');
     }
   })
-  .catch(err => console.error('❌ Error:', err));
+  .catch((err) => console.error('❌ Error:', err));
 ```
 
 5. **A new tab will open** with Stripe Checkout for $0.50
@@ -50,4 +50,3 @@ fetch('/api/test/stripe-small', {
 ---
 
 **That's it!** The test is complete when you see the payment in Stripe Dashboard.
-

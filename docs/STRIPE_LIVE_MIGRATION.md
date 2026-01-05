@@ -35,6 +35,7 @@ This guide walks through migrating from Stripe test/sandbox mode to live/product
    - This is safe to expose in client-side code
 
 **✅ You need:**
+
 - [ ] `sk_live_...` (Secret key)
 - [ ] `pk_live_...` (Publishable key)
 
@@ -73,6 +74,7 @@ This guide walks through migrating from Stripe test/sandbox mode to live/product
    - ⚠️ **Keep this secret!**
 
 **✅ You need:**
+
 - [ ] `whsec_...` (Webhook signing secret from LIVE mode)
 
 ---
@@ -115,6 +117,7 @@ This guide walks through migrating from Stripe test/sandbox mode to live/product
    - Click **Save**
 
 **✅ Checklist:**
+
 - [ ] `STRIPE_SECRET_KEY` = `sk_live_...` (Production environment)
 - [ ] `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` = `pk_live_...` (Production environment)
 - [ ] `STRIPE_WEBHOOK_SECRET` = `whsec_...` (Production environment, from live webhook)
@@ -238,6 +241,7 @@ If you need to rollback to test mode:
 **Issue**: Payments failing or API errors
 
 **Solutions**:
+
 - Verify keys are copied correctly (no spaces/newlines)
 - Check you're using live keys (`sk_live_`, `pk_live_`)
 - Verify Stripe account is activated for live payments
@@ -248,6 +252,7 @@ If you need to rollback to test mode:
 **Issue**: Webhook events not being received
 
 **Solutions**:
+
 - Verify webhook URL is correct
 - Check webhook secret matches live mode webhook
 - Ensure you're using live mode webhook secret (not test mode)
@@ -259,6 +264,7 @@ If you need to rollback to test mode:
 **Issue**: Using test keys with live webhook or vice versa
 
 **Solutions**:
+
 - Test keys must use test webhook secret
 - Live keys must use live webhook secret
 - Don't mix test and live keys/webhooks
@@ -292,4 +298,3 @@ Before going live, verify:
 ---
 
 **Once you complete these steps, your application will be using Stripe live mode!** 🎉
-

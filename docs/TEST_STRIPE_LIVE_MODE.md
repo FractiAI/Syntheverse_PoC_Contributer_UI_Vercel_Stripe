@@ -15,6 +15,7 @@ A dedicated test endpoint is available at `/api/test/stripe-small` that creates 
 **Endpoint:** `POST /api/test/stripe-small`
 
 **Request Body (optional):**
+
 ```json
 {
   "amount_cents": 50
@@ -44,13 +45,14 @@ This is the easiest method - just use your browser's developer tools:
    - Click on the "Console" tab in Developer Tools
 
 4. **Run this JavaScript code:**
+
    ```javascript
    fetch('/api/test/stripe-small', {
      method: 'POST',
      headers: {
        'Content-Type': 'application/json',
      },
-     body: JSON.stringify({ amount_cents: 50 })
+     body: JSON.stringify({ amount_cents: 50 }),
    })
      .then((res) => res.json())
      .then((data) => {
@@ -84,6 +86,7 @@ If you prefer command-line testing:
    - Copy the entire cookie value
 
 3. **Run curl command:**
+
    ```bash
    curl -X POST https://syntheverse-poc.vercel.app/api/test/stripe-small \
      -H "Content-Type: application/json" \
@@ -95,6 +98,7 @@ If you prefer command-line testing:
    (Replace `YOUR_COOKIE_VALUE_HERE` with the actual cookie value)
 
 **Expected Response:**
+
 ```json
 {
   "success": true,
@@ -143,7 +147,7 @@ export default function TestStripePage() {
       }
 
       setResult(data);
-      
+
       // Open checkout URL automatically
       if (data.checkout_url) {
         window.open(data.checkout_url, '_blank');
@@ -158,7 +162,7 @@ export default function TestStripePage() {
   return (
     <div className="container mx-auto p-8">
       <h1 className="text-2xl font-bold mb-4">Test Stripe Live Mode</h1>
-      
+
       <button
         onClick={runTest}
         disabled={loading}
@@ -206,6 +210,7 @@ The financial support endpoint accepts any amount (minimum 50 cents):
 **Endpoint:** `POST /api/financial-support/create-checkout`
 
 **Request Body:**
+
 ```json
 {
   "amount_cents": 50,
@@ -214,6 +219,7 @@ The financial support endpoint accepts any amount (minimum 50 cents):
 ```
 
 **Example:**
+
 ```bash
 curl -X POST https://syntheverse-poc.vercel.app/api/financial-support/create-checkout \
   -H "Content-Type: application/json" \
@@ -251,15 +257,18 @@ curl -X POST https://syntheverse-poc.vercel.app/api/financial-support/create-che
 ## Important Notes
 
 ⚠️ **Live Mode = Real Charges**
+
 - Transactions in live mode will charge real credit cards
 - Use small amounts (50 cents minimum) for testing
 - Consider refunding test transactions after verification
 
 ⚠️ **Minimum Amount**
+
 - Stripe requires minimum $0.50 USD (50 cents) per transaction
 - Smaller amounts will be rejected by Stripe
 
 ⚠️ **Authentication Required**
+
 - Both endpoints require user authentication
 - Must be logged in to create checkout sessions
 
@@ -284,16 +293,20 @@ After completing a test transaction:
 ## Troubleshooting
 
 ### Error: "Amount too small"
+
 - **Solution:** Use at least 50 cents (5000 = $50.00 is wrong, use 50 = $0.50)
 
 ### Error: "Live keys required"
+
 - **Solution:** Verify `STRIPE_SECRET_KEY` starts with `sk_live_` in Vercel environment variables
 
 ### Error: "Unauthorized"
+
 - **Solution:** Must be logged in. Authenticate first before calling the endpoint.
 
 ### Webhook not received
-- **Solution:** 
+
+- **Solution:**
   1. Verify webhook endpoint URL in Stripe Dashboard
   2. Check `STRIPE_WEBHOOK_SECRET` is set correctly
   3. Check Vercel logs for webhook events
@@ -312,4 +325,3 @@ After successful testing:
 
 **Last Updated:** After Stripe live mode migration  
 **Minimum Test Amount:** $0.50 USD (50 cents)
-

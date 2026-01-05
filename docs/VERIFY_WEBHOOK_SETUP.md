@@ -53,7 +53,7 @@ If no webhook exists in Live mode:
 1. **Click "+ Add endpoint"** button (top right)
 
 2. **Configure Endpoint**
-   - **Endpoint URL:** 
+   - **Endpoint URL:**
      ```
      https://syntheverse-poc.vercel.app/webhook/stripe
      ```
@@ -87,9 +87,11 @@ Once you have the **live mode** webhook secret:
 1. **Copy the secret** from Stripe (starts with `whsec_...`)
 
 2. **Update in Vercel via CLI:**
+
    ```bash
    echo "whsec_YOUR_SECRET_HERE" | vercel env add STRIPE_WEBHOOK_SECRET production --force --token YOUR_TOKEN
    ```
+
    (Replace `whsec_YOUR_SECRET_HERE` with your actual secret)
 
 3. **Or update manually:**
@@ -106,6 +108,7 @@ Once you have the **live mode** webhook secret:
 ### Check Webhook Secret Format
 
 The webhook secret should:
+
 - ✅ Start with `whsec_...`
 - ✅ Be from **Live mode** webhook (not Test mode)
 - ✅ Match the webhook endpoint you're using
@@ -137,7 +140,7 @@ The webhook secret should:
 
 - ⚠️ **Test mode webhooks** use test keys and test secrets
 - ⚠️ **Live mode webhooks** use live keys and live secrets
-- ⚠️ **Don't mix them!** 
+- ⚠️ **Don't mix them!**
   - Live keys → Live webhook secret
   - Test keys → Test webhook secret
 
@@ -163,4 +166,3 @@ The webhook secret should:
 ---
 
 **Once you complete these steps, your Stripe webhook will be fully configured for live mode!** 🎉
-

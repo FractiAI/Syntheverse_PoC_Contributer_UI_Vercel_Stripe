@@ -1,10 +1,10 @@
 /**
  * Test endpoint to create a small Stripe checkout session for testing live mode
- * 
+ *
  * POST /api/test/stripe-small
- * 
+ *
  * Body: { amount_cents?: number } (optional, defaults to 50 cents = $0.50)
- * 
+ *
  * Creates a minimal test checkout session to verify Stripe live mode integration.
  * Minimum amount: 50 cents ($0.50 USD) per Stripe requirements.
  */
@@ -61,9 +61,13 @@ export async function POST(request: NextRequest) {
     }
 
     const sanitizedKey = process.env.STRIPE_SECRET_KEY.trim().replace(/\s+/g, '');
-    
+
     // Verify we're using live keys (for production testing)
-    if (!sanitizedKey.startsWith('sk_live_') && !sanitizedKey.startsWith('ssk_live_') && !sanitizedKey.startsWith('rk_live_')) {
+    if (
+      !sanitizedKey.startsWith('sk_live_') &&
+      !sanitizedKey.startsWith('ssk_live_') &&
+      !sanitizedKey.startsWith('rk_live_')
+    ) {
       return NextResponse.json(
         {
           error: 'This endpoint is for testing live mode only. Live keys required.',
@@ -172,4 +176,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
