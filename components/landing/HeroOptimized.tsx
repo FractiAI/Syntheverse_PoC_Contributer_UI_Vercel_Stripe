@@ -26,7 +26,7 @@ export function HeroOptimized() {
       {/* Hero content */}
       <div className="relative z-10 max-w-4xl px-6 text-center">
         <h1 className="mb-6 text-4xl font-bold leading-tight md:text-5xl lg:text-6xl">
-          Syntheverse: Proof-of-Contribution for Frontier Research
+          Syntheverse: Proof-of-Contribution for Frontier R&D
         </h1>
 
         <p className="cockpit-text mb-4 text-lg opacity-90 md:text-xl">

@@ -1,4 +1,5 @@
 import { XCircle, AlertTriangle, CheckCircle } from 'lucide-react';
+import Link from 'next/link';
 import { SectionWrapper } from './shared/SectionWrapper';
 import { Card } from './shared/Card';
 
@@ -51,9 +52,9 @@ export function SectionWhy() {
       </Card>
 
       <div className="mt-6 flex justify-center">
-        <button className="cockpit-lever inline-flex items-center gap-2 text-sm">
+        <Link href="/scoring" className="cockpit-lever inline-flex items-center gap-2 text-sm">
           See Scoring Criteria
-        </button>
+        </Link>
       </div>
     </SectionWrapper>
   );

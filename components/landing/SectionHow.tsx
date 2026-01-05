@@ -63,7 +63,7 @@ export function SectionHow() {
         'Refine your work to reduce overlap',
         'Resubmit for improved scores',
       ],
-      cta: { label: 'Learn About Scoring', href: '/onboarding' },
+      cta: { label: 'Learn About Scoring', href: '/scoring' },
     },
     {
       number: 5,

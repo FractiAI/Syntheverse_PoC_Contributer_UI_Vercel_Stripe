@@ -4,7 +4,7 @@ import './dashboard-cockpit.css';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Syntheverse: Proof-of-Contribution for Frontier Research',
+  title: 'Syntheverse: Proof-of-Contribution for Frontier R&D',
   description:
     'Turn research into verifiable on-chain records. No gatekeeping, measured by coherence. Submit your PoC and receive SynthScan™ MRI evaluation.',
 };

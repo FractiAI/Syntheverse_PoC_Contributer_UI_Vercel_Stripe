@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Microscope, Code, Compass } from 'lucide-react';
 import { SectionWrapper } from './shared/SectionWrapper';
@@ -10,6 +10,15 @@ type Persona = 'researcher' | 'developer' | 'alignment';
 
 export function SectionEngage() {
   const [activePersona, setActivePersona] = useState<Persona>('researcher');
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    // Check if user is authenticated by trying to fetch user session
+    fetch('/api/auth/check')
+      .then((res) => res.json())
+      .then((data) => setIsAuthenticated(data.authenticated === true))
+      .catch(() => setIsAuthenticated(false));
+  }, []);
 
   const personas = {
     researcher: {
@@ -22,7 +31,10 @@ export function SectionEngage() {
         'Receive SynthScan™ MRI score',
         'Iterate with redundancy feedback',
       ],
-      cta: { label: 'Start as Researcher', href: '/onboarding?track=researcher' },
+      cta: {
+        label: 'Start as Researcher',
+        href: isAuthenticated === false ? '/signup' : '/onboarding?track=researcher',
+      },
     },
     developer: {
       icon: Code,

@@ -66,7 +66,7 @@ export function SectionProof() {
               </div>
             </div>
             <Link
-              href="/archive"
+              href="/signup"
               className="inline-flex items-center gap-2 text-sm text-[var(--hydrogen-amber)] hover:underline"
             >
               View Full Evaluation
@@ -100,7 +100,7 @@ export function SectionProof() {
               </div>
             </div>
             <Link
-              href="/archive"
+              href="/signup"
               className="inline-flex items-center gap-2 text-sm text-[var(--hydrogen-amber)] hover:underline"
             >
               View Full Evaluation
@@ -190,7 +190,7 @@ export function SectionProof() {
       )}
 
       <div className="mt-8 flex justify-center">
-        <Link href="/dashboard" className="cockpit-lever inline-flex items-center gap-2">
+        <Link href="/signup" className="cockpit-lever inline-flex items-center gap-2">
           Browse Full Archive
           <ArrowRight className="h-4 w-4" />
         </Link>
