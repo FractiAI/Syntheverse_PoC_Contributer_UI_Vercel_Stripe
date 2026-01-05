@@ -55,6 +55,7 @@ export default function EnterpriseContributionDetail({
 
   useEffect(() => {
     fetchContribution();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [submissionHash]);
 
   async function fetchContribution() {

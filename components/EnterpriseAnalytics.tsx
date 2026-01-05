@@ -36,6 +36,7 @@ export default function EnterpriseAnalytics({ sandboxId }: EnterpriseAnalyticsPr
 
   useEffect(() => {
     fetchAnalytics();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sandboxId]);
 
   async function fetchAnalytics() {
