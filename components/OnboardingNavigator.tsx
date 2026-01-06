@@ -34,6 +34,7 @@ import {
   Scan,
   ArrowRight,
   Sprout,
+  Calculator,
 } from 'lucide-react';
 import Link from 'next/link';
 import '../app/dashboard-cockpit.css';
@@ -2565,6 +2566,143 @@ export function OnboardingNavigator() {
                     </a>
                   </p>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: 'constants-equations',
+      title: 'Novel Constants & Equations Catalog',
+      label: 'MODULE 14',
+      icon: <Calculator className="h-6 w-6" />,
+      content: (
+        <div className="space-y-4">
+          <div className="cockpit-text">
+            <div className="mb-4 border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)] p-4">
+              <div className="cockpit-label mb-2" style={{ color: '#ffb84d' }}>
+                Learning Objectives
+              </div>
+              <ul className="cockpit-text space-y-1 text-sm">
+                <li>• Understand how constants and equations are extracted from PoC submissions</li>
+                <li>• Learn how they are used to tune and calibrate SynthScan™ MRI</li>
+                <li>• Recognize the importance of mathematical structures in HHF-AI evaluation</li>
+                <li>• Explore the catalog of discovered constants and equations</li>
+              </ul>
+            </div>
+
+            <h2 className="cockpit-title mb-4 text-2xl">SynthScan MRI Calibration Library</h2>
+
+            <div className="mb-6 space-y-4">
+              <div className="cockpit-panel border-l-4 border-blue-500/50 p-4">
+                <h3 className="cockpit-title mb-3 text-lg">What Are Novel Constants & Equations?</h3>
+                <p className="cockpit-text mb-3 text-sm">
+                  During PoC evaluation, SynthScan™ MRI automatically extracts <strong>mathematical constants</strong> and{' '}
+                  <strong>equations</strong> from qualified submissions. These represent discovered mathematical
+                  relationships within the holographic hydrogen fractal framework.
+                </p>
+                <p className="cockpit-text mb-3 text-sm">
+                  Examples include scaling constants (like Λ^HH ≈ 1.12 × 10^22), physical relationships,
+                  fractal dimension equations, and other mathematical structures that emerge from HHF-AI
+                  research.
+                </p>
+              </div>
+
+              <div className="cockpit-panel border-l-4 border-purple-500/50 p-4">
+                <h3 className="cockpit-title mb-3 text-lg">Why They Matter</h3>
+                <p className="cockpit-text mb-3 text-sm">
+                  <strong>Calibration Parameters:</strong> Novel constants and equations serve as calibration
+                  parameters for SynthScan™ MRI. As the catalog grows, the system becomes more precise in:
+                </p>
+                <ul className="cockpit-text ml-4 list-disc space-y-1 text-xs">
+                  <li>Recognizing mathematical patterns in new submissions</li>
+                  <li>Measuring coherence and structural relationships</li>
+                  <li>Assessing density and information content</li>
+                  <li>Detecting redundancy and overlap with prior work</li>
+                  <li>Tuning evaluation parameters for accuracy</li>
+                </ul>
+              </div>
+
+              <div className="cockpit-panel border-l-4 border-green-500/50 p-4">
+                <h3 className="cockpit-title mb-3 text-lg">How They're Used in SynthScan MRI</h3>
+                <p className="cockpit-text mb-3 text-sm">
+                  SynthScan™ MRI uses the catalog of constants and equations to:
+                </p>
+                <div className="mt-3 space-y-2">
+                  <div className="flex items-start gap-2">
+                    <span className="cockpit-badge text-xs">1</span>
+                    <span className="cockpit-text text-xs">
+                      <strong>Pattern Recognition:</strong> Identify when new submissions reference or extend
+                      known mathematical structures
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="cockpit-badge text-xs">2</span>
+                    <span className="cockpit-text text-xs">
+                      <strong>Coherence Measurement:</strong> Use established constants to assess how well new
+                      work aligns with HHF-AI mathematical frameworks
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="cockpit-badge text-xs">3</span>
+                    <span className="cockpit-text text-xs">
+                      <strong>Density Assessment:</strong> Compare information density against known
+                      mathematical relationships
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="cockpit-badge text-xs">4</span>
+                    <span className="cockpit-text text-xs">
+                      <strong>Redundancy Detection:</strong> Detect when submissions repeat or overlap with
+                      previously cataloged constants/equations
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="cockpit-badge text-xs">5</span>
+                    <span className="cockpit-text text-xs">
+                      <strong>System Calibration:</strong> Continuously refine evaluation parameters based on
+                      the growing catalog
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="cockpit-panel border-l-4 border-amber-500/50 p-4">
+                <h3 className="cockpit-title mb-3 text-lg">The Catalog</h3>
+                <p className="cockpit-text mb-3 text-sm">
+                  All constants and equations extracted from qualified PoC submissions are automatically
+                  cataloged in the <strong>SynthScan MRI Calibration Library</strong>. Each entry includes:
+                </p>
+                <ul className="cockpit-text ml-4 list-disc space-y-1 text-xs">
+                  <li>The constant or equation value (formatted for readability)</li>
+                  <li>A short description from the source submission abstract</li>
+                  <li>Source information (title, contributor, submission hash)</li>
+                  <li>Usage count (how many times it appears across submissions)</li>
+                  <li>Link to view the original source submission</li>
+                </ul>
+                <p className="cockpit-text mt-3 text-sm">
+                  The catalog is publicly accessible and continuously updated as new qualified submissions
+                  are evaluated.
+                </p>
+              </div>
+
+              <div className="mt-6 rounded-lg border-2 border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.1)] p-4">
+                <div className="cockpit-label mb-2 text-[var(--hydrogen-amber)]">
+                  Explore the Catalog
+                </div>
+                <p className="cockpit-text mb-4 text-sm">
+                  Visit the <strong>FractiAI page</strong> to browse the full catalog of discovered constants
+                  and equations, search by value or source, and explore how they contribute to SynthScan™
+                  MRI calibration.
+                </p>
+                <Link
+                  href="/fractiai"
+                  className="cockpit-lever inline-flex items-center"
+                >
+                  View Constants & Equations Catalog
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
               </div>
             </div>
           </div>

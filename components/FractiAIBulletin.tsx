@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import FractiAIStatusWidget from '@/components/FractiAIStatusWidget';
 import { StatusIndicators } from './StatusIndicators';
 import { GenesisButton } from './GenesisButton';
+import { ConstantsEquationsCatalog } from './ConstantsEquationsCatalog';
 
 type FractiAIBulletinProps = {
   isAuthenticated?: boolean;
@@ -662,6 +663,25 @@ export default function FractiAIBulletin({ isAuthenticated = false }: FractiAIBu
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* Constants & Equations Catalog */}
+            <div className="cockpit-panel border-l-4 border-blue-500 p-8">
+              <div className="cockpit-label mb-4 text-blue-400">SYNTHSCAN MRI CALIBRATION LIBRARY</div>
+              <div className="cockpit-title mb-4 text-xl">Novel Constants & Equations</div>
+              <div className="cockpit-text mb-6 text-sm" style={{ opacity: 0.9 }}>
+                Constants and equations extracted from qualified PoC submissions are cataloged and used to
+                tune and calibrate SynthScan™ MRI evaluation parameters. These discovered mathematical
+                structures enable more accurate coherence measurement, density assessment, and redundancy
+                detection across the HHF-AI evaluation framework.
+              </div>
+              <div className="cockpit-text mb-6 text-xs" style={{ opacity: 0.8 }}>
+                <strong>Importance:</strong> Novel constants and equations represent discovered mathematical
+                relationships within the holographic hydrogen fractal framework. They serve as calibration
+                parameters for SynthScan MRI, allowing the system to recognize patterns, measure coherence,
+                and evaluate contributions with increasing precision as the catalog grows.
+              </div>
+              <ConstantsEquationsCatalog />
             </div>
 
             {/* Onboarding CTA */}

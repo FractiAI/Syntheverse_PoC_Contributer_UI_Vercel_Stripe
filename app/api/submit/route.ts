@@ -8,6 +8,7 @@ import { evaluateWithGrok } from '@/utils/grok/evaluate';
 import { vectorizeSubmission } from '@/utils/vectors';
 import { sendApprovalRequestEmail } from '@/utils/email/send-approval-request';
 import { isQualifiedForOpenEpoch, getOpenEpochInfo } from '@/utils/epochs/qualification';
+import { getAuthenticatedUserWithRole } from '@/utils/auth/permissions';
 import * as crypto from 'crypto';
 import Stripe from 'stripe';
 import {
@@ -248,10 +249,11 @@ export async function POST(request: NextRequest) {
           status: 'evaluating', // Direct to evaluation for operator
           text_content: text_content.trim(),
           metadata: {
-            payment_status: 'operator_exempt',
+            payment_status: isCreator ? 'creator_exempt' : 'operator_exempt',
             user_email: user.email,
             submission_timestamp: new Date().toISOString(),
-            operator_mode: true,
+            creator_mode: isCreator,
+            operator_mode: isOperator,
           },
           created_at: new Date(),
           updated_at: new Date(),
@@ -272,7 +274,8 @@ export async function POST(request: NextRequest) {
             content_hash: contentHash,
             text_content_length: text_content.length,
             user_email: user.email,
-            operator_mode: true,
+            creator_mode: isCreator,
+            operator_mode: isOperator,
           },
           created_at: new Date(),
         });
