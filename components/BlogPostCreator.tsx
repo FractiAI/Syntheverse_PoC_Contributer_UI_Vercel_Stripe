@@ -32,7 +32,7 @@ export function BlogPostCreator({
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [excerpt, setExcerpt] = useState('');
-  const [status, setStatus] = useState<'draft' | 'published'>('draft');
+  const [status, setStatus] = useState<'draft' | 'published'>('published');
   const [featured, setFeatured] = useState(false);
   const [tags, setTags] = useState('');
   const [authorName, setAuthorName] = useState('');
