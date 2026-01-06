@@ -319,12 +319,18 @@ export default function ScoringCriteriaPage() {
                 <div>
                   <strong>Step 2:</strong> Apply redundancy effects
                   <div className="ml-4 mt-1 font-mono opacity-80">
-                    Final Score = (Composite × (1 - penalty% / 100)) × bonus_multiplier
+                    After Redundancy = (Composite × (1 - penalty% / 100)) × bonus_multiplier
+                  </div>
+                </div>
+                <div>
+                  <strong>Step 3:</strong> Apply seed multiplier (if applicable)
+                  <div className="ml-4 mt-1 font-mono opacity-80">
+                    Final Score = After Redundancy × seed_multiplier
                   </div>
                 </div>
                 <div className="mt-3 text-xs opacity-75">
                   <strong>Note:</strong> Individual dimension scores are never modified. Only the
-                  composite/total score receives redundancy adjustments.
+                  composite/total score receives redundancy adjustments and seed multipliers.
                 </div>
               </div>
             </div>
@@ -333,6 +339,50 @@ export default function ScoringCriteriaPage() {
               <strong>Feedback:</strong> You&apos;ll receive detailed redundancy analysis showing
               which prior submissions overlap, your measured overlap percentage, and specific
               guidance on how to refine your work to improve scores.
+            </div>
+          </Card>
+
+          {/* Seed Detection & Bonus */}
+          <Card hover={false} className="mb-8 border-l-4 border-purple-500/50">
+            <h3 className="cockpit-title mb-4 text-lg">Seed Detection & Bonus</h3>
+            <div className="rounded-lg border-2 border-purple-500/50 bg-purple-500/5 p-4">
+              <h4 className="cockpit-title mb-2 text-sm">Seed Submissions</h4>
+              <p className="cockpit-text mb-3 text-xs opacity-90">
+                <strong>Seed submissions</strong> are the first contributions to a sandbox—foundational
+                work that establishes the initial knowledge base. Based on Seed Information Theory,
+                seed submissions possess disproportionately high Generative Value Density (GVD) and
+                serve as compact informational structures capable of unpacking into complex systems.
+              </p>
+              <div className="mb-3 space-y-2 text-xs">
+                <div className="flex items-center gap-2">
+                  <span className="cockpit-badge text-xs bg-purple-500/20 text-purple-300">Seed Detection:</span>
+                  <span>Automatic detection when no prior submissions exist in sandbox</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="cockpit-badge text-xs bg-purple-500/20 text-purple-300">Seed Multiplier:</span>
+                  <span className="font-mono">×1.15 (15% bonus)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="cockpit-badge text-xs bg-purple-500/20 text-purple-300">Applied To:</span>
+                  <span>Final score after redundancy adjustments</span>
+                </div>
+              </div>
+              <div className="rounded border border-purple-500/30 bg-purple-500/5 p-3">
+                <div className="cockpit-text mb-2 text-xs font-semibold">Example Calculation:</div>
+                <div className="space-y-1 text-xs font-mono opacity-90">
+                  <div>Composite Score: 7,500</div>
+                  <div>After Redundancy: 7,200 (4% overlap penalty)</div>
+                  <div>Seed Multiplier: ×1.15</div>
+                  <div className="mt-2 font-semibold text-purple-300">
+                    Final Score: 7,200 × 1.15 = 8,280
+                  </div>
+                </div>
+              </div>
+              <p className="cockpit-text mt-3 text-xs opacity-75">
+                <strong>Research Basis:</strong> Empirical validation shows HHF-encoded seeds generate
+                8.7–14.2× greater reachable configuration spaces than non-seed encodings of equivalent
+                length, supporting the formal distinction between seed information and conventional data.
+              </p>
             </div>
           </Card>
 

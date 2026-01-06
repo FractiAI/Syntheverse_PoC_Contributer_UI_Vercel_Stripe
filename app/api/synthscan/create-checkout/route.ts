@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
         },
       ],
       mode: 'subscription',
-      success_url: `${baseUrl}/subscribe?success=true&tier=${encodeURIComponent(tier)}`,
+      success_url: `${baseUrl}/synthscan/control-panel?subscription=success&tier=${encodeURIComponent(tier)}`,
       cancel_url: `${baseUrl}/subscribe?canceled=true`,
       customer_email: user.email,
       metadata: {

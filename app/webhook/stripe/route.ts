@@ -107,6 +107,12 @@ export async function POST(req: Request) {
         // Handle enterprise sandbox subscriptions
         if (subscription.metadata?.product_type === 'enterprise_sandbox') {
           await handleEnterpriseSubscription(subscription);
+        } else if (subscription.metadata?.product_type === 'synthscan_monthly_access') {
+          // SynthScan subscription - update user plan
+          await db
+            .update(usersTable)
+            .set({ plan: subscription.id })
+            .where(eq(usersTable.stripe_id, subscription.customer as string));
         } else {
           // Legacy user plan update
           await db
@@ -160,6 +166,17 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
   // Check if this is an enterprise sandbox subscription
   if (session.metadata?.product_type === 'enterprise_sandbox') {
     await handleEnterpriseCheckoutCompleted(session);
+    return;
+  }
+
+  // Check if this is a SynthScan subscription
+  if (session.metadata?.product_type === 'synthscan_monthly_access') {
+    // SynthScan subscription completed - user will be redirected to control panel via success_url
+    debug('StripeWebhook', 'SynthScan subscription completed', {
+      sessionId: session.id,
+      userEmail: session.metadata.user_email,
+      tier: session.metadata.tier,
+    });
     return;
   }
 

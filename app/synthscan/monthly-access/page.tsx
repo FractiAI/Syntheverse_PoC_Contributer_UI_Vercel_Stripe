@@ -119,17 +119,24 @@ export default async function SynthScanMonthlyAccessPage() {
           </div>
         </div>
 
-        {/* Access Status */}
+        {/* Control Panel Access */}
         <div className="cockpit-panel border border-[var(--hydrogen-amber)] p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="cockpit-label text-[var(--hydrogen-amber)]">
-                MONTHLY ACCESS ACTIVE
-              </div>
-              <div className="cockpit-text mt-2 text-sm" style={{ opacity: 0.9 }}>
-                Your subscription provides full access to SynthScan™ MRI tools and capabilities.
-              </div>
+          <div className="mb-4">
+            <div className="cockpit-label text-[var(--hydrogen-amber)]">
+              MONTHLY ACCESS ACTIVE
             </div>
+            <div className="cockpit-text mt-2 text-sm" style={{ opacity: 0.9 }}>
+              Your subscription provides full access to SynthScan™ MRI tools and capabilities.
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Link
+              href="/synthscan/control-panel"
+              className="cockpit-lever inline-flex items-center bg-[var(--hydrogen-amber)] text-black hover:bg-[var(--hydrogen-amber)]/90"
+            >
+              <Settings className="mr-2 h-4 w-4" />
+              Open Control Panel
+            </Link>
             <Link href="/billing-portal" className="cockpit-lever inline-flex items-center">
               <Settings className="mr-2 h-4 w-4" />
               Manage Subscription

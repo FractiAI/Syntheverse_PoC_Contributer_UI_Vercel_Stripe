@@ -71,8 +71,8 @@ export default async function CreatorDashboard() {
         {/* Control Panels */}
         <CreatorCockpitNavigation />
 
-        {/* Sales Tracking - Revenue & Subscriptions */}
-        <SalesTracking />
+        {/* Sales Tracking - Revenue & Subscriptions (Creators Only) */}
+        {isCreator && <SalesTracking />}
 
         {/* PoC Archive - Same as Contributor Dashboard */}
         <FrontierModule userEmail={userEmail} />

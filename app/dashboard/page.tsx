@@ -50,7 +50,8 @@ export default async function Dashboard() {
     <div className="cockpit-bg min-h-screen">
       <div className="container mx-auto space-y-6 px-4 py-6 md:space-y-8 md:px-6 md:py-8">
         {/* Sandbox Selector */}
-        <div className="flex justify-end">
+        <div className="flex flex-col items-end gap-2">
+          <div className="cockpit-label text-xs">Select Sandbox</div>
           <SandboxSelector />
         </div>
 
