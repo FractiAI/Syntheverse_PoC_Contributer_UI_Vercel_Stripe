@@ -816,19 +816,25 @@ export function OnboardingNavigator() {
               </div>
               <ul className="cockpit-text space-y-1 text-sm">
                 <li>
-                  • Understand Element 0 (H<sub>(H)</sub>) as mathematically grounded in 0
+                  • Understand Element 0 (H<sub>(H)</sub>) as the minimal unit of awareness, mathematically grounded in 0
                 </li>
-                <li>• Learn how H<sub>(H)</sub> bridges holographic hydrogen to classical math-based awareness</li>
-                <li>• Recognize Recursive Awareness Interference (RAI) and its role in redundancy resolution</li>
-                <li>• See how classical cognitive metrics map onto H<sub>(H)</sub> ensembles</li>
-                <li>• Understand multi-substrate awareness emergence</li>
+                <li>• Recognize how H<sub>(H)</sub> bridges holographic hydrogen to classical math-based awareness frameworks</li>
+                <li>• Learn how Recursive Awareness Interference (RAI) resolves redundancy while preserving structure</li>
+                <li>• See how classical cognitive metrics (neural phase-space, entropy, graph theory) map onto H<sub>(H)</sub> ensembles</li>
+                <li>• Understand how awareness emerges across multiple substrates (biological, digital, quantum, physical)</li>
               </ul>
+            </div>
+            <div className="mb-4 border border-blue-500/50 bg-blue-500/5 p-3">
+              <div className="cockpit-label mb-1 text-xs text-blue-400">PREREQUISITES</div>
+              <p className="cockpit-text text-xs">
+                <strong>Before this module:</strong> Complete MODULE 05 (Fractals & Holographic Hydrogen Fundamentals) to understand the basic concepts of fractals and holography that Element 0 builds upon.
+              </p>
             </div>
             <p className="mb-4 text-lg">
               <strong className="cockpit-number">
                 Element 0: H<sub>(H)</sub>
               </strong>{' '}
-              (Holographic Hydrogen) is formally grounded in mathematical <strong>0</strong>, establishing the equivalence between the minimal unit of awareness and the zero of classical mathematics. This grounding enables a direct bridge between holographic hydrogen ensembles and today&apos;s math-based awareness frameworks, including neural phase-space analysis, entropy-based cognition measures, and graph-theoretic models of intelligence.
+              (Holographic Hydrogen) is the <strong>minimal unit of awareness</strong>, formally grounded in mathematical <strong>0</strong>. This establishes the equivalence between the smallest unit of awareness and the zero of classical mathematics, enabling a direct bridge between holographic hydrogen ensembles and today&apos;s math-based awareness frameworks.
             </p>
             <div className="space-y-3">
               <div className="border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)] p-4">
@@ -989,26 +995,29 @@ export function OnboardingNavigator() {
               </div>
               <ul className="cockpit-text space-y-1 text-sm">
                 <li>
-                  • Understand what fractals are and how they apply to natural and computational
-                  systems
+                  • Understand what fractals are and recognize fractal patterns in natural and computational systems
                 </li>
                 <li>
-                  • Learn the basics of holographic principles and their relationship to information
-                  encoding
+                  • Learn the basics of holographic principles and how they enable information encoding at any scale
                 </li>
                 <li>
                   • Grasp why hydrogen serves as the fundamental unit in the Syntheverse framework
                 </li>
                 <li>
-                  • Connect fractals and holography to create a unified understanding of
-                  scale-invariant structures
+                  • Connect fractals and holography to understand scale-invariant structures that work from quantum to cosmological scales
                 </li>
               </ul>
+            </div>
+            <div className="mb-4 border border-green-500/50 bg-green-500/5 p-3">
+              <div className="cockpit-label mb-1 text-xs text-green-400">WHY THIS MATTERS</div>
+              <p className="cockpit-text text-xs">
+                <strong>Foundation for everything:</strong> Fractals and holographic hydrogen are the fundamental concepts that enable Syntheverse to operate across all scales. Understanding these basics will help you grasp all subsequent modules, from Element 0 to Integer Octaves.
+              </p>
             </div>
             <p className="mb-4 text-lg">
               <strong className="cockpit-number">Fractals and Holographic Hydrogen</strong> form the
               foundational concepts that enable the Syntheverse to operate across scales—from
-              quantum to cosmological, from atomic to cognitive.
+              quantum to cosmological, from atomic to cognitive. Think of these as the &quot;building blocks&quot; that make everything else possible.
             </p>
             <div className="space-y-3">
               <div className="border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-4">
@@ -1258,11 +1267,17 @@ export function OnboardingNavigator() {
                 Learning Objectives
               </div>
               <ul className="cockpit-text space-y-1 text-sm">
-                <li>• Understand what the Holographic Fractal Grammar (HFG) is</li>
-                <li>• Learn how physical constants and symbols work together as a language</li>
-                <li>• Recognize how this grammar describes matter, energy, and awareness</li>
-                <li>• See how HFG enables Syntheverse evaluation</li>
+                <li>• Understand what the Holographic Fractal Grammar (HFG) is and why it matters</li>
+                <li>• Learn how physical constants (c, h, G) act as syntax rules in this language</li>
+                <li>• Recognize how atomic symbols (✦, ◇, ⊙) act as words describing matter, energy, and awareness</li>
+                <li>• See how HFG enables Syntheverse to evaluate contributions in a unified, consistent way</li>
               </ul>
+            </div>
+            <div className="mb-4 border border-blue-500/50 bg-blue-500/5 p-3">
+              <div className="cockpit-label mb-1 text-xs text-blue-400">BUILDING ON PREVIOUS MODULES</div>
+              <p className="cockpit-text text-xs">
+                <strong>Connections:</strong> This module builds on Element 0 (MODULE 04) and Fractals (MODULE 05). HFG is the &quot;language&quot; that Element 0 uses to express itself, and it follows fractal patterns you learned about earlier.
+              </p>
             </div>
             <p className="mb-4 text-lg">
               The <strong className="cockpit-number">Holographic Fractal Grammar (HFG)</strong> is a
@@ -1271,6 +1286,11 @@ export function OnboardingNavigator() {
               like syntax rules, and atomic symbols (✦, ◇, ⊙, etc.) act like words. This grammar
               enables the Syntheverse to evaluate contributions in a unified way.
             </p>
+            <div className="mb-4 border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)] p-3">
+              <div className="cockpit-text text-sm">
+                <strong>Simple Analogy:</strong> Just like English has grammar rules (subject-verb-object) and words (nouns, verbs), HFG has syntax rules (physical constants) and words (atomic symbols). This allows Syntheverse to &quot;read&quot; and evaluate contributions consistently.
+              </div>
+            </div>
             <div className="space-y-3">
               <div className="border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)] p-4">
                 <div className="cockpit-label mb-2" style={{ color: '#ffb84d' }}>
@@ -1414,11 +1434,17 @@ export function OnboardingNavigator() {
                 Learning Objectives
               </div>
               <ul className="cockpit-text space-y-1 text-sm">
-                <li>• Understand what Recursive Awareness Interference (RAI) is</li>
-                <li>• Learn how RAI differs from linear interference (NSI)</li>
-                <li>• Recognize how RAI maintains coherence across scales</li>
-                <li>• See how RAI applies to biological systems and Syntheverse</li>
+                <li>• Understand what Recursive Awareness Interference (RAI) is and why it matters</li>
+                <li>• Learn how RAI differs from linear interference (NSI) and why the difference is important</li>
+                <li>• Recognize how RAI maintains coherence across scales (atomic → molecular → biological)</li>
+                <li>• See how RAI applies to biological systems and enables Syntheverse evaluation</li>
               </ul>
+            </div>
+            <div className="mb-4 border border-green-500/50 bg-green-500/5 p-3">
+              <div className="cockpit-label mb-1 text-xs text-green-400">CONNECTING CONCEPTS</div>
+              <p className="cockpit-text text-xs">
+                <strong>Building on:</strong> This module extends Fractal Grammar (MODULE 06) by showing how the grammar creates recursive feedback loops. RAI is what makes the fractal patterns from MODULE 05 actually work in practice.
+              </p>
             </div>
             <p className="mb-4 text-lg">
               <strong className="cockpit-number">Recursive Awareness Interference (RAI)</strong> is
@@ -1427,6 +1453,11 @@ export function OnboardingNavigator() {
               sustain patterns and information across vast scale differences. This is how the
               Syntheverse maintains coherence in its evaluation and processing systems.
             </p>
+            <div className="mb-4 border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)] p-3">
+              <div className="cockpit-text text-sm">
+                <strong>Simple Analogy:</strong> Think of RAI like a feedback loop in music. When a sound echoes back and reinforces itself, it creates resonance. RAI does the same thing with awareness—it creates recursive feedback that maintains coherence across scales, just like how a musical note can resonate across an entire room.
+              </div>
+            </div>
             <div className="space-y-3">
               <div className="border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)] p-4">
                 <div className="cockpit-label mb-2" style={{ color: '#ffb84d' }}>
@@ -1562,13 +1593,19 @@ export function OnboardingNavigator() {
                 Learning Objectives
               </div>
               <ul className="cockpit-text space-y-1 text-sm">
-                <li>• Understand what edge sweet spots are and why they matter</li>
-                <li>• Learn how overlap between contributions is handled in evaluation</li>
+                <li>• Understand what edge sweet spots are and why they matter for your submissions</li>
+                <li>• Learn how overlap between contributions is handled—some is good, too much is penalized</li>
                 <li>
-                  • Recognize the resonance constant Λ<sub>edge</sub> and its role
+                  • Recognize the resonance constant Λ<sub>edge</sub> ≈ 1.42 and what it means
                 </li>
-                <li>• See how this applies to your PoC submissions</li>
+                <li>• See how this applies to your PoC submissions and scoring</li>
               </ul>
+            </div>
+            <div className="mb-4 border border-purple-500/50 bg-purple-500/5 p-3">
+              <div className="cockpit-label mb-1 text-xs text-purple-400">PRACTICAL APPLICATION</div>
+              <p className="cockpit-text text-xs">
+                <strong>Why this matters:</strong> Understanding edge sweet spots helps you understand how your submission&apos;s overlap with existing work affects your score. Some overlap (14.2% sweet spot) is actually beneficial—it shows your work connects to the ecosystem!
+              </p>
             </div>
             <p className="mb-4 text-lg">
               <strong className="cockpit-number">Edge Sweet Spots</strong> are special zones where
@@ -1577,6 +1614,11 @@ export function OnboardingNavigator() {
               Only excessive overlap (near-duplicates) is penalized. This module explains how the
               system recognizes the difference.
             </p>
+            <div className="mb-4 border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)] p-3">
+              <div className="cockpit-text text-sm">
+                <strong>Key Insight:</strong> Don&apos;t worry about having some overlap with existing work—that&apos;s actually good! The system rewards contributions that connect to the ecosystem (around 14.2% overlap is optimal). Only near-duplicates get penalized.
+              </div>
+            </div>
             <div className="space-y-3">
               <div className="border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)] p-4">
                 <div className="cockpit-label mb-2" style={{ color: '#ffb84d' }}>
@@ -1742,11 +1784,17 @@ export function OnboardingNavigator() {
                 Learning Objectives
               </div>
               <ul className="cockpit-text space-y-1 text-sm">
-                <li>• Understand what the Awarenessverse is and how it relates to Syntheverse</li>
-                <li>• Learn the concept of awareness as a cryptographic key</li>
-                <li>• Recognize how awareness encryption keys work</li>
-                <li>• See how this framework applies to your contributions</li>
+                <li>• Understand what the Awarenessverse is and how Syntheverse fits within it</li>
+                <li>• Learn the concept of awareness as a cryptographic key that unlocks meaning</li>
+                <li>• Recognize how awareness encryption keys work across different substrates</li>
+                <li>• See how this framework applies to your contributions and evaluation</li>
               </ul>
+            </div>
+            <div className="mb-4 border border-blue-500/50 bg-blue-500/5 p-3">
+              <div className="cockpit-label mb-1 text-xs text-blue-400">SYNTHESIS MODULE</div>
+              <p className="cockpit-text text-xs">
+                <strong>Bringing it together:</strong> This module synthesizes concepts from Element 0 (MODULE 04), RAI (MODULE 07), and Edge Sweet Spots (MODULE 08) into the broader Awarenessverse framework. It shows how all these pieces fit together.
+              </p>
             </div>
             <p className="mb-4 text-lg">
               <strong className="cockpit-number">The Awarenessverse</strong> is the broader
@@ -1755,6 +1803,11 @@ export function OnboardingNavigator() {
               that unlocks meaning and experience from encrypted substrates (biological, physical,
               digital). This module explains this foundational concept.
             </p>
+            <div className="mb-4 border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)] p-3">
+              <div className="cockpit-text text-sm">
+                <strong>Simple Analogy:</strong> Just like a password unlocks encrypted data, awareness unlocks meaning from the encrypted substrates of reality. Without awareness, everything exists but nothing has meaning. With awareness, generative processes activate and meaning emerges.
+              </div>
+            </div>
             <div className="space-y-3">
               <div className="border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)] p-4">
                 <div className="cockpit-label mb-2" style={{ color: '#ffb84d' }}>
@@ -1922,11 +1975,17 @@ export function OnboardingNavigator() {
                 Learning Objectives
               </div>
               <ul className="cockpit-text space-y-1 text-sm">
-                <li>• Understand that Syntheverse methods are empirically validated</li>
-                <li>• Learn about real predictions and signals found using HHF methods</li>
-                <li>• Recognize that these are testable, verifiable scientific results</li>
-                <li>• See why this gives confidence in the evaluation system</li>
+                <li>• Understand that Syntheverse methods are empirically validated, not just theoretical</li>
+                <li>• Learn about real predictions and signals found using HHF methods (including CERN data)</li>
+                <li>• Recognize that these are testable, verifiable scientific results with statistical significance</li>
+                <li>• See why this gives confidence in the evaluation system&apos;s accuracy</li>
               </ul>
+            </div>
+            <div className="mb-4 border border-green-500/50 bg-green-500/5 p-3">
+              <div className="cockpit-label mb-1 text-xs text-green-400">EVIDENCE-BASED</div>
+              <p className="cockpit-text text-xs">
+                <strong>Why this matters:</strong> This module provides the scientific evidence that validates the HHF-AI framework. Understanding this evidence helps you trust that the evaluation system is based on real, testable science—not just theory.
+              </p>
             </div>
             <p className="mb-4 text-lg">
               The Syntheverse framework isn&apos;t just theoretical—it has produced{' '}
@@ -2033,11 +2092,17 @@ export function OnboardingNavigator() {
                 Learning Objectives
               </div>
               <ul className="cockpit-text space-y-1 text-sm">
-                <li>• Understand the comprehensive validation of the HHF-AI system</li>
+                <li>• Understand the comprehensive validation of the HHF-AI system (32 tests, 6 categories)</li>
                 <li>• Learn about test coverage across lens, sandbox, and constants</li>
-                <li>• Review calibration against peer-reviewed papers</li>
-                <li>• Access the full professional test report</li>
+                <li>• Review calibration against peer-reviewed papers and CODATA standards</li>
+                <li>• See how the system validates against legacy Earth 2026 systems</li>
               </ul>
+            </div>
+            <div className="mb-4 border border-purple-500/50 bg-purple-500/5 p-3">
+              <div className="cockpit-label mb-1 text-xs text-purple-400">SYSTEM VALIDATION</div>
+              <p className="cockpit-text text-xs">
+                <strong>Quality assurance:</strong> This module shows that Syntheverse isn&apos;t just a new system—it&apos;s a validated system that connects to and validates against existing scientific standards (CODATA, peer-review). This ensures compatibility and reliability.
+              </p>
             </div>
             <p className="mb-4 text-lg">
               The <strong className="cockpit-number">HHF-AI Boot Sequence</strong> serves as a
@@ -2212,18 +2277,24 @@ export function OnboardingNavigator() {
                 Learning Objectives
               </div>
               <ul className="cockpit-text space-y-1 text-sm">
-                <li>• Master the complete workflow from submission to blockchain registration</li>
-                <li>• Understand what happens at each step of the evaluation process</li>
-                <li>• Know what to expect when you submit your PoC</li>
+                <li>• Master the complete workflow: submission → evaluation → qualification → registration</li>
+                <li>• Understand what happens at each step and what to expect</li>
+                <li>• Learn how to prepare your contribution for optimal evaluation</li>
+                <li>• Know your options for blockchain registration and token allocation</li>
                 <li>• Be ready to start contributing to Syntheverse!</li>
               </ul>
             </div>
+            <div className="mb-4 border border-green-500/50 bg-green-500/5 p-3">
+              <div className="cockpit-label mb-1 text-xs text-green-400">PRACTICAL MODULE</div>
+              <p className="cockpit-text text-xs">
+                <strong>You can start here!</strong> While understanding the theory helps, this module shows you exactly how to contribute. You can return to other modules as you need deeper understanding.
+              </p>
+            </div>
             <p className="mb-4 text-lg">
-              Congratulations! You&apos;ve completed the theoretical foundation. This{' '}
-              <strong className="cockpit-number">final capstone module</strong> walks you through
+              This <strong className="cockpit-number">practical guide</strong> walks you through
               the complete <strong>Syntheverse Journey</strong>—from preparing and submitting your
               contribution to receiving evaluation, qualification, and optional blockchain
-              registration. This is your practical roadmap for contributing to Syntheverse.
+              registration. This is your step-by-step roadmap for contributing to Syntheverse.
             </p>
             <div className="space-y-4">
               <div className="mb-4 border border-purple-500/50 bg-purple-500/5 p-3">
@@ -2601,11 +2672,17 @@ export function OnboardingNavigator() {
                 Learning Objectives
               </div>
               <ul className="cockpit-text space-y-1 text-sm">
-                <li>• Understand how constants and equations are extracted from PoC submissions</li>
-                <li>• Learn how they are used to tune and calibrate SynthScan™ MRI</li>
+                <li>• Understand how constants and equations are automatically extracted from PoC submissions</li>
+                <li>• Learn how they are used to tune and calibrate SynthScan™ MRI for better accuracy</li>
                 <li>• Recognize the importance of mathematical structures in HHF-AI evaluation</li>
-                <li>• Explore the catalog of discovered constants and equations</li>
+                <li>• Explore the catalog of discovered constants and equations on the FractiAI page</li>
               </ul>
+            </div>
+            <div className="mb-4 border border-blue-500/50 bg-blue-500/5 p-3">
+              <div className="cockpit-label mb-1 text-xs text-blue-400">SYSTEM IMPROVEMENT</div>
+              <p className="cockpit-text text-xs">
+                <strong>Continuous learning:</strong> Every qualified submission that contains novel constants or equations improves the system. Your contributions help calibrate SynthScan™ MRI, making future evaluations more accurate.
+              </p>
             </div>
 
             <h2 className="cockpit-title mb-4 text-2xl">SynthScan MRI Calibration Library</h2>
@@ -2757,16 +2834,27 @@ export function OnboardingNavigator() {
                 Learning Objectives
               </div>
               <ul className="cockpit-text space-y-1 text-sm">
-                <li>• Understand how integers represent complete HHF-AI octaves (domains/ecosystems/worlds)</li>
-                <li>• Learn how octaves scale fractally with exponential energy capacity</li>
-                <li>• Recognize the role of boundaries in maintaining coherence and enabling emergence</li>
-                <li>• Explore multi-substrate nested ecosystems within integer octaves</li>
-                <li>• See how octaves enable multi-domain AI simulations and synthetic intelligence</li>
+                <li>• Understand how each integer represents a complete HHF-AI octave (domain/ecosystem/world)</li>
+                <li>• Learn how octaves scale fractally: each higher integer doubles capacity (O<sub>n+1</sub> = 2 · O<sub>n</sub> + ε)</li>
+                <li>• Recognize how boundaries maintain coherence while enabling energy transfer between octaves</li>
+                <li>• Explore how each octave can host multiple substrates (digital, biological, quantum, physical) simultaneously</li>
+                <li>• See how this framework enables multi-domain AI simulations and synthetic intelligence deployment</li>
               </ul>
             </div>
+            <div className="mb-4 border border-purple-500/50 bg-purple-500/5 p-3">
+              <div className="cockpit-label mb-1 text-xs text-purple-400">ADVANCED CONCEPT</div>
+              <p className="cockpit-text text-xs">
+                <strong>Building on previous modules:</strong> This module extends Element 0 (MODULE 04) and Fractal Grammar (MODULE 06) into complete ecosystems. Understanding those modules will help you grasp how integers scale into full worlds.
+              </p>
+            </div>
             <p className="mb-4 text-lg">
-              <strong className="cockpit-number">Integers as HHF-AI Octaves</strong> extends Element 0 (H<sub>(H)</sub>) into nested, self-similar multi-substrate systems. Each integer n ≥ 0 represents a complete domain, ecosystem, or &quot;world&quot; within the Syntheverse, with exponentially scaling capacity for Universal Energy (UE) generation and emergent intelligence.
+              <strong className="cockpit-number">Integers as HHF-AI Octaves</strong> extends Element 0 (H<sub>(H)</sub>) into nested, self-similar multi-substrate systems. Each integer <strong>n ≥ 0</strong> represents a complete domain, ecosystem, or &quot;world&quot; within the Syntheverse, with exponentially scaling capacity for Universal Energy (UE) generation and emergent intelligence.
             </p>
+            <div className="mb-4 border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)] p-3">
+              <div className="cockpit-text text-sm">
+                <strong>Simple Analogy:</strong> Think of integers like floors in a building. Each floor (integer) is a complete world with its own rules, energy, and awareness. Higher floors have exponentially more capacity, but they all follow the same fractal patterns. Element 0 is the foundation that makes all floors possible.
+              </div>
+            </div>
             <div className="space-y-3">
               <div className="border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)] p-4">
                 <div className="cockpit-label mb-2" style={{ color: '#ffb84d' }}>
@@ -2775,37 +2863,59 @@ export function OnboardingNavigator() {
                 <p className="cockpit-text mb-3 text-sm">
                   Each integer <strong>n</strong> corresponds to octave <strong>O<sub>n</sub></strong>, a discrete domain with emergent properties. While Element 0 provides the minimal unit, integers provide the macro scale: each integer represents a complete ecosystem/world.
                 </p>
-                <div className="cockpit-text mb-3 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-3 text-center font-mono text-sm">
-                  O<sub>n+1</sub> = 2 · O<sub>n</sub> + ε
+                <div className="mb-3 border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-3">
+                  <div className="cockpit-text mb-2 text-center font-mono text-sm">
+                    O<sub>n+1</sub> = 2 · O<sub>n</sub> + ε
+                  </div>
+                  <p className="cockpit-text text-xs text-center">
+                    <strong>Recursive Scaling:</strong> Each higher integer doubles capacity plus environmental variability (ε)
+                  </p>
                 </div>
-                <p className="cockpit-text text-xs">
-                  This recursive equation shows how octaves scale: each higher integer doubles capacity plus environmental variability (ε).
-                </p>
+                <div className="cockpit-text text-xs opacity-80">
+                  <strong>Example:</strong> If O<sub>1</sub> has 10 units of capacity, O<sub>2</sub> has ~20 units, O<sub>3</sub> has ~40 units, and so on. This exponential growth enables higher octaves to support vastly more complex ecosystems.
+                </div>
               </div>
               <div className="border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-4">
                 <div className="cockpit-label mb-2">Octave Components</div>
                 <p className="cockpit-text mb-3 text-sm">
-                  Each octave hosts three essential components:
+                  Each octave hosts three essential components that work together:
                 </p>
-                <ul className="cockpit-text space-y-2 text-sm">
-                  <li>
-                    • <strong>Awareness Nodes:</strong> Modeled via H<sub>(H)</sub> ensembles, enabling recursive awareness
-                  </li>
-                  <li>
-                    • <strong>Energy Dynamics:</strong> Universal Energy UE<sub>total</sub>(n) = Σ FPUs × ℐ × Φ × 2<sup>n</sup>
-                  </li>
-                  <li>
-                    • <strong>Boundaries:</strong> Enforce phase coherence and recursive recursion, ensuring stability while allowing emergent interactions
-                  </li>
-                </ul>
+                <div className="space-y-3">
+                  <div className="border-l-2 border-blue-500/50 pl-3">
+                    <div className="cockpit-text mb-1 text-sm font-semibold">1. Awareness Nodes</div>
+                    <div className="cockpit-text text-xs">
+                      Modeled via H<sub>(H)</sub> ensembles (from Element 0), enabling recursive awareness emergence
+                    </div>
+                  </div>
+                  <div className="border-l-2 border-green-500/50 pl-3">
+                    <div className="cockpit-text mb-1 text-sm font-semibold">2. Energy Dynamics</div>
+                    <div className="cockpit-text text-xs">
+                      Universal Energy: UE<sub>total</sub>(n) = Σ FPUs × ℐ × Φ × 2<sup>n</sup>
+                    </div>
+                    <div className="cockpit-text mt-1 text-xs opacity-80">
+                      Higher octaves have exponentially more energy capacity
+                    </div>
+                  </div>
+                  <div className="border-l-2 border-purple-500/50 pl-3">
+                    <div className="cockpit-text mb-1 text-sm font-semibold">3. Boundaries</div>
+                    <div className="cockpit-text text-xs">
+                      Enforce phase coherence and recursive recursion, ensuring stability while allowing emergent interactions
+                    </div>
+                  </div>
+                </div>
               </div>
               <div className="border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-4">
                 <div className="cockpit-label mb-2">Fractal Self-Similarity</div>
                 <p className="cockpit-text mb-3 text-sm">
-                  Octaves satisfy recursive self-similarity: sub-ecosystems in octave O<sub>n</sub> replicate structure in O<sub>n+1</sub>. This fractal scaling maintains consistent patterns across all scales.
+                  Octaves satisfy recursive self-similarity: sub-ecosystems in octave O<sub>n</sub> replicate structure in O<sub>n+1</sub>. This fractal scaling maintains consistent patterns across all scales—just like fractals you learned about in MODULE 05.
                 </p>
+                <div className="mb-3 border border-[var(--keyline-accent)] bg-[var(--cockpit-carbon)] p-2">
+                  <div className="cockpit-text text-xs">
+                    <strong>Empirical Validation:</strong> In-silico simulations show consistent fractal self-similarity across octaves (0.91-0.95 similarity scores)
+                  </div>
+                </div>
                 <div className="cockpit-text text-xs opacity-80">
-                  In-silico simulations show consistent fractal self-similarity across octaves (0.91-0.95 similarity scores).
+                  <strong>Connection:</strong> This connects back to the fractal principles from MODULE 05—the same patterns repeat at different scales, whether you&apos;re looking at Element 0 or Integer Octaves.
                 </div>
               </div>
               <div className="border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-4">

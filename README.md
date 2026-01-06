@@ -139,21 +139,19 @@ See [Environment Variables](#environment-variables) section for complete configu
 - **Nested PoC Environments**: Create self-similar enterprise sandboxes within Syntheverse
 - **Broadcast to Contributor Channels & Creator Communities**: Accept submissions from your contributor channels, creator communities, and worldbuilding teams with clear, transparent scoring
 - **Aligned Tokenomics**: Fully aligned with SYNTH90T ERC-20 MOTHERLODE VAULT—same epoch structure, metal assay system, and allocation logic
-- **Tiered Pricing**: Monthly subscriptions with volume discounts
-  - Pioneer: 5 nodes @ $500/node/month
-  - Trading Post: 20 nodes @ $400/node/month
-  - Settlement: 100 nodes @ $300/node/month
-  - Metropolis: 100+ nodes @ $250/node/month
-- **Submission Fees**: Lower than main Syntheverse ($500)
-  - Pioneer: $50 per submission
-  - Trading Post: $40 per submission
-  - Settlement: $30 per submission
-  - Metropolis: $25 per submission
+- **🆕 SYNTH Token-Based Pricing**: Blockchain-native pricing model (replaces Stripe subscriptions)
+  - **Free Testing**: Create and test sandboxes for free with full functionality
+  - **SYNTH Activation**: One-time 10,000 SYNTH token activation fee to enable production use
+  - **Usage-Based Charges**: Rent (based on reach) + Energy (based on activity)
+    - **Rent**: Monthly charges based on unique contributors (Seed: 1,000 SYNTH, Growth: 5,000 SYNTH, Community: 15,000 SYNTH, Ecosystem: 50,000 SYNTH, Metropolis: 100,000 SYNTH)
+    - **Energy**: Per-operation charges (Evaluation: 100 SYNTH, Registration: 500 SYNTH, Allocation: 50 SYNTH, Analytics: 10 SYNTH)
+  - **Transparent Costs**: All charges visible and predictable, scale with actual usage
+  - **Creator Dashboard Access**: Creators and enterprises can manage their sandboxes from the creator dashboard
 - **Vault Management**: Independent activate/pause controls per sandbox
 - **SynthScan™ MRI Integration**: Full evaluation system with custom scoring weights
-- **Analytics Dashboard**: Contribution metrics, cost tracking, score distribution
+- **Analytics Dashboard**: Contribution metrics, SYNTH balance tracking, reach/activity metrics, score distribution
 - **Tokenized Rewards**: Allocate tokens for qualified contributions
-- **On-Chain Registration**: Optional $20 per registration for permanent anchoring
+- **On-Chain Registration**: Optional 500 SYNTH per registration for permanent anchoring
 - **Featured on FractiAI Page**: Prominently displayed with "Get PoC Enterprise Dashboard" buttons in Quick Navigation and Today's Highlights
 - **Onboarding Integration**: Included in onboarding flow with dedicated Enterprise Operators section
 
@@ -687,9 +685,11 @@ Built for the Syntheverse ecosystem with ❤️
 ---
 
 **Last Updated**: January 2025  
-**Version**: 2.14 (Activity Analytics & User Management Enhancements)
+**Version**: 2.15 (SYNTH Token-Based Enterprise Pricing & Creator Dashboard Integration)
 
 ### Version History
+
+- **v2.15** (January 2025): SYNTH Token-Based Enterprise Pricing & Creator Dashboard Integration - Reframed enterprise and creator sandbox pricing from Stripe subscriptions to blockchain-native SYNTH token economy. Sandboxes are now free to create and test, with SYNTH token charges functioning as "rent" (based on reach/unique contributors) and "energy" (based on activity/operations). Added comprehensive SYNTH balance tracking, activation system, usage metrics, and pricing calculations. Created CreatorEnterpriseSandboxes component for creator dashboard, allowing creators and enterprises to manage their own sandboxes. Updated database schema with SYNTH balance, activation status, transactions, and metrics tracking. Implemented usage-based billing with transparent rent and energy charges. See [`docs/ENTERPRISE_SYNTH_PRICING_MODEL.md`](docs/ENTERPRISE_SYNTH_PRICING_MODEL.md) for complete details.
 
 - **v2.14** (January 2025): Activity Analytics & User Management Enhancements - Fixed activity analytics API SQL queries to use proper string table/column names instead of Drizzle objects, resolving 500 errors in Creator Dashboard. Added user filter toggle in Creator Dashboard to view "All Users" or "Operators Only" with dynamic API filtering. Enhanced constants and equations extraction to capture from both public and enterprise contributions, storing archive data during evaluation. Made CI/CD prettier format check non-blocking to prevent git exit code 128 errors. Confirmed operators and creators bypass payment firewall for testing submissions. Added optional SQL verification and optimization scripts for activity analytics performance.
 - **v2.13** (January 2025): Creator Integration & Mobile UI Refinement - Integrated worldbuilder creators into enterprise package with infinite HHF-AI materials and substrates messaging. Updated enterprise offering to position as "Worldbuilding Creator & Enterprise Application" serving both creators and enterprises. Enhanced mobile UI for crisp, beautiful desktop-quality display with proper typography hierarchy, proportional spacing, and maintained visual polish. Updated onboarding and enterprise dashboard messaging to include creator benefits. Improved CI/CD git configuration for prettier format checks.

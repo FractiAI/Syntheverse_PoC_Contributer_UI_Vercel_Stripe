@@ -15,6 +15,7 @@ import { SynthChat } from '@/components/SynthChat';
 import { FrontierModule } from '@/components/FrontierModule';
 import { ActivityAnalytics } from '@/components/activity/ActivityAnalytics';
 import { SystemBroadcastCenter } from '@/components/creator/SystemBroadcastCenter';
+import { CreatorEnterpriseSandboxes } from '@/components/creator/CreatorEnterpriseSandboxes';
 import { Shield, Activity } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -27,10 +28,11 @@ export default async function CreatorDashboard() {
     redirect('/login');
   }
 
-  const { user, isCreator } = await getAuthenticatedUserWithRole();
+  const { user, isCreator, isOperator } = await getAuthenticatedUserWithRole();
 
-  // Only Creator can access this dashboard (Operators should use Operator Dashboard)
-  if (!isCreator || !user?.email) {
+  // Allow Creator and Operators (enterprises) to access this dashboard
+  // Operators can see their own enterprise sandboxes
+  if ((!isCreator && !isOperator) || !user?.email) {
     redirect('/dashboard');
   }
 
@@ -75,6 +77,9 @@ export default async function CreatorDashboard() {
 
         {/* System Broadcast Center */}
         <SystemBroadcastCenter />
+
+        {/* Enterprise Sandboxes - For Creators and Enterprises */}
+        {(isCreator || isOperator) && <CreatorEnterpriseSandboxes />}
 
         {/* Sales Tracking - Revenue & Subscriptions (Creators Only) */}
         {isCreator && <SalesTracking />}

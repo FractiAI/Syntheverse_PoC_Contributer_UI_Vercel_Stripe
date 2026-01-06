@@ -190,11 +190,19 @@ export const enterpriseSandboxesTable = pgTable('enterprise_sandboxes', {
     qualification_threshold?: number; // Minimum score to qualify
     [key: string]: any;
   }>(),
-  // Subscription and pricing information
+  // Subscription and pricing information (legacy Stripe)
   subscription_tier: text('subscription_tier'), // Pioneer, Trading Post, Settlement, Metropolis
   node_count: integer('node_count').default(0), // Number of nodes purchased
   stripe_subscription_id: text('stripe_subscription_id'), // Stripe subscription ID
   stripe_customer_id: text('stripe_customer_id'), // Stripe customer ID
+  // SYNTH token-based pricing (new model)
+  synth_balance: numeric('synth_balance', { precision: 20, scale: 0 }).default('0'), // SYNTH token balance (18 decimals)
+  synth_activated: boolean('synth_activated').default(false), // Whether sandbox is activated
+  synth_activated_at: timestamp('synth_activated_at'), // Activation timestamp
+  synth_activation_fee: numeric('synth_activation_fee', { precision: 20, scale: 0 }).default('10000'), // Activation fee in SYNTH
+  current_reach_tier: text('current_reach_tier'), // Seed, Growth, Community, Ecosystem, Metropolis
+  last_billing_cycle: timestamp('last_billing_cycle'), // Last rent charge date
+  testing_mode: boolean('testing_mode').default(true), // Free testing mode (default)
   metadata: jsonb('metadata').$type<{
     [key: string]: any;
   }>(),
@@ -267,9 +275,37 @@ export const enterpriseAllocationsTable = pgTable('enterprise_allocations', {
   created_at: timestamp('created_at').defaultNow().notNull(),
 });
 
-export type InsertEnterpriseSandbox = typeof enterpriseSandboxesTable.$inferInsert;
-export type SelectEnterpriseSandbox = typeof enterpriseSandboxesTable.$inferSelect;
-export type SelectPocLog = typeof pocLogTable.$inferSelect;
+// SYNTH Token Transactions Table
+export const sandboxSynthTransactionsTable = pgTable('sandbox_synth_transactions', {
+  id: text('id').primaryKey(),
+  sandbox_id: text('sandbox_id').notNull().references(() => enterpriseSandboxesTable.id, { onDelete: 'cascade' }),
+  transaction_type: text('transaction_type').notNull(), // activation, deposit, rent, energy, refund, withdrawal
+  amount: numeric('amount', { precision: 20, scale: 0 }).notNull(),
+  balance_before: numeric('balance_before', { precision: 20, scale: 0 }).notNull(),
+  balance_after: numeric('balance_after', { precision: 20, scale: 0 }).notNull(),
+  metadata: jsonb('metadata').$type<{
+    [key: string]: any;
+  }>(),
+  created_at: timestamp('created_at').defaultNow().notNull(),
+});
+
+// Sandbox Metrics Table
+export const sandboxMetricsTable = pgTable('sandbox_metrics', {
+  sandbox_id: text('sandbox_id').primaryKey().references(() => enterpriseSandboxesTable.id, { onDelete: 'cascade' }),
+  unique_contributors: integer('unique_contributors').default(0).notNull(),
+  total_submissions: integer('total_submissions').default(0).notNull(),
+  total_evaluations: integer('total_evaluations').default(0).notNull(),
+  total_registrations: integer('total_registrations').default(0).notNull(),
+  total_allocations: integer('total_allocations').default(0).notNull(),
+  total_analytics_queries: integer('total_analytics_queries').default(0).notNull(),
+  last_calculated_at: timestamp('last_calculated_at').defaultNow().notNull(),
+  updated_at: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export type InsertSandboxSynthTransaction = typeof sandboxSynthTransactionsTable.$inferInsert;
+export type SelectSandboxSynthTransaction = typeof sandboxSynthTransactionsTable.$inferSelect;
+export type InsertSandboxMetrics = typeof sandboxMetricsTable.$inferInsert;
+export type SelectSandboxMetrics = typeof sandboxMetricsTable.$inferSelect;
 
 // Audit Log Table (for tracking destructive actions)
 export const auditLogTable = pgTable('audit_log', {
