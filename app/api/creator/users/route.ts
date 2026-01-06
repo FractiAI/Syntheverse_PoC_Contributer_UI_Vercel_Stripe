@@ -10,7 +10,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAuthenticatedUserWithRole, CREATOR_EMAIL } from '@/utils/auth/permissions';
 import { db } from '@/utils/db/db';
 import { usersTable, contributionsTable, enterpriseSandboxesTable } from '@/utils/db/schema';
-import { eq, isNull, sql, desc } from 'drizzle-orm';
+import { eq, isNull, sql, desc, and } from 'drizzle-orm';
 
 /**
  * GET /api/creator/users - List all users with metadata
@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
 
     if (conditions.length > 0) {
       query = query.where(
-        conditions.length === 1 ? conditions[0] : sql`${conditions.join(' AND ')}`
+        conditions.length === 1 ? conditions[0] : and(...conditions)
       ) as any;
     }
 
