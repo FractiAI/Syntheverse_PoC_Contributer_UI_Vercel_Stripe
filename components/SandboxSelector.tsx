@@ -1,16 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ChevronDown, Search, Filter, Layers } from 'lucide-react';
+import { ChevronDown, Search, Layers, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 
 interface EnterpriseSandbox {
   id: string;
@@ -64,8 +64,8 @@ export function SandboxSelector() {
   };
 
   return (
-    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-      <DropdownMenuTrigger asChild>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
         <Button variant="outline" className="cockpit-lever">
           <Layers className="mr-2 h-4 w-4" />
           {selectedSandbox === 'syntheverse'
@@ -73,16 +73,17 @@ export function SandboxSelector() {
             : sandboxes.find((s) => s.id === selectedSandbox)?.name || 'Select Sandbox'}
           <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="cockpit-panel w-80 max-h-[600px] border-[var(--keyline-primary)] p-0 overflow-hidden flex flex-col">
-        {/* Fixed Header Section */}
-        <div className="p-4 flex-shrink-0 border-b border-[var(--keyline-primary)]">
-          {/* Header */}
-          <div className="cockpit-label mb-3 flex items-center gap-2">
+      </DialogTrigger>
+      <DialogContent className="cockpit-panel max-w-md border-[var(--keyline-primary)] p-0 max-h-[80vh] flex flex-col">
+        <DialogHeader className="p-4 border-b border-[var(--keyline-primary)] flex-shrink-0">
+          <DialogTitle className="cockpit-label flex items-center gap-2">
             <Layers className="h-4 w-4" />
             SELECT SANDBOX
-          </div>
+          </DialogTitle>
+        </DialogHeader>
 
+        {/* Fixed Header Section */}
+        <div className="p-4 flex-shrink-0 border-b border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)]">
           {/* Search */}
           <div className="relative mb-3">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 opacity-50" />
@@ -91,13 +92,12 @@ export function SandboxSelector() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="cockpit-input bg-[var(--cockpit-bg)] pl-10"
-              onClick={(e) => e.stopPropagation()}
             />
           </div>
 
           {/* Filter by Tier */}
           {tiers.length > 0 && (
-            <div className="mb-3 flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2">
               <Button
                 variant={filterTier === null ? 'default' : 'outline'}
                 size="sm"
@@ -122,11 +122,11 @@ export function SandboxSelector() {
         </div>
 
         {/* Scrollable Content Section */}
-        <div className="flex-1 overflow-y-auto overscroll-contain">
+        <div className="flex-1 overflow-y-auto min-h-0">
           {/* Syntheverse (Default) */}
-          <DropdownMenuItem
+          <button
             onClick={() => handleSandboxSelect('syntheverse')}
-            className={`cockpit-text cursor-pointer p-4 ${
+            className={`w-full text-left cockpit-text cursor-pointer p-4 hover:bg-[var(--cockpit-carbon)] transition-colors border-b border-[var(--keyline-primary)] ${
               selectedSandbox === 'syntheverse' ? 'bg-[var(--cockpit-carbon)]' : ''
             }`}
           >
@@ -141,14 +141,12 @@ export function SandboxSelector() {
                 </div>
               </div>
               {selectedSandbox === 'syntheverse' && (
-                <div className="h-2 w-2 rounded-full bg-[var(--hydrogen-amber)]" />
+                <Check className="h-4 w-4 text-[var(--hydrogen-amber)] flex-shrink-0" />
               )}
             </div>
-          </DropdownMenuItem>
+          </button>
 
-          <DropdownMenuSeparator className="bg-[var(--keyline-primary)]" />
-
-          {/* Enterprise Sandboxes (Nested) */}
+          {/* Enterprise Sandboxes */}
           {loading ? (
             <div className="cockpit-text p-4 text-center text-xs opacity-60">
               Loading sandboxes...
@@ -158,39 +156,37 @@ export function SandboxSelector() {
               {searchTerm ? 'No sandboxes found' : 'No enterprise sandboxes available'}
             </div>
           ) : (
-            <>
-              {filteredSandboxes.map((sandbox) => (
-                <DropdownMenuItem
-                  key={sandbox.id}
-                  onClick={() => handleSandboxSelect(sandbox.id)}
-                  className={`cockpit-text cursor-pointer p-4 ${
-                    selectedSandbox === sandbox.id ? 'bg-[var(--cockpit-carbon)]' : ''
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500/30 to-cyan-500/30 text-xs font-semibold">
-                      {sandbox.name.charAt(0).toUpperCase()}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="cockpit-title truncate text-sm font-medium">
-                        {sandbox.name}
-                      </div>
-                      <div className="cockpit-text text-xs opacity-75">
-                        {sandbox.subscription_tier || 'Enterprise'} · {sandbox.contribution_count || 0}{' '}
-                        contributions
-                      </div>
-                    </div>
-                    {selectedSandbox === sandbox.id && (
-                      <div className="h-2 w-2 flex-shrink-0 rounded-full bg-[var(--hydrogen-amber)]" />
-                    )}
+            filteredSandboxes.map((sandbox) => (
+              <button
+                key={sandbox.id}
+                onClick={() => handleSandboxSelect(sandbox.id)}
+                className={`w-full text-left cockpit-text cursor-pointer p-4 hover:bg-[var(--cockpit-carbon)] transition-colors border-b border-[var(--keyline-primary)] ${
+                  selectedSandbox === sandbox.id ? 'bg-[var(--cockpit-carbon)]' : ''
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500/30 to-cyan-500/30 text-xs font-semibold">
+                    {sandbox.name.charAt(0).toUpperCase()}
                   </div>
-                </DropdownMenuItem>
-              ))}
-            </>
+                  <div className="flex-1 min-w-0">
+                    <div className="cockpit-title truncate text-sm font-medium">
+                      {sandbox.name}
+                    </div>
+                    <div className="cockpit-text text-xs opacity-75">
+                      {sandbox.subscription_tier || 'Enterprise'} · {sandbox.contribution_count || 0}{' '}
+                      contributions
+                    </div>
+                  </div>
+                  {selectedSandbox === sandbox.id && (
+                    <Check className="h-4 w-4 text-[var(--hydrogen-amber)] flex-shrink-0" />
+                  )}
+                </div>
+              </button>
+            ))
           )}
         </div>
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </DialogContent>
+    </Dialog>
   );
 }
 
