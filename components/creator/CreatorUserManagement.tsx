@@ -42,6 +42,7 @@ export function CreatorUserManagement() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [filterRole, setFilterRole] = useState<'all' | 'operators'>('operators');
   const [deleteMode, setDeleteMode] = useState<{ email: string; mode: 'hard' | null }>({
     email: '',
     mode: null,
@@ -61,11 +62,14 @@ export function CreatorUserManagement() {
 
   useEffect(() => {
     loadUsers();
-  }, []);
+  }, [filterRole]);
 
   const loadUsers = async () => {
     try {
-      const response = await fetch('/api/creator/users');
+      const url = filterRole === 'operators' 
+        ? '/api/creator/users?role=operator'
+        : '/api/creator/users';
+      const response = await fetch(url);
       if (response.ok) {
         const data: UserListResponse = await response.json();
         setUsers(data.users);
@@ -158,10 +162,13 @@ export function CreatorUserManagement() {
     }
   };
 
-  // Filter to only show operators (and creators for management purposes)
-  const operatorsOnly = users.filter((u) => u.role === 'operator' || u.role === 'creator');
+  // Apply role filter
+  const roleFilteredUsers = filterRole === 'operators' 
+    ? users.filter((u) => u.role === 'operator' || u.role === 'creator')
+    : users;
 
-  const filteredUsers = operatorsOnly.filter(
+  // Apply search filter
+  const filteredUsers = roleFilteredUsers.filter(
     (u) =>
       u.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       u.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -183,20 +190,50 @@ export function CreatorUserManagement() {
         <div className="mb-4 flex items-start gap-3">
           <Users className="h-6 w-6 text-red-500" />
           <div className="flex-1">
-            <div className="cockpit-label mb-2">OPERATOR MANAGEMENT</div>
-            <h2 className="cockpit-title mb-2 text-xl">Operator Administration</h2>
+            <div className="cockpit-label mb-2">USER MANAGEMENT</div>
+            <h2 className="cockpit-title mb-2 text-xl">
+              {filterRole === 'operators' ? 'Operator Administration' : 'User Administration'}
+            </h2>
             <p className="cockpit-text text-sm opacity-80">
-              Manage operators, grant/revoke operator privileges, and delete operator accounts. All actions are
-              logged.
+              {filterRole === 'operators' 
+                ? 'Manage operators, grant/revoke operator privileges, and delete operator accounts. All actions are logged.'
+                : 'View all users, manage roles, and delete user accounts. All actions are logged.'}
             </p>
           </div>
         </div>
 
-        <div className="mb-4">
+        <div className="mb-4 space-y-3">
+          {/* Role Filter Toggle */}
+          <div className="flex items-center gap-3">
+            <Label className="cockpit-label text-sm">Filter:</Label>
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                variant={filterRole === 'all' ? 'default' : 'outline'}
+                onClick={() => setFilterRole('all')}
+                className="cockpit-lever"
+              >
+                All Users
+              </Button>
+              <Button
+                size="sm"
+                variant={filterRole === 'operators' ? 'default' : 'outline'}
+                onClick={() => setFilterRole('operators')}
+                className="cockpit-lever"
+              >
+                Operators Only
+              </Button>
+            </div>
+            <div className="cockpit-text ml-auto text-xs opacity-60">
+              Showing {filteredUsers.length} of {roleFilteredUsers.length} {filterRole === 'operators' ? 'operators' : 'users'}
+            </div>
+          </div>
+          
+          {/* Search Input */}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform opacity-50" />
             <Input
-              placeholder="Search operators by email or name..."
+              placeholder={`Search ${filterRole === 'operators' ? 'operators' : 'users'} by email or name...`}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="cockpit-input pl-10"
@@ -207,7 +244,9 @@ export function CreatorUserManagement() {
         {filteredUsers.length === 0 && !loading && (
           <div className="cockpit-panel bg-[var(--cockpit-carbon)] p-6 text-center">
             <div className="cockpit-text opacity-60">
-              {searchTerm ? 'No operators found matching your search.' : 'No operators found.'}
+              {searchTerm 
+                ? `No ${filterRole === 'operators' ? 'operators' : 'users'} found matching your search.`
+                : `No ${filterRole === 'operators' ? 'operators' : 'users'} found.`}
             </div>
           </div>
         )}

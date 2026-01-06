@@ -27,6 +27,7 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '100');
     const offset = parseInt(searchParams.get('offset') || '0');
     const includeDeleted = searchParams.get('include_deleted') === 'true';
+    const roleFilter = searchParams.get('role'); // Filter by role (e.g., 'operator')
 
     // Build query
     let query = db
@@ -43,8 +44,19 @@ export async function GET(request: NextRequest) {
       .limit(limit)
       .offset(offset);
 
+    // Apply filters
+    const conditions = [];
     if (!includeDeleted) {
-      query = query.where(isNull(usersTable.deleted_at)) as any;
+      conditions.push(isNull(usersTable.deleted_at));
+    }
+    if (roleFilter) {
+      conditions.push(eq(usersTable.role, roleFilter));
+    }
+
+    if (conditions.length > 0) {
+      query = query.where(
+        conditions.length === 1 ? conditions[0] : sql`${conditions.join(' AND ')}`
+      ) as any;
     }
 
     const users = await query;
