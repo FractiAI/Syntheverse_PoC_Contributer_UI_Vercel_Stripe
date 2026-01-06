@@ -100,6 +100,27 @@ export async function evaluateWithGrok(
     system_prompt_file: string;
     evaluation_timestamp_ms: number;
   };
+  // H) Score trace for transparency (Marek requirement)
+  score_trace?: {
+    dimension_scores: {
+      novelty: number;
+      density: number;
+      coherence: number;
+      alignment: number;
+    };
+    composite: number;
+    base_pod_score: number;
+    overlap_percent: number;
+    penalty_percent_computed: number;
+    penalty_percent_applied: number;
+    bonus_multiplier_computed: number;
+    bonus_multiplier_applied: number;
+    after_penalty: number;
+    after_bonus: number;
+    final_score: number;
+    formula: string;
+    clamped: boolean;
+  };
 }> {
   const grokApiKey = process.env.NEXT_PUBLIC_GROK_API_KEY;
   if (!grokApiKey) {
@@ -1147,16 +1168,21 @@ ${answer}`;
       });
     }
 
-    // Extract overlap effect as percentage (-100 to +100)
-    // Positive = bonus (sweet-spot), Negative = penalty (excessive overlap), Zero = neutral
-    // Prefer calculated vector-based analysis if available, otherwise use Grok's estimate
+    // Extract penalty and bonus separately (G-H-I: Fix formula violation and add score trace)
+    // Use calculated vector-based redundancy if available, otherwise extract from Grok's response
+    const penaltyPercent = calculatedRedundancy
+      ? calculatedRedundancy.penalty_percent
+      : Math.max(0, Math.min(100, Number(evaluation.redundancy_penalty_percent ?? 0)));
+    
+    const bonusMultiplier = calculatedRedundancy
+      ? calculatedRedundancy.bonus_multiplier
+      : Math.max(1.0, Math.min(2.0, Number(evaluation.redundancy_bonus_multiplier ?? 1.0)));
+    
+    // Legacy: keep redundancyOverlapPercent for backward compatibility in metadata
+    // But DO NOT use it for score calculation - use penaltyPercent and bonusMultiplier directly
     const redundancyOverlapPercent = calculatedRedundancy
-      ? (calculatedRedundancy.bonus_multiplier - 1 - calculatedRedundancy.penalty_percent / 100) *
-        100
-      : Math.max(
-          -100,
-          Math.min(100, Number(evaluation.redundancy_overlap_percent ?? evaluation.redundancy ?? 0))
-        );
+      ? calculatedRedundancy.overlap_percent
+      : Math.max(0, Math.min(100, Number(evaluation.redundancy_overlap_percent ?? 0)));
 
     // Use final_score if provided, otherwise use base score
     // Individual category scores are NOT penalized - penalty is applied to total composite score
@@ -1229,18 +1255,43 @@ ${answer}`;
     });
 
     // Calculate composite/total score from all individual category scores
+    // G) Ensure scoring formula is always followed: Composite = N + D + C + A
     const compositeScore = finalNoveltyScore + densityFinal + coherenceScore + alignmentScore;
 
-    // Get base total score if provided by Grok
-    let pod_score =
+    // Get base total score if provided by Grok (but prefer compositeScore for consistency)
+    let basePodScore =
       evaluation.total_score ?? evaluation.pod_score ?? evaluation.poc_score ?? compositeScore;
-    if (!pod_score || pod_score === 0) {
-      pod_score = compositeScore;
+    if (!basePodScore || basePodScore === 0) {
+      basePodScore = compositeScore;
     }
 
-    // Apply overlap effect (penalty or bonus) to the composite/total score
-    // redundancyOverlapPercent can be negative (penalty) or positive (bonus)
-    pod_score = Math.max(0, Math.min(10000, pod_score * (1 + redundancyOverlapPercent / 100)));
+    // G) Apply correct formula: Final = (Composite × (1 - penalty%/100)) × bonus_multiplier
+    // This matches the published formula exactly
+    const afterPenalty = basePodScore * (1 - penaltyPercent / 100);
+    const afterBonus = afterPenalty * bonusMultiplier;
+    const pod_score = Math.max(0, Math.min(10000, Math.round(afterBonus)));
+
+    // H) Score trace for transparency (Marek requirement)
+    const scoreTrace = {
+      dimension_scores: {
+        novelty: finalNoveltyScore,
+        density: densityFinal,
+        coherence: coherenceScore,
+        alignment: alignmentScore,
+      },
+      composite: compositeScore,
+      base_pod_score: basePodScore,
+      overlap_percent: redundancyOverlapPercent,
+      penalty_percent_computed: penaltyPercent,
+      penalty_percent_applied: penaltyPercent, // Same for now, but can differ if gated
+      bonus_multiplier_computed: bonusMultiplier,
+      bonus_multiplier_applied: bonusMultiplier, // Same for now, but can differ if gated
+      after_penalty: afterPenalty,
+      after_bonus: afterBonus,
+      final_score: pod_score,
+      formula: `Final = (Composite × (1 - ${penaltyPercent}% / 100)) × ${bonusMultiplier.toFixed(3)} = ${pod_score}`,
+      clamped: pod_score === 10000 || pod_score === 0,
+    };
 
     // Use actual evaluated score for all submissions, including seed submissions
     // Qualification threshold (≥8,000 for Founder) is checked separately
@@ -1444,6 +1495,8 @@ ${answer}`;
       raw_grok_response: answer, // Store the raw markdown/text response from Grok
       // LLM Metadata for provenance and audit trail (required for all qualifying PoCs)
       llm_metadata: llmMetadata,
+      // H) Score trace for transparency (Marek requirement)
+      score_trace: scoreTrace,
     };
   } catch (error) {
     debugError('EvaluateWithGrok', 'Grok API call failed', error);

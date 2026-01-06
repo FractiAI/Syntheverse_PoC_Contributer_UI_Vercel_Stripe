@@ -11,8 +11,10 @@ import {
   Coins,
   Play,
   Pause,
+  CheckCircle,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { SectionWrapper } from './landing/shared/SectionWrapper';
 import { Card } from './landing/shared/Card';
 import EnterprisePricing from './EnterprisePricing';
@@ -44,11 +46,13 @@ export default function EnterpriseDashboard({
   isAuthenticated = false,
   userEmail = null,
 }: EnterpriseDashboardProps) {
+  const searchParams = useSearchParams();
   const [sandboxes, setSandboxes] = useState<EnterpriseSandbox[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newSandboxName, setNewSandboxName] = useState('');
   const [newSandboxDescription, setNewSandboxDescription] = useState('');
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -57,6 +61,24 @@ export default function EnterpriseDashboard({
       setLoading(false);
     }
   }, [isAuthenticated]);
+
+  // Check for successful checkout return
+  useEffect(() => {
+    const sessionId = searchParams?.get('session_id');
+    if (sessionId) {
+      // Payment successful - refresh sandboxes and show success message
+      setShowSuccessMessage(true);
+      fetchSandboxes();
+      
+      // Clean up URL
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.delete('session_id');
+      window.history.replaceState({}, '', newUrl.toString());
+      
+      // Hide success message after 5 seconds
+      setTimeout(() => setShowSuccessMessage(false), 5000);
+    }
+  }, [searchParams]);
 
   async function fetchSandboxes() {
     try {
@@ -125,6 +147,20 @@ export default function EnterpriseDashboard({
   return (
     <div className="cockpit-bg min-h-screen">
       <div className="container mx-auto px-6 py-12">
+        {/* Success Message Banner */}
+        {showSuccessMessage && (
+          <div className="mb-6 rounded-lg border-2 border-green-500/50 bg-green-500/10 p-4">
+            <div className="flex items-center gap-3">
+              <CheckCircle className="h-5 w-5 text-green-500" />
+              <div>
+                <div className="cockpit-title text-green-400">Subscription Activated!</div>
+                <div className="cockpit-text text-sm opacity-90">
+                  Your enterprise sandbox subscription is now active. You can now access your sandbox and start submitting contributions.
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         <Link
           href="/fractiai"
           className="mb-8 inline-flex items-center gap-2 text-sm text-[var(--hydrogen-amber)] hover:underline"

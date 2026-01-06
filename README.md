@@ -682,10 +682,11 @@ Built for the Syntheverse ecosystem with ❤️
 ---
 
 **Last Updated**: January 2025  
-**Version**: 2.10 (SynthScan Prompt Transformation)
+**Version**: 2.11 (Scoring Formula Fix & Transparency Improvements)
 
 ### Version History
 
+- **v2.11** (January 2025): Scoring Formula Fix & Transparency Improvements - Fixed critical scoring formula violation to match published formula `Final = (Composite × (1 - penalty%/100)) × bonus_multiplier`. Added comprehensive score trace block showing all intermediate values (composite, overlap, penalty computed/applied, bonus computed/applied, final score). Added Beta/Mode banners to submission form and scoring page clarifying current text-only mode (4k chars) vs planned PDF pipeline, and fee structure by mode. Added sweet spot clarification documenting 14.2% is tuned for "edge novelty" vs "ecosystem synthesis". See [`MAREK_FEEDBACK_G_M_IMPLEMENTATION.md`](MAREK_FEEDBACK_G_M_IMPLEMENTATION.md) for details.
 - **v2.10** (January 2025): SynthScan Prompt Transformation - Hardened system prompt with deterministic scoring contract, versioned config IDs, sandbox context tracking, mandatory PoD composition breakdown, fixed redundancy reporting (one source of truth), exposed sweet spot parameters, archive similarity distribution with percentile and neighbor statistics, fixed Module 12 documentation mismatch, and testing protocol for scientific validation. See [`SYNTHSCAN_PROMPT_TRANSFORMATION.md`](SYNTHSCAN_PROMPT_TRANSFORMATION.md) for details.
 - **v2.9** (January 2025): Simplified Sales Tracking & Sandbox Selector - Simplified SalesTracking component to show only essential metrics (Total Revenue, This Month, Last Month) with expandable details section. Added SandboxSelector component to dashboard with Syntheverse as default and enterprise sandboxes nested within. Sales tracking restricted to creator/operator dashboard only. Sandbox selector includes search and filter by subscription tier capabilities.
 - **v2.8** (January 2025): SynthChat WhatsApp-Style Interface - Redesigned SynthChat with WhatsApp-style mobile interface featuring two-panel layout (sandbox list + chat view), connect/disconnect functionality, chat navigator with filtering (All/Connected/Available), embedded mode in Creator Dashboard, message bubbles with timestamps, last message preview, and participant tracking. Database schema includes chat_rooms, chat_messages, and chat_participants tables with Row Level Security policies.

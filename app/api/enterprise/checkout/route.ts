@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import Stripe from 'stripe';
+import { db } from '@/utils/db/db';
+import { enterpriseSandboxesTable } from '@/utils/db/schema';
+import crypto from 'crypto';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
   apiVersion: '2024-06-20',
@@ -57,7 +60,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { tier, nodeCount, sandboxId } = body;
+    let { tier, nodeCount, sandboxId } = body;
 
     if (!tier || !nodeCount || nodeCount < 1) {
       return NextResponse.json({ error: 'Tier and node count are required' }, { status: 400 });
@@ -66,6 +69,34 @@ export async function POST(request: NextRequest) {
     const monthlyPrice = calculatePrice(tier, nodeCount);
     if (monthlyPrice === 0) {
       return NextResponse.json({ error: 'Invalid tier or node count' }, { status: 400 });
+    }
+
+    // If no sandboxId provided, create a new sandbox for the user
+    if (!sandboxId || sandboxId.trim() === '') {
+      const newSandboxId = crypto.randomUUID();
+      const sandboxName = `${user.email.split('@')[0]}-sandbox-${Date.now().toString().slice(-6)}`;
+      
+      await db
+        .insert(enterpriseSandboxesTable)
+        .values({
+          id: newSandboxId,
+          operator: user.email,
+          name: sandboxName,
+          description: `Enterprise sandbox for ${tier} tier with ${nodeCount} nodes`,
+          vault_status: 'paused', // Will be activated after successful payment
+          tokenized: false,
+          current_epoch: 'founder',
+          scoring_config: {
+            novelty_weight: 1.0,
+            density_weight: 1.0,
+            coherence_weight: 1.0,
+            alignment_weight: 1.0,
+            qualification_threshold: 4000,
+          },
+          metadata: {},
+        });
+      
+      sandboxId = newSandboxId;
     }
 
     // Create Stripe Checkout Session

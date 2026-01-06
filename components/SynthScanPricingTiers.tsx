@@ -45,8 +45,17 @@ const tiers: PricingTier[] = [
 
 export default function SynthScanPricingTiers() {
   const [loading, setLoading] = useState<string | null>(null);
+  const [selectedTier, setSelectedTier] = useState<string | null>(null);
+  const [nodeCount, setNodeCount] = useState<Record<string, number>>({
+    'SynthScan Light': 1,
+    'SynthScan Pro': 1,
+    'SynthScan Enterprise': 1,
+  });
 
   const handlePurchase = async (tier: PricingTier) => {
+    const nodes = nodeCount[tier.name] || 1;
+    const totalPrice = tier.price * nodes;
+
     setLoading(tier.name);
     try {
       const response = await fetch('/api/synthscan/create-checkout', {
@@ -57,6 +66,8 @@ export default function SynthScanPricingTiers() {
         body: JSON.stringify({
           tier: tier.name,
           price: tier.price,
+          nodeCount: nodes,
+          totalPrice: totalPrice,
         }),
       });
 
@@ -65,11 +76,13 @@ export default function SynthScanPricingTiers() {
       if (data.checkout_url) {
         window.location.href = data.checkout_url;
       } else {
-        console.error('No checkout URL returned');
+        console.error('No checkout URL returned:', data);
+        alert(data.error || 'Failed to create checkout session');
         setLoading(null);
       }
     } catch (error) {
       console.error('Error creating checkout session:', error);
+      alert('Failed to create checkout session. Please try again.');
       setLoading(null);
     }
   };
@@ -113,20 +126,63 @@ export default function SynthScanPricingTiers() {
               </div>
             </div>
 
-            <button
-              onClick={() => handlePurchase(tier)}
-              disabled={loading === tier.name}
-              className="cockpit-lever mt-4 w-full text-center disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {loading === tier.name ? (
-                'Processing...'
+            {selectedTier === tier.name && (
+              <div className="mb-4 rounded border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-3">
+                <label className="cockpit-label mb-2 block text-xs">Number of Nodes</label>
+                <input
+                  type="number"
+                  min="1"
+                  max="1000"
+                  value={nodeCount[tier.name] || 1}
+                  onChange={(e) => {
+                    const count = Math.max(1, Math.min(1000, parseInt(e.target.value) || 1));
+                    setNodeCount((prev) => ({ ...prev, [tier.name]: count }));
+                  }}
+                  className="cockpit-input mb-2 w-full"
+                />
+                <div className="cockpit-text text-xs opacity-75">
+                  <div>Price per node: ${tier.price.toLocaleString()}</div>
+                  <div className="mt-1 font-semibold text-[var(--hydrogen-amber)]">
+                    Total: ${((tier.price * (nodeCount[tier.name] || 1))).toLocaleString()}/month
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="flex gap-2">
+              {selectedTier !== tier.name ? (
+                <button
+                  onClick={() => setSelectedTier(tier.name)}
+                  className="cockpit-lever flex-1 text-center text-sm"
+                >
+                  Select Package
+                  <ArrowRight className="ml-2 inline h-4 w-4" />
+                </button>
               ) : (
                 <>
-                  Start Trial
-                  <ArrowRight className="ml-2 inline h-4 w-4" />
+                  <button
+                    onClick={() => setSelectedTier(null)}
+                    className="cockpit-text flex-1 border border-[var(--keyline-primary)] px-4 py-2 text-center text-sm opacity-75 hover:opacity-100"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => handlePurchase(tier)}
+                    disabled={loading === tier.name}
+                    className="cockpit-lever flex-1 text-center text-sm disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {loading === tier.name ? (
+                      'Processing...'
+                    ) : (
+                      <>
+                        Start Trial
+                        <ArrowRight className="ml-2 inline h-4 w-4" />
+                      </>
+                    )}
+                  </button>
                 </>
               )}
-            </button>
+            </div>
           </div>
         ))}
       </div>

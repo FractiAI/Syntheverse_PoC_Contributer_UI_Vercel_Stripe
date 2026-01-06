@@ -23,6 +23,39 @@ export default function ScoringCriteriaPage() {
           title="How Submissions Are Scored"
           background="default"
         >
+          {/* K) Beta/Mode Banner (Marek requirement) */}
+          <div className="mb-6 rounded-lg border-2 border-amber-500/50 bg-amber-500/10 p-4">
+            <div className="mb-2 flex items-center gap-2">
+              <span className="cockpit-badge bg-amber-500/20 text-amber-400">BETA MODE</span>
+              <span className="cockpit-label text-sm">Current Submission Mode & Fees</span>
+            </div>
+            <div className="space-y-2 text-xs">
+              <div>
+                <strong className="text-amber-300">Submission Mode:</strong>{' '}
+                <span className="opacity-90">Text-only PoC (4,000 characters max)</span>
+              </div>
+              <div>
+                <strong className="text-amber-300">PDF Pipeline:</strong>{' '}
+                <span className="opacity-90">Planned for enterprise tier (coming soon)</span>
+              </div>
+              <div className="mt-3 border-t border-amber-500/30 pt-2">
+                <strong className="text-amber-300">Fee Structure:</strong>
+                <ul className="ml-4 mt-1 list-disc space-y-1 opacity-90">
+                  <li>
+                    <strong>Public PoC:</strong> $500 evaluation fee (one-time per submission)
+                  </li>
+                  <li>
+                    <strong>Enterprise Tier:</strong> $50/$40/$30/$25 per submission (by tier) + $20
+                    on-chain registration (optional)
+                  </li>
+                  <li>
+                    <strong>Tester Exemption:</strong> Free evaluation for approved testers
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
           <div className="cockpit-text mb-8 text-base opacity-90">
             SynthScan™ MRI evaluates every Proof-of-Contribution (PoC) across four dimensions, each
             scored from 0 to 2,500 points. The total score ranges from 0 to 10,000.
@@ -224,6 +257,16 @@ export default function ScoringCriteriaPage() {
                   the center. This rewards work that builds on prior contributions while maintaining
                   originality.
                 </p>
+                {/* L) Sweet Spot Clarification (Marek requirement) */}
+                <div className="mt-3 rounded border border-blue-500/30 bg-blue-500/5 p-2">
+                  <p className="cockpit-text text-xs opacity-90">
+                    <strong>Note:</strong> The 14.2% sweet spot is currently tuned for{' '}
+                    <strong>edge novelty</strong> (low-to-mid overlap that connects nodes without
+                    redundancy). For <strong>ecosystem synthesis</strong> (higher overlap that
+                    integrates multiple contributions), a higher sweet spot center may be more
+                    appropriate. This parameter may be adjusted based on ecosystem goals.
+                  </p>
+                </div>
               </div>
 
               <div className="rounded-lg border-2 border-yellow-500/50 bg-yellow-500/5 p-4">

@@ -338,22 +338,30 @@ export default function EnterprisePricing({
                   </div>
                 )}
 
-                <button
-                  onClick={() =>
-                    handlePurchase(
-                      tier,
-                      expandedTier === tier.name
-                        ? nodeCount
-                        : tier.maxNodes === Infinity
-                          ? 126
-                          : tier.maxNodes
-                    )
-                  }
-                  className="cockpit-lever w-full text-center text-sm"
-                >
-                  {isCurrentTier ? 'Manage Plan' : 'Start Trial'}
-                  <ArrowRight className="ml-2 inline h-4 w-4" />
-                </button>
+                {expandedTier !== tier.name && (
+                  <button
+                    onClick={() => setExpandedTier(tier.name)}
+                    className="cockpit-lever w-full text-center text-sm"
+                  >
+                    Select Package
+                    <ArrowRight className="ml-2 inline h-4 w-4" />
+                  </button>
+                )}
+
+                {expandedTier === tier.name && (
+                  <div className="space-y-2">
+                    <div className="cockpit-text rounded border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.1)] p-2 text-center text-xs font-semibold text-[var(--hydrogen-amber)]">
+                      Total: ${monthlyPrice.toLocaleString()}/month
+                    </div>
+                    <button
+                      onClick={() => handlePurchase(tier, nodeCount)}
+                      className="cockpit-lever w-full text-center text-sm"
+                    >
+                      {isCurrentTier ? 'Manage Plan' : 'Start Trial'}
+                      <ArrowRight className="ml-2 inline h-4 w-4" />
+                    </button>
+                  </div>
+                )}
               </Card>
             );
           })}

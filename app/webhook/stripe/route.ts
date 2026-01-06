@@ -743,16 +743,51 @@ async function handleFinancialAlignmentPayment(session: Stripe.Checkout.Session)
 async function handleEnterpriseCheckoutCompleted(session: Stripe.Checkout.Session) {
   try {
     const metadata = session.metadata || {};
-    const sandboxId = metadata.sandbox_id;
+    let sandboxId = metadata.sandbox_id;
     const tier = metadata.tier;
     const nodeCount = parseInt(metadata.node_count || '0', 10);
+    const userEmail = metadata.user_email || session.customer_email || (session.customer_details?.email);
 
-    if (!sandboxId) {
-      debug('StripeWebhook', 'Enterprise checkout missing sandbox_id', {
-        sessionId: session.id,
-        metadata,
+    // If no sandboxId, create a new sandbox for the user
+    if (!sandboxId || sandboxId.trim() === '') {
+      if (!userEmail) {
+        debugError('StripeWebhook', 'Enterprise checkout missing both sandbox_id and user_email', {
+          sessionId: session.id,
+          metadata,
+        });
+        return;
+      }
+
+      // Create a new sandbox for the user
+      sandboxId = crypto.randomUUID();
+      const sandboxName = `${userEmail.split('@')[0]}-sandbox-${Date.now().toString().slice(-6)}`;
+      
+      await db
+        .insert(enterpriseSandboxesTable)
+        .values({
+          id: sandboxId,
+          operator: userEmail,
+          name: sandboxName,
+          description: `Enterprise sandbox for ${tier} tier with ${nodeCount} nodes`,
+          vault_status: 'paused', // Will be activated after successful payment
+          tokenized: false,
+          current_epoch: 'founder',
+          scoring_config: {
+            novelty_weight: 1.0,
+            density_weight: 1.0,
+            coherence_weight: 1.0,
+            alignment_weight: 1.0,
+            qualification_threshold: 4000,
+          },
+          metadata: {},
+        });
+
+      debug('StripeWebhook', 'Created new enterprise sandbox for checkout', {
+        sandboxId,
+        userEmail,
+        tier,
+        nodeCount,
       });
-      return;
     }
 
     // Get subscription from session
@@ -760,6 +795,15 @@ async function handleEnterpriseCheckoutCompleted(session: Stripe.Checkout.Sessio
       const stripe = getStripeClient();
       if (stripe) {
         const subscription = await stripe.subscriptions.retrieve(session.subscription);
+        // Update subscription metadata with sandbox_id if it was just created
+        if (!subscription.metadata?.sandbox_id || subscription.metadata.sandbox_id !== sandboxId) {
+          await stripe.subscriptions.update(session.subscription, {
+            metadata: {
+              ...subscription.metadata,
+              sandbox_id: sandboxId,
+            },
+          });
+        }
         await handleEnterpriseSubscription(subscription);
       }
     } else {
@@ -770,6 +814,7 @@ async function handleEnterpriseCheckoutCompleted(session: Stripe.Checkout.Sessio
           subscription_tier: tier || null,
           node_count: nodeCount || 0,
           stripe_customer_id: session.customer as string,
+          vault_status: 'active', // Activate vault after successful payment
           updated_at: new Date(),
         })
         .where(eq(enterpriseSandboxesTable.id, sandboxId));
@@ -790,16 +835,77 @@ async function handleEnterpriseCheckoutCompleted(session: Stripe.Checkout.Sessio
 async function handleEnterpriseSubscription(subscription: Stripe.Subscription) {
   try {
     const metadata = subscription.metadata || {};
-    const sandboxId = metadata.sandbox_id;
+    let sandboxId = metadata.sandbox_id;
     const tier = metadata.tier;
     const nodeCount = parseInt(metadata.node_count || '0', 10);
 
-    if (!sandboxId) {
-      debug('StripeWebhook', 'Enterprise subscription missing sandbox_id', {
-        subscriptionId: subscription.id,
-        metadata,
-      });
-      return;
+    // If no sandboxId, try to find existing sandbox by customer email or create new one
+    if (!sandboxId || sandboxId.trim() === '') {
+      const stripe = getStripeClient();
+      if (stripe && subscription.customer) {
+        const customer = await stripe.customers.retrieve(subscription.customer as string);
+        const userEmail = (customer as Stripe.Customer).email;
+        
+        if (userEmail) {
+          // Try to find existing sandbox for this user
+          const existingSandboxes = await db
+            .select()
+            .from(enterpriseSandboxesTable)
+            .where(eq(enterpriseSandboxesTable.operator, userEmail))
+            .limit(1);
+          
+          if (existingSandboxes.length > 0) {
+            sandboxId = existingSandboxes[0].id;
+            // Update subscription metadata with found sandbox_id
+            await stripe.subscriptions.update(subscription.id, {
+              metadata: {
+                ...subscription.metadata,
+                sandbox_id: sandboxId,
+              },
+            });
+          } else {
+            // Create new sandbox
+            sandboxId = crypto.randomUUID();
+            const sandboxName = `${userEmail.split('@')[0]}-sandbox-${Date.now().toString().slice(-6)}`;
+            
+            await db
+              .insert(enterpriseSandboxesTable)
+              .values({
+                id: sandboxId,
+                operator: userEmail,
+                name: sandboxName,
+                description: `Enterprise sandbox for ${tier} tier with ${nodeCount} nodes`,
+                vault_status: 'active',
+                tokenized: false,
+                current_epoch: 'founder',
+                scoring_config: {
+                  novelty_weight: 1.0,
+                  density_weight: 1.0,
+                  coherence_weight: 1.0,
+                  alignment_weight: 1.0,
+                  qualification_threshold: 4000,
+                },
+                metadata: {},
+              });
+            
+            // Update subscription metadata
+            await stripe.subscriptions.update(subscription.id, {
+              metadata: {
+                ...subscription.metadata,
+                sandbox_id: sandboxId,
+              },
+            });
+          }
+        }
+      }
+      
+      if (!sandboxId) {
+        debugError('StripeWebhook', 'Enterprise subscription missing sandbox_id and unable to create/find one', {
+          subscriptionId: subscription.id,
+          metadata,
+        });
+        return;
+      }
     }
 
     // Update sandbox with subscription info
@@ -810,6 +916,7 @@ async function handleEnterpriseSubscription(subscription: Stripe.Subscription) {
         node_count: nodeCount || 0,
         stripe_subscription_id: subscription.id,
         stripe_customer_id: subscription.customer as string,
+        vault_status: 'active', // Activate vault when subscription is active
         updated_at: new Date(),
       })
       .where(eq(enterpriseSandboxesTable.id, sandboxId));

@@ -27,17 +27,23 @@ export async function POST(request: NextRequest) {
 
     // Parse request body
     const body = await request.json();
-    const { tier, price } = body;
+    const { tier, price, nodeCount = 1, totalPrice } = body;
 
     if (!tier || typeof tier !== 'string') {
       return NextResponse.json({ error: 'Missing required field: tier' }, { status: 400 });
     }
 
     // Validate tier
-    const priceInCents = TIER_PRICES[tier];
-    if (!priceInCents) {
+    const pricePerNodeInCents = TIER_PRICES[tier];
+    if (!pricePerNodeInCents) {
       return NextResponse.json({ error: `Invalid tier: ${tier}` }, { status: 400 });
     }
+
+    // Validate and calculate node count
+    const nodes = Math.max(1, Math.min(1000, parseInt(String(nodeCount)) || 1));
+    const totalPriceInCents = totalPrice 
+      ? Math.round(totalPrice * 100) 
+      : pricePerNodeInCents * nodes;
 
     // Get base URL
     let baseUrl: string | undefined = (
@@ -79,9 +85,9 @@ export async function POST(request: NextRequest) {
             currency: 'usd',
             product_data: {
               name: `SynthScan™ MRI Monthly Access - ${tier}`,
-              description: `Monthly subscription for ${tier} tier - per node/month`,
+              description: `${nodes} node${nodes > 1 ? 's' : ''} × $${(pricePerNodeInCents / 100).toLocaleString()}/node/month = $${(totalPriceInCents / 100).toLocaleString()}/month`,
             },
-            unit_amount: priceInCents,
+            unit_amount: totalPriceInCents,
             recurring: {
               interval: 'month',
             },
@@ -96,14 +102,28 @@ export async function POST(request: NextRequest) {
       metadata: {
         user_email: user.email,
         tier: tier,
+        node_count: String(nodes),
+        price_per_node: String(pricePerNodeInCents / 100),
+        total_price: String(totalPriceInCents / 100),
         product_type: 'synthscan_monthly_access',
+      },
+      subscription_data: {
+        metadata: {
+          tier: tier,
+          node_count: String(nodes),
+          price_per_node: String(pricePerNodeInCents / 100),
+          total_price: String(totalPriceInCents / 100),
+          product_type: 'synthscan_monthly_access',
+        },
       },
     });
 
     debug('SynthScanCheckout', 'Checkout session created', {
       sessionId: session.id,
       tier: tier,
-      price: priceInCents,
+      nodeCount: nodes,
+      pricePerNode: pricePerNodeInCents / 100,
+      totalPrice: totalPriceInCents / 100,
     });
 
     if (!session.url) {
