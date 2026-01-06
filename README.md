@@ -122,7 +122,8 @@ See [Environment Variables](#environment-variables) section for complete configu
 - **LLM Metadata**: Full capture of evaluation metadata (timestamp, model, version, prompts)
 - **Operator Mode**: Special exemption for operator accounts
 - **Creator Dashboard**: Creator-only destructive controls for PoC lifecycle management and user administration
-- **Sales Tracking**: Real-time revenue, subscription, and payment analytics for operators and creators
+- **Sales Tracking**: Simplified revenue tracking for creators and operators (Total, This Month, Last Month) with expandable details
+- **Sandbox Selector**: Dashboard-level sandbox selection with Syntheverse as default and enterprise sandboxes nested within
 - **Activity Stats**: Page activity, new users, submissions, chat sessions, and problems reported tracking
 - **Genesis Info**: On-chain transaction information display
 - **Submission Limits**: 4000 character limit (abstract, equations, constants only) with automatic truncation
@@ -155,13 +156,11 @@ See [Environment Variables](#environment-variables) section for complete configu
 
 ### 🎯 Recent Additions
 
-- **Sales Tracking Dashboard**: Real-time sales analytics for operators and creators
-  - **Revenue Tracking**: Total revenue, monthly revenue, revenue by product (Enterprise, SynthScan, FieldScan, PoC Registration, Enterprise Submission, Financial Alignment)
-  - **Subscription Analytics**: Total, active, and canceled subscriptions by tier (Pioneer, Trading Post, Settlement, Metropolis)
-  - **Payment Metrics**: Total payments, monthly payments, average payment amount
-  - **Customer Stats**: Total customers, active customers, new customers this month
+- **Sales Tracking Dashboard**: Simplified revenue tracking for operators and creators
+  - **Essential Metrics**: Total Revenue, This Month, Last Month (always visible)
+  - **Expandable Details**: Click to expand for subscriptions, revenue by product, customers, and payments
   - **Auto-refresh**: Updates every 60 seconds
-  - **Access Control**: Operator and Creator only, server-side permission enforcement
+  - **Access Control**: Creator and Operator dashboard only (not visible in contributor dashboard)
 - **Activity Stats Dashboard**: Comprehensive activity tracking for operators and creators
   - **Page Activity**: Total events tracked from system logs (today, this week, this month)
   - **New Users**: User registration tracking (total, today, this week, this month)
@@ -185,10 +184,17 @@ See [Environment Variables](#environment-variables) section for complete configu
   - **Auto-Join**: Syntheverse room auto-joins users on first access
   - **Message Bubbles**: WhatsApp-style rounded message bubbles with timestamps and sender names
   - **Last Message Preview**: Shows last message and timestamp in sandbox list
+- **Sandbox Selector**: Dashboard-level sandbox selection at top of dashboard page
+  - **Syntheverse Default**: Always shown as the primary/default option
+  - **Enterprise Sandboxes**: Nested below Syntheverse with visual separation
+  - **Search & Filter**: Search by name, filter by subscription tier (Pioneer, Trading Post, Settlement, Metropolis)
+  - **Contribution Counts**: Shows contribution and qualified counts for each sandbox
+  - **Access Control**: Operators and creators see all sandboxes, regular users see only their own
 - **Creator Dashboard Enhancements**:
   - **PoC Archive Integration**: Full PoC Archive view (same as contributor dashboard) showing all submissions
   - **Archive Management**: View and manage PoC entries with detailed statistics
   - **SynthChat Integration**: Collaborative chat system for creator coordination
+  - **Sales Tracking**: Revenue and subscription analytics (simplified view with expandable details)
 - **Creator Dashboard**: Creator-controlled destructive operations for PoC archive management and user administration
   - **PoC Archive Reset**: Hard reset mode with safeguards and confirmation phrases
   - **User Management**: View all users, hard delete, grant/revoke operator roles
@@ -655,10 +661,11 @@ Built for the Syntheverse ecosystem with ❤️
 ---
 
 **Last Updated**: January 5, 2025  
-**Version**: 2.8 (SynthChat WhatsApp-Style Interface)
+**Version**: 2.9 (Simplified Sales Tracking & Sandbox Selector)
 
 ### Version History
 
+- **v2.9** (January 2025): Simplified Sales Tracking & Sandbox Selector - Simplified SalesTracking component to show only essential metrics (Total Revenue, This Month, Last Month) with expandable details section. Added SandboxSelector component to dashboard with Syntheverse as default and enterprise sandboxes nested within. Sales tracking restricted to creator/operator dashboard only. Sandbox selector includes search and filter by subscription tier capabilities.
 - **v2.8** (January 2025): SynthChat WhatsApp-Style Interface - Redesigned SynthChat with WhatsApp-style mobile interface featuring two-panel layout (sandbox list + chat view), connect/disconnect functionality, chat navigator with filtering (All/Connected/Available), embedded mode in Creator Dashboard, message bubbles with timestamps, last message preview, and participant tracking. Database schema includes chat_rooms, chat_messages, and chat_participants tables with Row Level Security policies.
 - **v2.7** (January 2025): Sales Tracking & Activity Stats - Added comprehensive sales tracking dashboard with revenue, subscription, payment, and customer analytics. Added activity stats dashboard tracking page activity, new users, submissions, chat sessions, and problems reported. Both dashboards are accessible to operators and creators with auto-refresh capabilities. Sales tracking integrates with Stripe API and database records for real-time analytics.
 - **v2.6** (January 2025): Creator Dashboard - Creator-controlled destructive operations for PoC archive management and user administration. Includes PoC archive reset (hard mode), user deletion (hard mode), operator role management, and complete audit logging. Creator-only access (info@fractiai.com) with server-side permission enforcement and safeguards.
