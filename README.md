@@ -233,10 +233,12 @@ See [Environment Variables](#environment-variables) section for complete configu
   - **Image Support**: Upload images via file picker or paste directly from clipboard
   - **Markdown Formatting**: Full markdown support (headers, bold, italic, links, code blocks, lists, images)
   - **Cockpit Styling**: All blog pages styled in consistent cockpit theme
-  - **Access Control**: Only creators and operators can create/edit blog posts
+  - **Permissions Management**: Creator can control who can create blog posts (contributors, operators, creator)
+  - **Access Control**: Permissions enforced server-side via blog_permissions table
   - **Featured Posts**: Mark posts as featured for prominent display
   - **Tags & Excerpts**: Organize posts with tags and optional excerpts
-  - **Draft/Published Status**: Save drafts or publish immediately
+  - **Draft/Published Status**: Save drafts or publish immediately (defaults to published)
+  - **Auto-refresh**: Page automatically refreshes after creating a post
 
 ### ⚡ Scalability Improvements (January 2025)
 
