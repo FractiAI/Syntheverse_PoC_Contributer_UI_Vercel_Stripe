@@ -40,8 +40,12 @@ interface ChatMessage {
   sender_name?: string;
 }
 
-export function SynthChat() {
-  const [isOpen, setIsOpen] = useState(false);
+interface SynthChatProps {
+  embedded?: boolean; // If true, render directly without dialog/button
+}
+
+export function SynthChat({ embedded = false }: SynthChatProps = {}) {
+  const [isOpen, setIsOpen] = useState(embedded); // Auto-open if embedded
   const [rooms, setRooms] = useState<ChatRoom[]>([]);
   const [currentRoom, setCurrentRoom] = useState<ChatRoom | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -345,22 +349,10 @@ export function SynthChat() {
     return matchesSearch;
   });
 
-  return (
-    <>
-      {/* Chat Button */}
-      <Button
-        onClick={() => setIsOpen(true)}
-        className="cockpit-lever inline-block"
-        variant="outline"
-      >
-        <MessageCircle className="mr-2 inline h-4 w-4" />
-        SynthChat
-      </Button>
-
-      {/* WhatsApp-Style Chat Interface */}
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="cockpit-panel h-[85vh] max-w-6xl overflow-hidden border-[var(--keyline-primary)] p-0">
-          <div className="flex h-full">
+  // If embedded, render directly without dialog
+  const chatContent = (
+    <div className={`${embedded ? 'h-[600px] w-full' : ''} flex h-full`}>
+      <div className="flex h-full w-full">
             {/* Sidebar - Sandbox List (WhatsApp conversation list style) */}
             <div
               className={`${
@@ -676,8 +668,34 @@ export function SynthChat() {
               )}
             </div>
           </div>
-        </DialogContent>
-      </Dialog>
+      </div>
+    </div>
+  );
+
+  return (
+    <>
+      {/* Chat Button - only show if not embedded */}
+      {!embedded && (
+        <Button
+          onClick={() => setIsOpen(true)}
+          className="cockpit-lever inline-block"
+          variant="outline"
+        >
+          <MessageCircle className="mr-2 inline h-4 w-4" />
+          SynthChat
+        </Button>
+      )}
+
+      {/* WhatsApp-Style Chat Interface */}
+      {embedded ? (
+        chatContent
+      ) : (
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+          <DialogContent className="cockpit-panel h-[85vh] max-w-6xl overflow-hidden border-[var(--keyline-primary)] p-0">
+            {chatContent}
+          </DialogContent>
+        </Dialog>
+      )}
 
       {/* Create New Sandbox Dialog */}
       <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>

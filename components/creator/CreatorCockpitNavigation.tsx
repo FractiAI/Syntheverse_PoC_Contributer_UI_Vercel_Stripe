@@ -136,8 +136,8 @@ export function CreatorCockpitNavigation() {
               <MessageCircle className="h-4 w-4" />
               SYNTHCHAT - COLLABORATIVE SANDBOX CHAT
             </div>
-            <div className="cockpit-panel bg-[var(--cockpit-carbon)] p-4">
-              <SynthChat />
+            <div className="cockpit-panel bg-[var(--cockpit-carbon)] p-0 overflow-hidden">
+              <SynthChat embedded={true} />
             </div>
           </div>
         )}

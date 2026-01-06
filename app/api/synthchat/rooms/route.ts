@@ -109,6 +109,16 @@ export async function GET(request: NextRequest) {
       Boolean
     );
 
+    // Get user's participant status for all rooms
+    const userParticipantRooms = await db
+      .select({
+        room_id: chatParticipantsTable.room_id,
+      })
+      .from(chatParticipantsTable)
+      .where(eq(chatParticipantsTable.user_email, userEmail));
+
+    const userRoomIds = new Set(userParticipantRooms.map((p) => p.room_id));
+
     // Get participant counts for each room
     const roomsWithCounts = await Promise.all(
       allRoomIds.map(async (roomId) => {
@@ -128,6 +138,7 @@ export async function GET(request: NextRequest) {
         return {
           ...room[0],
           participant_count: participants.length,
+          is_connected: userRoomIds.has(roomId),
           participants: participants.map((p) => ({
             email: p.user_email,
             role: p.role,
