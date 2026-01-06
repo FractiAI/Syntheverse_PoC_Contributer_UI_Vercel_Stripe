@@ -13,8 +13,8 @@ import { getAuthenticatedUserWithRole } from '@/utils/auth/permissions';
 // Optional ecosystem support is intentionally not placed in the primary beta cockpit.
 // The reference client stays protocol-first and avoids any "package" framing in the main dashboard.
 import { BookOpen, Shield, Settings, FileText } from 'lucide-react';
-import { SynthChat } from '@/components/SynthChat';
-import { SandboxSelector } from '@/components/SandboxSelector';
+import { SandboxNavigator } from '@/components/SandboxNavigator';
+import { SynthChatNavigator } from '@/components/SynthChatNavigator';
 
 export const dynamic = 'force-dynamic';
 
@@ -49,13 +49,10 @@ export default async function Dashboard() {
   return (
     <div className="cockpit-bg min-h-screen">
       <div className="container mx-auto space-y-4 px-4 py-6 md:space-y-6 md:px-6 md:py-8">
-        {/* Sandbox Selector - Cockpit Control */}
-        <div className="cockpit-panel p-3 md:p-4">
-          <div className="flex flex-col items-end gap-2 md:flex-row md:items-center md:justify-between">
-            <div className="cockpit-label text-xs uppercase tracking-wider">SANDBOX SELECTOR</div>
-            <SandboxSelector />
-          </div>
-        </div>
+        {/* Navigation Modules - Three Navigators in Sequence */}
+        <SandboxNavigator />
+        <FrontierModule userEmail={user.email!} />
+        <SynthChatNavigator />
 
         {/* System Broadcast Banners - Fetched from API */}
         <OperatorBroadcastBanner />
@@ -106,7 +103,6 @@ export default async function Dashboard() {
                 <FileText className="mr-2 inline h-4 w-4" />
                 Blog
               </Link>
-              <SynthChat />
               {isCreator && (
                 <Link href="/creator/dashboard" className="cockpit-lever inline-block text-center">
                   <Shield className="mr-2 inline h-4 w-4" />
@@ -130,9 +126,6 @@ export default async function Dashboard() {
         <div className="cockpit-panel p-3 md:p-4">
           <GenesisButton />
         </div>
-
-        {/* Frontier Modules - PoC Archive */}
-        <FrontierModule userEmail={user.email!} />
       </div>
     </div>
   );

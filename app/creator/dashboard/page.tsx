@@ -17,7 +17,9 @@ import { ActivityAnalytics } from '@/components/activity/ActivityAnalytics';
 import { SystemBroadcastCenter } from '@/components/creator/SystemBroadcastCenter';
 import { CreatorEnterpriseSandboxes } from '@/components/creator/CreatorEnterpriseSandboxes';
 import { ReferenceCustomersList } from '@/components/ReferenceCustomersList';
-import { SandboxSelector } from '@/components/SandboxSelector';
+import { SandboxNavigator } from '@/components/SandboxNavigator';
+import { SynthChatNavigator } from '@/components/SynthChatNavigator';
+import { FrontierModule } from '@/components/FrontierModule';
 import { Shield, Activity, FileText } from 'lucide-react';
 import Link from 'next/link';
 
@@ -48,13 +50,10 @@ export default async function CreatorDashboard() {
   return (
     <div className="cockpit-bg min-h-screen">
       <div className="container mx-auto space-y-6 px-6 py-8">
-        {/* Sandbox Selector - Cockpit Control */}
-        <div className="cockpit-panel p-3 md:p-4">
-          <div className="flex flex-col items-end gap-2 md:flex-row md:items-center md:justify-between">
-            <div className="cockpit-label text-xs uppercase tracking-wider">SANDBOX SELECTOR</div>
-            <SandboxSelector />
-          </div>
-        </div>
+        {/* Navigation Modules - Three Navigators in Sequence */}
+        <SandboxNavigator />
+        <FrontierModule userEmail={userEmail} />
+        <SynthChatNavigator />
 
         {/* Cockpit Header */}
         <div className="cockpit-panel border-l-4 border-red-500 p-6">
@@ -104,9 +103,6 @@ export default async function CreatorDashboard() {
 
         {/* Activity Analytics */}
         <ActivityAnalytics />
-
-        {/* PoC Archive - Same as Contributor Dashboard */}
-        <FrontierModule userEmail={userEmail} />
       </div>
     </div>
   );
