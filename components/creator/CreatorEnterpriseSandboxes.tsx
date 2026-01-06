@@ -181,7 +181,7 @@ export function CreatorEnterpriseSandboxes() {
           <Card key={sandbox.id} hover={true} className="border-l-4 border-[var(--hydrogen-amber)]">
             <div className="mb-3 flex items-start justify-between">
               <div className="flex-1">
-                <div className="cockpit-title mb-1 text-lg">{sandbox.name}</div>
+                <div className="cockpit-title mb-1 text-base">{sandbox.name}</div>
                 {sandbox.description && (
                   <div className="cockpit-text mb-2 text-xs opacity-75">{sandbox.description}</div>
                 )}

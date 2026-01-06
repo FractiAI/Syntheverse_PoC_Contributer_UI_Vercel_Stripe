@@ -413,7 +413,7 @@ export default function EnterpriseDashboard({
                         className="border-l-4 border-[var(--hydrogen-amber)]"
                       >
                         <div className="mb-4">
-                          <div className="cockpit-title mb-2 text-lg">{sandbox.name}</div>
+                          <div className="cockpit-title mb-2 text-base">{sandbox.name}</div>
                           {sandbox.description && (
                             <div className="cockpit-text mb-4 text-sm opacity-80">
                               {sandbox.description}

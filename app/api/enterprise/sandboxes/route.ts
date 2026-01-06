@@ -22,12 +22,19 @@ export async function GET(request: NextRequest) {
 
     const { isCreator, isOperator } = await getAuthenticatedUserWithRole();
 
-    // All users (including creators and operators) see only their own sandboxes
-    // This ensures creators/enterprises can manage their own sandboxes in the creator dashboard
-    const sandboxes = await db
-      .select()
-      .from(enterpriseSandboxesTable)
-      .where(eq(enterpriseSandboxesTable.operator, user.email));
+    // Creators can see all sandboxes, operators see only their own
+    // This allows creators to manage all sandboxes in the creator dashboard
+    let sandboxes;
+    if (isCreator) {
+      // Creators see all sandboxes
+      sandboxes = await db.select().from(enterpriseSandboxesTable);
+    } else {
+      // Operators and regular users see only their own sandboxes
+      sandboxes = await db
+        .select()
+        .from(enterpriseSandboxesTable)
+        .where(eq(enterpriseSandboxesTable.operator, user.email));
+    }
 
     // Get contribution counts for each sandbox
     const sandboxesWithCounts = await Promise.all(

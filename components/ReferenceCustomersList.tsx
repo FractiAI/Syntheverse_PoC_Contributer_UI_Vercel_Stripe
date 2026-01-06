@@ -74,7 +74,7 @@ export function ReferenceCustomersList() {
                 className="border-l-4 border-[var(--hydrogen-amber)]"
               >
                 <div className="mb-3">
-                  <div className="cockpit-title mb-2 text-lg">{customer.sandbox_name}</div>
+                  <div className="cockpit-title mb-2 text-base">{customer.sandbox_name}</div>
                   {customer.sandbox_description && (
                     <div className="cockpit-text mb-3 text-xs opacity-75">
                       {customer.sandbox_description}

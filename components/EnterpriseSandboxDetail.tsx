@@ -266,7 +266,7 @@ export default function EnterpriseSandboxDetail({
                   <div className="mb-6 grid gap-4 md:grid-cols-2">
                     <Card hover={false} className="border-l-4 border-blue-500/50">
                       <div className="cockpit-label mb-2 text-xs">CURRENT CONFIGURATION</div>
-                      <div className="cockpit-title text-lg">{sandbox.name}</div>
+                      <div className="cockpit-title text-base">{sandbox.name}</div>
                       {sandbox.description && (
                         <div className="cockpit-text mt-2 text-xs opacity-75">
                           {sandbox.description}
