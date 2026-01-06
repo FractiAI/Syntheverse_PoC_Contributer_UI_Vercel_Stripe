@@ -78,10 +78,10 @@ export function SandboxSelector() {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="cockpit-panel max-h-[600px] min-w-[320px] border-[var(--keyline-primary)] bg-[var(--cockpit-obsidian)] p-0"
+        className="cockpit-panel min-w-[320px] border-[var(--keyline-primary)] bg-[var(--cockpit-obsidian)] p-0"
         sideOffset={8}
         style={{
-          maxHeight: '85vh',
+          maxHeight: '80vh',
           height: 'auto',
           overflow: 'hidden',
           display: 'flex',
@@ -103,7 +103,7 @@ export function SandboxSelector() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               onClick={(e) => e.stopPropagation()}
-              className="cockpit-input bg-[var(--cockpit-obsidian)] pl-10"
+              className="cockpit-input bg-[var(--cockpit-obsidian)] pl-10 text-sm"
             />
           </div>
 
@@ -139,36 +139,30 @@ export function SandboxSelector() {
           )}
         </div>
 
-        {/* Scrollable Content Section - Safari fixes */}
+        {/* Scrollable Content Section - Safari fixes with explicit height */}
         <div
-          className="flex-1 overflow-auto"
           style={{
-            minHeight: 0,
-            maxHeight: 'calc(85vh - 200px)',
-            height: '100%',
-            position: 'relative',
+            height: '400px',
+            maxHeight: '400px',
+            overflow: 'scroll',
             WebkitOverflowScrolling: 'touch',
-            overflowY: 'auto',
-            overflowX: 'hidden',
+            position: 'relative',
             scrollbarWidth: 'thin',
             scrollbarColor: 'var(--hydrogen-amber) var(--cockpit-carbon)',
-            // Safari-specific fixes
-            WebkitTransform: 'translateZ(0)',
-            transform: 'translateZ(0)',
           }}
         >
           {/* Syntheverse (Default) */}
           <DropdownMenuItem
             onClick={() => handleSandboxSelect('syntheverse')}
-            className="cockpit-text cursor-pointer p-4 hover:bg-[var(--cockpit-carbon)] focus:bg-[var(--cockpit-carbon)]"
+            className="cursor-pointer p-3 hover:bg-[var(--cockpit-carbon)] focus:bg-[var(--cockpit-carbon)]"
           >
             <div className="flex w-full items-center gap-3">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--hydrogen-amber)]/30 to-purple-500/30 text-sm font-semibold">
+              <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--hydrogen-amber)]/30 to-purple-500/30 text-xs font-semibold">
                 S
               </div>
               <div className="flex-1">
-                <div className="cockpit-title text-sm font-medium">Syntheverse</div>
-                <div className="cockpit-text text-xs opacity-75">
+                <div className="text-sm font-medium">Syntheverse</div>
+                <div className="text-xs opacity-75">
                   Main Syntheverse Protocol
                 </div>
               </div>
@@ -182,11 +176,11 @@ export function SandboxSelector() {
 
           {/* Enterprise Sandboxes */}
           {loading ? (
-            <div className="cockpit-text p-4 text-center text-xs opacity-60">
+            <div className="p-4 text-center text-sm opacity-60">
               Loading sandboxes...
             </div>
           ) : filteredSandboxes.length === 0 ? (
-            <div className="cockpit-text p-4 text-center text-xs opacity-60">
+            <div className="p-4 text-center text-sm opacity-60">
               {searchTerm ? 'No sandboxes found' : 'No enterprise sandboxes available'}
             </div>
           ) : (
@@ -194,17 +188,17 @@ export function SandboxSelector() {
               <DropdownMenuItem
                 key={sandbox.id}
                 onClick={() => handleSandboxSelect(sandbox.id)}
-                className="cockpit-text cursor-pointer p-4 hover:bg-[var(--cockpit-carbon)] focus:bg-[var(--cockpit-carbon)]"
+                className="cursor-pointer p-3 hover:bg-[var(--cockpit-carbon)] focus:bg-[var(--cockpit-carbon)]"
               >
                 <div className="flex w-full items-center gap-3">
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500/30 to-cyan-500/30 text-xs font-semibold">
+                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500/30 to-cyan-500/30 text-xs font-semibold">
                     {sandbox.name.charAt(0).toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="cockpit-title truncate text-sm font-medium">
+                    <div className="text-sm font-medium truncate">
                       {sandbox.name}
                     </div>
-                    <div className="cockpit-text text-xs opacity-75">
+                    <div className="text-xs opacity-75">
                       {sandbox.subscription_tier || 'Enterprise'} · {sandbox.contribution_count || 0}{' '}
                       contributions
                     </div>
