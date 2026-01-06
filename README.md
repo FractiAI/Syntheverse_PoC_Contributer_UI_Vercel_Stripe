@@ -234,6 +234,27 @@ See [Environment Variables](#environment-variables) section for complete configu
   - Removed text_content from archive queries (~99% memory reduction)
   - Vector-based redundancy scales to 10,000+ submissions without degradation
 
+### 🔬 SynthScan Prompt Transformation (January 2025)
+
+**Hardened System Prompt with Deterministic Scoring & Full Transparency**
+
+The system prompt has been transformed into a hardened SynthScan prompt incorporating comprehensive feedback for scientific validation and reproducibility:
+
+- **✅ Deterministic Score Contract**: Versioned scoring config ID, sandbox context ID, and mandatory PoD composition breakdown showing complete calculation path
+- **✅ One Source of Truth**: Fixed redundancy reporting to prevent showing "0.0% penalty" when no penalty exists
+- **✅ Exposed Sweet Spot Parameters**: Documented ρ* (14.2%), τ (±5.0%), ρ_max (30%) with clear explanations
+- **✅ Archive Similarity Distribution**: Enhanced to show overlap percentile, nearest 10 neighbors statistics, and computation context (global/per-user/per-sandbox)
+- **✅ Documentation Consistency**: Fixed Module 12 mismatch (text-only PoC vs PDF pipeline)
+- **✅ Testing Protocol**: Added guidance for reset baseline, lock configs, and re-run validation
+
+**Key Features:**
+- Every evaluation includes `scoring_metadata` (config ID, sandbox ID, archive version)
+- Complete `pod_composition` breakdown: `PoD = (N + D + C + A) × [multipliers] - [penalties] × [sandbox_factor]`
+- `archive_similarity_distribution` with percentile ranking and neighbor statistics
+- Testing protocol ensures identical input + identical config ⇒ identical output
+
+See [`SYNTHSCAN_PROMPT_TRANSFORMATION.md`](SYNTHSCAN_PROMPT_TRANSFORMATION.md) for complete details.
+
 ---
 
 ## Current Status
@@ -660,11 +681,12 @@ Built for the Syntheverse ecosystem with ❤️
 
 ---
 
-**Last Updated**: January 5, 2025  
-**Version**: 2.9 (Simplified Sales Tracking & Sandbox Selector)
+**Last Updated**: January 2025  
+**Version**: 2.10 (SynthScan Prompt Transformation)
 
 ### Version History
 
+- **v2.10** (January 2025): SynthScan Prompt Transformation - Hardened system prompt with deterministic scoring contract, versioned config IDs, sandbox context tracking, mandatory PoD composition breakdown, fixed redundancy reporting (one source of truth), exposed sweet spot parameters, archive similarity distribution with percentile and neighbor statistics, fixed Module 12 documentation mismatch, and testing protocol for scientific validation. See [`SYNTHSCAN_PROMPT_TRANSFORMATION.md`](SYNTHSCAN_PROMPT_TRANSFORMATION.md) for details.
 - **v2.9** (January 2025): Simplified Sales Tracking & Sandbox Selector - Simplified SalesTracking component to show only essential metrics (Total Revenue, This Month, Last Month) with expandable details section. Added SandboxSelector component to dashboard with Syntheverse as default and enterprise sandboxes nested within. Sales tracking restricted to creator/operator dashboard only. Sandbox selector includes search and filter by subscription tier capabilities.
 - **v2.8** (January 2025): SynthChat WhatsApp-Style Interface - Redesigned SynthChat with WhatsApp-style mobile interface featuring two-panel layout (sandbox list + chat view), connect/disconnect functionality, chat navigator with filtering (All/Connected/Available), embedded mode in Creator Dashboard, message bubbles with timestamps, last message preview, and participant tracking. Database schema includes chat_rooms, chat_messages, and chat_participants tables with Row Level Security policies.
 - **v2.7** (January 2025): Sales Tracking & Activity Stats - Added comprehensive sales tracking dashboard with revenue, subscription, payment, and customer analytics. Added activity stats dashboard tracking page activity, new users, submissions, chat sessions, and problems reported. Both dashboards are accessible to operators and creators with auto-refresh capabilities. Sales tracking integrates with Stripe API and database records for real-time analytics.

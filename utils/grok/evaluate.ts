@@ -332,14 +332,30 @@ export async function evaluateWithGrok(
   // This prevents prompt bloat that causes coherence collapse after multiple submissions
 
   // Add calculated redundancy information if available (compact, vector-based).
+  // Include enhanced distribution data (Marek's requirements)
   const calculatedRedundancyContext = calculatedRedundancy
     ? `Vector redundancy (HHF 3D):
 - overlap_percent=${calculatedRedundancy.overlap_percent.toFixed(1)}%
 - penalty_percent=${calculatedRedundancy.penalty_percent.toFixed(1)}%
 - bonus_multiplier=${calculatedRedundancy.bonus_multiplier.toFixed(3)}
 - similarity=${(calculatedRedundancy.similarity_score * 100).toFixed(1)}%
-- closest="${calculatedRedundancy.closest_vectors[0]?.title || 'N/A'}"`
+- closest="${calculatedRedundancy.closest_vectors[0]?.title || 'N/A'}"
+${calculatedRedundancy.overlap_percentile !== undefined ? `- overlap_percentile=${calculatedRedundancy.overlap_percentile}th percentile` : ''}
+${calculatedRedundancy.nearest_10_neighbors ? `- nearest_10_neighbors: μ=${calculatedRedundancy.nearest_10_neighbors.mean.toFixed(3)} ± ${calculatedRedundancy.nearest_10_neighbors.std_dev.toFixed(3)} (min=${calculatedRedundancy.nearest_10_neighbors.min.toFixed(3)}, max=${calculatedRedundancy.nearest_10_neighbors.max.toFixed(3)})` : ''}
+- computation_context=${calculatedRedundancy.computation_context || 'per-sandbox'}`
     : '';
+  
+  // Generate scoring config ID (versioned)
+  // TODO: This should come from a config management system in production
+  const SCORE_CONFIG_VERSION = 'v2.0.13';
+  const scoreConfigId = `score_config=${SCORE_CONFIG_VERSION}(overlap_penalty_start=30%, sweet_spot_center=14.2%±5%, weights:N=1.0/D=1.0/C=1.0/A=1.0)`;
+  
+  // Generate sandbox ID (default to main sandbox, can be overridden per-user/per-enterprise)
+  // TODO: This should come from user context or enterprise sandbox selection
+  const sandboxId = 'sandbox_id=pru-default'; // Default sandbox; can be 'marek-sandbox-01', 'syntheverse-genesis', etc.
+  
+  // Archive version/snapshot ID
+  const archiveVersion = `archive_version=${archivedVectors.length > 0 ? `snapshot-${archivedVectors.length}` : 'empty'}`;
 
   // Format tokenomics context (condensed)
   const tokenomicsContext = tokenomicsInfo
@@ -350,6 +366,11 @@ export async function evaluateWithGrok(
   // IMPORTANT: We want a detailed narrative review AND parseable JSON (embedded).
   // SCALABILITY FIX: Using vectors-only approach - removed archivedPoCsContext to prevent prompt bloat
   const evaluationQuery = `Evaluate this Proof-of-Contribution (PoC) using the system prompt rules.
+
+**Scoring Metadata (Deterministic Score Contract):**
+${scoreConfigId}
+${sandboxId}
+${archiveVersion}
 
 Title: ${title}
 Category: ${category || 'scientific'}
@@ -363,6 +384,7 @@ ${calculatedRedundancyContext ? `\n${calculatedRedundancyContext}` : ''}
 Notes:
 - ${isSeedSubmission ? 'This is the FIRST submission defining the Syntheverse sandbox. Redundancy penalty MUST be 0%.' : 'This is NOT the first submission. Use the vector-based redundancy information above to determine overlap and redundancy penalties.'}
 - Apply redundancy penalty ONLY to the composite/total score (as specified in the system prompt).
+- You MUST include scoring_metadata, pod_composition, and archive_similarity_distribution in your JSON response.
 - Output: Provide a detailed narrative review (clear + specific), AND include the REQUIRED JSON structure from the system prompt.
 - The JSON may be placed in a markdown code block, but it MUST be valid parseable JSON.
 `;

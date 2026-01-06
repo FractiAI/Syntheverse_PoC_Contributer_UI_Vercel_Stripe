@@ -32,6 +32,15 @@ export interface RedundancyResult {
     distance: number;
   }>;
   analysis: string;
+  // Enhanced distribution data (Marek's requirements)
+  overlap_percentile?: number; // Percentile rank of this overlap in archive distribution
+  nearest_10_neighbors?: {
+    mean: number;
+    std_dev: number;
+    min: number;
+    max: number;
+  };
+  computation_context?: 'global' | 'per-user' | 'per-sandbox'; // How similarity is computed
 }
 
 /**
@@ -118,8 +127,11 @@ export function calculateRedundancy(
   // Sort by similarity (highest first)
   similarities.sort((a, b) => b.combinedSimilarity - a.combinedSimilarity);
 
-  // Get top 3 most similar
+  // Get top 3 most similar (for display)
   const topSimilar = similarities.slice(0, 3);
+  
+  // Get top 10 most similar (for distribution stats)
+  const top10Similar = similarities.slice(0, 10);
 
   // Calculate redundancy penalty based on highest similarity
   // Convert similarity (0-1) to redundancy penalty (0-100%)
@@ -127,6 +139,39 @@ export function calculateRedundancy(
   const maxSimilarity = similarities.length > 0 ? similarities[0].combinedSimilarity : 0;
 
   const overlapPercent = Math.min(100, Math.max(0, maxSimilarity * 100));
+  
+  // Calculate overlap percentile (where this overlap ranks in the archive distribution)
+  // If we have enough data, calculate percentile; otherwise estimate
+  let overlapPercentile = 0;
+  if (similarities.length > 0) {
+    // Count how many archived PoCs have lower similarity than this one
+    const lowerCount = similarities.filter(s => s.combinedSimilarity < maxSimilarity).length;
+    overlapPercentile = Math.round((lowerCount / similarities.length) * 100);
+  }
+  
+  // Calculate nearest 10 neighbors statistics
+  let nearest10Stats: {
+    mean: number;
+    std_dev: number;
+    min: number;
+    max: number;
+  } | undefined = undefined;
+  
+  if (top10Similar.length > 0) {
+    const similarities10 = top10Similar.map(s => s.combinedSimilarity);
+    const mean = similarities10.reduce((a, b) => a + b, 0) / similarities10.length;
+    const variance = similarities10.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / similarities10.length;
+    const stdDev = Math.sqrt(variance);
+    const min = Math.min(...similarities10);
+    const max = Math.max(...similarities10);
+    
+    nearest10Stats = {
+      mean: mean,
+      std_dev: stdDev,
+      min: min,
+      max: max,
+    };
+  }
 
   // Edge sweet-spot overlap policy (HHFS expedition prerelease):
   // - Some overlap is beneficial: it connects nodes at the boundaries.
@@ -184,6 +229,15 @@ export function calculateRedundancy(
   analysis += `\nOverlap (max similarity): ${overlapPercent.toFixed(1)}%`;
   analysis += `\nEdge sweet-spot multiplier (Λ_edge≈1.42): ×${bonusMultiplier.toFixed(3)} (center=${SWEET_SPOT_CENTER.toFixed(1)}% ± ${SWEET_SPOT_TOLERANCE.toFixed(1)}%)`;
   analysis += `\nExcess-overlap penalty: ${penaltyPercent.toFixed(1)}% (starts > ${PENALTY_START_OVERLAP}%)`;
+  
+  // Add distribution information to analysis
+  if (overlapPercentile !== undefined) {
+    analysis += `\nOverlap percentile: ${overlapPercentile}th percentile of archive distribution`;
+  }
+  if (nearest10Stats) {
+    analysis += `\nNearest 10 neighbors: μ=${nearest10Stats.mean.toFixed(3)} ± ${nearest10Stats.std_dev.toFixed(3)} (min=${nearest10Stats.min.toFixed(3)}, max=${nearest10Stats.max.toFixed(3)})`;
+  }
+  analysis += `\nComputation context: per-sandbox (similarity computed within sandbox archive)`;
 
   return {
     overlap_percent: overlapPercent,
@@ -192,5 +246,8 @@ export function calculateRedundancy(
     similarity_score: maxSimilarity,
     closest_vectors: closestVectors,
     analysis,
+    overlap_percentile: overlapPercentile,
+    nearest_10_neighbors: nearest10Stats,
+    computation_context: 'per-sandbox' as const, // Default to per-sandbox; can be overridden by caller
   };
 }

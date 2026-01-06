@@ -2208,11 +2208,20 @@ export function OnboardingNavigator() {
               registration. This is your practical roadmap for contributing to Syntheverse.
             </p>
             <div className="space-y-4">
+              <div className="mb-4 border border-purple-500/50 bg-purple-500/5 p-3">
+                <div className="cockpit-label mb-1 text-xs" style={{ color: '#a855f7' }}>
+                  Beta Note
+                </div>
+                <p className="cockpit-text text-xs">
+                  <strong>Current mode:</strong> Text-only PoC (4k chars max). PDF pipeline planned for enterprise tier.
+                  Module 12 documentation references PDF submission, but current implementation accepts text-only contributions.
+                </p>
+              </div>
               {[
                 {
                   step: '01',
                   title: 'Submit Contribution',
-                  desc: 'Upload your PDF contribution (research, technical documentation, alignment work)',
+                  desc: 'Upload your contribution (research, technical documentation, alignment work). Current: text-only (4k chars). PDF pipeline planned.',
                 },
                 {
                   step: '02',
