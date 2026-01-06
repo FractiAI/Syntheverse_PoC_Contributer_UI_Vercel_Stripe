@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import Stripe from 'stripe';
 import { debug, debugError } from '@/utils/debug';
+import { getAuthenticatedUserWithRole } from '@/utils/auth/permissions';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -23,6 +24,27 @@ export async function POST(request: NextRequest) {
 
     if (authError || !user || !user.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Check if user is creator or operator - exempt from payment for testing
+    const { isCreator, isOperator } = await getAuthenticatedUserWithRole();
+    const isExemptFromPayment = isCreator || isOperator;
+
+    if (isExemptFromPayment) {
+      debug('FieldScanCheckout', 'Creator/Operator mode: exempt from payment', {
+        email: user.email,
+        isCreator,
+        isOperator,
+      });
+
+      // Return success without creating checkout session
+      return NextResponse.json({
+        success: true,
+        exempt: true,
+        message: 'Creator/Operator: Payment bypassed for testing',
+        checkout_url: null,
+        session_id: null,
+      });
     }
 
     // Parse request body
