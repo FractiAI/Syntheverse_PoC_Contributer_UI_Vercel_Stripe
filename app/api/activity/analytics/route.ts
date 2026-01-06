@@ -95,6 +95,12 @@ export async function GET(request: NextRequest) {
     startDate.setDate(now.getDate() - days);
     const startHour = new Date(now);
     startHour.setHours(now.getHours() - hours);
+    
+    // Convert Date objects to ISO strings for SQL queries
+    const startDateISO = startDate.toISOString();
+    const startHourISO = startHour.toISOString();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const todayStartISO = todayStart.toISOString();
 
     // Real-time data
     const pageActivityRealtime = await db
@@ -110,14 +116,14 @@ export async function GET(request: NextRequest) {
     const submissionsRealtime = await db
       .select({ count: sql<number>`count(*)::int` })
       .from(contributionsTable)
-      .where(gte(contributionsTable.created_at, new Date(now.getFullYear(), now.getMonth(), now.getDate())));
+      .where(gte(contributionsTable.created_at, todayStart));
 
     const qualificationsRealtime = await db
       .select({ count: sql<number>`count(*)::int` })
       .from(contributionsTable)
       .where(
         and(
-          gte(contributionsTable.created_at, new Date(now.getFullYear(), now.getMonth(), now.getDate())),
+          gte(contributionsTable.created_at, todayStart),
           eq(contributionsTable.status, 'qualified')
         )
       );
@@ -128,7 +134,7 @@ export async function GET(request: NextRequest) {
         DATE(created_at) as date,
         COUNT(*)::int as value
       FROM poc_log
-      WHERE created_at >= ${startDate}
+      WHERE created_at >= ${startDateISO}::timestamp
       GROUP BY DATE(created_at)
       ORDER BY date ASC
     `);
@@ -140,7 +146,7 @@ export async function GET(request: NextRequest) {
         DATE_TRUNC('hour', created_at) as date,
         COUNT(*)::int as value
       FROM poc_log
-      WHERE created_at >= ${startHour}
+      WHERE created_at >= ${startHourISO}::timestamp
       GROUP BY DATE_TRUNC('hour', created_at)
       ORDER BY date ASC
     `);
@@ -152,7 +158,7 @@ export async function GET(request: NextRequest) {
         DATE_TRUNC('week', created_at) as date,
         COUNT(*)::int as value
       FROM poc_log
-      WHERE created_at >= ${startDate}
+      WHERE created_at >= ${startDateISO}::timestamp
       GROUP BY DATE_TRUNC('week', created_at)
       ORDER BY date ASC
     `);
@@ -164,7 +170,7 @@ export async function GET(request: NextRequest) {
         DATE(created_at) as date,
         COUNT(DISTINCT contributor)::int as value
       FROM contributions
-      WHERE created_at >= ${startDate}
+      WHERE created_at >= ${startDateISO}::timestamp
       GROUP BY DATE(created_at)
       ORDER BY date ASC
     `);
@@ -176,7 +182,7 @@ export async function GET(request: NextRequest) {
         DATE_TRUNC('week', created_at) as date,
         COUNT(DISTINCT contributor)::int as value
       FROM contributions
-      WHERE created_at >= ${startDate}
+      WHERE created_at >= ${startDateISO}::timestamp
       GROUP BY DATE_TRUNC('week', created_at)
       ORDER BY date ASC
     `);
@@ -188,7 +194,7 @@ export async function GET(request: NextRequest) {
         DATE_TRUNC('month', created_at) as date,
         COUNT(DISTINCT contributor)::int as value
       FROM contributions
-      WHERE created_at >= ${startDate}
+      WHERE created_at >= ${startDateISO}::timestamp
       GROUP BY DATE_TRUNC('month', created_at)
       ORDER BY date ASC
     `);
@@ -200,7 +206,7 @@ export async function GET(request: NextRequest) {
         DATE(created_at) as date,
         COUNT(*)::int as value
       FROM contributions
-      WHERE created_at >= ${startDate}
+      WHERE created_at >= ${startDateISO}::timestamp
       GROUP BY DATE(created_at)
       ORDER BY date ASC
     `);
@@ -212,7 +218,7 @@ export async function GET(request: NextRequest) {
         DATE_TRUNC('hour', created_at) as date,
         COUNT(*)::int as value
       FROM contributions
-      WHERE created_at >= ${startHour}
+      WHERE created_at >= ${startHourISO}::timestamp
       GROUP BY DATE_TRUNC('hour', created_at)
       ORDER BY date ASC
     `);
@@ -224,7 +230,7 @@ export async function GET(request: NextRequest) {
         DATE_TRUNC('week', created_at) as date,
         COUNT(*)::int as value
       FROM contributions
-      WHERE created_at >= ${startDate}
+      WHERE created_at >= ${startDateISO}::timestamp
       GROUP BY DATE_TRUNC('week', created_at)
       ORDER BY date ASC
     `);
@@ -236,7 +242,7 @@ export async function GET(request: NextRequest) {
         DATE(created_at) as date,
         COUNT(*)::int as value
       FROM contributions
-      WHERE created_at >= ${startDate}
+      WHERE created_at >= ${startDateISO}::timestamp
         AND status = 'qualified'
       GROUP BY DATE(created_at)
       ORDER BY date ASC
@@ -249,7 +255,7 @@ export async function GET(request: NextRequest) {
         DATE_TRUNC('week', created_at) as date,
         COUNT(*)::int as value
       FROM contributions
-      WHERE created_at >= ${startDate}
+      WHERE created_at >= ${startDateISO}::timestamp
         AND status = 'qualified'
       GROUP BY DATE_TRUNC('week', created_at)
       ORDER BY date ASC
@@ -262,7 +268,7 @@ export async function GET(request: NextRequest) {
         DATE_TRUNC('month', created_at) as date,
         COUNT(*)::int as value
       FROM contributions
-      WHERE created_at >= ${startDate}
+      WHERE created_at >= ${startDateISO}::timestamp
         AND status = 'qualified'
       GROUP BY DATE_TRUNC('month', created_at)
       ORDER BY date ASC
