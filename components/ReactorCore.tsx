@@ -236,11 +236,11 @@ export function ReactorCore() {
   return (
     <div className="reactor-core cockpit-panel holographic-depth">
       {/* Header */}
-      <div className="mb-8 border-b border-[var(--keyline-primary)] pb-4">
+      <div className="mb-6 border-b border-[var(--keyline-primary)] pb-3 md:mb-8 md:pb-4">
         <div className="flex items-center justify-between">
           <div>
             <div className="cockpit-label">CORE INSTRUMENT PANEL</div>
-            <div className="cockpit-title mt-2 text-3xl">SYNTH 90T ERC-20 MOTHERLODE BLOCKMINE</div>
+            <div className="cockpit-title mt-2 text-lg leading-tight md:text-3xl">SYNTH 90T ERC-20 MOTHERLODE BLOCKMINE</div>
             <div
               className="cockpit-text mt-2 border-l-2 border-amber-500 bg-amber-500/10 px-3 py-2 text-xs"
               style={{ color: '#fbbf24' }}
@@ -271,7 +271,7 @@ export function ReactorCore() {
       </div>
 
       {/* Central Display - Available SYNTH */}
-      <div className="mb-8 text-center">
+      <div className="mb-6 text-center md:mb-8">
         <div className="cockpit-label mb-2">SYNTH 90T MOTHERLODE RESERVE REMAINING</div>
         <div className="cockpit-number cockpit-number-large">{formatTokens(totalAvailable)}</div>
         <div className="cockpit-text mt-2">
@@ -283,7 +283,7 @@ export function ReactorCore() {
       </div>
 
       {/* Epoch Breakdown */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4 lg:grid-cols-4">
         {openEpochs.map((epoch) => {
           const epochData = epochInfo.epochs[epoch];
           if (!epochData) return null;
@@ -294,7 +294,7 @@ export function ReactorCore() {
           return (
             <div
               key={epoch}
-              className={`cockpit-module p-6 ${isCurrent ? 'epoch-badge current' : ''}`}
+              className={`cockpit-module p-4 md:p-6 ${isCurrent ? 'epoch-badge current' : ''}`}
             >
               <div className="cockpit-label mb-2 uppercase">{epoch}</div>
               <div className="cockpit-number cockpit-number-medium mb-1">
@@ -334,7 +334,7 @@ export function ReactorCore() {
       </div>
 
       {/* System Status Footer */}
-      <div className="mt-8 border-t border-[var(--keyline-primary)] pt-4">
+      <div className="mt-6 border-t border-[var(--keyline-primary)] pt-3 md:mt-8 md:pt-4">
         <div className="flex flex-wrap items-center justify-between gap-4 text-xs">
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-2">

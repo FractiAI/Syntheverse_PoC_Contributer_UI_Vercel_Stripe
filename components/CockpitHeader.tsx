@@ -10,7 +10,7 @@ import { StatusIndicators } from './StatusIndicators';
 export default function CockpitHeader() {
   return (
     <header className="cockpit-panel rounded-none border-b-0 border-l-0 border-r-0 border-t-0">
-      <div className="container mx-auto px-6 py-4">
+      <div className="container mx-auto px-4 py-3 md:px-6 md:py-4">
         <div className="flex items-center justify-between">
           {/* Syntheverse Insignia */}
           <div className="flex items-center gap-4">
@@ -23,7 +23,7 @@ export default function CockpitHeader() {
               ></div>
             </div>
             <div>
-              <div className="cockpit-title text-2xl">SYNTHEVERSE</div>
+              <div className="cockpit-title text-xl md:text-2xl">SYNTHEVERSE</div>
               <div className="cockpit-label mt-0.5">SYNTH 90T ERC-20 MOTHERLODE BLOCKMINE</div>
               <div
                 className="cockpit-text mt-1 border-l-2 border-amber-500 bg-amber-500/10 px-2 py-1 text-[10px] leading-tight"

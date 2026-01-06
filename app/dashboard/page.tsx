@@ -48,7 +48,7 @@ export default async function Dashboard() {
 
   return (
     <div className="cockpit-bg min-h-screen">
-      <div className="container mx-auto space-y-8 px-6 py-8">
+      <div className="container mx-auto space-y-6 px-4 py-6 md:space-y-8 md:px-6 md:py-8">
         {/* Sandbox Selector */}
         <div className="flex justify-end">
           <SandboxSelector />
@@ -62,7 +62,7 @@ export default async function Dashboard() {
         />
 
         {/* Command Zone - Welcome & Action Control */}
-        <div className="cockpit-panel p-6">
+        <div className="cockpit-panel p-4 md:p-6">
           <div className="flex items-center justify-between">
             <div className="flex-1">
               <div className="mb-2 flex items-center justify-between">
@@ -72,20 +72,20 @@ export default async function Dashboard() {
                 {/* Boot Sequence Indicator Lights */}
                 <BootSequenceIndicators />
               </div>
-              <div className="cockpit-title mt-1 text-2xl">{displayName.toUpperCase()}</div>
+              <div className="cockpit-title mt-1 text-xl md:text-2xl">{displayName.toUpperCase()}</div>
               <div className="cockpit-text mt-2">
                 You are using the FractiAI reference client to interact with the public Syntheverse
                 protocol. Records are verifiable and permanent; this UI does not represent protocol
                 ownership, centralized governance, or financial promises.
               </div>
-              <div className="cockpit-text bg-[var(--hydrogen-amber)]/5 mt-3 border-l-4 border-[var(--hydrogen-amber)] px-4 py-2 text-sm">
+              <div className="cockpit-text bg-[var(--hydrogen-amber)]/5 mt-3 border-l-4 border-[var(--hydrogen-amber)] px-3 py-2 text-xs md:px-4 md:py-2 md:text-sm">
                 <strong>Liberating Contributions:</strong> Through our hydrogen spin MRI-based PoC
                 protocol on the blockchain, your contributions are no longer gatekept—they become{' '}
                 <strong>visible and demonstrable to all</strong> via HHF-AI MRI science and
                 technology.
               </div>
             </div>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-2.5 md:gap-3">
               <Link href="/fractiai" className="cockpit-lever inline-block">
                 <span className="mr-2">◎</span>
                 FractiAI
@@ -113,7 +113,7 @@ export default async function Dashboard() {
         <ReactorCore />
 
         {/* Genesis Button */}
-        <div className="cockpit-panel p-4">
+        <div className="cockpit-panel p-3 md:p-4">
           <GenesisButton />
         </div>
 

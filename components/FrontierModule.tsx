@@ -369,8 +369,8 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
 
   if (loading) {
     return (
-      <div className="cockpit-module cockpit-panel p-8">
-        <div className="flex min-h-[200px] items-center justify-center gap-4">
+      <div className="cockpit-module cockpit-panel p-4 md:p-8">
+        <div className="flex min-h-[200px] items-center justify-center gap-3 md:gap-4">
           <div className="fractal-spiral"></div>
           <div className="cockpit-text">Loading submission data...</div>
         </div>
@@ -380,7 +380,7 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
 
   if (error) {
     return (
-      <div className="cockpit-module cockpit-panel p-8">
+      <div className="cockpit-module cockpit-panel p-4 md:p-8">
         <div className="text-center">
           <div className="cockpit-label mb-4 text-red-400">Module Error</div>
           <div className="cockpit-text mb-4">{error}</div>
@@ -398,9 +398,9 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
   return (
     <>
       <div className="cockpit-module cockpit-panel">
-        <div className="p-6">
+        <div className="p-4 md:p-6">
           {/* Module Header */}
-          <div className="mb-6 flex items-center justify-between border-b border-[var(--keyline-primary)] pb-4">
+          <div className="mb-4 flex items-center justify-between border-b border-[var(--keyline-primary)] pb-3 md:mb-6 md:pb-4">
             <div>
               <div className="cockpit-label">FRONTIER MODULE</div>
               <div className="cockpit-title mt-1 text-2xl">PoC SUBMISSIONS ARCHIVE</div>
@@ -417,7 +417,7 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
           </div>
 
           {/* View Mode Selector */}
-          <div className="mb-6 flex gap-2">
+          <div className="mb-4 flex gap-2 md:mb-6">
             <button
               onClick={() => setViewMode('my')}
               className={`cockpit-lever px-4 py-2 text-sm ${viewMode === 'my' ? 'border-[var(--hydrogen-amber)]' : ''}`}
@@ -533,7 +533,7 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
           {selectedSubmission && (
             <div className="mt-4 space-y-4">
               {/* Status and Metadata */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3 md:gap-4">
                 <div>
                   <div className="cockpit-label mb-2">Status</div>
                   {getStatusBadge(selectedSubmission)}
@@ -586,7 +586,7 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
               {/* Scores */}
               <div>
                 <div className="cockpit-label mb-3">Evaluation Scores</div>
-                <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+                <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
                   <div>
                     <div className="cockpit-text mb-1 text-xs">PoC Score</div>
                     <div className="cockpit-number cockpit-number-medium">
@@ -652,7 +652,7 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
                   <div className="space-y-4 text-sm">
                     {/* Evaluation Review Text */}
                     {selectedSubmission.metadata.redundancy_analysis && (
-                      <div className="rounded border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-4">
+                      <div className="rounded border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-3 md:p-4">
                         <div className="cockpit-label mb-2">Evaluation Review</div>
                         <div className="cockpit-text whitespace-pre-wrap">
                           {selectedSubmission.metadata.redundancy_analysis}
@@ -662,7 +662,7 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
 
                     {/* Metal Justification */}
                     {selectedSubmission.metadata.metal_justification && (
-                      <div className="rounded border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-4">
+                      <div className="rounded border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-3 md:p-4">
                         <div className="cockpit-label mb-2">Metal Assignment</div>
                         <div className="cockpit-text whitespace-pre-wrap">
                           {selectedSubmission.metadata.metal_justification}
@@ -672,7 +672,7 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
 
                     {/* Scoring Breakdown */}
                     {selectedSubmission.metadata.grok_evaluation_details && (
-                      <div className="rounded border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-4">
+                      <div className="rounded border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-3 md:p-4">
                         <div className="cockpit-label mb-3">Scoring Breakdown</div>
                         <div className="space-y-3 text-sm">
                           {/* Base Scores */}
@@ -769,7 +769,7 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
 
                     {/* Tokenomics Recommendation */}
                     {selectedSubmission.metadata.tokenomics_recommendation?.allocation_notes && (
-                      <div className="rounded border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-4">
+                      <div className="rounded border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-3 md:p-4">
                         <div className="cockpit-label mb-2">Allocation Recommendation</div>
                         <div className="cockpit-text whitespace-pre-wrap">
                           {selectedSubmission.metadata.tokenomics_recommendation.allocation_notes}
@@ -779,7 +779,7 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
 
                     {/* Founder Certificate */}
                     {selectedSubmission.metadata.founder_certificate && (
-                      <div className="rounded border border-[var(--hydrogen-amber)] bg-[rgba(255,215,0,0.1)] p-4">
+                      <div className="rounded border border-[var(--hydrogen-amber)] bg-[rgba(255,215,0,0.1)] p-3 md:p-4">
                         <div className="cockpit-label mb-2 text-[var(--hydrogen-amber)]">
                           Founder Certificate
                         </div>
@@ -803,7 +803,7 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
                             return (
                               <div>
                                 <div className="cockpit-label mb-2">Full Grok API Response</div>
-                                <div className="rounded border border-[var(--keyline-primary)] bg-[var(--cockpit-obsidian)] p-4">
+                                <div className="rounded border border-[var(--keyline-primary)] bg-[var(--cockpit-obsidian)] p-3 md:p-4">
                                   <pre className="cockpit-text max-h-96 overflow-auto whitespace-pre-wrap font-mono text-xs">
                                     {raw}
                                   </pre>
@@ -837,7 +837,7 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
               )}
 
               {/* Metadata */}
-              <div className="grid grid-cols-2 gap-4 border-t border-[var(--keyline-primary)] pt-4 text-sm">
+              <div className="grid grid-cols-2 gap-3 border-t border-[var(--keyline-primary)] pt-3 text-sm md:gap-4 md:pt-4">
                 <div>
                   <div className="cockpit-label mb-1">Contributor</div>
                   <div className="cockpit-text">{selectedSubmission.contributor}</div>
@@ -877,7 +877,7 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
               {selectedSubmission.registered && (
                 <div className="border-t border-[var(--keyline-primary)] pt-4">
                   <div className="cockpit-label mb-3">Registration & Allocation</div>
-                  <div className="space-y-2 rounded border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-4 text-sm">
+                  <div className="space-y-2 rounded border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-3 text-sm md:p-4">
                     {selectedSubmission.allocation_amount !== null &&
                       selectedSubmission.allocation_amount > 0 && (
                         <div className="flex items-center justify-between">

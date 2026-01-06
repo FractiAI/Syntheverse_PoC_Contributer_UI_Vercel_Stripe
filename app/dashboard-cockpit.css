@@ -584,17 +584,85 @@ details[open] .cockpit-chevron {
   color: rgba(255, 255, 255, 0.5);
 }
 
-/* Responsive Adjustments */
+/* Responsive Adjustments - Maintain Crisp Desktop Aesthetic on Mobile */
 @media (max-width: 768px) {
+  /* Typography - Preserve hierarchy and readability */
   .cockpit-title {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    letter-spacing: 0.02em;
   }
 
   .cockpit-number-large {
     font-size: 2.5rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .cockpit-number-medium {
+    font-size: 1.75rem;
+    line-height: 1;
+  }
+
+  .cockpit-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    line-height: 1.4;
+  }
+
+  .cockpit-text {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+  }
+
+  /* Spacing - Maintain proportional rhythm */
+  .cockpit-panel {
+    padding: 1rem;
+    border-width: 2px; /* Slightly thinner on mobile but still structural */
   }
 
   .reactor-core {
-    padding: var(--ma-medium);
+    padding: 1.5rem;
+  }
+
+  .cockpit-module {
+    border-width: 2px;
+  }
+
+  /* Lever buttons - Compact but still elegant */
+  .cockpit-lever {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.8125rem;
+    letter-spacing: 0.08em;
+  }
+
+  /* Container - Tighter but not cramped */
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Maintain visual hierarchy with proper spacing */
+  .cockpit-panel > * + * {
+    margin-top: 1rem;
+  }
+
+  /* Ensure keylines remain visible and structural */
+  .cockpit-panel,
+  .cockpit-module {
+    box-shadow:
+      0 0 0 1px var(--keyline-accent) inset,
+      0 2px 8px rgba(0, 0, 0, 0.8);
+  }
+
+  /* Preserve hover states and interactions */
+  .cockpit-lever:hover {
+    transform: translateY(-1px);
+  }
+
+  /* Maintain badge elegance */
+  .cockpit-badge {
+    padding: 0.2rem 0.6rem;
+    font-size: 0.7rem;
   }
 }
