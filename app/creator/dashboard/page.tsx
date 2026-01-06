@@ -19,7 +19,10 @@ import { CreatorEnterpriseSandboxes } from '@/components/creator/CreatorEnterpri
 import { ReferenceCustomersList } from '@/components/ReferenceCustomersList';
 import { SandboxNavigator } from '@/components/SandboxNavigator';
 import { SynthChatNavigator } from '@/components/SynthChatNavigator';
-import { Shield, Activity, FileText } from 'lucide-react';
+import { ReactorCore } from '@/components/ReactorCore';
+import CockpitHeader from '@/components/CockpitHeader';
+import { GenesisButtonQuickAction } from '@/components/GenesisButtonQuickAction';
+import { Shield, Activity, FileText, BookOpen, Settings } from 'lucide-react';
 import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
@@ -48,7 +51,45 @@ export default async function CreatorDashboard() {
 
   return (
     <div className="cockpit-bg min-h-screen">
+      <CockpitHeader />
       <div className="container mx-auto space-y-6 px-6 py-8">
+        {/* Core Instrument Panel - Reactor Core - At the very top */}
+        <ReactorCore />
+
+        {/* Quick Action Buttons - Top Section */}
+        <div className="cockpit-panel p-4 md:p-6">
+          <div className="mb-4 border-b border-[var(--keyline-primary)] pb-3">
+            <div className="cockpit-label text-xs uppercase tracking-wider">
+              QUICK ACTIONS
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2 md:gap-3">
+            <Link href="/dashboard" className="cockpit-lever inline-block text-center">
+              <span className="mr-2">◎</span>
+              Contributor Dashboard
+            </Link>
+            <Link href="/onboarding" className="cockpit-lever inline-block text-center">
+              <BookOpen className="mr-2 inline h-4 w-4" />
+              Onboarding Navigator
+            </Link>
+            <Link href="/submit" className="cockpit-lever inline-block text-center">
+              <span className="mr-2">✎</span>
+              Submit Contribution
+            </Link>
+            <Link href="/blog" className="cockpit-lever inline-block text-center">
+              <FileText className="mr-2 inline h-4 w-4" />
+              Blog
+            </Link>
+            <GenesisButtonQuickAction />
+            {isOperator && !isCreator && (
+              <Link href="/operator/dashboard" className="cockpit-lever inline-block text-center">
+                <Settings className="mr-2 inline h-4 w-4" />
+                Operator Dashboard
+              </Link>
+            )}
+          </div>
+        </div>
+
         {/* Navigation Modules - Three Navigators in Sequence */}
         <SandboxNavigator />
         <FrontierModule userEmail={userEmail} />

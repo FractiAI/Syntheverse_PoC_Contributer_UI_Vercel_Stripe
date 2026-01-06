@@ -41,9 +41,9 @@ export default function CockpitHeader() {
           </div>
 
           {/* Syntheverse Status & Profile */}
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4 flex-wrap">
             {/* Status Indicators */}
-            <div className="hidden items-center gap-3 md:flex">
+            <div className="flex items-center gap-2 min-w-0">
               <StatusIndicators />
             </div>
             <DashboardHeaderProfileDropdown />

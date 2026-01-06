@@ -12,9 +12,10 @@ import { GenesisButton } from '@/components/GenesisButton';
 import { getAuthenticatedUserWithRole } from '@/utils/auth/permissions';
 // Optional ecosystem support is intentionally not placed in the primary beta cockpit.
 // The reference client stays protocol-first and avoids any "package" framing in the main dashboard.
-import { BookOpen, Shield, Settings, FileText } from 'lucide-react';
+import { BookOpen, Shield, Settings, FileText, ArrowRight } from 'lucide-react';
 import { SandboxNavigator } from '@/components/SandboxNavigator';
 import { SynthChatNavigator } from '@/components/SynthChatNavigator';
+import { GenesisButtonQuickAction } from '@/components/GenesisButtonQuickAction';
 
 export const dynamic = 'force-dynamic';
 
@@ -49,6 +50,49 @@ export default async function Dashboard() {
   return (
     <div className="cockpit-bg min-h-screen">
       <div className="container mx-auto space-y-4 px-4 py-6 md:space-y-6 md:px-6 md:py-8">
+        {/* Core Instrument Panel - Reactor Core - At the very top */}
+        <ReactorCore />
+
+        {/* Quick Action Buttons - Top Section */}
+        <div className="cockpit-panel p-4 md:p-6">
+          <div className="mb-4 border-b border-[var(--keyline-primary)] pb-3">
+            <div className="cockpit-label text-xs uppercase tracking-wider">
+              QUICK ACTIONS
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2 md:gap-3">
+            <Link href="/fractiai" className="cockpit-lever inline-block text-center">
+              <span className="mr-2">◎</span>
+              FractiAI
+            </Link>
+            <Link href="/onboarding" className="cockpit-lever inline-block text-center">
+              <BookOpen className="mr-2 inline h-4 w-4" />
+              Onboarding Navigator
+            </Link>
+            <Link href="/submit" className="cockpit-lever inline-block text-center">
+              <span className="mr-2">✎</span>
+              Submit Contribution
+            </Link>
+            <Link href="/blog" className="cockpit-lever inline-block text-center">
+              <FileText className="mr-2 inline h-4 w-4" />
+              Blog
+            </Link>
+            <GenesisButtonQuickAction />
+            {isCreator && (
+              <Link href="/creator/dashboard" className="cockpit-lever inline-block text-center">
+                <Shield className="mr-2 inline h-4 w-4" />
+                Creator Dashboard
+              </Link>
+            )}
+            {isOperator && !isCreator && (
+              <Link href="/operator/dashboard" className="cockpit-lever inline-block text-center">
+                <Settings className="mr-2 inline h-4 w-4" />
+                Operator Dashboard
+              </Link>
+            )}
+          </div>
+        </div>
+
         {/* Navigation Modules - Three Navigators in Sequence */}
         <SandboxNavigator />
         <FrontierModule userEmail={user.email!} />
@@ -67,65 +111,24 @@ export default async function Dashboard() {
             <BootSequenceIndicators />
           </div>
           
-          <div className="grid gap-6 md:grid-cols-[1fr_auto]">
-            <div className="space-y-4">
-              <div>
-                <div className="cockpit-title text-xl md:text-2xl">{displayName.toUpperCase()}</div>
-                <div className="cockpit-text mt-2 text-sm md:text-base">
-                  You are using the FractiAI reference client to interact with the public Syntheverse
-                  protocol. Records are verifiable and permanent; this UI does not represent protocol
-                  ownership, centralized governance, or financial promises.
-                </div>
-              </div>
-              <div className="cockpit-text border-l-4 border-[var(--hydrogen-amber)] bg-[var(--hydrogen-amber)]/5 px-3 py-2 text-xs md:px-4 md:py-2 md:text-sm">
-                <strong>Liberating Contributions:</strong> Through our hydrogen spin MRI-based PoC
-                protocol on the blockchain, your contributions are no longer gatekept—they become{' '}
-                <strong>visible and demonstrable to all</strong> via HHF-AI MRI science and
-                technology.
+          <div className="space-y-4">
+            <div>
+              <div className="cockpit-title text-xl md:text-2xl">{displayName.toUpperCase()}</div>
+              <div className="cockpit-text mt-2 text-sm md:text-base">
+                You are using the FractiAI reference client to interact with the public Syntheverse
+                protocol. Records are verifiable and permanent; this UI does not represent protocol
+                ownership, centralized governance, or financial promises.
               </div>
             </div>
-            
-            {/* Action Controls */}
-            <div className="flex flex-wrap gap-2 md:flex-col md:items-end">
-              <Link href="/fractiai" className="cockpit-lever inline-block text-center">
-                <span className="mr-2">◎</span>
-                FractiAI
-              </Link>
-              <Link href="/onboarding" className="cockpit-lever inline-block text-center">
-                <BookOpen className="mr-2 inline h-4 w-4" />
-                Onboarding Navigator
-              </Link>
-              <Link href="/submit" className="cockpit-lever inline-block text-center">
-                <span className="mr-2">✎</span>
-                Submit Contribution
-              </Link>
-              <Link href="/blog" className="cockpit-lever inline-block text-center">
-                <FileText className="mr-2 inline h-4 w-4" />
-                Blog
-              </Link>
-              {isCreator && (
-                <Link href="/creator/dashboard" className="cockpit-lever inline-block text-center">
-                  <Shield className="mr-2 inline h-4 w-4" />
-                  Creator Dashboard
-                </Link>
-              )}
-              {isOperator && !isCreator && (
-                <Link href="/operator/dashboard" className="cockpit-lever inline-block text-center">
-                  <Settings className="mr-2 inline h-4 w-4" />
-                  Operator Dashboard
-                </Link>
-              )}
+            <div className="cockpit-text border-l-4 border-[var(--hydrogen-amber)] bg-[var(--hydrogen-amber)]/5 px-3 py-2 text-xs md:px-4 md:py-2 md:text-sm">
+              <strong>Liberating Contributions:</strong> Through our hydrogen spin MRI-based PoC
+              protocol on the blockchain, your contributions are no longer gatekept—they become{' '}
+              <strong>visible and demonstrable to all</strong> via HHF-AI MRI science and
+              technology.
             </div>
           </div>
         </div>
 
-        {/* Core Instrument Panel - Reactor Core */}
-        <ReactorCore />
-
-        {/* Genesis Button */}
-        <div className="cockpit-panel p-3 md:p-4">
-          <GenesisButton />
-        </div>
       </div>
     </div>
   );

@@ -51,7 +51,8 @@ export function SandboxNavigator() {
     setSelectedSandbox(sandboxId);
     // Store in localStorage for persistence
     localStorage.setItem('selectedSandbox', sandboxId);
-    // Could also trigger navigation or context update here
+    // Dispatch custom event to notify StatusIndicators
+    window.dispatchEvent(new CustomEvent('sandboxChanged', { detail: { sandboxId } }));
   };
 
   const getStatusBadge = (sandbox: EnterpriseSandbox) => {
