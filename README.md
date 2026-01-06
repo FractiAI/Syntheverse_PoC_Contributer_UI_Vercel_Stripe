@@ -132,6 +132,10 @@ See [Environment Variables](#environment-variables) section for complete configu
 - **Creator Dashboard**: Creator-only destructive controls for PoC lifecycle management and user administration
 - **Mobile UI Optimization**: Crisp, beautiful desktop-quality display on mobile with proper typography hierarchy, proportional spacing, and maintained visual polish
 - **Sales Tracking**: Simplified revenue tracking for creators and operators (Total, This Month, Last Month) with expandable details
+- **Dashboard Layout**: Optimized dashboard structure with Quick Actions at top, Core Instrument Panel (ReactorCore) prominently displayed, followed by navigation modules (Sandbox Navigator, PoC Archive, SynthChat Navigator)
+  - **Quick Actions Panel**: Dedicated top section with quick access buttons (FractiAI, Onboarding Navigator, Submit Contribution, Blog, role-specific dashboards) on all dashboards
+  - **Core Instrument Panel**: SYNTH90T ERC-20 MOTHERLODE BLOCKMINE display showing available SYNTH tokens, epoch breakdown, and system status
+  - **Consistent Navigation**: Standardized table-based navigators across all dashboards for easy sandbox, PoC, and chat access
 - **Sandbox Selector**: Dashboard-level sandbox selection with Syntheverse as default and enterprise sandboxes nested within
 - **Activity Stats**: Page activity, new users, submissions, chat sessions, and problems reported tracking
 - **Genesis Info**: On-chain transaction information display
@@ -233,7 +237,23 @@ See [Environment Variables](#environment-variables) section for complete configu
 - **Motherlode Vault Status**: Live epoch and SYNTH availability display
 - **Mobile Navigation**: Optimized button placement for mobile devices
 - **Operator Broadcast Banner**: Dismissible notification system
-- **Status Indicators**: Beta Active and Base Mainnet LIVE indicators
+- **Status Indicators**: Comprehensive system status display in header
+  - **Syntheverse Components**: Green indicator lights showing online status for:
+    - Syntheverse Protocol (always green, deployed)
+    - Whole Brain AI
+    - SynthScan MRI
+    - PoC Sandbox
+    - ERC-20 Base Mainnet Ecosystem
+    - Awareness Bridge Router
+  - **Current Sandbox Indicator**: Shows active sandbox with deployment status
+    - Green pulsing light if deployed (`synth_activated: true`)
+    - Gray static light if not deployed
+    - Updates dynamically when sandbox selection changes
+    - Reads from localStorage for persistence
+  - **Beta Active Badge**: Shows current beta status
+  - **Boot Sequence Indicators**: System initialization status
+  - **Responsive Display**: Labels visible on large screens, tooltips on smaller screens
+  - **Real-Time Updates**: Listens for sandbox selection changes across all dashboards
 - **Blog System**: Comprehensive blog functionality with sandbox-specific blogs
   - **Main Syntheverse Blog**: Public blog for protocol updates and announcements
   - **Sandbox-Specific Blogs**: Each creator/enterprise sandbox spawns its own blog page
@@ -713,9 +733,13 @@ Built for the Syntheverse ecosystem with ❤️
 ---
 
 **Last Updated**: January 2025  
-**Version**: 2.15 (SYNTH Token-Based Enterprise Pricing & Creator Dashboard Integration)
+**Version**: 2.17 (Syntheverse Component Status Indicators)
 
 ### Version History
+
+- **v2.17** (January 2025): Syntheverse Component Status Indicators - Enhanced status indicators in header to show comprehensive system status. Added green indicator lights for all Syntheverse components (Syntheverse Protocol, Whole Brain AI, SynthScan MRI, PoC Sandbox, ERC-20 Base Mainnet, Awareness Bridge Router) with real-time online status. Added current sandbox indicator showing active sandbox with deployment status (green if deployed, gray if not). Status indicators appear on all dashboards (contributor, creator, operator) via CockpitHeader component. Indicators update dynamically when sandbox selection changes, reading from localStorage for persistence. Responsive design shows labels on large screens and tooltips on smaller screens. All components show as green (online) with pulsing animation for deployed systems.
+
+- **v2.16** (January 2025): Dashboard Layout Optimization & Quick Actions - Reorganized dashboard structure for improved navigation and accessibility. Added dedicated Quick Actions panel at the top of all dashboards (contributor, creator, operator) with quick access buttons for FractiAI, Onboarding Navigator, Submit Contribution, Blog, and role-specific dashboards. Moved Core Instrument Panel (ReactorCore) to prominent position after Quick Actions, displaying SYNTH90T ERC-20 MOTHERLODE BLOCKMINE with available SYNTH tokens, epoch breakdown, and system status. Standardized navigation modules (Sandbox Navigator, PoC Archive, SynthChat Navigator) in consistent table-based format across all dashboards. Improved dashboard hierarchy: Quick Actions → Core Instrument Panel → Navigation Modules → Content.
 
 - **v2.15** (January 2025): SYNTH Token-Based Enterprise Pricing & Creator Dashboard Integration - Reframed enterprise and creator sandbox pricing from Stripe subscriptions to blockchain-native SYNTH token economy. Sandboxes are now free to create and test, with SYNTH token charges functioning as "rent" (based on reach/unique contributors) and "energy" (based on activity/operations). Added comprehensive SYNTH balance tracking, activation system, usage metrics, and pricing calculations. Created CreatorEnterpriseSandboxes component for creator dashboard, allowing creators and enterprises to manage their own sandboxes. Updated database schema with SYNTH balance, activation status, transactions, and metrics tracking. Implemented usage-based billing with transparent rent and energy charges. **Database migration applied to production** - SYNTH pricing schema deployed. Transformed enterprise dashboard into intuitive setup/configuration page with step-by-step guidance and cockpit styling. See [`docs/ENTERPRISE_SYNTH_PRICING_MODEL.md`](docs/ENTERPRISE_SYNTH_PRICING_MODEL.md) for complete details.
 
