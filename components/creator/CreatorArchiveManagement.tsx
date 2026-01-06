@@ -115,13 +115,18 @@ export function CreatorArchiveManagement() {
         setResetMode(null);
         setConfirmationPhrase('');
         setSafetyConfirmed(false);
+        setError(null);
         await loadStats();
         alert(`Archive reset completed. ${data.affected_count} records affected.`);
       } else {
-        setError(data.error || 'Failed to reset archive');
+        const errorMessage = data.error || 'Failed to reset archive';
+        setError(errorMessage);
+        // Don't close dialog on error - let user see the error and try again or cancel
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to reset archive');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to reset archive';
+      setError(errorMessage);
+      // Don't close dialog on error - let user see the error and try again or cancel
     } finally {
       setResetting(false);
     }

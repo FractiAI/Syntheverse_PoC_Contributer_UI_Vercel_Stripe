@@ -2327,11 +2327,17 @@ export function OnboardingNavigator() {
             </div>
 
             <div className="mb-6 rounded-lg border-2 border-green-500/50 bg-green-500/10 p-4">
-              <div className="cockpit-label mb-2 text-green-400">SEED SUBMISSION REWARD</div>
+              <div className="cockpit-label mb-2 text-green-400">SEED INFORMATION RECOGNITION</div>
               <p className="cockpit-text text-sm">
-                <strong>First submissions</strong> that establish the foundational framework receive a{' '}
-                <strong className="text-green-300">15% score multiplier</strong>. This recognizes that
-                seed information has disproportionately high generative value relative to its length.
+                <strong>Seed Information</strong> is a fundamental class of information—distinct from data
+                and metadata—that functions as a generative seed. <strong>First submissions to a sandbox</strong>{' '}
+                (which often exhibit seed-like properties) receive a <strong className="text-green-300">15% score multiplier</strong>. This recognizes that seed information has disproportionately high{' '}
+                <strong>Generative Value Density (GVD)</strong> relative to its descriptive length.
+              </p>
+              <p className="cockpit-text mt-2 text-xs opacity-90">
+                Note: While the practical detection heuristic is &quot;first in sandbox,&quot; seed information
+                is defined by four conditions: Minimal Description Length, Recursive Expandability, Self-Similar
+                Structural Preservation, and Substrate Independence.
               </p>
             </div>
 
@@ -2513,8 +2519,14 @@ export function OnboardingNavigator() {
                         <strong>HHF functions as a universal generative seed</strong>
                       </li>
                       <li>Ecosystem growth driven by unpacking, not uploading</li>
-                      <li>Seed submissions (first submissions) receive 15% score multiplier</li>
-                      <li>Recognizes that foundational contributions have disproportionate value</li>
+                      <li>
+                        First submissions to a sandbox (practical heuristic for seed-like foundational work)
+                        receive 15% score multiplier
+                      </li>
+                      <li>
+                        Recognizes that seed information—compact structures with high GVD—have
+                        disproportionate generative value
+                      </li>
                     </ul>
                   </div>
                 </div>

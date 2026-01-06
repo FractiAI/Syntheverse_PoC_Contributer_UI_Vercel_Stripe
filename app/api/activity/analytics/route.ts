@@ -132,7 +132,7 @@ export async function GET(request: NextRequest) {
       GROUP BY DATE(${pocLogTable.created_at})
       ORDER BY date ASC
     `);
-    const pageActivityDaily = (pageActivityDailyResult as any).rows || pageActivityDailyResult;
+    const pageActivityDaily = Array.isArray(pageActivityDailyResult) ? pageActivityDailyResult : [];
 
     // Historical data - Hourly page activity (last 24 hours)
     const pageActivityHourlyResult = await db.execute(sql`
@@ -144,7 +144,7 @@ export async function GET(request: NextRequest) {
       GROUP BY DATE_TRUNC('hour', ${pocLogTable.created_at})
       ORDER BY date ASC
     `);
-    const pageActivityHourly = (pageActivityHourlyResult as any).rows || pageActivityHourlyResult;
+    const pageActivityHourly = Array.isArray(pageActivityHourlyResult) ? pageActivityHourlyResult : [];
 
     // Historical data - Weekly page activity
     const pageActivityWeeklyResult = await db.execute(sql`
@@ -156,7 +156,7 @@ export async function GET(request: NextRequest) {
       GROUP BY DATE_TRUNC('week', ${pocLogTable.created_at})
       ORDER BY date ASC
     `);
-    const pageActivityWeekly = (pageActivityWeeklyResult as any).rows || pageActivityWeeklyResult;
+    const pageActivityWeekly = Array.isArray(pageActivityWeeklyResult) ? pageActivityWeeklyResult : [];
 
     // Historical data - Daily user count
     const userCountDailyResult = await db.execute(sql`
@@ -168,7 +168,7 @@ export async function GET(request: NextRequest) {
       GROUP BY DATE(${contributionsTable.created_at})
       ORDER BY date ASC
     `);
-    const userCountDaily = (userCountDailyResult as any).rows || userCountDailyResult;
+    const userCountDaily = Array.isArray(userCountDailyResult) ? userCountDailyResult : [];
 
     // Historical data - Weekly user count
     const userCountWeeklyResult = await db.execute(sql`
@@ -180,7 +180,7 @@ export async function GET(request: NextRequest) {
       GROUP BY DATE_TRUNC('week', ${contributionsTable.created_at})
       ORDER BY date ASC
     `);
-    const userCountWeekly = (userCountWeeklyResult as any).rows || userCountWeeklyResult;
+    const userCountWeekly = Array.isArray(userCountWeeklyResult) ? userCountWeeklyResult : [];
 
     // Historical data - Monthly user count
     const userCountMonthlyResult = await db.execute(sql`
@@ -192,7 +192,7 @@ export async function GET(request: NextRequest) {
       GROUP BY DATE_TRUNC('month', ${contributionsTable.created_at})
       ORDER BY date ASC
     `);
-    const userCountMonthly = (userCountMonthlyResult as any).rows || userCountMonthlyResult;
+    const userCountMonthly = Array.isArray(userCountMonthlyResult) ? userCountMonthlyResult : [];
 
     // Historical data - Daily submissions
     const submissionsDailyResult = await db.execute(sql`
@@ -204,7 +204,7 @@ export async function GET(request: NextRequest) {
       GROUP BY DATE(${contributionsTable.created_at})
       ORDER BY date ASC
     `);
-    const submissionsDaily = (submissionsDailyResult as any).rows || submissionsDailyResult;
+    const submissionsDaily = Array.isArray(submissionsDailyResult) ? submissionsDailyResult : [];
 
     // Historical data - Hourly submissions (last 24 hours)
     const submissionsHourlyResult = await db.execute(sql`
@@ -216,7 +216,7 @@ export async function GET(request: NextRequest) {
       GROUP BY DATE_TRUNC('hour', ${contributionsTable.created_at})
       ORDER BY date ASC
     `);
-    const submissionsHourly = (submissionsHourlyResult as any).rows || submissionsHourlyResult;
+    const submissionsHourly = Array.isArray(submissionsHourlyResult) ? submissionsHourlyResult : [];
 
     // Historical data - Weekly submissions
     const submissionsWeeklyResult = await db.execute(sql`
@@ -228,7 +228,7 @@ export async function GET(request: NextRequest) {
       GROUP BY DATE_TRUNC('week', ${contributionsTable.created_at})
       ORDER BY date ASC
     `);
-    const submissionsWeekly = (submissionsWeeklyResult as any).rows || submissionsWeeklyResult;
+    const submissionsWeekly = Array.isArray(submissionsWeeklyResult) ? submissionsWeeklyResult : [];
 
     // Historical data - Daily qualifications
     const qualificationsDailyResult = await db.execute(sql`
@@ -241,7 +241,7 @@ export async function GET(request: NextRequest) {
       GROUP BY DATE(${contributionsTable.created_at})
       ORDER BY date ASC
     `);
-    const qualificationsDaily = (qualificationsDailyResult as any).rows || qualificationsDailyResult;
+    const qualificationsDaily = Array.isArray(qualificationsDailyResult) ? qualificationsDailyResult : [];
 
     // Historical data - Weekly qualifications
     const qualificationsWeeklyResult = await db.execute(sql`
@@ -254,7 +254,7 @@ export async function GET(request: NextRequest) {
       GROUP BY DATE_TRUNC('week', ${contributionsTable.created_at})
       ORDER BY date ASC
     `);
-    const qualificationsWeekly = (qualificationsWeeklyResult as any).rows || qualificationsWeeklyResult;
+    const qualificationsWeekly = Array.isArray(qualificationsWeeklyResult) ? qualificationsWeeklyResult : [];
 
     // Historical data - Monthly qualifications
     const qualificationsMonthlyResult = await db.execute(sql`
@@ -267,7 +267,7 @@ export async function GET(request: NextRequest) {
       GROUP BY DATE_TRUNC('month', ${contributionsTable.created_at})
       ORDER BY date ASC
     `);
-    const qualificationsMonthly = (qualificationsMonthlyResult as any).rows || qualificationsMonthlyResult;
+    const qualificationsMonthly = Array.isArray(qualificationsMonthlyResult) ? qualificationsMonthlyResult : [];
 
     // Qualifications breakdown by tier
     const qualificationsBreakdownResult = await db.execute(sql`
@@ -284,7 +284,7 @@ export async function GET(request: NextRequest) {
       WHERE ${contributionsTable.status} = 'qualified'
       GROUP BY tier
     `);
-    const qualificationsBreakdown = (qualificationsBreakdownResult as any).rows || qualificationsBreakdownResult;
+    const qualificationsBreakdown = Array.isArray(qualificationsBreakdownResult) ? qualificationsBreakdownResult : [];
 
     // Location data - extract from metadata or use placeholder
     // Note: Real location tracking would require IP geolocation or user-provided data
@@ -298,88 +298,88 @@ export async function GET(request: NextRequest) {
         qualificationsToday: qualificationsRealtime[0]?.count || 0,
       },
       runrate: {
-        pageActivity: (pageActivityDaily as any[]).map((r: any) => ({
-          date: r.date instanceof Date ? r.date.toISOString().split('T')[0] : String(r.date).split('T')[0],
-          value: Number(r.value),
+        pageActivity: pageActivityDaily.map((r: any) => ({
+          date: r.date instanceof Date ? r.date.toISOString().split('T')[0] : String(r.date || '').split('T')[0],
+          value: Number(r.value || 0),
         })),
-        userCount: (userCountDaily as any[]).map((r: any) => ({
-          date: r.date instanceof Date ? r.date.toISOString().split('T')[0] : String(r.date).split('T')[0],
-          value: Number(r.value),
+        userCount: userCountDaily.map((r: any) => ({
+          date: r.date instanceof Date ? r.date.toISOString().split('T')[0] : String(r.date || '').split('T')[0],
+          value: Number(r.value || 0),
         })),
-        submissions: (submissionsDaily as any[]).map((r: any) => ({
-          date: r.date instanceof Date ? r.date.toISOString().split('T')[0] : String(r.date).split('T')[0],
-          value: Number(r.value),
+        submissions: submissionsDaily.map((r: any) => ({
+          date: r.date instanceof Date ? r.date.toISOString().split('T')[0] : String(r.date || '').split('T')[0],
+          value: Number(r.value || 0),
         })),
-        qualifications: (qualificationsDaily as any[]).map((r: any) => ({
-          date: r.date instanceof Date ? r.date.toISOString().split('T')[0] : String(r.date).split('T')[0],
-          value: Number(r.value),
+        qualifications: qualificationsDaily.map((r: any) => ({
+          date: r.date instanceof Date ? r.date.toISOString().split('T')[0] : String(r.date || '').split('T')[0],
+          value: Number(r.value || 0),
         })),
       },
       historical: {
         pageActivity: {
-          hourly: (pageActivityHourly as any[]).map((r: any) => ({
-            date: r.date instanceof Date ? r.date.toISOString() : new Date(r.date).toISOString(),
-            value: Number(r.value),
+          hourly: pageActivityHourly.map((r: any) => ({
+            date: r.date instanceof Date ? r.date.toISOString() : new Date(r.date || Date.now()).toISOString(),
+            value: Number(r.value || 0),
           })),
-          daily: (pageActivityDaily as any[]).map((r: any) => ({
-            date: r.date instanceof Date ? r.date.toISOString().split('T')[0] : String(r.date).split('T')[0],
-            value: Number(r.value),
+          daily: pageActivityDaily.map((r: any) => ({
+            date: r.date instanceof Date ? r.date.toISOString().split('T')[0] : String(r.date || '').split('T')[0],
+            value: Number(r.value || 0),
           })),
-          weekly: (pageActivityWeekly as any[]).map((r: any) => ({
-            date: r.date instanceof Date ? r.date.toISOString() : new Date(r.date).toISOString(),
-            value: Number(r.value),
+          weekly: pageActivityWeekly.map((r: any) => ({
+            date: r.date instanceof Date ? r.date.toISOString() : new Date(r.date || Date.now()).toISOString(),
+            value: Number(r.value || 0),
           })),
         },
         userCount: {
-          daily: (userCountDaily as any[]).map((r: any) => ({
-            date: r.date instanceof Date ? r.date.toISOString().split('T')[0] : String(r.date).split('T')[0],
-            value: Number(r.value),
+          daily: userCountDaily.map((r: any) => ({
+            date: r.date instanceof Date ? r.date.toISOString().split('T')[0] : String(r.date || '').split('T')[0],
+            value: Number(r.value || 0),
           })),
-          weekly: (userCountWeekly as any[]).map((r: any) => ({
-            date: r.date instanceof Date ? r.date.toISOString() : new Date(r.date).toISOString(),
-            value: Number(r.value),
+          weekly: userCountWeekly.map((r: any) => ({
+            date: r.date instanceof Date ? r.date.toISOString() : new Date(r.date || Date.now()).toISOString(),
+            value: Number(r.value || 0),
           })),
-          monthly: (userCountMonthly as any[]).map((r: any) => ({
-            date: r.date instanceof Date ? r.date.toISOString() : new Date(r.date).toISOString(),
-            value: Number(r.value),
+          monthly: userCountMonthly.map((r: any) => ({
+            date: r.date instanceof Date ? r.date.toISOString() : new Date(r.date || Date.now()).toISOString(),
+            value: Number(r.value || 0),
           })),
         },
         submissions: {
-          hourly: (submissionsHourly as any[]).map((r: any) => ({
-            date: r.date instanceof Date ? r.date.toISOString() : new Date(r.date).toISOString(),
-            value: Number(r.value),
+          hourly: submissionsHourly.map((r: any) => ({
+            date: r.date instanceof Date ? r.date.toISOString() : new Date(r.date || Date.now()).toISOString(),
+            value: Number(r.value || 0),
           })),
-          daily: (submissionsDaily as any[]).map((r: any) => ({
-            date: r.date instanceof Date ? r.date.toISOString().split('T')[0] : String(r.date).split('T')[0],
-            value: Number(r.value),
+          daily: submissionsDaily.map((r: any) => ({
+            date: r.date instanceof Date ? r.date.toISOString().split('T')[0] : String(r.date || '').split('T')[0],
+            value: Number(r.value || 0),
           })),
-          weekly: (submissionsWeekly as any[]).map((r: any) => ({
-            date: r.date instanceof Date ? r.date.toISOString() : new Date(r.date).toISOString(),
-            value: Number(r.value),
+          weekly: submissionsWeekly.map((r: any) => ({
+            date: r.date instanceof Date ? r.date.toISOString() : new Date(r.date || Date.now()).toISOString(),
+            value: Number(r.value || 0),
           })),
         },
         qualifications: {
-          daily: (qualificationsDaily as any[]).map((r: any) => ({
-            date: r.date instanceof Date ? r.date.toISOString().split('T')[0] : String(r.date).split('T')[0],
-            value: Number(r.value),
+          daily: qualificationsDaily.map((r: any) => ({
+            date: r.date instanceof Date ? r.date.toISOString().split('T')[0] : String(r.date || '').split('T')[0],
+            value: Number(r.value || 0),
           })),
-          weekly: (qualificationsWeekly as any[]).map((r: any) => ({
-            date: r.date instanceof Date ? r.date.toISOString() : new Date(r.date).toISOString(),
-            value: Number(r.value),
+          weekly: qualificationsWeekly.map((r: any) => ({
+            date: r.date instanceof Date ? r.date.toISOString() : new Date(r.date || Date.now()).toISOString(),
+            value: Number(r.value || 0),
           })),
-          monthly: (qualificationsMonthly as any[]).map((r: any) => ({
-            date: r.date instanceof Date ? r.date.toISOString() : new Date(r.date).toISOString(),
-            value: Number(r.value),
+          monthly: qualificationsMonthly.map((r: any) => ({
+            date: r.date instanceof Date ? r.date.toISOString() : new Date(r.date || Date.now()).toISOString(),
+            value: Number(r.value || 0),
           })),
         },
       },
       locations: locationData,
       qualifications: {
-        total: (qualificationsBreakdown as any[]).reduce((sum, r: any) => sum + Number(r.count), 0),
-        founder: (qualificationsBreakdown as any[]).find((r: any) => r.tier === 'founder')?.count || 0,
-        pioneer: (qualificationsBreakdown as any[]).find((r: any) => r.tier === 'pioneer')?.count || 0,
-        community: (qualificationsBreakdown as any[]).find((r: any) => r.tier === 'community')?.count || 0,
-        ecosystem: (qualificationsBreakdown as any[]).find((r: any) => r.tier === 'ecosystem')?.count || 0,
+        total: qualificationsBreakdown.reduce((sum, r: any) => sum + Number(r.count || 0), 0),
+        founder: Number(qualificationsBreakdown.find((r: any) => r.tier === 'founder')?.count || 0),
+        pioneer: Number(qualificationsBreakdown.find((r: any) => r.tier === 'pioneer')?.count || 0),
+        community: Number(qualificationsBreakdown.find((r: any) => r.tier === 'community')?.count || 0),
+        ecosystem: Number(qualificationsBreakdown.find((r: any) => r.tier === 'ecosystem')?.count || 0),
       },
     };
 

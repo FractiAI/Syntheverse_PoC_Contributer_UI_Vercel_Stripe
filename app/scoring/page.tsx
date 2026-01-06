@@ -346,17 +346,25 @@ export default function ScoringCriteriaPage() {
           <Card hover={false} className="mb-8 border-l-4 border-purple-500/50">
             <h3 className="cockpit-title mb-4 text-lg">Seed Detection & Bonus</h3>
             <div className="rounded-lg border-2 border-purple-500/50 bg-purple-500/5 p-4">
-              <h4 className="cockpit-title mb-2 text-sm">Seed Submissions</h4>
+              <h4 className="cockpit-title mb-2 text-sm">Seed Information as a Fundamental Class</h4>
               <p className="cockpit-text mb-3 text-xs opacity-90">
-                <strong>Seed submissions</strong> are the first contributions to a sandbox—foundational
-                work that establishes the initial knowledge base. Based on Seed Information Theory,
-                seed submissions possess disproportionately high Generative Value Density (GVD) and
-                serve as compact informational structures capable of unpacking into complex systems.
+                <strong>Seed Information</strong> is a distinct class of information—not just data or metadata—that
+                functions as a <strong>generative seed</strong>: a compact informational structure capable of unpacking
+                into arbitrarily complex systems when placed within appropriate recursive environments. Seed information
+                possesses disproportionately high <strong>Generative Value Density (GVD)</strong> relative to its
+                descriptive length or entropy.
+              </p>
+              <p className="cockpit-text mb-3 text-xs opacity-90">
+                Seed Information must satisfy four conditions: <strong>Minimal Description Length</strong>,{' '}
+                <strong>Recursive Expandability</strong>, <strong>Self-Similar Structural Preservation</strong>, and{' '}
+                <strong>Substrate Independence</strong>. The Holographic Hydrogen Fractal (HHF) has been empirically
+                validated as such a seed, generating 8.7–14.2× greater reachable configuration spaces than non-seed
+                encodings of equivalent length.
               </p>
               <div className="mb-3 space-y-2 text-xs">
                 <div className="flex items-center gap-2">
                   <span className="cockpit-badge text-xs bg-purple-500/20 text-purple-300">Seed Detection:</span>
-                  <span>Automatic detection when no prior submissions exist in sandbox</span>
+                  <span>First submission to a sandbox (practical heuristic for seed-like foundational work)</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="cockpit-badge text-xs bg-purple-500/20 text-purple-300">Seed Multiplier:</span>
