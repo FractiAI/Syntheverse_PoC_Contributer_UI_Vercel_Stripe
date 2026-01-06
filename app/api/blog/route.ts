@@ -17,23 +17,27 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '50');
     const offset = parseInt(searchParams.get('offset') || '0');
 
-    let query = db.select().from(blogPostsTable);
-
+    // Build conditions array
+    const conditions = [];
+    
     // Filter by sandbox_id
     if (sandboxId) {
-      query = query.where(eq(blogPostsTable.sandbox_id, sandboxId));
+      conditions.push(eq(blogPostsTable.sandbox_id, sandboxId));
     } else {
       // Main blog (no sandbox_id)
-      query = query.where(isNull(blogPostsTable.sandbox_id));
+      conditions.push(isNull(blogPostsTable.sandbox_id));
     }
 
     // Filter by status
     if (status !== 'all') {
-      query = query.where(eq(blogPostsTable.status, status));
+      conditions.push(eq(blogPostsTable.status, status));
     }
 
-    // Order by published_at (most recent first) or created_at if published_at is null
-    const posts = await query
+    // Build query with all conditions
+    const posts = await db
+      .select()
+      .from(blogPostsTable)
+      .where(conditions.length > 1 ? and(...conditions) : conditions[0])
       .orderBy(desc(sql`COALESCE(${blogPostsTable.published_at}, ${blogPostsTable.created_at})`))
       .limit(limit)
       .offset(offset);

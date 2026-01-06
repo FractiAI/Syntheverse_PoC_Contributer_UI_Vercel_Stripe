@@ -42,10 +42,6 @@ export function BlogPage({
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
   const canCreate = canCreateProp;
 
-  useEffect(() => {
-    fetchPosts();
-  }, [sandboxId, userEmail]);
-
   async function fetchPosts() {
     setLoading(true);
     try {
@@ -61,6 +57,11 @@ export function BlogPage({
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    fetchPosts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sandboxId, userEmail]);
 
   async function handleDelete(postId: string) {
     if (!confirm('Are you sure you want to delete this post?')) return;
@@ -183,6 +184,100 @@ export function BlogPage({
   );
 }
 
+// Markdown renderer for blog content display
+function BlogContentDisplay({ content }: { content: string }) {
+  // Simple markdown parser
+  const renderMarkdown = (text: string) => {
+    let html = text;
+
+    // Headers
+    html = html.replace(/^### (.*$)/gim, '<h3 class="cockpit-title text-lg mt-6 mb-3">$1</h3>');
+    html = html.replace(/^## (.*$)/gim, '<h2 class="cockpit-title text-xl mt-6 mb-3">$1</h2>');
+    html = html.replace(/^# (.*$)/gim, '<h1 class="cockpit-title text-2xl mt-6 mb-4">$1</h1>');
+
+    // Bold
+    html = html.replace(/\*\*(.*?)\*\*/gim, '<strong class="font-semibold text-[var(--hydrogen-amber)]">$1</strong>');
+
+    // Italic
+    html = html.replace(/\*(.*?)\*/gim, '<em class="italic opacity-90">$1</em>');
+
+    // Images
+    html = html.replace(
+      /!\[([^\]]*)\]\(([^)]+)\)/gim,
+      '<div class="my-6"><img src="$2" alt="$1" class="w-full rounded border border-[var(--keyline-primary)] shadow-lg" /></div>'
+    );
+
+    // Links
+    html = html.replace(
+      /\[([^\]]+)\]\(([^)]+)\)/gim,
+      '<a href="$2" class="text-[var(--hydrogen-amber)] hover:text-[var(--hydrogen-amber)]/80 underline" target="_blank" rel="noopener noreferrer">$1</a>'
+    );
+
+    // Code blocks
+    html = html.replace(
+      /```([\s\S]*?)```/gim,
+      '<div class="cockpit-panel bg-[var(--cockpit-carbon)] p-4 rounded my-4 overflow-x-auto"><code class="text-xs font-mono cockpit-text">$1</code></div>'
+    );
+
+    // Inline code
+    html = html.replace(
+      /`([^`]+)`/gim,
+      '<code class="bg-[var(--cockpit-carbon)] px-1.5 py-0.5 rounded text-xs font-mono cockpit-text border border-[var(--keyline-primary)]">$1</code>'
+    );
+
+    // Lists
+    const lines = html.split('\n');
+    let inList = false;
+    let listItems: string[] = [];
+    const processedLines: string[] = [];
+
+    lines.forEach((line) => {
+      if (line.trim().match(/^[\-\*\+]\s/)) {
+        if (!inList) {
+          inList = true;
+          listItems = [];
+        }
+        listItems.push(line.replace(/^[\-\*\+]\s/, ''));
+      } else {
+        if (inList) {
+          processedLines.push(
+            `<ul class="list-disc ml-6 my-3 space-y-1 cockpit-text">${listItems
+              .map((item) => `<li>${item}</li>`)
+              .join('')}</ul>`
+          );
+          inList = false;
+          listItems = [];
+        }
+        processedLines.push(line);
+      }
+    });
+
+    if (inList && listItems.length > 0) {
+      processedLines.push(
+        `<ul class="list-disc ml-6 my-3 space-y-1 cockpit-text">${listItems
+          .map((item) => `<li>${item}</li>`)
+          .join('')}</ul>`
+      );
+    }
+
+    html = processedLines.join('\n');
+
+    // Line breaks
+    html = html.replace(/\n\n\n+/gim, '</p><p class="cockpit-text mb-4 leading-relaxed">');
+    html = html.replace(/\n\n/gim, '</p><p class="cockpit-text mb-4 leading-relaxed">');
+    html = html.replace(/\n/gim, '<br />');
+
+    return `<div class="cockpit-text text-sm leading-relaxed"><p class="cockpit-text mb-4 leading-relaxed">${html}</p></div>`;
+  };
+
+  return (
+    <div
+      className="blog-content"
+      dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }}
+    />
+  );
+}
+
 function BlogPostCard({
   post,
   canEdit,
@@ -268,7 +363,7 @@ function BlogPostCard({
         )}
       </div>
 
-      <div className="cockpit-text whitespace-pre-wrap text-sm">{post.content}</div>
+      <BlogContentDisplay content={post.content} />
     </div>
   );
 }
