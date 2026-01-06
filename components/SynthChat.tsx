@@ -351,7 +351,7 @@ export function SynthChat({ embedded = false }: SynthChatProps = {}) {
 
   // If embedded, render directly without dialog
   const chatContent = (
-    <div className={`${embedded ? 'h-[600px] w-full' : ''} flex h-full`}>
+    <div className={`flex h-full ${embedded ? 'h-[600px] w-full' : ''}`}>
       <div className="flex h-full w-full">
             {/* Sidebar - Sandbox List (WhatsApp conversation list style) */}
             <div
