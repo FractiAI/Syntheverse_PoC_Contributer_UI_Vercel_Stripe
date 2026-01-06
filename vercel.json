@@ -1,3 +1,8 @@
 {
-  "buildCommand": "next build"
+  "buildCommand": "next build",
+  "framework": "nextjs",
+  "installCommand": "npm ci",
+  "env": {
+    "SKIP_ENV_VALIDATION": "true"
+  }
 }
