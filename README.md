@@ -735,9 +735,11 @@ Built for the Syntheverse ecosystem with ❤️
 ---
 
 **Last Updated**: January 2025  
-**Version**: 2.18 (Dashboard Layout Optimization & Status Indicators)
+**Version**: 2.19 (Chat Migration Fix & Status Indicators Improvements)
 
 ### Version History
+
+- **v2.19** (January 2025): Chat Migration Fix & Status Indicators Improvements - Fixed chat migration SQL to be fully idempotent by adding missing DROP POLICY statement for "Users can leave rooms" policy. Improved StatusIndicators component with proper SSR handling and client-side mounting checks to prevent hydration errors. Enhanced header layout with better responsive design for status indicators. All chat tables and policies now properly support safe re-running of migrations without errors.
 
 - **v2.18** (January 2025): Dashboard Layout Optimization & Status Indicators - Reorganized dashboard structure to prioritize Core Instrument Panel (ReactorCore) at the very top of all dashboards, followed by Quick Actions section. Added "Check out our Syntheverse Genesis on Base Mainnet" button to Quick Actions on all dashboards (contributor, creator, operator). Made status indicators visible on all screen sizes (removed mobile hiding) so system status is always accessible. Improved dashboard hierarchy: Header (with always-visible status indicators) → Core Instrument Panel → Quick Actions (including Genesis button) → Navigation Modules → Content. All dashboards now have consistent layout and structure.
 

@@ -56,6 +56,7 @@ DROP POLICY IF EXISTS "Participants can read room messages" ON public.chat_messa
 DROP POLICY IF EXISTS "Participants can send messages" ON public.chat_messages;
 DROP POLICY IF EXISTS "Users can see room participants" ON public.chat_participants;
 DROP POLICY IF EXISTS "Users can join rooms" ON public.chat_participants;
+DROP POLICY IF EXISTS "Users can leave rooms" ON public.chat_participants;
 DROP POLICY IF EXISTS "Service role full access to chat_rooms" ON public.chat_rooms;
 DROP POLICY IF EXISTS "Service role full access to chat_messages" ON public.chat_messages;
 DROP POLICY IF EXISTS "Service role full access to chat_participants" ON public.chat_participants;
