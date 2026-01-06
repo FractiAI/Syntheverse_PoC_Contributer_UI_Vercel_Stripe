@@ -173,6 +173,35 @@ export default function EnterpriseSandboxDetail({
   }
 
   const isOperator = sandbox.operator === userEmail;
+  const [isEditing, setIsEditing] = useState(false);
+  const [editName, setEditName] = useState(sandbox?.name || '');
+  const [editDescription, setEditDescription] = useState(sandbox?.description || '');
+
+  async function handleSaveConfiguration() {
+    if (!sandbox || !editName.trim()) return;
+
+    try {
+      const res = await fetch(`/api/enterprise/sandboxes/${sandboxId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: editName.trim(),
+          description: editDescription.trim() || null,
+        }),
+      });
+
+      if (res.ok) {
+        setIsEditing(false);
+        fetchSandbox();
+      } else {
+        const error = await res.json();
+        alert(error.error || 'Failed to update sandbox');
+      }
+    } catch (error) {
+      console.error('Error updating sandbox:', error);
+      alert('Failed to update sandbox');
+    }
+  }
 
   return (
     <div className="cockpit-bg min-h-screen">
@@ -187,10 +216,102 @@ export default function EnterpriseSandboxDetail({
 
         <SectionWrapper
           id="sandbox-detail"
-          eyebrow="ENTERPRISE SANDBOX"
-          title={sandbox.name}
+          eyebrow="SANDBOX CONFIGURATION"
+          title="Define Your Sandbox Project"
           background="default"
         >
+          {/* Guided Configuration Section */}
+          {isOperator && (
+            <div className="cockpit-panel mb-8 border-l-4 border-[var(--hydrogen-amber)] p-6">
+              <div className="cockpit-label mb-4" style={{ color: '#ffb84d' }}>
+                PROJECT CAPTURE & CONFIGURATION
+              </div>
+              <p className="cockpit-text mb-6 text-sm">
+                Define your sandbox project within the Syntheverse ecosystem. This nested world will
+                operate with its own evaluation parameters, contributor channels, and tokenomics
+                aligned with the SYNTH90T MOTHERLODE VAULT.
+              </p>
+
+              {!isEditing ? (
+                <div className="space-y-4">
+                  <div className="border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-4">
+                    <div className="cockpit-label mb-2 text-xs">SANDBOX NAME</div>
+                    <div className="cockpit-title text-lg">{sandbox.name}</div>
+                  </div>
+                  {sandbox.description && (
+                    <div className="border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-4">
+                      <div className="cockpit-label mb-2 text-xs">DESCRIPTION</div>
+                      <div className="cockpit-text text-sm">{sandbox.description}</div>
+                    </div>
+                  )}
+                  <button
+                    onClick={() => {
+                      setEditName(sandbox.name);
+                      setEditDescription(sandbox.description || '');
+                      setIsEditing(true);
+                    }}
+                    className="cockpit-lever inline-flex items-center text-sm"
+                  >
+                    <Settings className="mr-2 h-4 w-4" />
+                    Edit Configuration
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div>
+                    <label className="cockpit-label mb-2 block text-xs">
+                      Sandbox Name <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      placeholder="Enter your sandbox project name"
+                      className="cockpit-input w-full bg-[var(--cockpit-carbon)] p-3 text-sm"
+                    />
+                    <p className="cockpit-text mt-1 text-xs opacity-75">
+                      Choose a name that clearly identifies your project within Syntheverse
+                    </p>
+                  </div>
+                  <div>
+                    <label className="cockpit-label mb-2 block text-xs">
+                      Description (Optional)
+                    </label>
+                    <textarea
+                      value={editDescription}
+                      onChange={(e) => setEditDescription(e.target.value)}
+                      placeholder="Describe your sandbox project, its purpose, and what contributions you're seeking..."
+                      rows={4}
+                      className="cockpit-input w-full bg-[var(--cockpit-carbon)] p-3 text-sm"
+                    />
+                    <p className="cockpit-text mt-1 text-xs opacity-75">
+                      Provide context about your project to help contributors understand what
+                      you&apos;re building
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handleSaveConfiguration}
+                      className="cockpit-lever inline-flex items-center text-sm"
+                    >
+                      Save Configuration
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsEditing(false);
+                        setEditName(sandbox.name);
+                        setEditDescription(sandbox.description || '');
+                      }}
+                      className="cockpit-lever inline-flex items-center bg-transparent text-sm"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Sandbox Info */}
           <div className="cockpit-panel mb-8 p-6">
             <div className="flex flex-wrap items-center justify-between gap-4">
