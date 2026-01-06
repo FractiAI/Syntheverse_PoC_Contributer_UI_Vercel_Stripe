@@ -32,6 +32,12 @@ export default async function CreatorDashboard() {
     redirect('/dashboard');
   }
 
+  // TypeScript guard: ensure user and email exist after checks
+  const userEmail = user?.email;
+  if (!userEmail) {
+    redirect('/dashboard');
+  }
+
   return (
     <div className="cockpit-bg min-h-screen">
       <div className="container mx-auto space-y-6 px-6 py-8">
@@ -69,7 +75,7 @@ export default async function CreatorDashboard() {
         <SalesTracking />
 
         {/* PoC Archive - Same as Contributor Dashboard */}
-        <FrontierModule userEmail={user.email} />
+        <FrontierModule userEmail={userEmail} />
       </div>
     </div>
   );
