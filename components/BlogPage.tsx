@@ -372,7 +372,7 @@ function BlogPostCard({
           </div>
           {post.status !== 'published' && (
             <span className="rounded border border-yellow-500/30 bg-yellow-500/10 px-2 py-1 text-yellow-400">
-              {post.status.toUpperCase()}
+              {post.status?.toUpperCase() || 'DRAFT'}
             </span>
           )}
           {post.featured && (

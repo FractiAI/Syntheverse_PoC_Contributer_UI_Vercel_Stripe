@@ -85,8 +85,8 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     if (body.excerpt !== undefined) updates.excerpt = body.excerpt?.trim() || null;
     if (body.status !== undefined) {
       updates.status = body.status;
-      // Set published_at if status changes to published
-      if (body.status === 'published' && !post.published_at) {
+      // Set published_at if status changes to published (always set, even if already exists)
+      if (body.status === 'published') {
         updates.published_at = new Date();
       }
     }
