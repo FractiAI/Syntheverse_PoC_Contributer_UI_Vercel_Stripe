@@ -42,19 +42,13 @@ jobs:
         run: npx tsc --noEmit
 
       - name: Check formatting
+        env:
+          GIT_TERMINAL_PROMPT: 0
+          GIT_ASKPASS: echo
+          GIT_CONFIG_NOSYSTEM: 1
         run: |
-          # Disable git operations completely
-          export GIT_TERMINAL_PROMPT=0
-          export GIT_ASKPASS=echo
-          export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no"
-          # Run prettier with explicit file patterns, no git dependencies
-          npx prettier --check \
-            "app/**/*.{js,jsx,ts,tsx,json,css}" \
-            "components/**/*.{js,jsx,ts,tsx,json,css}" \
-            "utils/**/*.{js,jsx,ts,tsx,json}" \
-            "*.{js,ts,json}" \
-            --ignore-path .gitignore \
-            --no-error-on-unmatched-pattern || {
+          # Use npm script for format check - it should work with git properly configured above
+          npm run format:check || {
             echo "Format check failed. Run 'npm run format' to fix formatting issues."
             exit 1
           }
