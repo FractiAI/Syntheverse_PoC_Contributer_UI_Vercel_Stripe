@@ -40,6 +40,7 @@ interface GrokEvaluationResult {
   base_novelty?: number;
   base_density?: number;
   redundancy_overlap_percent?: number;
+  is_seed_submission?: boolean;
   raw_grok_response?: string;
   llm_metadata?: {
     timestamp: string;
@@ -86,6 +87,7 @@ export async function evaluateWithGrok(
   base_novelty?: number;
   base_density?: number;
   redundancy_overlap_percent?: number;
+  is_seed_submission?: boolean;
   raw_grok_response?: string;
   llm_metadata?: {
     timestamp: string;
@@ -113,8 +115,11 @@ export async function evaluateWithGrok(
     penalty_percent_applied: number;
     bonus_multiplier_computed: number;
     bonus_multiplier_applied: number;
+    seed_multiplier?: number;
+    is_seed_submission?: boolean;
     after_penalty: number;
     after_bonus: number;
+    after_seed?: number;
     final_score: number;
     formula: string;
     clamped: boolean;
@@ -221,13 +226,16 @@ export async function evaluateWithGrok(
     // Continue without archived PoCs if fetch fails
   }
 
+  // Detect seed submissions: first submission that establishes the foundational framework
+  const isSeedSubmission = archivedVectors.length === 0;
+
   debug('EvaluateWithGrok', 'Submission comparison context', {
     archivedCount: archivedVectors.length,
+    isSeedSubmission,
     title,
-    comparisonContext:
-      archivedVectors.length === 0
-        ? 'First submission - No prior submissions to compare against'
-        : `Subsequent submission - Will be compared to ${archivedVectors.length} prior submission(s)`,
+    comparisonContext: isSeedSubmission
+      ? 'SEED SUBMISSION - First submission establishing foundational framework'
+      : `Subsequent submission - Will be compared to ${archivedVectors.length} prior submission(s)`,
   });
 
   // Calculate actual vector-based redundancy if we have current vectorization
@@ -365,17 +373,22 @@ ${calculatedRedundancy.nearest_10_neighbors ? `- nearest_10_neighbors: μ=${calc
   // Evaluation query with contribution details + minimal extra instructions.
   // IMPORTANT: We want a detailed narrative review AND parseable JSON (embedded).
   // SCALABILITY FIX: Using vectors-only approach - removed archivedPoCsContext to prevent prompt bloat
+  const seedSubmissionNote = isSeedSubmission
+    ? `\n**⚠️ SEED SUBMISSION DETECTED ⚠️**\nThis is a seed submission (first submission to this sandbox). Seed submissions establish the foundational framework and receive a 15% score multiplier (×1.15) after bonus multipliers, recognizing their disproportionately high generative value density (GVD). Apply the seed multiplier in your scoring calculation.\n`
+    : '';
+
   const evaluationQuery = `Evaluate this Proof-of-Contribution (PoC) using the system prompt rules.
 
 **Scoring Metadata (Deterministic Score Contract):**
 ${scoreConfigId}
 ${sandboxId}
 ${archiveVersion}
+${isSeedSubmission ? 'seed_submission=true' : 'seed_submission=false'}
 
 Title: ${title}
 Category: ${category || 'scientific'}
 ${tokenomicsContext ? `\n${tokenomicsContext}` : ''}
-
+${seedSubmissionNote}
 Submission Content:
 ${truncatedText}
 
@@ -384,7 +397,7 @@ ${calculatedRedundancyContext ? `\n${calculatedRedundancyContext}` : ''}
 Notes:
 - Use the vector-based redundancy information above to determine overlap and redundancy penalties.
 - Apply redundancy penalty ONLY to the composite/total score (as specified in the system prompt).
-- You MUST include scoring_metadata, pod_composition, and archive_similarity_distribution in your JSON response.
+${isSeedSubmission ? '- This is a SEED SUBMISSION: apply the 15% seed multiplier (×1.15) after bonus multipliers in your final score calculation.\n' : ''}- You MUST include scoring_metadata, pod_composition, and archive_similarity_distribution in your JSON response.
 - Output: Provide a detailed narrative review (clear + specific), AND include the REQUIRED JSON structure from the system prompt.
 - The JSON may be placed in a markdown code block, but it MUST be valid parseable JSON.
 `;
@@ -1244,11 +1257,15 @@ ${answer}`;
       basePodScore = compositeScore;
     }
 
-    // G) Apply correct formula: Final = (Composite × (1 - penalty%/100)) × bonus_multiplier
-    // This matches the published formula exactly
+    // G) Apply correct formula: Final = (Composite × (1 - penalty%/100)) × bonus_multiplier × seed_multiplier
+    // Seed submissions (first submission) receive a multiplier for establishing foundational framework
+    const SEED_MULTIPLIER = 1.15; // 15% bonus for seed submissions
+    const seedMultiplier = isSeedSubmission ? SEED_MULTIPLIER : 1.0;
+
     const afterPenalty = basePodScore * (1 - penaltyPercent / 100);
     const afterBonus = afterPenalty * bonusMultiplier;
-    const pod_score = Math.max(0, Math.min(10000, Math.round(afterBonus)));
+    const afterSeed = afterBonus * seedMultiplier;
+    const pod_score = Math.max(0, Math.min(10000, Math.round(afterSeed)));
 
     // H) Score trace for transparency (Marek requirement)
     const scoreTrace = {
@@ -1265,10 +1282,15 @@ ${answer}`;
       penalty_percent_applied: penaltyPercent, // Same for now, but can differ if gated
       bonus_multiplier_computed: bonusMultiplier,
       bonus_multiplier_applied: bonusMultiplier, // Same for now, but can differ if gated
+      seed_multiplier: seedMultiplier,
+      is_seed_submission: isSeedSubmission,
       after_penalty: afterPenalty,
       after_bonus: afterBonus,
+      after_seed: afterSeed,
       final_score: pod_score,
-      formula: `Final = (Composite × (1 - ${penaltyPercent}% / 100)) × ${bonusMultiplier.toFixed(3)} = ${pod_score}`,
+      formula: isSeedSubmission
+        ? `Final = (Composite × (1 - ${penaltyPercent}% / 100)) × ${bonusMultiplier.toFixed(3)} × ${seedMultiplier.toFixed(2)} (seed) = ${pod_score}`
+        : `Final = (Composite × (1 - ${penaltyPercent}% / 100)) × ${bonusMultiplier.toFixed(3)} = ${pod_score}`,
       clamped: pod_score === 10000 || pod_score === 0,
     };
 
@@ -1444,6 +1466,8 @@ ${answer}`;
       base_novelty: baseNoveltyScore,
       base_density: baseDensityScore,
       redundancy_overlap_percent: redundancyOverlapPercent,
+      // Flag to indicate if this was a seed submission (first submission establishing framework)
+      is_seed_submission: isSeedSubmission,
       // Store raw Grok API response for display
       raw_grok_response: answer, // Store the raw markdown/text response from Grok
       // LLM Metadata for provenance and audit trail (required for all qualifying PoCs)

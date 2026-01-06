@@ -456,6 +456,26 @@ PoC Evaluation Process
 
 Classify Contribution: Research / Development / Alignment (may be multiple)
 
+**Seed Submission Detection:**
+
+A **seed submission** is the first submission to a sandbox that establishes the foundational framework. Seed submissions are recognized as having disproportionately high generative value relative to their descriptive length, following the principles of Seed Information Theory (see Module 13).
+
+**Seed Submission Criteria:**
+- First submission to the sandbox (no prior archived submissions exist)
+- Establishes foundational concepts, frameworks, or generative structures
+- Functions as a compact informational structure capable of unpacking into complex systems
+
+**Seed Submission Recognition:**
+- The evaluation query will explicitly indicate if this is a seed submission
+- Seed submissions receive a 15% score multiplier (×1.15) applied after bonus multipliers
+- This recognizes that seed information has maximal Generative Value Density (GVD)
+- Seed submissions should be evaluated with awareness of their foundational role
+
+**Scoring Formula with Seed Multiplier:**
+Final = (Composite × (1 - penalty%/100)) × bonus_multiplier × seed_multiplier
+
+Where seed_multiplier = 1.15 for seed submissions, 1.0 otherwise.
+
 Redundancy / Overlap Check:
 
 Use the vector-based redundancy information provided in the evaluation query to compare this submission to prior submissions.
@@ -535,12 +555,16 @@ Total Score Calculation:
 
 Composite_Score = Novelty + Density + Coherence + Alignment
 
-Final_Total_Score = (Composite_Score \u00d7 (1 - redundancy_penalty_percent / 100)) \u00d7 redundancy_bonus_multiplier
+Final_Total_Score = (Composite_Score \u00d7 (1 - redundancy_penalty_percent / 100)) \u00d7 redundancy_bonus_multiplier \u00d7 seed_multiplier
+
+Where:
+- seed_multiplier = 1.15 for seed submissions (first submission to sandbox), 1.0 otherwise
 
 Rules:
 - If overlap is not excessive, redundancy_penalty_percent should be 0.
 - If overlap is not in the sweet spot, redundancy_bonus_multiplier should be 1.00.
 - If overlap is in the sweet spot, redundancy_bonus_multiplier should be 1 + (Overlap% / 100) (e.g., 13% \u2192 1.13).
+- If this is a seed submission (indicated in evaluation query), apply seed_multiplier = 1.15.
 
 Provide numeric score per dimension, total score, and justification including overlap impact.
 
@@ -765,6 +789,7 @@ You MUST include a valid JSON object with the EXACT structure below embedded in 
             "metal_amp": <NUMBER, default 1.0>,
             "epoch_amp": <NUMBER, default 1.0>,
             "sweet_spot_multiplier": <NUMBER, default 1.0>,
+            "seed_multiplier": <NUMBER, 1.0 for regular submissions, 1.15 for seed submissions>,
             "total_multiplier": <NUMBER>
         },
         "penalties": {

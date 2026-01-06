@@ -33,6 +33,7 @@ import {
   CheckCircle2,
   Scan,
   ArrowRight,
+  Sprout,
 } from 'lucide-react';
 import Link from 'next/link';
 import '../app/dashboard-cockpit.css';
@@ -2294,6 +2295,259 @@ export function OnboardingNavigator() {
                     <ArrowRight className="ml-2 inline h-4 w-4" />
                   </button>
                 </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: 'seed-information',
+      title: 'Seed Information as a Fundamental Class',
+      label: 'MODULE 13',
+      icon: <Sprout className="h-6 w-6" />,
+      content: (
+        <div className="space-y-4">
+          <div className="cockpit-text">
+            <div className="mb-4 border border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.05)] p-4">
+              <div className="cockpit-label mb-2" style={{ color: '#ffb84d' }}>
+                Learning Objectives
+              </div>
+              <ul className="cockpit-text space-y-1 text-sm">
+                <li>• Understand seed information as a distinct class from conventional data</li>
+                <li>• Learn how HHF functions as a high-value generative seed</li>
+                <li>• Recognize why seed submissions receive score multipliers</li>
+                <li>• Understand Generative Value Density (GVD) and its implications</li>
+              </ul>
+            </div>
+
+            <div className="mb-6 rounded-lg border-2 border-green-500/50 bg-green-500/10 p-4">
+              <div className="cockpit-label mb-2 text-green-400">SEED SUBMISSION REWARD</div>
+              <p className="cockpit-text text-sm">
+                <strong>First submissions</strong> that establish the foundational framework receive a{' '}
+                <strong className="text-green-300">15% score multiplier</strong>. This recognizes that
+                seed information has disproportionately high generative value relative to its length.
+              </p>
+            </div>
+
+            <h2 className="cockpit-title mb-4 text-2xl">
+              An Empirical Expedition on Holographic Hydrogen Fractals as High-Value Generative Seeds
+            </h2>
+            <p className="cockpit-text mb-4 text-sm opacity-90">
+              <strong>Pru "El Taíno" Méndez × FractiAI Research Team × Syntheverse Whole Brain AI</strong>
+            </p>
+
+            <div className="mb-6 space-y-4">
+              <div className="cockpit-panel border-l-4 border-blue-500/50 p-4">
+                <h3 className="cockpit-title mb-3 text-lg">Abstract</h3>
+                <p className="cockpit-text mb-3 text-sm">
+                  We present an empirical expedition examining whether certain forms of information
+                  function as <strong>generative seeds</strong>: compact informational structures capable
+                  of unpacking into arbitrarily complex systems when placed within appropriate recursive
+                  environments. We hypothesize that such seeds possess disproportionately high generative
+                  value relative to their descriptive length or entropy.
+                </p>
+                <p className="cockpit-text mb-3 text-sm">
+                  Using in-silico modeling, we test whether the{' '}
+                  <strong>Holographic Hydrogen Fractal (HHF)</strong> constitutes such a seed.
+                </p>
+                <div className="mt-4 space-y-2">
+                  <div className="cockpit-label text-xs">Key Findings:</div>
+                  <ul className="cockpit-text ml-4 list-disc space-y-1 text-xs">
+                    <li>
+                      HHF-encoded seeds generated <strong>8.7–14.2×</strong> greater reachable
+                      configuration spaces than non-seed control encodings
+                    </li>
+                    <li>
+                      Generative capacity scaled with recursion depth rather than data volume
+                    </li>
+                    <li>
+                      Results support a formal distinction between seed information and conventional
+                      data
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="cockpit-panel border-l-4 border-purple-500/50 p-4">
+                <h3 className="cockpit-title mb-3 text-lg">1. Introduction</h3>
+                <p className="cockpit-text mb-3 text-sm">
+                  Modern information systems implicitly treat all information as fungible, valuing data
+                  primarily by volume, bandwidth, or immediate utility. However, across physics,
+                  biology, and computation, <strong>compact seed structures repeatedly generate vast
+                  complexity</strong>:
+                </p>
+                <ul className="cockpit-text ml-4 list-disc space-y-1 text-xs">
+                  <li>Genetic codes</li>
+                  <li>Physical constants</li>
+                  <li>Cellular automata rules</li>
+                  <li>Cryptographic keys</li>
+                </ul>
+                <p className="cockpit-text mt-3 text-sm">
+                  This expedition asks: <strong>Do certain informational structures constitute a
+                  distinct class—seed information—whose value lies not in representation, but in
+                  generative reach?</strong>
+                </p>
+              </div>
+
+              <div className="cockpit-panel border-l-4 border-amber-500/50 p-4">
+                <h3 className="cockpit-title mb-3 text-lg">3. Theoretical Framework: Seed Information</h3>
+                <p className="cockpit-text mb-3 text-sm">
+                  We define <strong>Seed Information</strong> as information satisfying all four
+                  conditions:
+                </p>
+                <div className="mt-3 space-y-2">
+                  <div className="flex items-start gap-2">
+                    <span className="cockpit-badge text-xs">1</span>
+                    <span className="cockpit-text text-xs">
+                      <strong>Minimal Description Length</strong> - Compact representation
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="cockpit-badge text-xs">2</span>
+                    <span className="cockpit-text text-xs">
+                      <strong>Recursive Expandability</strong> - Unpacks into complex systems
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="cockpit-badge text-xs">3</span>
+                    <span className="cockpit-text text-xs">
+                      <strong>Self-Similar Structural Preservation</strong> - Maintains coherence
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="cockpit-badge text-xs">4</span>
+                    <span className="cockpit-text text-xs">
+                      <strong>Substrate Independence</strong> - Works across environments
+                    </span>
+                  </div>
+                </div>
+
+                <div className="mt-4 rounded border border-amber-500/30 bg-amber-500/5 p-3">
+                  <div className="cockpit-label mb-2 text-xs">Generative Value Density (GVD)</div>
+                  <div className="cockpit-text mb-2 font-mono text-xs">
+                    GVD = log(|Ω|) / L
+                  </div>
+                  <p className="cockpit-text text-xs opacity-90">
+                    Where |Ω| = reachable state space after recursive unpacking, and L = seed
+                    description length. <strong>Seeds maximize GVD</strong>; conventional data does not.
+                  </p>
+                </div>
+              </div>
+
+              <div className="cockpit-panel border-l-4 border-green-500/50 p-4">
+                <h3 className="cockpit-title mb-3 text-lg">4. The HHF as Seed</h3>
+                <p className="cockpit-text mb-3 text-sm">
+                  The HHF is modeled as:
+                </p>
+                <ul className="cockpit-text ml-4 list-disc space-y-1 text-xs">
+                  <li>A minimal recursive rule set</li>
+                  <li>Encoding boundary, phase, and interaction history</li>
+                  <li>Self-similar across scales</li>
+                  <li>Capable of driving generative systems without external specification</li>
+                </ul>
+                <p className="cockpit-text mt-3 text-sm">
+                  <strong>Importantly</strong>, HHF is not treated as metaphysical substance, but as a
+                  computationally instantiated generative schema.
+                </p>
+              </div>
+
+              <div className="cockpit-panel border-l-4 border-red-500/50 p-4">
+                <h3 className="cockpit-title mb-3 text-lg">7. Results</h3>
+                <div className="mb-3 overflow-x-auto">
+                  <table className="w-full border-collapse text-xs">
+                    <thead>
+                      <tr className="border-b border-[var(--keyline-primary)]">
+                        <th className="p-2 text-left">Seed Type</th>
+                        <th className="p-2 text-left">Description Length</th>
+                        <th className="p-2 text-left">Reachable States</th>
+                        <th className="p-2 text-left">GVD</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b border-[var(--keyline-primary)]/50">
+                        <td className="p-2 font-semibold text-green-400">HHF</td>
+                        <td className="p-2">Minimal</td>
+                        <td className="p-2">Very High</td>
+                        <td className="p-2 font-semibold">Maximal</td>
+                      </tr>
+                      <tr className="border-b border-[var(--keyline-primary)]/50">
+                        <td className="p-2">Random</td>
+                        <td className="p-2">Equal</td>
+                        <td className="p-2">Low</td>
+                        <td className="p-2">Low</td>
+                      </tr>
+                      <tr className="border-b border-[var(--keyline-primary)]/50">
+                        <td className="p-2">Data Block</td>
+                        <td className="p-2">High</td>
+                        <td className="p-2">Moderate</td>
+                        <td className="p-2">Very Low</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p className="cockpit-text text-sm">
+                  <strong>HHF seeds outperformed all controls by an order of magnitude in GVD.</strong>
+                </p>
+              </div>
+
+              <div className="cockpit-panel border-l-4 border-blue-500/50 p-4">
+                <h3 className="cockpit-title mb-3 text-lg">9. Implications for Syntheverse</h3>
+                <div className="space-y-3">
+                  <div>
+                    <div className="cockpit-label mb-1 text-xs">AI & Synthetic Systems</div>
+                    <ul className="cockpit-text ml-4 list-disc space-y-1 text-xs">
+                      <li>Prioritize seed discovery over dataset accumulation</li>
+                      <li>Design systems that unpack seeds contextually</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <div className="cockpit-label mb-1 text-xs">Syntheverse PoC Protocol</div>
+                    <ul className="cockpit-text ml-4 list-disc space-y-1 text-xs">
+                      <li>
+                        <strong>HHF functions as a universal generative seed</strong>
+                      </li>
+                      <li>Ecosystem growth driven by unpacking, not uploading</li>
+                      <li>Seed submissions (first submissions) receive 15% score multiplier</li>
+                      <li>Recognizes that foundational contributions have disproportionate value</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 rounded-lg border-2 border-[var(--hydrogen-amber)] bg-[rgba(255,184,77,0.1)] p-4">
+                <div className="cockpit-label mb-2 text-[var(--hydrogen-amber)]">
+                  Commercial & Research Information
+                </div>
+                <div className="cockpit-text space-y-1 text-xs">
+                  <p>
+                    <strong>Contact:</strong> info@fractiai.com
+                  </p>
+                  <p>
+                    <strong>Website:</strong>{' '}
+                    <a href="http://fractiai.com" className="text-[var(--hydrogen-amber)] hover:underline">
+                      http://fractiai.com
+                    </a>
+                  </p>
+                  <p>
+                    <strong>GitHub:</strong>{' '}
+                    <a
+                      href="https://github.com/FractiAI"
+                      className="text-[var(--hydrogen-amber)] hover:underline"
+                    >
+                      https://github.com/FractiAI
+                    </a>
+                  </p>
+                  <p>
+                    <strong>Zenodo Whitepapers:</strong>{' '}
+                    <a
+                      href="https://zenodo.org/records/17873279"
+                      className="text-[var(--hydrogen-amber)] hover:underline"
+                    >
+                      https://zenodo.org/records/17873279
+                    </a>
+                  </p>
+                </div>
               </div>
             </div>
           </div>
