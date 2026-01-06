@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { ArrowLeft, CheckCircle2, XCircle, Clock } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { SectionWrapper } from './landing/shared/SectionWrapper';
 import { Card } from './landing/shared/Card';
 
@@ -53,12 +53,19 @@ export default function EnterpriseContributionDetail({
   const [sandbox, setSandbox] = useState<Sandbox | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    fetchContribution();
-  }, [submissionHash]);
+  const fetchSandbox = useCallback(async (sandboxId: string) => {
+    try {
+      const res = await fetch(`/api/enterprise/sandboxes/${sandboxId}`);
+      if (res.ok) {
+        const data = await res.json();
+        setSandbox(data.sandbox);
+      }
+    } catch (error) {
+      console.error('Error fetching sandbox:', error);
+    }
+  }, []);
 
-  async function fetchContribution() {
+  const fetchContribution = useCallback(async () => {
     try {
       const res = await fetch(`/api/enterprise/contributions/${submissionHash}`);
       if (res.ok) {
@@ -73,19 +80,11 @@ export default function EnterpriseContributionDetail({
     } finally {
       setLoading(false);
     }
-  }
+  }, [submissionHash, fetchSandbox]);
 
-  async function fetchSandbox(sandboxId: string) {
-    try {
-      const res = await fetch(`/api/enterprise/sandboxes/${sandboxId}`);
-      if (res.ok) {
-        const data = await res.json();
-        setSandbox(data.sandbox);
-      }
-    } catch (error) {
-      console.error('Error fetching sandbox:', error);
-    }
-  }
+  useEffect(() => {
+    fetchContribution();
+  }, [fetchContribution]);
 
   if (loading) {
     return (

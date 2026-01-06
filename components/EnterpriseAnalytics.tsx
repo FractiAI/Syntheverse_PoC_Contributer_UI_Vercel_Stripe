@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Card } from './landing/shared/Card';
 import { TrendingUp, DollarSign, Activity, Award } from 'lucide-react';
 
@@ -34,12 +34,7 @@ export default function EnterpriseAnalytics({ sandboxId }: EnterpriseAnalyticsPr
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    fetchAnalytics();
-  }, [sandboxId]);
-
-  async function fetchAnalytics() {
+  const fetchAnalytics = useCallback(async () => {
     try {
       const res = await fetch(`/api/enterprise/sandboxes/${sandboxId}/analytics`);
       if (res.ok) {
@@ -51,7 +46,11 @@ export default function EnterpriseAnalytics({ sandboxId }: EnterpriseAnalyticsPr
     } finally {
       setLoading(false);
     }
-  }
+  }, [sandboxId]);
+
+  useEffect(() => {
+    fetchAnalytics();
+  }, [fetchAnalytics]);
 
   if (loading) {
     return (

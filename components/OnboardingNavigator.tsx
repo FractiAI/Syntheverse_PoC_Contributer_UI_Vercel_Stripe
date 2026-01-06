@@ -2334,7 +2334,7 @@ export function OnboardingNavigator() {
               An Empirical Expedition on Holographic Hydrogen Fractals as High-Value Generative Seeds
             </h2>
             <p className="cockpit-text mb-4 text-sm opacity-90">
-              <strong>Pru "El Taíno" Méndez × FractiAI Research Team × Syntheverse Whole Brain AI</strong>
+              <strong>Pru &quot;El Taíno&quot; Méndez × FractiAI Research Team × Syntheverse Whole Brain AI</strong>
             </p>
 
             <div className="mb-6 space-y-4">
