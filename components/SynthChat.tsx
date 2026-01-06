@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { MessageCircle, X, Send, Users, Plus, Search, ArrowLeft, MoreVertical } from 'lucide-react';
+import { MessageCircle, X, Send, Users, Plus, Search, ArrowLeft, MoreVertical, Upload, Image as ImageIcon, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -65,6 +65,10 @@ export function SynthChat({ embedded = false }: SynthChatProps = {}) {
   const [filter, setFilter] = useState<'all' | 'connected' | 'available'>('all');
   const [joining, setJoining] = useState<string | null>(null);
   const [leaving, setLeaving] = useState<string | null>(null);
+  const [uploadingFile, setUploadingFile] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState<Array<{ url: string; name: string; type: string }>>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const pdfInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
@@ -224,19 +228,64 @@ export function SynthChat({ embedded = false }: SynthChatProps = {}) {
     }
   };
 
+  const handleFileUpload = async (file: File, isImage: boolean) => {
+    setUploadingFile(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/synthchat/upload-file', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const fileMarkdown = isImage
+          ? `![${data.name}](${data.url})`
+          : `[${data.name}](${data.url})`;
+        
+        setUploadedFiles((prev) => [...prev, { url: data.url, name: data.name, type: data.type }]);
+        setNewMessage((prev) => (prev ? `${prev}\n${fileMarkdown}` : fileMarkdown));
+      } else {
+        const error = await response.json();
+        alert(error.error || 'Failed to upload file');
+      }
+    } catch (error) {
+      console.error('Failed to upload file:', error);
+      alert('Failed to upload file');
+    } finally {
+      setUploadingFile(false);
+    }
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>, isImage: boolean) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      handleFileUpload(file, isImage);
+    }
+    // Reset input
+    if (isImage && fileInputRef.current) {
+      fileInputRef.current.value = '';
+    } else if (!isImage && pdfInputRef.current) {
+      pdfInputRef.current.value = '';
+    }
+  };
+
   const sendMessage = async () => {
-    if (!currentRoom || !newMessage.trim() || sending) return;
+    if (!currentRoom || (!newMessage.trim() && uploadedFiles.length === 0) || sending) return;
 
     setSending(true);
     try {
       const response = await fetch(`/api/synthchat/rooms/${currentRoom.id}/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: newMessage }),
+        body: JSON.stringify({ message: newMessage.trim() || 'Shared a file' }),
       });
 
       if (response.ok) {
         setNewMessage('');
+        setUploadedFiles([]);
         await fetchMessages();
         // Update rooms to refresh last message
         await fetchRooms();
@@ -339,6 +388,113 @@ export function SynthChat({ embedded = false }: SynthChatProps = {}) {
 
   const getSenderDisplayName = (msg: ChatMessage) => {
     return msg.sender_name || msg.sender_email.split('@')[0];
+  };
+
+  const renderMessageContent = (content: string) => {
+    // Parse markdown-style image and PDF links
+    const parts: Array<{ type: 'text' | 'image' | 'pdf'; content: string; url?: string; name?: string }> = [];
+    let remaining = content;
+    let lastIndex = 0;
+
+    // Match images: ![name](url)
+    const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g;
+    let match;
+    while ((match = imageRegex.exec(content)) !== null) {
+      // Add text before image
+      if (match.index > lastIndex) {
+        const textBefore = content.substring(lastIndex, match.index);
+        if (textBefore.trim()) {
+          parts.push({ type: 'text', content: textBefore });
+        }
+      }
+      // Add image
+      parts.push({
+        type: 'image',
+        content: match[2],
+        url: match[2],
+        name: match[1] || 'Image',
+      });
+      lastIndex = match.index + match[0].length;
+    }
+
+    // Match PDFs: [name](url)
+    const pdfRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+    lastIndex = 0;
+    const processedParts: typeof parts = [];
+    
+    for (const part of parts.length > 0 ? parts : [{ type: 'text' as const, content }]) {
+      if (part.type === 'text') {
+        let textRemaining = part.content;
+        let textLastIndex = 0;
+        while ((match = pdfRegex.exec(part.content)) !== null) {
+          // Check if it's not already an image (images start with !)
+          if (match[0].startsWith('![')) continue;
+          
+          // Add text before PDF
+          if (match.index > textLastIndex) {
+            const textBefore = textRemaining.substring(textLastIndex, match.index);
+            if (textBefore.trim()) {
+              processedParts.push({ type: 'text', content: textBefore });
+            }
+          }
+          // Add PDF
+          processedParts.push({
+            type: 'pdf',
+            content: match[2],
+            url: match[2],
+            name: match[1],
+          });
+          textLastIndex = match.index + match[0].length;
+        }
+        // Add remaining text
+        if (textLastIndex < textRemaining.length) {
+          const textAfter = textRemaining.substring(textLastIndex);
+          if (textAfter.trim()) {
+            processedParts.push({ type: 'text', content: textAfter });
+          }
+        }
+      } else {
+        processedParts.push(part);
+      }
+    }
+
+    const finalParts = processedParts.length > 0 ? processedParts : parts.length > 0 ? parts : [{ type: 'text' as const, content }];
+
+    return (
+      <>
+        {finalParts.map((part, idx) => {
+          if (part.type === 'image') {
+            return (
+              <div key={idx} className="my-2">
+                <img
+                  src={part.url}
+                  alt={part.name}
+                  className="max-w-full rounded-lg border border-gray-200"
+                  style={{ maxHeight: '300px' }}
+                />
+              </div>
+            );
+          } else if (part.type === 'pdf') {
+            return (
+              <div key={idx} className="my-2">
+                <a
+                  href={part.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 rounded border border-blue-300 bg-blue-50 px-3 py-2 text-blue-700 hover:bg-blue-100"
+                >
+                  <FileText className="h-4 w-4" />
+                  <span className="font-medium">{part.name}</span>
+                  <span className="text-xs opacity-75">(PDF)</span>
+                </a>
+              </div>
+            );
+          } else {
+            return <span key={idx}>{part.content}</span>;
+          }
+        })}
+      </>
+    );
   };
 
   const filteredRooms = rooms.filter((room) => {
@@ -637,9 +793,9 @@ export function SynthChat({ embedded = false }: SynthChatProps = {}) {
                                       : 'rounded-tl-sm bg-white text-[#111b21]'
                                   } shadow-sm`}
                                 >
-                                  <p className="whitespace-pre-wrap break-words text-sm leading-relaxed">
-                                    {msg.message}
-                                  </p>
+                                  <div className="whitespace-pre-wrap break-words text-sm leading-relaxed">
+                                    {renderMessageContent(msg.message)}
+                                  </div>
                                   <div
                                     className={`mt-1 flex items-center gap-1 ${
                                       isCurrentUser ? 'justify-end' : 'justify-start'
@@ -664,7 +820,86 @@ export function SynthChat({ embedded = false }: SynthChatProps = {}) {
 
                   {/* Input Area - WhatsApp Style */}
                   <div className="border-t border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] p-3">
+                    {/* Uploaded Files Preview */}
+                    {uploadedFiles.length > 0 && (
+                      <div className="mb-2 flex flex-wrap gap-2">
+                        {uploadedFiles.map((file, idx) => (
+                          <div
+                            key={idx}
+                            className="flex items-center gap-2 rounded border border-[var(--keyline-primary)] bg-[var(--cockpit-bg)] px-2 py-1 text-xs"
+                          >
+                            {file.type === 'image' ? (
+                              <ImageIcon className="h-3 w-3" />
+                            ) : (
+                              <FileText className="h-3 w-3" />
+                            )}
+                            <span className="truncate max-w-[100px]">{file.name}</span>
+                            <button
+                              onClick={() => {
+                                setUploadedFiles((prev) => prev.filter((_, i) => i !== idx));
+                                // Remove from message text
+                                const fileMarkdown = file.type === 'image'
+                                  ? `![${file.name}](${file.url})`
+                                  : `[${file.name}](${file.url})`;
+                                setNewMessage((prev) => prev.replace(fileMarkdown, '').replace(/\n\n+/g, '\n').trim());
+                              }}
+                              className="text-red-400 hover:text-red-300"
+                            >
+                              <X className="h-3 w-3" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                     <div className="flex items-center gap-2">
+                      {/* Hidden file inputs */}
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleFileSelect(e, true)}
+                        className="hidden"
+                      />
+                      <input
+                        ref={pdfInputRef}
+                        type="file"
+                        accept="application/pdf"
+                        onChange={(e) => handleFileSelect(e, false)}
+                        className="hidden"
+                      />
+                      
+                      {/* Upload Buttons */}
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={uploadingFile || sending}
+                        className="h-10 w-10"
+                        title="Upload Image"
+                      >
+                        {uploadingFile ? (
+                          <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                        ) : (
+                          <ImageIcon className="h-5 w-5" />
+                        )}
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => pdfInputRef.current?.click()}
+                        disabled={uploadingFile || sending}
+                        className="h-10 w-10"
+                        title="Upload PDF"
+                      >
+                        {uploadingFile ? (
+                          <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                        ) : (
+                          <FileText className="h-5 w-5" />
+                        )}
+                      </Button>
+                      
                       <Input
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
@@ -675,7 +910,7 @@ export function SynthChat({ embedded = false }: SynthChatProps = {}) {
                       />
                       <Button
                         onClick={sendMessage}
-                        disabled={!newMessage.trim() || sending}
+                        disabled={(!newMessage.trim() && uploadedFiles.length === 0) || sending}
                         className="hover:bg-[var(--hydrogen-amber)]/90 h-10 w-10 rounded-full bg-[var(--hydrogen-amber)] p-0 text-white"
                       >
                         <Send className="h-5 w-5" />
