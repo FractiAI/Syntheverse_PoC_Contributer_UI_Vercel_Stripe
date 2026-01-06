@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
     const posts = await db
       .select()
       .from(blogPostsTable)
-      .where(conditions.length > 0 ? (conditions.length > 1 ? and(...conditions) : conditions[0]) : undefined)
+      .where(conditions.length > 0 ? and(...conditions) : undefined)
       .orderBy(desc(sql`COALESCE(${blogPostsTable.published_at}, ${blogPostsTable.created_at})`))
       .limit(limit)
       .offset(offset);
