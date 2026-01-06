@@ -29,7 +29,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     }
 
     const body = await request.json();
-    const { amount } = body;
+    const { amount, agree_to_reference } = body;
 
     if (!amount || typeof amount !== 'number' || amount <= 0) {
       return NextResponse.json({ error: 'Invalid amount' }, { status: 400 });
@@ -58,14 +58,21 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       return NextResponse.json({ error: 'Sandbox is already activated' }, { status: 400 });
     }
 
-    const activationFee = Number(sandbox.synth_activation_fee || getActivationFee());
+    const baseActivationFee = Number(sandbox.synth_activation_fee || getActivationFee());
+    
+    // Apply 5% discount if customer agrees to be a reference
+    const referenceDiscount = agree_to_reference ? 0.05 : 0;
+    const activationFee = Math.floor(baseActivationFee * (1 - referenceDiscount));
 
     // Check if amount is sufficient for activation
     if (amount < activationFee) {
       return NextResponse.json(
         {
-          error: `Insufficient amount. Activation requires ${activationFee} SYNTH tokens`,
+          error: `Insufficient amount. Activation requires ${activationFee} SYNTH tokens${referenceDiscount > 0 ? ` (with ${(referenceDiscount * 100).toFixed(0)}% reference discount)` : ''}`,
           required: activationFee,
+          base_fee: baseActivationFee,
+          discount_applied: referenceDiscount > 0,
+          discount_percent: referenceDiscount * 100,
         },
         { status: 400 }
       );
@@ -85,6 +92,14 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
         testing_mode: false,
         vault_status: 'active',
         updated_at: new Date(),
+        metadata: {
+          ...(sandbox.metadata || {}),
+          reference_customer: agree_to_reference || false,
+          activation_discount_applied: referenceDiscount > 0,
+          activation_discount_percent: referenceDiscount * 100,
+          base_activation_fee: baseActivationFee,
+          final_activation_fee: activationFee,
+        },
       })
       .where(eq(enterpriseSandboxesTable.id, params.id));
 
@@ -99,6 +114,10 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       balance_after: balanceAfter.toString(),
       metadata: {
         activation_fee: activationFee,
+        base_activation_fee: baseActivationFee,
+        discount_applied: referenceDiscount > 0,
+        discount_percent: referenceDiscount * 100,
+        reference_customer: agree_to_reference || false,
         remaining_balance: balanceAfter - activationFee,
       },
     });
@@ -146,6 +165,10 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       activated: true,
       balance: balanceAfter.toString(),
       activation_fee: activationFee,
+      base_activation_fee: baseActivationFee,
+      discount_applied: referenceDiscount > 0,
+      discount_percent: referenceDiscount * 100,
+      reference_customer: agree_to_reference || false,
       remaining_balance: balanceAfter - activationFee,
       transaction_id: transactionId,
     });

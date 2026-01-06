@@ -21,6 +21,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card } from './landing/shared/Card';
+import { ReferenceCustomersList } from './ReferenceCustomersList';
 
 type EnterpriseDashboardProps = {
   isAuthenticated?: boolean;
@@ -527,6 +528,9 @@ export default function EnterpriseDashboard({
                 )}
               </div>
             )}
+
+            {/* Reference Customers */}
+            <ReferenceCustomersList />
 
             {/* Next Steps Guidance */}
             {sandboxes.length > 0 && (

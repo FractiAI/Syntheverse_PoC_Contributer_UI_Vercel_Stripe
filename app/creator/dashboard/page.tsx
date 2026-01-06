@@ -16,6 +16,7 @@ import { FrontierModule } from '@/components/FrontierModule';
 import { ActivityAnalytics } from '@/components/activity/ActivityAnalytics';
 import { SystemBroadcastCenter } from '@/components/creator/SystemBroadcastCenter';
 import { CreatorEnterpriseSandboxes } from '@/components/creator/CreatorEnterpriseSandboxes';
+import { ReferenceCustomersList } from '@/components/ReferenceCustomersList';
 import { Shield, Activity } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -83,6 +84,9 @@ export default async function CreatorDashboard() {
 
         {/* Sales Tracking - Revenue & Subscriptions (Creators Only) */}
         {isCreator && <SalesTracking />}
+
+        {/* Reference Customers - Creators Only */}
+        {isCreator && <ReferenceCustomersList />}
 
         {/* Activity Analytics */}
         <ActivityAnalytics />
