@@ -1,15 +1,17 @@
 /**
- * Creator-only endpoint to reset PoC archive
+ * Creator/Operator endpoint to reset PoC archive
  *
  * POST /api/creator/archive/reset
  * Body: { mode: 'soft' | 'hard', confirmation_phrase: string }
  *
  * Soft Reset: Clears archived PoC records, preserves on-chain registrations, audit logs, aggregate metrics
  * Hard Reset: Deletes archived PoC data, requires explicit confirmation
+ *
+ * Access: Creator and Operators
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { requireCreator, getAuthenticatedUserWithRole } from '@/utils/auth/permissions';
+import { getAuthenticatedUserWithRole } from '@/utils/auth/permissions';
 import { db } from '@/utils/db/db';
 import { contributionsTable } from '@/utils/db/schema';
 import { eq, isNull, isNotNull, sql } from 'drizzle-orm';
@@ -20,10 +22,13 @@ const CONFIRMATION_PHRASE = 'RESET ARCHIVE';
 
 export async function POST(request: NextRequest) {
   try {
-    const { user, isCreator } = await getAuthenticatedUserWithRole();
+    const { user, isCreator, isOperator } = await getAuthenticatedUserWithRole();
 
-    if (!user || !isCreator) {
-      return NextResponse.json({ error: 'Unauthorized: Creator access required' }, { status: 403 });
+    if (!user || (!isCreator && !isOperator)) {
+      return NextResponse.json(
+        { error: 'Unauthorized: Creator or Operator access required' },
+        { status: 403 }
+      );
     }
 
     const body = await request.json();
@@ -132,13 +137,17 @@ export async function POST(request: NextRequest) {
 
 /**
  * GET /api/creator/archive/reset - Get archive statistics
+ * Access: Creator and Operators
  */
 export async function GET(request: NextRequest) {
   try {
-    const { user, isCreator } = await getAuthenticatedUserWithRole();
+    const { user, isCreator, isOperator } = await getAuthenticatedUserWithRole();
 
-    if (!user || !isCreator) {
-      return NextResponse.json({ error: 'Unauthorized: Creator access required' }, { status: 403 });
+    if (!user || (!isCreator && !isOperator)) {
+      return NextResponse.json(
+        { error: 'Unauthorized: Creator or Operator access required' },
+        { status: 403 }
+      );
     }
 
     // Get statistics
