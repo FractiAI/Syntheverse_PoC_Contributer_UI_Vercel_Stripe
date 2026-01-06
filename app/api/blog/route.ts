@@ -129,7 +129,7 @@ export async function POST(request: NextRequest) {
         author: user.email,
         author_name: author_name?.trim() || user.email.split('@')[0],
         sandbox_id: sandbox_id || null,
-        status: status || 'draft',
+        status: status || 'published', // Default to published (matches BlogPostCreator default)
         published_at: publishedAt,
         featured: featured || false,
         tags: tags || [],
