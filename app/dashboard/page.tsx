@@ -14,6 +14,7 @@ import { getAuthenticatedUserWithRole } from '@/utils/auth/permissions';
 // The reference client stays protocol-first and avoids any "package" framing in the main dashboard.
 import { BookOpen, Shield } from 'lucide-react';
 import { SynthChat } from '@/components/SynthChat';
+import { SandboxSelector } from '@/components/SandboxSelector';
 
 export const dynamic = 'force-dynamic';
 
@@ -48,6 +49,11 @@ export default async function Dashboard() {
   return (
     <div className="cockpit-bg min-h-screen">
       <div className="container mx-auto space-y-8 px-6 py-8">
+        {/* Sandbox Selector */}
+        <div className="flex justify-end">
+          <SandboxSelector />
+        </div>
+
         {/* Operator Broadcast Banner */}
         <OperatorBroadcastBanner
           message="Welcome to Syntheverse! SYNTH90T MOTHERLODE VAULT opens Spring Equinox, March 20, 2026. All qualifying PoCs will be registered on-chain and allocated SYNTH, by score. Be sure to get your best work in by March 19."

@@ -3,6 +3,7 @@ import { createClient } from '@/utils/supabase/server';
 import { db } from '@/utils/db/db';
 import { enterpriseSandboxesTable, enterpriseContributionsTable } from '@/utils/db/schema';
 import { eq, sql } from 'drizzle-orm';
+import { getAuthenticatedUserWithRole } from '@/utils/auth/permissions';
 import crypto from 'crypto';
 
 export const dynamic = 'force-dynamic';
@@ -19,10 +20,18 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const sandboxes = await db
-      .select()
-      .from(enterpriseSandboxesTable)
-      .where(eq(enterpriseSandboxesTable.operator, user.email));
+    const { isCreator, isOperator } = await getAuthenticatedUserWithRole();
+
+    // Operators/Creators can see all enterprise sandboxes, regular users see only their own
+    let sandboxes;
+    if (isOperator || isCreator) {
+      sandboxes = await db.select().from(enterpriseSandboxesTable);
+    } else {
+      sandboxes = await db
+        .select()
+        .from(enterpriseSandboxesTable)
+        .where(eq(enterpriseSandboxesTable.operator, user.email));
+    }
 
     // Get contribution counts for each sandbox
     const sandboxesWithCounts = await Promise.all(
