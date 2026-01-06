@@ -1,6 +1,11 @@
 import { debug, debugError } from '@/utils/debug';
 import { db } from '@/utils/db/db';
-import { contributionsTable, tokenomicsTable, epochMetalBalancesTable } from '@/utils/db/schema';
+import {
+  contributionsTable,
+  tokenomicsTable,
+  epochMetalBalancesTable,
+  enterpriseContributionsTable,
+} from '@/utils/db/schema';
 import { ne, sql } from 'drizzle-orm';
 import { qualifyEpoch } from '@/utils/epochs/qualification';
 import {
@@ -221,20 +226,51 @@ export async function evaluateWithGrok(
   try {
     // Fetch ONLY vector/metadata data for redundancy calculation (SCALABILITY FIX: removed text_content)
     // This reduces memory usage by ~99% and improves query performance significantly
-    const archivedContributions = await db
-      .select({
-        submission_hash: contributionsTable.submission_hash,
-        title: contributionsTable.title,
-        embedding: contributionsTable.embedding,
-        vector_x: contributionsTable.vector_x,
-        vector_y: contributionsTable.vector_y,
-        vector_z: contributionsTable.vector_z,
-        metadata: contributionsTable.metadata,
-        created_at: contributionsTable.created_at,
-      })
-      .from(contributionsTable)
-      .where(excludeHash ? ne(contributionsTable.submission_hash, excludeHash) : undefined)
-      .orderBy(contributionsTable.created_at);
+    // If sandbox context is provided, fetch from enterprise contributions table for that sandbox
+    // Otherwise, fetch from main Syntheverse contributions table
+    let archivedContributions;
+    
+    if (sandboxContext) {
+      // Fetch from enterprise sandbox contributions
+      archivedContributions = await db
+        .select({
+          submission_hash: enterpriseContributionsTable.submission_hash,
+          title: enterpriseContributionsTable.title,
+          embedding: enterpriseContributionsTable.embedding,
+          vector_x: enterpriseContributionsTable.vector_x,
+          vector_y: enterpriseContributionsTable.vector_y,
+          vector_z: enterpriseContributionsTable.vector_z,
+          metadata: enterpriseContributionsTable.metadata,
+          created_at: enterpriseContributionsTable.created_at,
+        })
+        .from(enterpriseContributionsTable)
+        .where(
+          sandboxContext.id
+            ? sql`${enterpriseContributionsTable.sandbox_id} = ${sandboxContext.id} ${
+                excludeHash ? sql`AND ${enterpriseContributionsTable.submission_hash} != ${excludeHash}` : sql``
+              }`
+            : excludeHash
+              ? sql`${enterpriseContributionsTable.submission_hash} != ${excludeHash}`
+              : undefined
+        )
+        .orderBy(enterpriseContributionsTable.created_at);
+    } else {
+      // Fetch from main Syntheverse contributions
+      archivedContributions = await db
+        .select({
+          submission_hash: contributionsTable.submission_hash,
+          title: contributionsTable.title,
+          embedding: contributionsTable.embedding,
+          vector_x: contributionsTable.vector_x,
+          vector_y: contributionsTable.vector_y,
+          vector_z: contributionsTable.vector_z,
+          metadata: contributionsTable.metadata,
+          created_at: contributionsTable.created_at,
+        })
+        .from(contributionsTable)
+        .where(excludeHash ? ne(contributionsTable.submission_hash, excludeHash) : undefined)
+        .orderBy(contributionsTable.created_at);
+    }
 
     // Store vector data for redundancy calculations (no text_content needed)
     archivedVectors = archivedContributions.map((contrib) => ({
