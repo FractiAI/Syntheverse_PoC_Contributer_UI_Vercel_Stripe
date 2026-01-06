@@ -56,7 +56,6 @@ This repository implements the **Syntheverse Protocol** - a public, implementati
 
 - **The Syntheverse Protocol**: Public specification for PoC primitives, scoring, and anchoring
 - **Operators**: Concrete implementations with infrastructure choices, policies, and costs
-- **FractiAI**: Reference operator maintaining this client
 - **SYNTH90T MOTHERLODE VAULT**: Fixed-supply 90 trillion SYNTH ERC-20 token allocation system
 
 ### What We're Building
