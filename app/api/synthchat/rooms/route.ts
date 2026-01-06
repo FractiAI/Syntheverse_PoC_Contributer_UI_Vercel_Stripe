@@ -84,12 +84,13 @@ export async function GET(request: NextRequest) {
       .from(chatParticipantsTable)
       .where(eq(chatParticipantsTable.user_email, userEmail));
 
-    const userRoomIds = userParticipantRooms.map((p) => p.room_id);
+    const userRoomIdsArray = userParticipantRooms.map((p) => p.room_id);
+    const userRoomIds = new Set(userRoomIdsArray);
 
     // Get all rooms user is in (user-defined sandboxes)
     const allUserRooms =
-      userRoomIds.length > 0
-        ? await db.select().from(chatRoomsTable).where(inArray(chatRoomsTable.id, userRoomIds))
+      userRoomIdsArray.length > 0
+        ? await db.select().from(chatRoomsTable).where(inArray(chatRoomsTable.id, userRoomIdsArray))
         : [];
 
     // Filter to get only user-defined rooms (not Syntheverse, not enterprise sandboxes)
@@ -108,16 +109,6 @@ export async function GET(request: NextRequest) {
     const allRoomIds = [syntheverseRoom[0].id, ...sandboxRoomIds, ...userDefinedRoomIds].filter(
       Boolean
     );
-
-    // Get user's participant status for all rooms
-    const userParticipantRooms = await db
-      .select({
-        room_id: chatParticipantsTable.room_id,
-      })
-      .from(chatParticipantsTable)
-      .where(eq(chatParticipantsTable.user_email, userEmail));
-
-    const userRoomIds = new Set(userParticipantRooms.map((p) => p.room_id));
 
     // Get participant counts for each room
     const roomsWithCounts = await Promise.all(
