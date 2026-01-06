@@ -351,10 +351,10 @@ export function SynthChat({ embedded = false }: SynthChatProps = {}) {
 
   // If embedded, render directly without dialog
   const chatContent = (
-    <div className={`flex h-full ${embedded ? 'h-[600px] w-full' : ''}`}>
+    <div className={embedded ? 'flex h-full h-[600px] w-full' : 'flex h-full'}>
       <div className="flex h-full w-full">
-            {/* Sidebar - Sandbox List (WhatsApp conversation list style) */}
-            <div
+        {/* Sidebar - Sandbox List (WhatsApp conversation list style) */}
+        <div
               className={`${
                 showSidebar ? 'flex' : 'hidden'
               } w-full flex-col border-r border-[var(--keyline-primary)] bg-[var(--cockpit-bg)] md:flex md:w-1/3`}
@@ -668,7 +668,6 @@ export function SynthChat({ embedded = false }: SynthChatProps = {}) {
               )}
             </div>
           </div>
-      </div>
     </div>
   );
 
