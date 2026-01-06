@@ -91,7 +91,13 @@ export function BlogPage({
   function handleSave() {
     setShowCreator(false);
     setEditingPost(null);
-    fetchPosts();
+    // Refresh posts and then reload page to ensure everything is in sync
+    fetchPosts().then(() => {
+      // Small delay to ensure data is saved, then refresh
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+    });
   }
 
   function handleCancel() {
@@ -152,8 +158,11 @@ export function BlogPage({
         {/* Featured Posts */}
         {featuredPosts.length > 0 && (
           <div>
-            <div className="cockpit-label mb-4 text-xs">FEATURED POSTS</div>
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="cockpit-label mb-4 flex items-center gap-2 text-xs">
+              <span className="text-[var(--hydrogen-amber)]">★</span>
+              FEATURED POSTS
+            </div>
+            <div className="space-y-6">
               {featuredPosts.map((post) => (
                 <BlogPostCard key={post.id} post={post} canEdit={canCreate} onEdit={handleEdit} onDelete={handleDelete} />
               ))}
@@ -163,22 +172,31 @@ export function BlogPage({
 
         {/* Regular Posts */}
         <div>
-          <div className="cockpit-label mb-4 text-xs">
-            {featuredPosts.length > 0 ? 'ALL POSTS' : 'BLOG POSTS'}
+          <div className="cockpit-label mb-4 flex items-center gap-2 text-xs">
+            {featuredPosts.length > 0 ? (
+              <>
+                <span>—</span>
+                ALL POSTS
+              </>
+            ) : (
+              'BLOG POSTS'
+            )}
           </div>
           {loading ? (
-            <div className="cockpit-text py-8 text-center">Loading posts...</div>
+            <div className="cockpit-panel p-8 text-center">
+              <div className="cockpit-text opacity-60">Loading posts...</div>
+            </div>
           ) : regularPosts.length > 0 ? (
-            <div className="space-y-4">
+            <div className="space-y-6">
               {regularPosts.map((post) => (
                 <BlogPostCard key={post.id} post={post} canEdit={canCreate} onEdit={handleEdit} onDelete={handleDelete} />
               ))}
             </div>
           ) : (
             <div className="cockpit-panel p-8 text-center">
-              <div className="cockpit-text opacity-60">No blog posts yet.</div>
+              <div className="cockpit-text mb-4 opacity-60">No blog posts yet.</div>
               {canCreate && (
-                <Button onClick={() => setShowCreator(true)} className="cockpit-lever mt-4">
+                <Button onClick={() => setShowCreator(true)} className="cockpit-lever">
                   <Plus className="mr-2 h-4 w-4" />
                   Create First Post
                 </Button>
@@ -307,60 +325,70 @@ function BlogPostCard({
 
   return (
     <div className="cockpit-panel p-6">
-      <div className="mb-4 flex items-start justify-between">
-        <div className="flex-1">
-          <h2 className="cockpit-title mb-2 text-xl">{post.title}</h2>
-          {post.excerpt && <p className="cockpit-text mb-3 text-sm opacity-80">{post.excerpt}</p>}
+      {/* Header Section */}
+      <div className="mb-6 border-b border-[var(--keyline-primary)] pb-4">
+        <div className="mb-3 flex items-start justify-between">
+          <div className="flex-1">
+            <h2 className="cockpit-title mb-3 text-2xl">{post.title}</h2>
+            {post.excerpt && (
+              <p className="cockpit-text mb-0 text-sm leading-relaxed opacity-80">{post.excerpt}</p>
+            )}
+          </div>
+          {canEdit && (
+            <div className="ml-4 flex gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => onEdit(post)}
+                className="cockpit-lever"
+              >
+                <Edit className="h-3 w-3" />
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => onDelete(post.id)}
+                className="cockpit-lever text-red-400 hover:text-red-300"
+              >
+                <Trash2 className="h-3 w-3" />
+              </Button>
+            </div>
+          )}
         </div>
-        {canEdit && (
-          <div className="ml-4 flex gap-2">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => onEdit(post)}
-              className="cockpit-lever"
-            >
-              <Edit className="h-3 w-3" />
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => onDelete(post.id)}
-              className="cockpit-lever text-red-400 hover:text-red-300"
-            >
-              <Trash2 className="h-3 w-3" />
-            </Button>
-          </div>
-        )}
-      </div>
 
-      <div className="mb-4 border-t border-[var(--keyline-primary)] pt-4">
-        <div className="cockpit-text flex flex-wrap items-center gap-4 text-xs opacity-60">
-          <div className="flex items-center gap-1">
-            <User className="h-3 w-3" />
-            {post.author_name || post.author.split('@')[0]}
+        {/* Metadata Bar */}
+        <div className="cockpit-label flex flex-wrap items-center gap-4 text-xs">
+          <div className="flex items-center gap-1.5">
+            <User className="h-3 w-3 opacity-60" />
+            <span className="cockpit-text opacity-75">
+              {post.author_name || post.author.split('@')[0]}
+            </span>
           </div>
-          <div className="flex items-center gap-1">
-            <Calendar className="h-3 w-3" />
-            {formatDate(post.published_at || post.created_at)}
+          <div className="flex items-center gap-1.5">
+            <Calendar className="h-3 w-3 opacity-60" />
+            <span className="cockpit-text opacity-75">
+              {formatDate(post.published_at || post.created_at)}
+            </span>
           </div>
           {post.status !== 'published' && (
-            <span className="rounded bg-yellow-500/20 px-2 py-1 text-yellow-400">
-              {post.status}
+            <span className="rounded border border-yellow-500/30 bg-yellow-500/10 px-2 py-1 text-yellow-400">
+              {post.status.toUpperCase()}
             </span>
           )}
           {post.featured && (
-            <span className="rounded bg-[var(--hydrogen-amber)]/20 px-2 py-1 text-[var(--hydrogen-amber)]">
-              Featured
+            <span className="rounded border border-[var(--hydrogen-amber)]/30 bg-[var(--hydrogen-amber)]/10 px-2 py-1 text-[var(--hydrogen-amber)]">
+              FEATURED
             </span>
           )}
         </div>
+
+        {/* Tags */}
         {post.tags && post.tags.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-2">
+          <div className="mt-3 flex flex-wrap gap-2">
             {post.tags.map((tag, idx) => (
               <span
                 key={idx}
-                className="flex items-center gap-1 rounded bg-[var(--cockpit-carbon)] px-2 py-1 text-xs"
+                className="cockpit-label flex items-center gap-1 rounded border border-[var(--keyline-primary)] bg-[var(--cockpit-carbon)] px-2 py-1 text-xs opacity-75"
               >
                 <Tag className="h-3 w-3" />
                 {tag}
@@ -370,7 +398,10 @@ function BlogPostCard({
         )}
       </div>
 
-      <BlogContentDisplay content={post.content} />
+      {/* Content Section */}
+      <div className="blog-post-content">
+        <BlogContentDisplay content={post.content} />
+      </div>
     </div>
   );
 }
