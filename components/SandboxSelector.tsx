@@ -56,11 +56,14 @@ export function SandboxSelector() {
 
   const tiers = Array.from(new Set(sandboxes.map((s) => s.subscription_tier).filter(Boolean)));
 
-  const handleSandboxSelect = (sandboxId: string) => {
+  const handleSandboxSelect = (sandboxId: string, e?: React.MouseEvent) => {
+    e?.preventDefault();
+    e?.stopPropagation();
     setSelectedSandbox(sandboxId);
-    setIsOpen(false);
-    // TODO: Update dashboard context/state to filter by selected sandbox
-    // This could update URL params or a context provider
+    // Close dialog after a brief delay to ensure state updates
+    setTimeout(() => {
+      setIsOpen(false);
+    }, 100);
   };
 
   return (
@@ -125,7 +128,8 @@ export function SandboxSelector() {
         <div className="flex-1 overflow-y-auto min-h-0">
           {/* Syntheverse (Default) */}
           <button
-            onClick={() => handleSandboxSelect('syntheverse')}
+            type="button"
+            onClick={(e) => handleSandboxSelect('syntheverse', e)}
             className={`w-full text-left cockpit-text cursor-pointer p-4 hover:bg-[var(--cockpit-carbon)] transition-colors border-b border-[var(--keyline-primary)] ${
               selectedSandbox === 'syntheverse' ? 'bg-[var(--cockpit-carbon)]' : ''
             }`}
@@ -159,7 +163,8 @@ export function SandboxSelector() {
             filteredSandboxes.map((sandbox) => (
               <button
                 key={sandbox.id}
-                onClick={() => handleSandboxSelect(sandbox.id)}
+                type="button"
+                onClick={(e) => handleSandboxSelect(sandbox.id, e)}
                 className={`w-full text-left cockpit-text cursor-pointer p-4 hover:bg-[var(--cockpit-carbon)] transition-colors border-b border-[var(--keyline-primary)] ${
                   selectedSandbox === sandbox.id ? 'bg-[var(--cockpit-carbon)]' : ''
                 }`}
