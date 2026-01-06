@@ -31,6 +31,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Generate submission hash early (needed for both payment and exempt paths)
+    const contentHash = crypto.createHash('sha256').update(text_content).digest('hex');
+    const submissionHash = crypto
+      .createHash('sha256')
+      .update(`${sandbox_id}:${contentHash}:${Date.now()}`)
+      .digest('hex');
+
     // Verify sandbox exists and user has access
     const sandboxes = await db
       .select()
@@ -53,13 +60,6 @@ export async function POST(request: NextRequest) {
     if (sandbox.operator !== user.email && !isCreator) {
       return NextResponse.json({ error: 'Access denied' }, { status: 403 });
     }
-
-    // Generate submission hash (needed for both payment and exempt paths)
-    const contentHash = crypto.createHash('sha256').update(text_content).digest('hex');
-    const submissionHash = crypto
-      .createHash('sha256')
-      .update(`${sandbox_id}:${contentHash}:${Date.now()}`)
-      .digest('hex');
 
     // Payment exemption: Creator bypasses all, Operator bypasses only their own sandboxes
     const isExemptFromPayment = isCreator || (isOperator && sandbox.operator === user.email);
