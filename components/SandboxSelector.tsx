@@ -74,8 +74,9 @@ export function SandboxSelector() {
           <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="cockpit-panel w-80 border-[var(--keyline-primary)] p-0">
-        <div className="p-4">
+      <DropdownMenuContent className="cockpit-panel w-80 max-h-[600px] border-[var(--keyline-primary)] p-0 overflow-hidden flex flex-col">
+        {/* Fixed Header Section */}
+        <div className="p-4 flex-shrink-0 border-b border-[var(--keyline-primary)]">
           {/* Header */}
           <div className="cockpit-label mb-3 flex items-center gap-2">
             <Layers className="h-4 w-4" />
@@ -120,44 +121,44 @@ export function SandboxSelector() {
           )}
         </div>
 
-        <DropdownMenuSeparator className="bg-[var(--keyline-primary)]" />
-
-        {/* Syntheverse (Default) */}
-        <DropdownMenuItem
-          onClick={() => handleSandboxSelect('syntheverse')}
-          className={`cockpit-text cursor-pointer p-4 ${
-            selectedSandbox === 'syntheverse' ? 'bg-[var(--cockpit-carbon)]' : ''
-          }`}
-        >
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--hydrogen-amber)]/30 to-purple-500/30 text-sm font-semibold">
-              S
-            </div>
-            <div className="flex-1">
-              <div className="cockpit-title text-sm font-medium">Syntheverse</div>
-              <div className="cockpit-text text-xs opacity-75">
-                Main Syntheverse Protocol
+        {/* Scrollable Content Section */}
+        <div className="flex-1 overflow-y-auto overscroll-contain">
+          {/* Syntheverse (Default) */}
+          <DropdownMenuItem
+            onClick={() => handleSandboxSelect('syntheverse')}
+            className={`cockpit-text cursor-pointer p-4 ${
+              selectedSandbox === 'syntheverse' ? 'bg-[var(--cockpit-carbon)]' : ''
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--hydrogen-amber)]/30 to-purple-500/30 text-sm font-semibold">
+                S
               </div>
+              <div className="flex-1">
+                <div className="cockpit-title text-sm font-medium">Syntheverse</div>
+                <div className="cockpit-text text-xs opacity-75">
+                  Main Syntheverse Protocol
+                </div>
+              </div>
+              {selectedSandbox === 'syntheverse' && (
+                <div className="h-2 w-2 rounded-full bg-[var(--hydrogen-amber)]" />
+              )}
             </div>
-            {selectedSandbox === 'syntheverse' && (
-              <div className="h-2 w-2 rounded-full bg-[var(--hydrogen-amber)]" />
-            )}
-          </div>
-        </DropdownMenuItem>
+          </DropdownMenuItem>
 
-        {/* Enterprise Sandboxes (Nested) */}
-        {loading ? (
-          <div className="cockpit-text p-4 text-center text-xs opacity-60">
-            Loading sandboxes...
-          </div>
-        ) : filteredSandboxes.length === 0 ? (
-          <div className="cockpit-text p-4 text-center text-xs opacity-60">
-            {searchTerm ? 'No sandboxes found' : 'No enterprise sandboxes available'}
-          </div>
-        ) : (
-          <>
-            <DropdownMenuSeparator className="bg-[var(--keyline-primary)]" />
-            <div className="max-h-96 overflow-y-auto">
+          <DropdownMenuSeparator className="bg-[var(--keyline-primary)]" />
+
+          {/* Enterprise Sandboxes (Nested) */}
+          {loading ? (
+            <div className="cockpit-text p-4 text-center text-xs opacity-60">
+              Loading sandboxes...
+            </div>
+          ) : filteredSandboxes.length === 0 ? (
+            <div className="cockpit-text p-4 text-center text-xs opacity-60">
+              {searchTerm ? 'No sandboxes found' : 'No enterprise sandboxes available'}
+            </div>
+          ) : (
+            <>
               {filteredSandboxes.map((sandbox) => (
                 <DropdownMenuItem
                   key={sandbox.id}
@@ -185,9 +186,9 @@ export function SandboxSelector() {
                   </div>
                 </DropdownMenuItem>
               ))}
-            </div>
-          </>
-        )}
+            </>
+          )}
+        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   );
