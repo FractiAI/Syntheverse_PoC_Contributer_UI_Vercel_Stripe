@@ -20,7 +20,7 @@ interface EnterpriseSandbox {
   qualified_count?: number;
   synth_activated?: boolean;
   vault_status?: string;
-  created_at?: string;
+  created_at?: string | null;
 }
 
 export function SandboxNavigator() {
