@@ -25,7 +25,6 @@ import { SynthChat } from '@/components/SynthChat';
 import { BlogPostCreator } from '@/components/BlogPostCreator';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useEffect } from 'react';
 
 type NavigationTab = 'archive' | 'users' | 'blockchain' | 'database' | 'chat' | 'blog';
 
