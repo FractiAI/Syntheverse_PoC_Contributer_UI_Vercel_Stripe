@@ -172,6 +172,28 @@ See [Environment Variables](#environment-variables) section for complete configu
 
 ### 🎯 Recent Additions
 
+- **Seeds and Edges Module**: Added Module 14 to onboarding covering "Syntheverse Minimum Viable Product: Seeds and Edges"
+  - Comprehensive module explaining the minimum viable generative set (9 seeds and 7 edge classes)
+  - Includes abstract, definitions, predictions, experimental results, and implications
+  - Added Seeds and Edges section to FractiAI landing page with overview and links to Module 14
+  - Content based on January 6, 2026 expedition by Pru "El Taíno" Méndez × FractiAI Research Team
+  - Demonstrates boundary-first model of reality construction with implications for AI, economics, and governance
+
+- **Quick Actions Panel Enhancements**: Improved Quick Actions Panel positioning and functionality
+  - Moved from fixed right-side panel to horizontal bar across top of all dashboards
+  - Integrated System Status indicators (Protocol, Blockchain, HHF-AI, SynthScan™) into top bar
+  - Consolidated all quick navigation and system status into single top horizontal bar
+  - Panel uses normal document flow (position: relative) - not floating, doesn't overlap content
+  - Responsive design with horizontal scrolling on mobile/tablet
+  - All quick operations and system status now accessible from top bar
+
+- **Broadcast System Error Handling**: Improved error handling for broadcast messages
+  - Fixed 500 errors on `/api/broadcasts/all` endpoint when table doesn't exist (returns empty array gracefully)
+  - Enhanced error handling in SystemBroadcastCenter component for 403 permission errors
+  - All broadcast API calls now properly handle errors without hanging UI
+  - Clear user-friendly error messages when permissions are missing
+  - Prevents UI from hanging when selecting broadcast messages
+
 - **Interactive Onboarding Training System**: Transformed onboarding from passive reading to active, hands-on training
   - **Training Paths**: Three paths (Contributor, Advanced, Operator) with progressive skill-building
   - **Hands-On Exercises**: Interactive practice exercises in each module for practical skill development
@@ -746,9 +768,11 @@ Built for the Syntheverse ecosystem with ❤️
 ---
 
 **Last Updated**: January 2025  
-**Version**: 2.20 (Contributor Dashboard Cockpit Resonance & Quick Actions Positioning)
+**Version**: 2.21 (Seeds and Edges Module & Broadcast Error Handling)
 
 ### Version History
+
+- **v2.21** (January 2025): Seeds and Edges Module & Broadcast Error Handling - Added Module 14 to onboarding covering "Syntheverse Minimum Viable Product: Seeds and Edges" with comprehensive content on the minimum viable generative set (9 seeds and 7 edge classes). Added Seeds and Edges section to FractiAI landing page with overview, seed/edge catalogs, and links to Module 14. Moved Quick Actions Panel from fixed right-side panel to horizontal bar across top of all dashboards. Integrated System Status indicators into top Quick Actions bar. Fixed 500 errors on `/api/broadcasts/all` endpoint with graceful table existence handling. Improved error handling in SystemBroadcastCenter component to prevent UI hanging on 403 errors. All broadcast API calls now properly handle errors with user-friendly messages.
 
 - **v2.20** (January 2025): Contributor Dashboard Cockpit Resonance & Quick Actions Positioning - Enhanced contributor dashboard with full cockpit design resonance matching creator and operator dashboards. Added CockpitHeader, Contributor Cockpit title panel with "Proof-of-Contribution Station" branding, enhanced system status indicators including SynthScan™, Quick Operations panel in left sidebar, and Genesis Status panel in right sidebar. Improved Quick Actions Panel positioning to fixed upper-right corner on all dashboards with responsive design that adapts to screen size and header presence. Enhanced Command Zone and Protocol Info panels with better typography hierarchy and formatting. All panels now use consistent cockpit styling with heavy keylines, proper spacing, and hydrogen-amber accents for strong visual resonance.
 

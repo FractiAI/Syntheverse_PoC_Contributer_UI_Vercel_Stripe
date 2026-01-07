@@ -111,6 +111,10 @@ export function SynthChat({ embedded = false }: SynthChatProps = {}) {
           roomsData.map(async (room: ChatRoom) => {
             try {
               const msgResponse = await fetch(`/api/synthchat/rooms/${room.id}/messages?limit=1`);
+              if (!msgResponse.ok && msgResponse.status !== 403) {
+                // Only log non-403 errors (403 is expected if not a participant)
+                console.warn('Failed to fetch room preview:', msgResponse.status);
+              }
               if (msgResponse.ok) {
                 const msgData = await msgResponse.json();
                 const lastMsg = msgData.messages?.[msgData.messages.length - 1];
@@ -156,9 +160,20 @@ export function SynthChat({ embedded = false }: SynthChatProps = {}) {
         const data = await response.json();
         setMessages(data.messages || []);
         setParticipants(data.participants || []);
+      } else if (response.status === 403) {
+        // User is not a participant in this room - silently handle
+        console.warn('Not a participant in room, clearing messages');
+        setMessages([]);
+        setParticipants([]);
+      } else if (response.status === 401) {
+        // Unauthorized - user needs to log in
+        console.warn('Unauthorized to fetch messages');
+        setMessages([]);
+        setParticipants([]);
       }
     } catch (error) {
       console.error('Failed to fetch messages:', error);
+      // Don't spam errors for network issues
     }
   }, [currentRoom]);
 

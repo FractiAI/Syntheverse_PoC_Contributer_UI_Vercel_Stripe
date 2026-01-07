@@ -87,9 +87,15 @@ export function SynthChatNavigator() {
                       }
                     : undefined,
                 };
+              } else if (msgResponse.status === 403) {
+                // User is not a participant - return room without last message
+                return { ...room };
               }
             } catch (error) {
-              console.error('Failed to fetch last message:', error);
+              // Silently handle errors - don't spam console
+              if (error instanceof Error && !error.message.includes('403')) {
+                console.error('Failed to fetch last message:', error);
+              }
             }
             return room;
           })
