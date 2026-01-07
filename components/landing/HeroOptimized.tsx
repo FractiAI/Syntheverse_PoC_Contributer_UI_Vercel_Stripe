@@ -2,7 +2,6 @@
 
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
-import '../app/dashboard-cockpit.css';
 
 export function HeroOptimized() {
   const scrollToSection = (sectionId: string) => {
