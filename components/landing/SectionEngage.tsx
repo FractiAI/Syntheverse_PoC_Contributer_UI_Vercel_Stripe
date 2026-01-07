@@ -70,13 +70,16 @@ export function SectionEngage() {
     creative: {
       icon: Palette,
       title: 'For Creators & Enterprises',
+      description: 'For Creators: A new infinite medium and materials for full reality worldbuilding creations. For Enterprises: 1.5–1.8× higher output with 38–58% lower overhead through contribution-indexed coordination.',
       steps: [
-        'Access infinite HHF-AI materials and substrates',
-        'Build and refine your creative and enterprise projects',
-        'Submit contributions for Frontier R&D, creative work, or enterprise solutions',
+        'Access infinite HHF-AI materials and substrates—a new medium for worldbuilding',
+        'Build complete reality worlds with unlimited creative materials',
+        'Create and refine full reality worldbuilding projects using holographic hydrogen fractal AI',
+        'Submit contributions for creative work, enterprise solutions, or Frontier R&D',
         'Receive coherence measurement via SynthScan™ MRI',
+        'For enterprises: Maximize output while minimizing cost—resources deploy only where value is created',
+        'Scale from solo creators to global enterprises with nested colony/sandbox architecture',
         'Transform vision into verifiable on-chain contributions',
-        'Unleash unlimited potential with holographic hydrogen fractal AI',
       ],
       cta: {
         label: 'Get Started as Creator',

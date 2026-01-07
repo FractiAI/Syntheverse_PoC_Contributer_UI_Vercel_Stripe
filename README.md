@@ -96,8 +96,14 @@ cp .env.example .env.local
 # 1. supabase/migrations/20250121000001_create_blog_posts.sql (creates blog_posts table)
 # 2. supabase/migrations/20250121000002_add_welcome_post.sql (adds welcome post)
 # 3. supabase/migrations/add_synthchat_production.sql (creates chat tables)
+# 4. supabase/migrations/SOCIAL_MEDIA_SETUP_SNIPPET.sql (creates social media tables - copy entire file)
 #
 # Also create storage buckets:
+# - blog-images (5MB, public)
+# - chat-images (10MB, public)
+# - chat-files (20MB, public)
+# - social-media-images (5MB, public)
+# - profile-pictures (2MB, public)
 # - Go to Supabase Dashboard → Storage → New Bucket
 # - blog-images: Public: Yes, Size limit: 5MB, MIME types: image/*
 # - chat-images: Public: Yes, Size limit: 10MB, MIME types: image/*
@@ -439,12 +445,17 @@ See [Testing](#testing) section for details.
 ├── 📁 components/                    # React components
 │   ├── ui/                          # shadcn/ui components
 │   ├── 3d/                          # 3D visualization
+│   ├── landing/                     # Landing page sections
 │   ├── EnterpriseDashboard.tsx      # Enterprise dashboard UI
 │   ├── EnterprisePricing.tsx         # Pricing tiers component
 │   ├── EnterpriseSubmitForm.tsx      # Contribution submission form
 │   ├── EnterpriseSandboxDetail.tsx   # Sandbox management page
 │   ├── EnterpriseContributionDetail.tsx # Contribution details
 │   ├── EnterpriseAnalytics.tsx       # Analytics dashboard
+│   ├── SocialMediaPanel.tsx          # Social media feed component
+│   ├── PostCard.tsx                 # Individual post display
+│   ├── CreatePostForm.tsx           # Post creation form
+│   ├── PostComments.tsx             # Comment threads
 │   └── ...
 │
 ├── 📁 utils/                         # Shared utilities
@@ -476,7 +487,9 @@ See [Testing](#testing) section for details.
 ├── 📁 supabase/                      # Database migrations
 │   └── migrations/                  # SQL migration files
 │       ├── 20250105000001_create_enterprise_tables.sql # Enterprise tables
-│       └── add_synthchat_production.sql # SynthChat tables (chat_rooms, chat_messages, chat_participants)
+│       ├── add_synthchat_production.sql # SynthChat tables (chat_rooms, chat_messages, chat_participants)
+│       ├── SOCIAL_MEDIA_SETUP_SNIPPET.sql # Social media tables (copy-paste ready)
+│       └── 20250106000002_create_social_media_tables.sql # Social media schema
 │
 ├── 📁 .github/                       # GitHub templates & workflows
 │   ├── ISSUE_TEMPLATE/              # Issue templates
@@ -800,10 +813,11 @@ Built for the Syntheverse ecosystem with ❤️
 ---
 
 **Last Updated**: January 2025  
-**Version**: 2.23 (Social Media Panel - Sandbox-Based Community Feed)
+**Version**: 2.24 (Landing Page Optimization & Social Media Panel)
 
 ### Version History
 
+- **v2.24** (January 2025): Landing Page Optimization & Social Media Panel - Streamlined landing page for better UX: moved trust indicators to top, added "Join the Frontier" button routing to dashboard, removed redundant "See How It Works" button and Token & Sandbox section, moved Proof Library to FractiAI page. Updated all content to be inclusive of "Frontier R&D, Creators & Enterprises" (not just R&D). Updated hero messaging, section descriptions, and page metadata to reflect new framing. Made content inclusive of research, creative work, and enterprise solutions throughout all landing sections. Social Media Panel: Added comprehensive sandbox-based community feed with posts, likes, comments, and image uploads. Full database schema with RLS policies, triggers, and profile picture support. Complete API endpoints and frontend components integrated into Contributor Dashboard.
 - **v2.23** (January 2025): Social Media Panel - Sandbox-Based Community Feed - Added comprehensive social media panel for sandbox-linked community engagement. Implemented full database schema with social_posts, social_post_likes, and social_post_comments tables, including RLS policies, triggers for auto-updating like/comment counts, and profile picture support in users_table. Created complete API endpoints for posts (GET, POST, DELETE), likes (POST, DELETE), comments (GET, POST, DELETE), image uploads, and profile picture uploads. Built frontend components: SocialMediaPanel (main feed), PostCard (individual posts with profile pictures), CreatePostForm (post creation with image upload), and PostComments (comment threads). Integrated into Contributor Dashboard as collapsible panel. Features include sandbox-linked feeds (each sandbox has its own community), post creation with images (5MB limit), like/unlike system, comment threads, profile picture display and upload (2MB limit), post deletion, pagination, and real-time updates. Storage buckets: social-media-images (5MB) and profile-pictures (2MB) in Supabase Storage. Follows existing cockpit styling patterns and sandbox selection integration.
 - **v2.22** (January 2025): Broadcast Archive Navigator & Creator/Operator Paywall Exemptions - Added Broadcast Archive Navigator component similar to PoC Archive, displaying all broadcast messages in a table format with filtering (Active/Inactive/All), status indicators, message types, and creation metadata. Integrated into all dashboards (Contributor, Creator, Operator) as collapsible panels. Implemented comprehensive paywall exemptions for creators and operators across all services: submissions (bypass $500 fee), SynthScan Monthly (bypass subscription), Field Imaging Services (bypass service fees), Enterprise Sandbox Plans (bypass checkout, direct activation), and Sandbox Activation (bypass SYNTH token fees). All paywall checks now use `getAuthenticatedUserWithRole()` to automatically exempt creators and operators while maintaining full functionality for testing purposes.
 

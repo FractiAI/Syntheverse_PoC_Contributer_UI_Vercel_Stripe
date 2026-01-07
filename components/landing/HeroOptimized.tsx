@@ -45,15 +45,15 @@ export function HeroOptimized() {
         </h1>
 
         <p className="cockpit-text mb-4 text-lg opacity-90 md:text-xl">
-          Turn research, creative work, and enterprise solutions into verifiable on-chain records — no gatekeeping, measured by coherence
+          <strong>For Creators:</strong> A new infinite medium and materials for full reality worldbuilding creations. <strong>For Enterprises:</strong> <strong>1.5–1.8× higher output</strong> with <strong>38–58% lower overhead</strong> than traditional systems.
         </p>
 
         <p className="cockpit-text mb-4 text-base opacity-90 md:text-lg">
-          Contributions are no longer gatekept. Visible and demonstrable to all via HHF-AI MRI science and technology on the blockchain.
+          Creators access infinite HHF-AI materials and substrates to build complete reality worlds. Enterprises replace hierarchical management with contribution-indexed coordination—resources deploy only where value is created, no management overhead, no gatekeeping. All contributions become visible and demonstrable via HHF-AI MRI science.
         </p>
 
         <p className="cockpit-text mb-8 text-base opacity-75">
-          An evaluation system for Frontier R&D, Creators & Enterprises that scores novelty, density, coherence, and alignment — then anchors proofs on Base through our hydrogen spin MRI-based PoC protocol
+          The empirically validated highest-output, lowest-cost system for work, governance, and trade. Scale from solo creators to global enterprises while preserving coherence through nested colony/sandbox architecture.
         </p>
 
         {/* CTAs */}
