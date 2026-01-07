@@ -207,9 +207,22 @@ export async function GET(request: NextRequest) {
       },
       { headers }
     );
-  } catch (error) {
+  } catch (error: any) {
+    // If table doesn't exist or other database error, return empty array instead of 500
+    // This allows the UI to continue working even if archive tables aren't set up
+    if (error.message?.includes('does not exist') || error.message?.includes('relation') || error.code === '42P01') {
+      debug('ArchiveContributions', 'Contributions table not found, returning empty array', error.message);
+      return NextResponse.json({
+        contributions: [],
+        count: 0,
+      }, { headers });
+    }
+    
     debugError('ArchiveContributions', 'Error fetching contributions', error);
-    return NextResponse.json({ error: 'Failed to fetch contributions' }, { status: 500 });
+    return NextResponse.json({ 
+      error: 'Failed to fetch contributions',
+      message: error.message || String(error)
+    }, { status: 500, headers });
   }
 }
 

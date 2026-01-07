@@ -291,26 +291,37 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
       });
 
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Archive API error:', {
-          status: response.status,
-          statusText: response.statusText,
-          body: errorText,
-        });
-        throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
+        const errorData = await response.json().catch(() => ({ error: 'Failed to fetch contributions' }));
+        if (response.status === 401) {
+          setError('You must be logged in to view the PoC Archive. Please log in and try again.');
+        } else if (response.status === 403) {
+          setError('You do not have permission to view the PoC Archive.');
+        } else {
+          console.error('Archive API error:', {
+            status: response.status,
+            statusText: response.statusText,
+            body: errorData,
+          });
+          setError(errorData.error || `Failed to fetch: ${response.status} ${response.statusText}`);
+        }
+        setAllSubmissions([]); // Set empty array on error
+        return;
       }
 
       const data = await response.json();
 
       if (!data || !Array.isArray(data.contributions)) {
         console.error('Invalid API response:', data);
-        throw new Error('Invalid response format from server');
+        setError('Invalid response format from server');
+        setAllSubmissions([]);
+        return;
       }
 
       setAllSubmissions(data.contributions || []);
     } catch (err) {
       console.error('Error fetching submissions:', err);
       setError(err instanceof Error ? err.message : 'Failed to load submissions');
+      setAllSubmissions([]); // Set empty array on error
     } finally {
       setLoading(false);
     }
