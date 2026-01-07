@@ -49,7 +49,6 @@ export function SystemBroadcastCenter() {
   const [formData, setFormData] = useState({
     message: '',
     nature: 'info' as MessageNature,
-    expires_at: '',
   });
   const [error, setError] = useState<string | null>(null);
 
@@ -93,13 +92,12 @@ export function SystemBroadcastCenter() {
         body: JSON.stringify({
           message: formData.message,
           nature: formData.nature,
-          expires_at: formData.expires_at || null,
         }),
       });
 
       if (response.ok) {
         setShowCreateDialog(false);
-        setFormData({ message: '', nature: 'info', expires_at: '' });
+        setFormData({ message: '', nature: 'info' });
         setError(null);
         await loadBroadcasts();
       } else {
@@ -127,13 +125,12 @@ export function SystemBroadcastCenter() {
         body: JSON.stringify({
           message: formData.message || broadcast.message,
           nature: formData.nature || broadcast.nature,
-          expires_at: formData.expires_at || broadcast.expires_at,
         }),
       });
 
       if (response.ok) {
         setEditingId(null);
-        setFormData({ message: '', nature: 'info', expires_at: '' });
+        setFormData({ message: '', nature: 'info' });
         setError(null);
         await loadBroadcasts();
       } else {
@@ -204,9 +201,6 @@ export function SystemBroadcastCenter() {
     setFormData({
       message: broadcast.message,
       nature: broadcast.nature,
-      expires_at: broadcast.expires_at
-        ? new Date(broadcast.expires_at).toISOString().split('T')[0]
-        : '',
     });
     setError(null);
   };
@@ -239,7 +233,7 @@ export function SystemBroadcastCenter() {
               e.preventDefault();
               e.stopPropagation();
               setShowCreateDialog(true);
-              setFormData({ message: '', nature: 'info', expires_at: '' });
+              setFormData({ message: '', nature: 'info' });
               setError(null);
             }}
             className="cockpit-lever"
@@ -339,7 +333,7 @@ export function SystemBroadcastCenter() {
           if (!open) {
             // Only close if explicitly closing, not during create
             setShowCreateDialog(false);
-            setFormData({ message: '', nature: 'info', expires_at: '' });
+            setFormData({ message: '', nature: 'info' });
             setError(null);
           }
         }}
@@ -376,7 +370,7 @@ export function SystemBroadcastCenter() {
                 onChange={(e) =>
                   setFormData({ ...formData, nature: e.target.value as MessageNature })
                 }
-                className="cockpit-input mt-2 w-full"
+                className="cockpit-select mt-2 w-full"
               >
                 <option value="announcement">Announcement</option>
                 <option value="warning">Warning</option>
@@ -388,18 +382,6 @@ export function SystemBroadcastCenter() {
               </select>
             </div>
 
-            <div>
-              <Label htmlFor="expires_at" className="cockpit-label">
-                Expiration Date (Optional)
-              </Label>
-              <Input
-                id="expires_at"
-                type="date"
-                value={formData.expires_at}
-                onChange={(e) => setFormData({ ...formData, expires_at: e.target.value })}
-                className="cockpit-input mt-2"
-              />
-            </div>
           </div>
 
           <DialogFooter>
@@ -464,7 +446,7 @@ export function SystemBroadcastCenter() {
                 onChange={(e) =>
                   setFormData({ ...formData, nature: e.target.value as MessageNature })
                 }
-                className="cockpit-input mt-2 w-full"
+                className="cockpit-select mt-2 w-full"
               >
                 <option value="announcement">Announcement</option>
                 <option value="warning">Warning</option>
@@ -476,18 +458,6 @@ export function SystemBroadcastCenter() {
               </select>
             </div>
 
-            <div>
-              <Label htmlFor="edit-expires_at" className="cockpit-label">
-                Expiration Date (Optional)
-              </Label>
-              <Input
-                id="edit-expires_at"
-                type="date"
-                value={formData.expires_at}
-                onChange={(e) => setFormData({ ...formData, expires_at: e.target.value })}
-                className="cockpit-input mt-2"
-              />
-            </div>
           </div>
 
           <DialogFooter>
