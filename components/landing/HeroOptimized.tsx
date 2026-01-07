@@ -45,7 +45,7 @@ export function HeroOptimized() {
         </h1>
 
         <p className="cockpit-text mb-4 text-lg opacity-90 md:text-xl">
-          Turn research into verifiable on-chain records — no gatekeeping, measured by coherence
+          Turn research, creative work, and enterprise solutions into verifiable on-chain records — no gatekeeping, measured by coherence
         </p>
 
         <p className="cockpit-text mb-4 text-base opacity-90 md:text-lg">
@@ -53,7 +53,7 @@ export function HeroOptimized() {
         </p>
 
         <p className="cockpit-text mb-8 text-base opacity-75">
-          An evaluation system that scores novelty, density, coherence, and alignment — then anchors proofs on Base through our hydrogen spin MRI-based PoC protocol
+          An evaluation system for Frontier R&D, Creators & Enterprises that scores novelty, density, coherence, and alignment — then anchors proofs on Base through our hydrogen spin MRI-based PoC protocol
         </p>
 
         {/* CTAs */}
@@ -67,20 +67,12 @@ export function HeroOptimized() {
           </Link>
 
           <Link
-            href="/onboarding"
+            href="/dashboard"
             className="cockpit-lever inline-flex items-center gap-2 bg-transparent px-8 py-4 text-base"
             style={{ border: '1px solid var(--keyline-primary)' }}
           >
             Join the Frontier
           </Link>
-
-          <button
-            onClick={() => scrollToSection('what-syntheverse-is')}
-            className="cockpit-lever inline-flex items-center gap-2 bg-transparent px-8 py-4 text-base"
-            style={{ border: '1px solid var(--keyline-primary)' }}
-          >
-            See How It Works
-          </button>
         </div>
       </div>
 

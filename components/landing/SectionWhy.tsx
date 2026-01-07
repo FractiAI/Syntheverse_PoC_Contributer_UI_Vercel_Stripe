@@ -14,9 +14,7 @@ export function SectionWhy() {
             <div>
               <h3 className="cockpit-title mb-2 text-base">The Problem</h3>
               <p className="cockpit-text text-sm opacity-80">
-                Frontier research lacks fast, neutral evaluation and provenance. Institutional
-                gatekeeping delays or blocks non-mainstream work. Contributions remain hidden,
-                unverifiable, and controlled by traditional barriers.
+                Frontier research, creative work, and enterprise solutions lack fast, neutral evaluation and provenance. Institutional gatekeeping delays or blocks non-mainstream work. Contributions remain hidden, unverifiable, and controlled by traditional barriers.
               </p>
             </div>
           </div>
@@ -29,8 +27,7 @@ export function SectionWhy() {
             <div>
               <h3 className="cockpit-title mb-2 text-base">The Cost</h3>
               <p className="cockpit-text text-sm opacity-80">
-                Good work gets ignored. Redundant work wastes cycles. Independent researchers have
-                no verification path.
+                Good work gets ignored. Redundant work wastes cycles. Independent researchers, creators, and enterprises have no verification path.
               </p>
             </div>
           </div>

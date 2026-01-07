@@ -9,7 +9,7 @@ export function SectionWhat() {
     {
       icon: FileText,
       title: 'Submit PoC',
-      description: 'Submit an abstract + equations + constants (4000 chars max)',
+      description: 'Submit research, creative work, or enterprise solutions — abstract + equations + constants (4000 chars max)',
     },
     {
       icon: BarChart3,
@@ -38,7 +38,7 @@ export function SectionWhat() {
       background="muted"
     >
       <p className="cockpit-text mb-8 text-lg">
-        A system that evaluates, archives, and anchors contributions for Frontier R&D, Creators & Enterprises — replacing peer review gatekeeping with measurable coherence.
+        A system that evaluates, archives, and anchors contributions for Frontier R&D, Creators & Enterprises — replacing traditional gatekeeping with measurable coherence. Whether you're conducting research, building creative projects, or developing enterprise solutions, Syntheverse provides transparent, verifiable evaluation and on-chain proof.
       </p>
 
       <div className="cockpit-panel bg-[var(--hydrogen-amber)]/5 mb-8 border-l-4 border-[var(--hydrogen-amber)] p-6">

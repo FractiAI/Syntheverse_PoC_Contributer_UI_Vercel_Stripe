@@ -18,6 +18,7 @@ import FractiAIStatusWidget from '@/components/FractiAIStatusWidget';
 import { StatusIndicators } from './StatusIndicators';
 import { GenesisButton } from './GenesisButton';
 import { ConstantsEquationsCatalog } from './ConstantsEquationsCatalog';
+import { SectionProof } from './landing/SectionProof';
 
 type FractiAIBulletinProps = {
   isAuthenticated?: boolean;
@@ -1061,6 +1062,11 @@ export default function FractiAIBulletin({ isAuthenticated = false }: FractiAIBu
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Proof Library Section */}
+        <div className="mt-12">
+          <SectionProof />
         </div>
 
         {/* Footer Notice */}

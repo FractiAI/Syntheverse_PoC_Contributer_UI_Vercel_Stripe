@@ -29,7 +29,7 @@ export function SectionEngage() {
   }> = {
     researcher: {
       icon: Microscope,
-      title: 'For Researchers',
+      title: 'For Frontier R&D',
       steps: [
         'Read the 2-minute explainer',
         'View example evaluation',

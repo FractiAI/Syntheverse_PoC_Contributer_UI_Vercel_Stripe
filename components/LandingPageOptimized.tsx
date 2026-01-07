@@ -2,9 +2,7 @@ import { HeroOptimized } from './landing/HeroOptimized';
 import { SectionWhat } from './landing/SectionWhat';
 import { SectionWhy } from './landing/SectionWhy';
 import { SectionTechnical } from './landing/SectionTechnical';
-import { SectionToken } from './landing/SectionToken';
 import { SectionMotherlode } from './landing/SectionMotherlode';
-import { SectionProof } from './landing/SectionProof';
 import { SectionEngage } from './landing/SectionEngage';
 
 export default function LandingPageOptimized() {
@@ -22,16 +20,10 @@ export default function LandingPageOptimized() {
       {/* Section 5: Technical Signals */}
       <SectionTechnical />
 
-      {/* Section 6: Token & Sandbox */}
-      <SectionToken />
-
-      {/* Section 7: MOTHERLODE VAULT */}
+      {/* Section 6: MOTHERLODE VAULT */}
       <SectionMotherlode />
 
-      {/* Section 8: Proof & Papers */}
-      <SectionProof />
-
-      {/* Section 9: How to Engage */}
+      {/* Section 7: How to Engage */}
       <SectionEngage />
 
       {/* Footer spacer */}
