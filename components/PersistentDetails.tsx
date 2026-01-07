@@ -5,7 +5,7 @@
 
 'use client';
 
-import { useState, useEffect, ReactNode } from 'react';
+import { useRef, useEffect, ReactNode } from 'react';
 
 interface PersistentDetailsProps {
   storageKey: string;
@@ -20,39 +20,46 @@ export function PersistentDetails({
   children,
   className = '',
 }: PersistentDetailsProps) {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
-  const [mounted, setMounted] = useState(false);
+  const detailsRef = useRef<HTMLDetailsElement>(null);
+  const isInitializedRef = useRef(false);
 
   useEffect(() => {
-    setMounted(true);
+    const details = detailsRef.current;
+    
+    // Only run once on mount
+    if (isInitializedRef.current || !details) return;
+    isInitializedRef.current = true;
+
     // Load state from localStorage
-    if (typeof window !== 'undefined') {
+    try {
       const stored = localStorage.getItem(`panel-${storageKey}`);
       if (stored !== null) {
-        setIsOpen(stored === 'true');
+        details.open = stored === 'true';
       }
+    } catch (e) {
+      // Ignore localStorage errors (e.g., in private mode)
     }
+
+    // Save state on toggle
+    const handleToggle = () => {
+      if (details) {
+        try {
+          localStorage.setItem(`panel-${storageKey}`, String(details.open));
+        } catch (e) {
+          // Ignore localStorage errors
+        }
+      }
+    };
+
+    details.addEventListener('toggle', handleToggle);
+
+    return () => {
+      details.removeEventListener('toggle', handleToggle);
+    };
   }, [storageKey]);
 
-  const handleToggle = () => {
-    const newState = !isOpen;
-    setIsOpen(newState);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(`panel-${storageKey}`, String(newState));
-    }
-  };
-
-  // Prevent hydration mismatch by not rendering until mounted
-  if (!mounted) {
-    return (
-      <details open={defaultOpen} className={className}>
-        {children}
-      </details>
-    );
-  }
-
   return (
-    <details open={isOpen} onToggle={handleToggle} className={className}>
+    <details ref={detailsRef} open={defaultOpen} className={className}>
       {children}
     </details>
   );

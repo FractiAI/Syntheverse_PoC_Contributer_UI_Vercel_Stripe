@@ -293,7 +293,7 @@ export async function POST(request: NextRequest, { params }: { params: { hash: s
             redundancy_penalty_percent: evaluation.redundancy_penalty_percent,
             density_penalty_percent: evaluation.density_penalty_percent,
             overlap_percent: overlapPercent,
-            bonus_multiplier_applied: evaluation.bonus_multiplier || 1.0,
+            bonus_multiplier_applied: (evaluation as any).bonus_multiplier || 1.0,
             seed_multiplier_applied: isSeed ? 1.15 : 1.0,
             has_sweet_spot_edges: hasSweetSpotEdges,
             full_evaluation: evaluation, // Store full evaluation object
