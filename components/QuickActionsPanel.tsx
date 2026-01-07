@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { BookOpen, Shield, Settings, FileText, Radio } from 'lucide-react';
 import { GenesisButtonQuickAction } from './GenesisButtonQuickAction';
 import { SimpleBroadcastDialog } from './SimpleBroadcastDialog';
+import DashboardHeaderProfileDropdown from './DashboardHeaderProfileDropdown';
 
 interface QuickActionsPanelProps {
   isCreator?: boolean;
@@ -29,7 +30,7 @@ export function QuickActionsPanel({
       <SimpleBroadcastDialog isOpen={showBroadcastDialog} onClose={() => setShowBroadcastDialog(false)} />
       <div className="cockpit-quick-actions-panel">
       <div className="cockpit-panel px-4 py-2">
-        <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex items-center justify-between gap-3 flex-wrap">
           {/* Quick Actions Links */}
           <div className="flex items-center gap-2 flex-wrap">
             <Link 
@@ -104,6 +105,11 @@ export function QuickActionsPanel({
                 <span className="sm:hidden">Ops</span>
               </Link>
             )}
+          </div>
+          
+          {/* Account Icon - Top Right */}
+          <div className="flex items-center">
+            <DashboardHeaderProfileDropdown />
           </div>
         </div>
       </div>

@@ -9,7 +9,7 @@ import { createClient } from '@/utils/supabase/server';
 import { getAuthenticatedUserWithRole } from '@/utils/auth/permissions';
 import { CreatorCockpitStats } from '@/components/creator/CreatorCockpitStats';
 import { CreatorCockpitNavigation } from '@/components/creator/CreatorCockpitNavigation';
-import { BootSequenceIndicators } from '@/components/BootSequenceIndicators';
+import { StatusPanel } from '@/components/StatusPanel';
 import { FrontierModule } from '@/components/FrontierModule';
 import { ActivityAnalytics } from '@/components/activity/ActivityAnalytics';
 import { SandboxNavigator } from '@/components/SandboxNavigator';

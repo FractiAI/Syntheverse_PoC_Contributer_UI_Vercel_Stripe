@@ -15,7 +15,7 @@ import { SocialMediaPanel } from '@/components/SocialMediaPanel';
 import { QuickActionsPanel } from '@/components/QuickActionsPanel';
 import { ChevronDown } from 'lucide-react';
 import { MobileStatusIndicators } from '@/components/MobileStatusIndicators';
-import { StatusPanel } from '@/components/StatusPanel';
+import DashboardHeaderProfileDropdown from '@/components/DashboardHeaderProfileDropdown';
 
 export const dynamic = 'force-dynamic';
 
@@ -49,10 +49,7 @@ export default async function Dashboard() {
 
   return (
     <div className="cockpit-bg min-h-screen">
-      {/* Status Panel - Top Bar */}
-      <StatusPanel />
-
-      {/* Quick Actions Panel - Top Bar */}
+      {/* Quick Actions Panel - Top Bar with Account Icon */}
       <QuickActionsPanel isCreator={isCreator} isOperator={isOperator} showContributorDashboard={false} />
 
       {/* Main Cockpit Container */}
@@ -61,54 +58,6 @@ export default async function Dashboard() {
         <div className="block md:hidden mb-6">
           <MobileStatusIndicators />
         </div>
-
-        {/* Primary Header - Cockpit Identity */}
-        <div className="cockpit-panel border-l-4 border-[var(--hydrogen-amber)] mb-6 p-5 md:p-6">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div className="flex-1">
-              <div className="cockpit-label mb-3 flex items-center gap-2 text-xs md:text-sm">
-                <span className="text-[var(--hydrogen-amber)] text-lg">◎</span>
-                <span className="uppercase tracking-[0.15em]">CONTRIBUTOR COCKPIT</span>
-              </div>
-              <h1 className="cockpit-title mb-3 text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
-                Proof-of-Contribution Station
-              </h1>
-              <p className="cockpit-text opacity-90 text-sm md:text-base max-w-2xl leading-relaxed">
-                Submit, evaluate, and anchor contributions to the Syntheverse protocol. All records are verifiable and permanent on Base Mainnet.
-              </p>
-            </div>
-          </div>
-          <div className="cockpit-text mt-4 pt-4 border-t border-[var(--keyline-primary)] text-[10px] md:text-xs opacity-70 uppercase tracking-wider">
-            FRACTIAI RESEARCH TEAM · PROTOCOL OPERATOR REFERENCE CLIENT
-          </div>
-        </div>
-
-        {/* Command Zone - Operator Identity - Moved to Top */}
-        <details className="cockpit-panel mb-6" open>
-          <summary className="cursor-pointer select-none list-none p-4 md:p-5 border-b border-[var(--keyline-primary)]">
-            <div className="flex items-center justify-between">
-              <div className="cockpit-label text-[10px] md:text-xs uppercase tracking-wider">
-                COMMAND ZONE
-              </div>
-              <ChevronDown className="cockpit-chevron h-5 w-5 opacity-70" />
-            </div>
-          </summary>
-          <div className="px-4 md:px-5 pb-4 md:pb-5 space-y-4">
-            <div>
-              <div className="cockpit-label text-[9px] uppercase tracking-wider opacity-70 mb-2">
-                OPERATOR
-              </div>
-              <div className="cockpit-title text-xl md:text-2xl mb-2">{displayName.toUpperCase()}</div>
-              <div className="cockpit-text text-xs md:text-sm leading-relaxed opacity-85">
-                FractiAI reference client for Syntheverse protocol. Records are verifiable and permanent.
-              </div>
-            </div>
-            <div className="cockpit-text border-l-3 border-[var(--hydrogen-amber)] bg-[var(--hydrogen-amber)]/8 px-3 py-2.5 text-[11px] md:text-xs leading-relaxed">
-              <strong className="text-[var(--hydrogen-amber)]">Liberating Contributions:</strong> Hydrogen spin MRI-based PoC protocol makes contributions{' '}
-              <strong>visible and demonstrable to all</strong> via HHF-AI MRI science.
-            </div>
-          </div>
-        </details>
 
         {/* Core Instrument Cluster - Reactor Core */}
         <details className="mb-6" open>

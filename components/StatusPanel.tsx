@@ -121,6 +121,11 @@ export function StatusPanel() {
 
   const statusItems = [
     {
+      label: 'Awareness Bridge/Router',
+      status: bootStatus.verdict || 'unknown',
+      key: 'bridge',
+    },
+    {
       label: 'Tokenomics',
       status: bootStatus.suiteScores.tokenomics?.status || 'unknown',
       key: 'tokenomics',
@@ -160,74 +165,6 @@ export function StatusPanel() {
     );
   }
 
-  return (
-    <div className="space-y-2">
-      {/* Status Indicators Row */}
-      <div className="cockpit-panel px-4 py-2">
-        <div className="flex items-center gap-4 flex-wrap">
-          <div className="cockpit-label text-[10px] uppercase tracking-wider opacity-70 border-r border-[var(--keyline-primary)] pr-4">
-            STATUS
-          </div>
-          {statusItems.map((item) => (
-            <div key={item.key} className="flex items-center gap-1.5">
-              <div
-                className={`h-2 w-2 rounded-full ${getStatusColor(item.status)}`}
-                style={getStatusGlow(item.status)}
-                title={`${item.label}: ${item.status.toUpperCase()}`}
-              />
-              <span className="cockpit-text text-[10px] uppercase tracking-wider opacity-80 whitespace-nowrap">
-                {item.label}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Protocol Info Row */}
-      <div className="cockpit-panel px-4 py-2">
-        <div className="flex items-center gap-6 flex-wrap">
-          <div className="cockpit-label text-[10px] uppercase tracking-wider opacity-70 border-r border-[var(--keyline-primary)] pr-4">
-            PROTOCOL INFO
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="cockpit-text text-[10px] opacity-80">Status:</span>
-            <span className="cockpit-text text-[10px] font-mono text-[var(--hydrogen-amber)] font-semibold">PUBLIC</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="cockpit-text text-[10px] opacity-80">Client:</span>
-            <span className="cockpit-text text-[10px] font-mono">FRACTIAI</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="cockpit-text text-[10px] opacity-80">Network:</span>
-            <span className="cockpit-text text-[10px] font-mono text-green-400 font-semibold">BASE MAINNET</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="cockpit-text text-[10px] opacity-80">Chain ID:</span>
-            <span className="cockpit-text text-[10px] font-mono">8453</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Genesis Status Row */}
-      <div className="cockpit-panel px-4 py-2 border-t-2 border-[var(--hydrogen-amber)]/30">
-        <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4 flex-wrap">
-          <div className="cockpit-label text-[10px] uppercase tracking-wider opacity-70 border-r border-[var(--keyline-primary)] pr-4">
-            GENESIS STATUS
-          </div>
-          <div className="flex-1 flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-            <div className="cockpit-text text-[10px] leading-relaxed">
-              <strong className="text-[var(--hydrogen-amber)]">SYNTH90T MOTHERLODE VAULT</strong> opens Spring Equinox, March 20, 2026.
-            </div>
-            <div className="cockpit-text text-[10px] leading-relaxed opacity-85">
-              Submission deadline: March 19, 2026
-            </div>
-          </div>
-          <div className="flex-shrink-0">
-            <GenesisButton />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  return null;
 }
 

@@ -9,7 +9,7 @@ import { createClient } from '@/utils/supabase/server';
 import { getAuthenticatedUserWithRole } from '@/utils/auth/permissions';
 import { CreatorCockpitStats } from '@/components/creator/CreatorCockpitStats';
 import { CreatorCockpitNavigation } from '@/components/creator/CreatorCockpitNavigation';
-import { BootSequenceIndicators } from '@/components/BootSequenceIndicators';
+import { StatusPanel } from '@/components/StatusPanel';
 import { SalesTracking } from '@/components/SalesTracking';
 import { SynthChat } from '@/components/SynthChat';
 import { FrontierModule } from '@/components/FrontierModule';
@@ -54,6 +54,8 @@ export default async function CreatorDashboard() {
   return (
     <div className="cockpit-bg min-h-screen">
       <CockpitHeader />
+      {/* Status Panel - Top Bar */}
+      <StatusPanel />
       {/* Quick Actions Panel - Upper Right */}
       <QuickActionsPanel isCreator={isCreator} isOperator={isOperator} showContributorDashboard={true} />
       <div className="container mx-auto space-y-6 px-6 py-8">
@@ -116,7 +118,6 @@ export default async function CreatorDashboard() {
                   Blog
                 </Link>
                 <Activity className="h-5 w-5 animate-pulse text-green-500" />
-                <BootSequenceIndicators />
                 <ChevronDown className="cockpit-chevron h-5 w-5 opacity-70 ml-2" />
               </div>
             </div>
