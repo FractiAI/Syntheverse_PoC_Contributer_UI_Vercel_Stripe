@@ -86,8 +86,8 @@ export function QuickActionsPanel({
             )}
           </div>
           
-          {/* Account Icon - Top Right */}
-          <div className="flex items-center">
+          {/* Account Icon - Top Right (hidden on mobile, shown in CockpitHeader) */}
+          <div className="hidden lg:flex items-center">
             <ClientProfileDropdown />
           </div>
         </div>
