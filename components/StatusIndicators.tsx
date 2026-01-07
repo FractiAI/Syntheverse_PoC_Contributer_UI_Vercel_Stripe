@@ -142,28 +142,13 @@ export function StatusIndicators() {
 
   return (
     <div className="flex flex-wrap items-center gap-3">
-      {/* Syntheverse Component Status Lights */}
+      {/* System Component Status Lights */}
       <div className="flex items-center gap-2 border-r border-[var(--keyline-primary)] pr-3">
         <div className="cockpit-label text-[10px] whitespace-nowrap" style={{ opacity: 0.7 }}>
           STATUS
         </div>
         <div className="flex flex-wrap items-center gap-1.5">
-          {/* Syntheverse - Always green */}
-          <div
-            className="group relative flex items-center gap-1"
-            title="Syntheverse Protocol"
-          >
-            <div
-              className="h-3 w-3 flex-shrink-0 animate-pulse rounded-full bg-green-500"
-              style={{ boxShadow: '0 0 8px #22c55e, 0 0 12px rgba(34, 197, 94, 0.5)' }}
-            ></div>
-            <div className="hidden items-center gap-1 text-[9px] text-green-400 md:flex">
-              <Box className="h-3 w-3" />
-              <span className="whitespace-nowrap">Syntheverse</span>
-            </div>
-          </div>
-
-          {/* Other Components */}
+          {/* System Components */}
           {syntheverseComponents.map((component) => (
             <div
               key={component.name}

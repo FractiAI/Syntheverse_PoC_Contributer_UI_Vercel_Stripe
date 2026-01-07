@@ -15,7 +15,6 @@ export function MobileStatusIndicators() {
   // All indicators are healthy by default (green, solid)
   // Red indicators would pulse for attention required
   const indicators: StatusIndicator[] = [
-    { name: 'Syntheverse', status: 'healthy' },
     { name: 'Awareness Bridge/Router', status: 'healthy' },
     { name: 'Whole Brain AI', status: 'healthy' },
     { name: 'SynthScan MRI', status: 'healthy' },
