@@ -77,6 +77,9 @@ export function CreatorEnterpriseSandboxes() {
                   testing_mode: balanceData.testing_mode,
                   current_reach_tier: balanceData.current_reach_tier,
                 };
+              } else {
+                // If balance fetch fails, return sandbox without metrics
+                console.warn(`Failed to fetch balance for sandbox ${sandbox.id}:`, balanceRes.status);
               }
             } catch (error) {
               console.error(`Error fetching metrics for sandbox ${sandbox.id}:`, error);
@@ -86,9 +89,15 @@ export function CreatorEnterpriseSandboxes() {
         );
 
         setSandboxes(sandboxesWithMetrics);
+      } else {
+        // Handle non-200 responses
+        const errorData = await res.json().catch(() => ({ error: 'Failed to fetch sandboxes' }));
+        console.error('Failed to fetch sandboxes:', res.status, errorData);
+        setSandboxes([]); // Set empty array on error
       }
     } catch (error) {
       console.error('Error fetching sandboxes:', error);
+      setSandboxes([]); // Set empty array on error
     } finally {
       setLoading(false);
     }

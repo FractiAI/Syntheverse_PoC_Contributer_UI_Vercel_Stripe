@@ -60,9 +60,21 @@ export async function GET(request: NextRequest) {
     );
 
     return NextResponse.json({ sandboxes: sandboxesWithCounts });
-  } catch (error) {
+  } catch (error: any) {
+    // If table doesn't exist or other database error, return empty array instead of 500
+    // This allows the UI to continue working even if enterprise tables aren't set up
+    if (error.message?.includes('does not exist') || error.message?.includes('relation') || error.code === '42P01') {
+      console.warn('Enterprise sandboxes table not found, returning empty array:', error.message);
+      return NextResponse.json({
+        sandboxes: [],
+      });
+    }
+    
     console.error('Error fetching sandboxes:', error);
-    return NextResponse.json({ error: 'Failed to fetch sandboxes' }, { status: 500 });
+    return NextResponse.json({ 
+      error: 'Failed to fetch sandboxes',
+      message: error.message || String(error)
+    }, { status: 500 });
   }
 }
 
