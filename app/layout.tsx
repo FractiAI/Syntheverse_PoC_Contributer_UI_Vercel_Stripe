@@ -10,6 +10,12 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'Syntheverse PoC',
   description: 'Proof of Contribution System',
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
+  },
 };
 
 export default function RootLayout({

@@ -725,11 +725,88 @@ select.cockpit-input::-ms-expand {
   .cockpit-quick-actions-panel .cockpit-lever {
     padding: 0.35rem 0.5rem;
     font-size: 0.65rem;
+    min-height: 44px; /* Ensure touch targets are large enough */
   }
   
   .cockpit-quick-actions-panel .cockpit-lever button {
     padding: 0.35rem 0.5rem;
     font-size: 0.65rem;
+    min-height: 44px; /* Ensure touch targets are large enough */
+  }
+}
+
+/* Extra small screens (Samsung A04 and similar) - 360px-480px width */
+@media (max-width: 480px) {
+  /* Prevent horizontal overflow */
+  body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+  }
+  
+  /* Ensure containers don't exceed viewport */
+  .container {
+    max-width: 100%;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  
+  /* Quick Actions Panel - More compact for very small screens */
+  .cockpit-quick-actions-panel .cockpit-panel {
+    padding: 0.35rem 0.4rem;
+  }
+  
+  .cockpit-quick-actions-panel .cockpit-lever {
+    padding: 0.3rem 0.4rem;
+    font-size: 0.6rem;
+    min-height: 44px;
+  }
+  
+  /* Typography adjustments for very small screens */
+  .cockpit-title {
+    font-size: 1.25rem;
+    line-height: 1.3;
+  }
+  
+  .cockpit-label {
+    font-size: 0.65rem;
+  }
+  
+  .cockpit-text {
+    font-size: 0.75rem;
+    line-height: 1.5;
+  }
+  
+  /* Panel padding adjustments */
+  .cockpit-panel {
+    padding: 0.75rem;
+  }
+  
+  /* Grid layout - single column on very small screens */
+  .cockpit-grid-layout {
+    padding: 0.5rem;
+    gap: 0.5rem;
+  }
+  
+  /* Tables - horizontal scroll on very small screens */
+  .cockpit-table {
+    font-size: 0.7rem;
+  }
+  
+  .cockpit-table th,
+  .cockpit-table td {
+    padding: 0.5rem 0.4rem;
+  }
+  
+  /* Ensure no fixed widths break layout */
+  * {
+    max-width: 100%;
+  }
+  
+  /* Images and media */
+  img, video, iframe {
+    max-width: 100%;
+    height: auto;
   }
 }
 
@@ -785,6 +862,13 @@ select.cockpit-input::-ms-expand {
 
 /* Responsive Adjustments - Maintain Crisp Desktop Aesthetic on Mobile */
 @media (max-width: 768px) {
+  /* Prevent horizontal overflow */
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+  }
+  
   .cockpit-grid-layout {
     padding: 0.5rem;
     gap: 0.75rem;
@@ -836,17 +920,21 @@ select.cockpit-input::-ms-expand {
     border-width: 2px;
   }
 
-  /* Lever buttons - Compact but still elegant */
+  /* Lever buttons - Compact but still elegant, ensure touch targets */
   .cockpit-lever {
     padding: 0.75rem 1.25rem;
     font-size: 0.8125rem;
     letter-spacing: 0.08em;
+    min-height: 44px; /* Minimum touch target size */
+    display: inline-flex;
+    align-items: center;
   }
 
   /* Container - Tighter but not cramped */
   .container {
     padding-left: 1rem;
     padding-right: 1rem;
+    max-width: 100%;
   }
 
   /* Maintain visual hierarchy with proper spacing */
@@ -871,5 +959,12 @@ select.cockpit-input::-ms-expand {
   .cockpit-badge {
     padding: 0.2rem 0.6rem;
     font-size: 0.7rem;
+  }
+  
+  /* Ensure tables don't overflow */
+  .cockpit-table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }
