@@ -1,7 +1,6 @@
 import { HeroOptimized } from './landing/HeroOptimized';
 import { SectionWhat } from './landing/SectionWhat';
 import { SectionWhy } from './landing/SectionWhy';
-import { SectionHow } from './landing/SectionHow';
 import { SectionTechnical } from './landing/SectionTechnical';
 import { SectionToken } from './landing/SectionToken';
 import { SectionMotherlode } from './landing/SectionMotherlode';
@@ -19,9 +18,6 @@ export default function LandingPageOptimized() {
 
       {/* Section 3: Why It Matters */}
       <SectionWhy />
-
-      {/* Section 4: How It Works */}
-      <SectionHow />
 
       {/* Section 5: Technical Signals */}
       <SectionTechnical />

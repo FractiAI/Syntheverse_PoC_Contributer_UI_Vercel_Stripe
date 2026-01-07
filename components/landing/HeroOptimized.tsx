@@ -25,8 +25,23 @@ export function HeroOptimized() {
 
       {/* Hero content */}
       <div className="relative z-10 max-w-4xl px-6 text-center">
+        {/* Trust indicators - moved to top */}
+        <div className="mb-8 flex flex-wrap items-center justify-center gap-4 text-sm opacity-75">
+          <span className="flex items-center gap-2">
+            <div
+              className="h-2 w-2 animate-pulse rounded-full bg-green-500"
+              style={{ boxShadow: '0 0 8px #22c55e' }}
+            />
+            Base Mainnet LIVE
+          </span>
+          <span>•</span>
+          <span>90T SYNTH</span>
+          <span>•</span>
+          <span>Beta Active</span>
+        </div>
+
         <h1 className="mb-6 text-4xl font-bold leading-tight md:text-5xl lg:text-6xl">
-          Syntheverse: Proof-of-Contribution for Frontier R&D
+          Syntheverse: Proof-of-Contribution for Frontier R&D, Creators and Enterprises
         </h1>
 
         <p className="cockpit-text mb-4 text-lg opacity-90 md:text-xl">
@@ -53,28 +68,21 @@ export function HeroOptimized() {
             <ArrowRight className="h-5 w-5" />
           </Link>
 
+          <Link
+            href="/onboarding"
+            className="cockpit-lever inline-flex items-center gap-2 bg-transparent px-8 py-4 text-base"
+            style={{ border: '1px solid var(--keyline-primary)' }}
+          >
+            Join the Frontier
+          </Link>
+
           <button
-            onClick={() => scrollToSection('how-it-works')}
+            onClick={() => scrollToSection('what-syntheverse-is')}
             className="cockpit-lever inline-flex items-center gap-2 bg-transparent px-8 py-4 text-base"
             style={{ border: '1px solid var(--keyline-primary)' }}
           >
             See How It Works
           </button>
-        </div>
-
-        {/* Trust indicators */}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-4 text-sm opacity-75">
-          <span className="flex items-center gap-2">
-            <div
-              className="h-2 w-2 animate-pulse rounded-full bg-green-500"
-              style={{ boxShadow: '0 0 8px #22c55e' }}
-            />
-            Base Mainnet LIVE
-          </span>
-          <span>•</span>
-          <span>90T SYNTH</span>
-          <span>•</span>
-          <span>Beta Active</span>
         </div>
       </div>
 
