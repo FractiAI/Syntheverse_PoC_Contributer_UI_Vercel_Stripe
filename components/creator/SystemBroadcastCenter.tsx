@@ -235,12 +235,15 @@ export function SystemBroadcastCenter() {
             </p>
           </div>
           <Button
-            onClick={() => {
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
               setShowCreateDialog(true);
               setFormData({ message: '', nature: 'info', expires_at: '' });
               setError(null);
             }}
             className="cockpit-lever"
+            type="button"
           >
             <Plus className="mr-2 h-4 w-4" />
             New Broadcast
@@ -330,7 +333,17 @@ export function SystemBroadcastCenter() {
       </div>
 
       {/* Create Dialog */}
-      <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
+      <Dialog 
+        open={showCreateDialog} 
+        onOpenChange={(open) => {
+          if (!open) {
+            // Only close if explicitly closing, not during create
+            setShowCreateDialog(false);
+            setFormData({ message: '', nature: 'info', expires_at: '' });
+            setError(null);
+          }
+        }}
+      >
         <DialogContent className="cockpit-panel border-purple-500">
           <DialogHeader>
             <DialogTitle className="cockpit-title">Create New Broadcast</DialogTitle>
@@ -401,10 +414,15 @@ export function SystemBroadcastCenter() {
               onClick={async (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                await handleCreate();
+                try {
+                  await handleCreate();
+                } catch (error) {
+                  console.error('Error in create button handler:', error);
+                }
               }} 
               className="cockpit-lever"
               type="button"
+              disabled={!formData.message.trim()}
             >
               <Save className="mr-2 h-4 w-4" />
               Create Broadcast

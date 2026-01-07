@@ -735,6 +735,100 @@ select.cockpit-input::-ms-expand {
   }
 }
 
+/* Tablet optimizations (iPad, Android tablets) - 768px-1024px */
+@media (min-width: 768px) and (max-width: 1024px) {
+  /* Tablet-specific adjustments */
+  .cockpit-grid-layout {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+    gap: 1rem;
+  }
+  
+  .cockpit-sidebar {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  /* Touch targets for tablets */
+  .cockpit-lever {
+    min-height: 44px;
+    padding: 0.75rem 1rem;
+  }
+  
+  /* Dialog sizing for tablets */
+  .cockpit-panel {
+    max-width: 90vw;
+  }
+}
+
+/* iPhone and Android phone optimizations - 360px-767px */
+@media (max-width: 767px) {
+  /* Prevent horizontal overflow */
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  
+  /* iOS Safari specific fixes */
+  @supports (-webkit-touch-callout: none) {
+    body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    /* Fix iOS viewport height issues */
+    .cockpit-bg {
+      min-height: -webkit-fill-available;
+    }
+  }
+  
+  /* Android Chrome specific fixes */
+  @supports not (-webkit-touch-callout: none) {
+    /* Android-specific adjustments */
+    body {
+      overscroll-behavior-y: contain;
+    }
+  }
+  
+  /* Touch targets - minimum 44px for iOS/Android */
+  .cockpit-lever,
+  button,
+  a.cockpit-lever {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0.75rem 1rem;
+    -webkit-tap-highlight-color: rgba(255, 184, 77, 0.2);
+    tap-highlight-color: rgba(255, 184, 77, 0.2);
+  }
+  
+  /* Dialog full-screen on mobile */
+  [role="dialog"] {
+    max-width: 100vw;
+    max-height: 100vh;
+    margin: 0;
+    border-radius: 0;
+  }
+  
+  /* Prevent zoom on input focus (iOS) */
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+  
+  /* Better scrolling on mobile */
+  .cockpit-panel,
+  .cockpit-module {
+    -webkit-overflow-scrolling: touch;
+    overflow-scrolling: touch;
+  }
+}
+
 /* Extra small screens (Samsung A04 and similar) - 360px-480px width */
 @media (max-width: 480px) {
   /* Prevent horizontal overflow */
