@@ -3,9 +3,13 @@
  * Horizontal bar across the top for quick navigation
  */
 
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
-import { BookOpen, Shield, Settings, FileText } from 'lucide-react';
+import { BookOpen, Shield, Settings, FileText, Radio } from 'lucide-react';
 import { GenesisButtonQuickAction } from './GenesisButtonQuickAction';
+import { SimpleBroadcastDialog } from './SimpleBroadcastDialog';
 
 interface QuickActionsPanelProps {
   isCreator?: boolean;
@@ -18,27 +22,31 @@ export function QuickActionsPanel({
   isOperator = false,
   showContributorDashboard = false,
 }: QuickActionsPanelProps) {
+  const [showBroadcastDialog, setShowBroadcastDialog] = useState(false);
+
   return (
-    <div className="cockpit-quick-actions-panel">
+    <>
+      <SimpleBroadcastDialog isOpen={showBroadcastDialog} onClose={() => setShowBroadcastDialog(false)} />
+      <div className="cockpit-quick-actions-panel">
       <div className="cockpit-panel px-4 py-2">
         <div className="flex items-center gap-3 flex-wrap">
           {/* System Status Indicators */}
           <div className="flex items-center gap-3 border-r border-[var(--keyline-primary)] pr-3 mr-1">
             <div className="flex items-center gap-1.5">
               <span className="cockpit-text text-[10px] uppercase tracking-wider opacity-60">Protocol</span>
-              <div className="h-2 w-2 animate-pulse rounded-full bg-green-500" style={{ boxShadow: '0 0 6px #22c55e' }}></div>
+              <div className="h-2 w-2 rounded-full bg-green-500" style={{ boxShadow: '0 0 6px #22c55e' }}></div>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="cockpit-text text-[10px] uppercase tracking-wider opacity-60">Blockchain</span>
-              <div className="h-2 w-2 animate-pulse rounded-full bg-green-500" style={{ boxShadow: '0 0 6px #22c55e' }}></div>
+              <div className="h-2 w-2 rounded-full bg-green-500" style={{ boxShadow: '0 0 6px #22c55e' }}></div>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="cockpit-text text-[10px] uppercase tracking-wider opacity-60">HHF-AI</span>
-              <div className="h-2 w-2 animate-pulse rounded-full bg-green-500" style={{ boxShadow: '0 0 6px #22c55e' }}></div>
+              <div className="h-2 w-2 rounded-full bg-green-500" style={{ boxShadow: '0 0 6px #22c55e' }}></div>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="cockpit-text text-[10px] uppercase tracking-wider opacity-60">SynthScan™</span>
-              <div className="h-2 w-2 animate-pulse rounded-full bg-green-500" style={{ boxShadow: '0 0 6px #22c55e' }}></div>
+              <div className="h-2 w-2 rounded-full bg-green-500" style={{ boxShadow: '0 0 6px #22c55e' }}></div>
             </div>
           </div>
 
@@ -82,10 +90,21 @@ export function QuickActionsPanel({
               <FileText className="mr-1.5 h-3 w-3" />
               Blog
             </Link>
-            <div className="inline-flex items-center">
-              <GenesisButtonQuickAction />
-            </div>
-            {isCreator && (
+                <div className="inline-flex items-center">
+                  <GenesisButtonQuickAction />
+                </div>
+                {(isCreator || isOperator) && (
+                  <button
+                    onClick={() => setShowBroadcastDialog(true)}
+                    className="cockpit-lever inline-flex items-center whitespace-nowrap py-1.5 px-3 text-xs"
+                    type="button"
+                  >
+                    <Radio className="mr-1.5 h-3 w-3" />
+                    <span className="hidden sm:inline">Broadcast</span>
+                    <span className="sm:hidden">Msg</span>
+                  </button>
+                )}
+                {isCreator && (
               <Link 
                 href="/creator/dashboard" 
                 className="cockpit-lever inline-flex items-center whitespace-nowrap py-1.5 px-3 text-xs"
@@ -109,6 +128,7 @@ export function QuickActionsPanel({
         </div>
       </div>
     </div>
+    </>
   );
 }
 

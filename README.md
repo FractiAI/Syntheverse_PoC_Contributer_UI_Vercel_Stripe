@@ -217,6 +217,22 @@ See [Environment Variables](#environment-variables) section for complete configu
   - **Problems Reported**: Error and issue tracking with type categorization (errors, evaluation_errors, payment_errors, other)
   - **Auto-refresh**: Updates every 30 seconds
   - **Access Control**: Operator and Creator only, server-side permission enforcement
+- **Broadcast Archive Navigator**: Archive view for all broadcast messages with filtering and status tracking
+  - **Table-Based Display**: Similar to PoC Archive, shows all broadcasts in organized table format
+  - **View Modes**: Filter by Active, Inactive, or All broadcasts
+  - **Status Indicators**: Visual indicators for active/inactive status and message types (info, warning, alert, announcement, success, milestone, update)
+  - **Metadata Display**: Shows message content, creation date, and creator information
+  - **Available on All Dashboards**: Integrated as collapsible panel in Contributor, Creator, and Operator dashboards
+  - **Auto-refresh**: Refresh button to reload latest broadcasts
+  - **Error Handling**: Graceful handling of missing permissions and API errors
+- **Creator/Operator Paywall Exemptions**: Comprehensive payment bypass for testing and development
+  - **Submissions**: Creators and operators bypass $500 submission fee, submissions go directly to evaluation
+  - **SynthScan Monthly**: Bypass monthly subscription fees for creators and operators
+  - **Field Imaging Services**: Bypass FieldScan service fees (Light/Pro/Enterprise tiers)
+  - **Enterprise Sandbox Plans**: Bypass Stripe checkout, sandboxes created and activated directly
+  - **Sandbox Activation**: Bypass SYNTH token activation fees, sandboxes activated with testing balance
+  - **Automatic Detection**: All paywall checks use `getAuthenticatedUserWithRole()` for automatic exemption
+  - **Full Functionality**: Exempt users maintain all features while skipping payment processing
 - **SynthChat - Collaborative Sandbox Chat System**: WhatsApp-style mobile chat interface for sandbox collaboration
   - **WhatsApp-Style Interface**: Mobile-first design with two-panel layout (sandbox list + chat view)
   - **Sandbox-Based Rooms**: Chat rooms organized by sandbox (Syntheverse default + enterprise + user-defined)
@@ -238,6 +254,22 @@ See [Environment Variables](#environment-variables) section for complete configu
   - **Auto-Join**: Syntheverse room auto-joins users on first access
   - **Message Bubbles**: WhatsApp-style rounded message bubbles with timestamps and sender names
   - **Last Message Preview**: Shows last message and timestamp in sandbox list
+- **Social Media Panel - Sandbox-Based Community Feed**: Collapsible social media panel for sandbox-linked community engagement
+  - **Sandbox-Linked Feeds**: Each sandbox has its own social feed, creating isolated communities within the Syntheverse ecosystem
+  - **Post Creation**: Create posts with text content and optional image uploads (5MB limit)
+  - **Image Uploads**: Upload images directly to posts with preview before posting
+  - **Like System**: Like and unlike posts with real-time count updates
+  - **Comment Threads**: Expandable comment sections with threaded discussions
+  - **Profile Pictures**: Display user profile pictures on posts and comments (2MB limit, stored in Supabase Storage)
+  - **Profile Picture Upload**: Upload and update profile pictures via dedicated API endpoint
+  - **Post Management**: Delete own posts, view pinned posts (operators/creators can pin)
+  - **Real-Time Updates**: Auto-refresh on post creation, like/comment actions
+  - **Pagination**: Load more posts with infinite scroll support
+  - **Sandbox Integration**: Automatically follows selected sandbox from dashboard (Syntheverse default or enterprise sandbox)
+  - **Cockpit Styling**: Consistent cockpit aesthetic matching other dashboard panels
+  - **Available on Contributor Dashboard**: Integrated as collapsible panel after Broadcast Archive
+  - **Storage**: Images stored in Supabase Storage (social-media-images and profile-pictures buckets)
+  - **Database**: Full database schema with posts, likes, comments tables, RLS policies, and auto-updating counters
 - **Sandbox Selector**: Dashboard-level sandbox selection at top of dashboard page
   - **Syntheverse Default**: Always shown as the primary/default option
   - **Enterprise Sandboxes**: Nested below Syntheverse with visual separation
@@ -768,9 +800,12 @@ Built for the Syntheverse ecosystem with ❤️
 ---
 
 **Last Updated**: January 2025  
-**Version**: 2.21 (Seeds and Edges Module & Broadcast Error Handling)
+**Version**: 2.23 (Social Media Panel - Sandbox-Based Community Feed)
 
 ### Version History
+
+- **v2.23** (January 2025): Social Media Panel - Sandbox-Based Community Feed - Added comprehensive social media panel for sandbox-linked community engagement. Implemented full database schema with social_posts, social_post_likes, and social_post_comments tables, including RLS policies, triggers for auto-updating like/comment counts, and profile picture support in users_table. Created complete API endpoints for posts (GET, POST, DELETE), likes (POST, DELETE), comments (GET, POST, DELETE), image uploads, and profile picture uploads. Built frontend components: SocialMediaPanel (main feed), PostCard (individual posts with profile pictures), CreatePostForm (post creation with image upload), and PostComments (comment threads). Integrated into Contributor Dashboard as collapsible panel. Features include sandbox-linked feeds (each sandbox has its own community), post creation with images (5MB limit), like/unlike system, comment threads, profile picture display and upload (2MB limit), post deletion, pagination, and real-time updates. Storage buckets: social-media-images (5MB) and profile-pictures (2MB) in Supabase Storage. Follows existing cockpit styling patterns and sandbox selection integration.
+- **v2.22** (January 2025): Broadcast Archive Navigator & Creator/Operator Paywall Exemptions - Added Broadcast Archive Navigator component similar to PoC Archive, displaying all broadcast messages in a table format with filtering (Active/Inactive/All), status indicators, message types, and creation metadata. Integrated into all dashboards (Contributor, Creator, Operator) as collapsible panels. Implemented comprehensive paywall exemptions for creators and operators across all services: submissions (bypass $500 fee), SynthScan Monthly (bypass subscription), Field Imaging Services (bypass service fees), Enterprise Sandbox Plans (bypass checkout, direct activation), and Sandbox Activation (bypass SYNTH token fees). All paywall checks now use `getAuthenticatedUserWithRole()` to automatically exempt creators and operators while maintaining full functionality for testing purposes.
 
 - **v2.21** (January 2025): Seeds and Edges Module & Broadcast Error Handling - Added Module 14 to onboarding covering "Syntheverse Minimum Viable Product: Seeds and Edges" with comprehensive content on the minimum viable generative set (9 seeds and 7 edge classes). Added Seeds and Edges section to FractiAI landing page with overview, seed/edge catalogs, and links to Module 14. Moved Quick Actions Panel from fixed right-side panel to horizontal bar across top of all dashboards. Integrated System Status indicators into top Quick Actions bar. Fixed 500 errors on `/api/broadcasts/all` endpoint with graceful table existence handling. Improved error handling in SystemBroadcastCenter component to prevent UI hanging on 403 errors. All broadcast API calls now properly handle errors with user-friendly messages.
 

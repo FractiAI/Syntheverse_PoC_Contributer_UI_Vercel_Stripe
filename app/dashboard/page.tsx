@@ -12,8 +12,11 @@ import { GenesisButton } from '@/components/GenesisButton';
 import { getAuthenticatedUserWithRole } from '@/utils/auth/permissions';
 import { SandboxNavigator } from '@/components/SandboxNavigator';
 import { SynthChatNavigator } from '@/components/SynthChatNavigator';
+import { BroadcastArchiveNavigator } from '@/components/BroadcastArchiveNavigator';
+import { SocialMediaPanel } from '@/components/SocialMediaPanel';
 import { QuickActionsPanel } from '@/components/QuickActionsPanel';
 import { ChevronDown } from 'lucide-react';
+import { MobileStatusIndicators } from '@/components/MobileStatusIndicators';
 
 export const dynamic = 'force-dynamic';
 
@@ -52,6 +55,11 @@ export default async function Dashboard() {
 
       {/* Main Cockpit Container */}
       <div className="container mx-auto px-4 py-6 max-w-[1920px]">
+        {/* Mobile Status Indicators - Top of mobile dashboards */}
+        <div className="block md:hidden mb-6">
+          <MobileStatusIndicators />
+        </div>
+
         {/* Primary Header - Cockpit Identity */}
         <div className="cockpit-panel border-l-4 border-[var(--hydrogen-amber)] mb-6 p-5 md:p-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -144,6 +152,36 @@ export default async function Dashboard() {
                 </summary>
                 <div className="px-4 md:px-5 pb-4 md:pb-5">
                   <SynthChatNavigator />
+                </div>
+              </details>
+
+              {/* Broadcast Archive Navigator - Collapsible */}
+              <details className="cockpit-panel" open>
+                <summary className="cursor-pointer select-none list-none p-4 md:p-5 border-b border-[var(--keyline-primary)]">
+                  <div className="flex items-center justify-between">
+                    <div className="cockpit-label text-xs md:text-sm uppercase tracking-wider">
+                      BROADCAST ARCHIVE
+                    </div>
+                    <ChevronDown className="cockpit-chevron h-5 w-5 opacity-70" />
+                  </div>
+                </summary>
+                <div className="px-4 md:px-5 pb-4 md:pb-5">
+                  <BroadcastArchiveNavigator />
+                </div>
+              </details>
+
+              {/* Social Media Panel - Collapsible */}
+              <details className="cockpit-panel" open>
+                <summary className="cursor-pointer select-none list-none p-4 md:p-5 border-b border-[var(--keyline-primary)]">
+                  <div className="flex items-center justify-between">
+                    <div className="cockpit-label text-xs md:text-sm uppercase tracking-wider">
+                      SOCIAL FEED
+                    </div>
+                    <ChevronDown className="cockpit-chevron h-5 w-5 opacity-70" />
+                  </div>
+                </summary>
+                <div className="px-4 md:px-5 pb-4 md:pb-5">
+                  <SocialMediaPanel />
                 </div>
               </details>
             </div>

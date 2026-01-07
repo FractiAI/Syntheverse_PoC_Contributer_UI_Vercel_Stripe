@@ -7,6 +7,7 @@ export const usersTable = pgTable('users_table', {
   plan: text('plan').notNull(),
   stripe_id: text('stripe_id').notNull(),
   role: text('role').notNull().default('user'), // 'creator', 'operator', 'user'
+  profile_picture_url: text('profile_picture_url'), // URL to profile picture in Supabase Storage
   deleted_at: timestamp('deleted_at'), // Soft delete timestamp
 });
 
@@ -404,3 +405,45 @@ export const blogPermissionsTable = pgTable('blog_permissions', {
 
 export type InsertBlogPermissions = typeof blogPermissionsTable.$inferInsert;
 export type SelectBlogPermissions = typeof blogPermissionsTable.$inferSelect;
+
+// Social Media Tables (Sandbox-Based Community Feeds)
+export const socialPostsTable = pgTable('social_posts', {
+  id: text('id').primaryKey(),
+  sandbox_id: text('sandbox_id'), // null = syntheverse (default), otherwise enterprise_sandboxes.id
+  author_email: text('author_email').notNull(),
+  author_role: text('author_role').notNull(), // 'contributor', 'operator', 'creator'
+  content: text('content').notNull(),
+  image_url: text('image_url'),
+  image_path: text('image_path'),
+  likes_count: integer('likes_count').default(0).notNull(),
+  comments_count: integer('comments_count').default(0).notNull(),
+  is_pinned: boolean('is_pinned').default(false),
+  is_deleted: boolean('is_deleted').default(false),
+  created_at: timestamp('created_at').defaultNow().notNull(),
+  updated_at: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const socialPostLikesTable = pgTable('social_post_likes', {
+  id: text('id').primaryKey(),
+  post_id: text('post_id').notNull(), // References social_posts.id
+  user_email: text('user_email').notNull(),
+  created_at: timestamp('created_at').defaultNow().notNull(),
+});
+
+export const socialPostCommentsTable = pgTable('social_post_comments', {
+  id: text('id').primaryKey(),
+  post_id: text('post_id').notNull(), // References social_posts.id
+  author_email: text('author_email').notNull(),
+  author_role: text('author_role').notNull(), // 'contributor', 'operator', 'creator'
+  content: text('content').notNull(),
+  is_deleted: boolean('is_deleted').default(false),
+  created_at: timestamp('created_at').defaultNow().notNull(),
+  updated_at: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export type InsertSocialPost = typeof socialPostsTable.$inferInsert;
+export type SelectSocialPost = typeof socialPostsTable.$inferSelect;
+export type InsertSocialPostLike = typeof socialPostLikesTable.$inferInsert;
+export type SelectSocialPostLike = typeof socialPostLikesTable.$inferSelect;
+export type InsertSocialPostComment = typeof socialPostCommentsTable.$inferInsert;
+export type SelectSocialPostComment = typeof socialPostCommentsTable.$inferSelect;
