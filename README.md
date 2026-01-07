@@ -813,9 +813,11 @@ Built for the Syntheverse ecosystem with ❤️
 ---
 
 **Last Updated**: January 2025  
-**Version**: 2.26 (Dashboard Navigation Clarity & Status Indicator Updates)
+**Version**: 2.27 (Dashboard Fixes & Persistent Panel State)
 
 ### Version History
+
+- **v2.27** (January 2025): Dashboard Fixes & Persistent Panel State - Critical fixes and UX improvements for contributor dashboard. Fixed mobile status indicators to consistently show "ERC-20 MOTHERLODE VAULT" label. Fixed social media panel logic that prevented Syntheverse sandbox posts from loading. Removed Genesis button from Reactor Core footer for cleaner interface. Fixed onboarding module numbering to be sequential (01-19 instead of duplicated MODULE 16). Added PersistentDetails component for collapsible panels - all dashboard panels (Reactor Core, Sandbox Navigator, SynthChat Navigator, Sandbox Channel, PoC Navigator) now remember their open/closed state across page refreshes using localStorage. Significantly improves UX by maintaining user preferences for panel visibility.
 
 - **v2.26** (January 2025): Dashboard Navigation Clarity & Status Indicator Updates - Improved dashboard navigation clarity and terminology. Removed Dashboard button from Quick Actions Panel to reduce redundancy. Updated status indicators: renamed "ERC-20 Base" to "ERC-20 MOTHERLODE VAULT" for clearer blockchain integration context. Renamed navigation sections for better clarity: "FRONTIER MODULE" to "PoC NAVIGATOR", "SANDBOX" to "SANDBOX NAVIGATOR", and "SYNTHCHAT" to "SYNTHCHAT NAVIGATOR". All changes enhance user understanding of dashboard sections and their purpose while maintaining consistent cockpit aesthetic.
 
