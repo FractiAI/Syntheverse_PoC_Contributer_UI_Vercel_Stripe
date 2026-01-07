@@ -10,7 +10,6 @@ import { OperatorBroadcastBanner } from '@/components/OperatorBroadcastBanner';
 import { getAuthenticatedUserWithRole } from '@/utils/auth/permissions';
 import { SandboxNavigator } from '@/components/SandboxNavigator';
 import { SynthChatNavigator } from '@/components/SynthChatNavigator';
-import { BroadcastArchiveNavigator } from '@/components/BroadcastArchiveNavigator';
 import { SocialMediaPanel } from '@/components/SocialMediaPanel';
 import { QuickActionsPanel } from '@/components/QuickActionsPanel';
 import { ChevronDown } from 'lucide-react';
@@ -78,91 +77,76 @@ export default async function Dashboard() {
           <OperatorBroadcastBanner />
         </div>
 
-        {/* Main Content Grid - Optimized Layout */}
+        {/* Main Content Grid - Three Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Left Column - Navigation Modules (8 columns on large screens) */}
-          <div className="lg:col-span-8 space-y-6">
-            {/* Navigation Modules - Stacked for better visibility */}
-            <div className="space-y-6">
-              {/* Sandbox Navigator - Collapsible */}
-              <details className="cockpit-panel" open>
-                <summary className="cursor-pointer select-none list-none p-4 md:p-5 border-b border-[var(--keyline-primary)]">
-                  <div className="flex items-center justify-between">
-                    <div className="cockpit-label text-xs md:text-sm uppercase tracking-wider">
-                      SANDBOX NAVIGATOR
-                    </div>
-                    <ChevronDown className="cockpit-chevron h-5 w-5 opacity-70" />
+          {/* Left Column - Navigators (3 columns on large screens) */}
+          <aside className="lg:col-span-3 space-y-6">
+            {/* Sandbox Navigator - Collapsible */}
+            <details className="cockpit-panel" open>
+              <summary className="cursor-pointer select-none list-none p-4 border-b border-[var(--keyline-primary)]">
+                <div className="flex items-center justify-between">
+                  <div className="cockpit-label text-xs uppercase tracking-wider">
+                    SANDBOX NAVIGATOR
                   </div>
-                </summary>
-                <div className="px-4 md:px-5 pb-4 md:pb-5">
-                  <SandboxNavigator userEmail={user.email!} isCreator={isCreator} isOperator={isOperator} />
+                  <ChevronDown className="cockpit-chevron h-5 w-5 opacity-70" />
                 </div>
-              </details>
+              </summary>
+              <div className="px-4 pb-4">
+                <SandboxNavigator userEmail={user.email!} isCreator={isCreator} isOperator={isOperator} />
+              </div>
+            </details>
 
-              {/* Frontier Module - Collapsible */}
-              <details className="cockpit-panel" open>
-                <summary className="cursor-pointer select-none list-none p-4 md:p-5 border-b border-[var(--keyline-primary)]">
-                  <div className="flex items-center justify-between">
-                    <div className="cockpit-label text-xs md:text-sm uppercase tracking-wider">
-                      FRONTIER MODULE
-                    </div>
-                    <ChevronDown className="cockpit-chevron h-5 w-5 opacity-70" />
+            {/* SynthChat Navigator - Collapsible */}
+            <details className="cockpit-panel" open>
+              <summary className="cursor-pointer select-none list-none p-4 border-b border-[var(--keyline-primary)]">
+                <div className="flex items-center justify-between">
+                  <div className="cockpit-label text-xs uppercase tracking-wider">
+                    SYNTHCHAT NAVIGATOR
                   </div>
-                </summary>
-                <div className="px-4 md:px-5 pb-4 md:pb-5">
-                  <FrontierModule userEmail={user.email!} />
+                  <ChevronDown className="cockpit-chevron h-5 w-5 opacity-70" />
                 </div>
-              </details>
+              </summary>
+              <div className="px-4 pb-4">
+                <SynthChatNavigator />
+              </div>
+            </details>
+          </aside>
 
-              {/* SynthChat Navigator - Collapsible */}
-              <details className="cockpit-panel" open>
-                <summary className="cursor-pointer select-none list-none p-4 md:p-5 border-b border-[var(--keyline-primary)]">
-                  <div className="flex items-center justify-between">
-                    <div className="cockpit-label text-xs md:text-sm uppercase tracking-wider">
-                      SYNTHCHAT NAVIGATOR
-                    </div>
-                    <ChevronDown className="cockpit-chevron h-5 w-5 opacity-70" />
+          {/* Center Column - Social Media Feed (6 columns on large screens) */}
+          <div className="lg:col-span-6 space-y-6">
+            {/* Social Media Panel - Main Focus */}
+            <details className="cockpit-panel" open>
+              <summary className="cursor-pointer select-none list-none p-4 md:p-5 border-b border-[var(--keyline-primary)]">
+                <div className="flex items-center justify-between">
+                  <div className="cockpit-label text-xs md:text-sm uppercase tracking-wider">
+                    SANDBOX CHANNEL
                   </div>
-                </summary>
-                <div className="px-4 md:px-5 pb-4 md:pb-5">
-                  <SynthChatNavigator />
+                  <ChevronDown className="cockpit-chevron h-5 w-5 opacity-70" />
                 </div>
-              </details>
+              </summary>
+              <div className="px-4 md:px-5 pb-4 md:pb-5">
+                <SocialMediaPanel />
+              </div>
+            </details>
 
-              {/* Broadcast Archive Navigator - Collapsible */}
-              <details className="cockpit-panel" open>
-                <summary className="cursor-pointer select-none list-none p-4 md:p-5 border-b border-[var(--keyline-primary)]">
-                  <div className="flex items-center justify-between">
-                    <div className="cockpit-label text-xs md:text-sm uppercase tracking-wider">
-                      BROADCAST ARCHIVE
-                    </div>
-                    <ChevronDown className="cockpit-chevron h-5 w-5 opacity-70" />
+            {/* Frontier Module - Collapsible */}
+            <details className="cockpit-panel" open>
+              <summary className="cursor-pointer select-none list-none p-4 md:p-5 border-b border-[var(--keyline-primary)]">
+                <div className="flex items-center justify-between">
+                  <div className="cockpit-label text-xs md:text-sm uppercase tracking-wider">
+                    FRONTIER MODULE
                   </div>
-                </summary>
-                <div className="px-4 md:px-5 pb-4 md:pb-5">
-                  <BroadcastArchiveNavigator />
+                  <ChevronDown className="cockpit-chevron h-5 w-5 opacity-70" />
                 </div>
-              </details>
-
-              {/* Social Media Panel - Collapsible */}
-              <details className="cockpit-panel" open>
-                <summary className="cursor-pointer select-none list-none p-4 md:p-5 border-b border-[var(--keyline-primary)]">
-                  <div className="flex items-center justify-between">
-                    <div className="cockpit-label text-xs md:text-sm uppercase tracking-wider">
-                      SOCIAL FEED
-                    </div>
-                    <ChevronDown className="cockpit-chevron h-5 w-5 opacity-70" />
-                  </div>
-                </summary>
-                <div className="px-4 md:px-5 pb-4 md:pb-5">
-                  <SocialMediaPanel />
-                </div>
-              </details>
-            </div>
+              </summary>
+              <div className="px-4 md:px-5 pb-4 md:pb-5">
+                <FrontierModule userEmail={user.email!} />
+              </div>
+            </details>
           </div>
 
-          {/* Right Column - Status Panels (4 columns on large screens) */}
-          <aside className="lg:col-span-4 space-y-4">
+          {/* Right Column - Additional Panels (3 columns on large screens) */}
+          <aside className="lg:col-span-3 space-y-4">
             {/* Additional status panels can be added here */}
           </aside>
         </div>

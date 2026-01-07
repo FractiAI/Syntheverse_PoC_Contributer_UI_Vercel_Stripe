@@ -28,9 +28,9 @@ export default function CockpitHeader() {
             </div>
           </div>
 
-          {/* Syntheverse Status & Profile */}
+          {/* Status Panel & My Account Icon */}
           <div className="flex items-center gap-4 flex-wrap">
-            {/* Status Indicators */}
+            {/* Status Indicators with Awareness Bridge/Router */}
             <div className="flex items-center gap-2 min-w-0">
               <StatusIndicators />
             </div>

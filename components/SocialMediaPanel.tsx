@@ -36,6 +36,7 @@ export function SocialMediaPanel() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedSandbox, setSelectedSandbox] = useState<string | null>('syntheverse');
+  const [sandboxName, setSandboxName] = useState<string>('Syntheverse');
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [currentUserEmail, setCurrentUserEmail] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(false);
@@ -53,6 +54,7 @@ export function SocialMediaPanel() {
     if (typeof window !== 'undefined') {
       const storedSandbox = localStorage.getItem('selectedSandbox') || 'syntheverse';
       setSelectedSandbox(storedSandbox === 'syntheverse' ? null : storedSandbox);
+      fetchSandboxName(storedSandbox);
     }
 
     // Listen for sandbox changes
@@ -60,6 +62,7 @@ export function SocialMediaPanel() {
       const newSandboxId = event.detail?.sandboxId || 'syntheverse';
       setSelectedSandbox(newSandboxId === 'syntheverse' ? null : newSandboxId);
       setOffset(0);
+      fetchSandboxName(newSandboxId);
       fetchPosts(newSandboxId === 'syntheverse' ? null : newSandboxId, 0, true);
     };
 
@@ -145,10 +148,27 @@ export function SocialMediaPanel() {
     );
   };
 
-  const getSandboxName = () => {
-    if (selectedSandbox === null) return 'Syntheverse';
-    // Could fetch sandbox name from API, but for now just show ID
-    return `Sandbox ${selectedSandbox.substring(0, 8)}...`;
+  const fetchSandboxName = async (sandboxId: string) => {
+    if (sandboxId === 'syntheverse') {
+      setSandboxName('Syntheverse');
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/enterprise/sandboxes`);
+      if (response.ok) {
+        const data = await response.json();
+        const sandbox = data.sandboxes?.find((s: any) => s.id === sandboxId);
+        if (sandbox?.name) {
+          setSandboxName(sandbox.name);
+        } else {
+          setSandboxName(`Sandbox ${sandboxId.substring(0, 8)}...`);
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching sandbox name:', err);
+      setSandboxName(`Sandbox ${sandboxId.substring(0, 8)}...`);
+    }
   };
 
   return (
@@ -156,8 +176,7 @@ export function SocialMediaPanel() {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-[var(--keyline-primary)] pb-3">
         <div>
-          <div className="cockpit-label text-xs uppercase tracking-wider">SOCIAL FEED</div>
-          <div className="cockpit-text text-sm opacity-80 mt-1">{getSandboxName()}</div>
+          <div className="cockpit-label text-xs uppercase tracking-wider">{sandboxName} CHANNEL</div>
         </div>
         <div className="flex items-center gap-2">
           <Button

@@ -22,6 +22,7 @@ import { BroadcastArchiveNavigator } from '@/components/BroadcastArchiveNavigato
 import { ReactorCore } from '@/components/ReactorCore';
 import CockpitHeader from '@/components/CockpitHeader';
 import { QuickActionsPanel } from '@/components/QuickActionsPanel';
+import { OperatorBroadcastBanner } from '@/components/OperatorBroadcastBanner';
 import { Shield, Activity, FileText, BookOpen, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
@@ -78,6 +79,11 @@ export default async function CreatorDashboard() {
             <ReactorCore />
           </div>
         </details>
+
+        {/* System Broadcast Banners - Priority Display */}
+        <div className="mb-6">
+          <OperatorBroadcastBanner />
+        </div>
 
         {/* Navigation Modules - Collapsible */}
         <details className="cockpit-panel" open>
