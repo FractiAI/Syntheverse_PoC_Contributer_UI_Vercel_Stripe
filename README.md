@@ -813,9 +813,11 @@ Built for the Syntheverse ecosystem with ❤️
 ---
 
 **Last Updated**: January 2025  
-**Version**: 2.25 (Cockpit Dashboard Refinement & Three-Column Layout)
+**Version**: 2.26 (Dashboard Navigation Clarity & Status Indicator Updates)
 
 ### Version History
+
+- **v2.26** (January 2025): Dashboard Navigation Clarity & Status Indicator Updates - Improved dashboard navigation clarity and terminology. Removed Dashboard button from Quick Actions Panel to reduce redundancy. Updated status indicators: renamed "ERC-20 Base" to "ERC-20 MOTHERLODE VAULT" for clearer blockchain integration context. Renamed navigation sections for better clarity: "FRONTIER MODULE" to "PoC NAVIGATOR", "SANDBOX" to "SANDBOX NAVIGATOR", and "SYNTHCHAT" to "SYNTHCHAT NAVIGATOR". All changes enhance user understanding of dashboard sections and their purpose while maintaining consistent cockpit aesthetic.
 
 - **v2.25** (January 2025): Cockpit Dashboard Refinement & Three-Column Layout - Comprehensive dashboard UI optimization for enhanced cockpit resonance and coherence. Restructured contributor dashboard to three-column layout: left sidebar (compact Sandbox and SynthChat navigators), center column (Social Media Channel and Frontier Module as primary content), right column (future expansion). Removed Genesis and Broadcast buttons from Quick Actions Panel to reduce clutter. Added Genesis on Base button to Reactor Core footer for contextual access. Centered epoch breakdown display (FOUNDER/GOLD/SILVER/COPPER) for better visual balance. Streamlined STATUS panel to 5 core technical indicators: Awareness Bridge/Router, Whole Brain AI, SynthScan MRI, PoC Sandbox, ERC-20 Base, plus dynamic Current Sandbox indicator. Mobile optimization: hid status indicators on mobile (< 1024px), showing only My Account icon in header; reordered columns to prioritize Social Media Channel first; enhanced navigator readability with larger fonts (0.8rem) and better touch targets (44px minimum). Added cockpit-navigator-compact CSS class for left sidebar with compressed styling. Renamed Social Media Feed to dynamic "[Sandbox Name] CHANNEL" displaying actual sandbox names. Fixed CSS syntax error (extra closing brace) causing webpack build failure. All changes maintain cockpit aesthetic while improving information hierarchy and mobile UX.
 

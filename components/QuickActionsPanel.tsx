@@ -27,14 +27,6 @@ export function QuickActionsPanel({
           {/* Quick Actions Links */}
           <div className="flex items-center gap-2 flex-wrap">
             <Link 
-              href="/dashboard" 
-              className="cockpit-lever inline-flex items-center whitespace-nowrap py-1.5 px-3 text-xs"
-            >
-              <span className="mr-1.5">◎</span>
-              <span className="hidden sm:inline">Dashboard</span>
-              <span className="sm:hidden">Dash</span>
-            </Link>
-            <Link 
               href="/fractiai" 
               className="cockpit-lever inline-flex items-center whitespace-nowrap py-1.5 px-3 text-xs"
             >

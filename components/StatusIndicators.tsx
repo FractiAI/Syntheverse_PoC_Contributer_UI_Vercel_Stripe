@@ -37,8 +37,8 @@ const syntheverseComponents: ComponentStatus[] = [
     icon: <Layers className="h-3 w-3" />,
   },
   {
-    name: 'erc20-base',
-    label: 'ERC-20 Base',
+    name: 'erc20-motherlode-vault',
+    label: 'ERC-20 MOTHERLODE VAULT',
     icon: <Network className="h-3 w-3" />,
   },
 ];

@@ -86,7 +86,7 @@ export default async function Dashboard() {
               <summary className="cursor-pointer select-none list-none p-3 border-b border-[var(--keyline-primary)]">
                 <div className="flex items-center justify-between">
                   <div className="cockpit-label text-[10px] uppercase tracking-wider">
-                    SANDBOX
+                    SANDBOX NAVIGATOR
                   </div>
                   <ChevronDown className="cockpit-chevron h-4 w-4 opacity-70" />
                 </div>
@@ -103,7 +103,7 @@ export default async function Dashboard() {
               <summary className="cursor-pointer select-none list-none p-3 border-b border-[var(--keyline-primary)]">
                 <div className="flex items-center justify-between">
                   <div className="cockpit-label text-[10px] uppercase tracking-wider">
-                    SYNTHCHAT
+                    SYNTHCHAT NAVIGATOR
                   </div>
                   <ChevronDown className="cockpit-chevron h-4 w-4 opacity-70" />
                 </div>
@@ -133,12 +133,12 @@ export default async function Dashboard() {
               </div>
             </details>
 
-            {/* Frontier Module - Collapsible */}
+            {/* PoC Navigator - Collapsible */}
             <details className="cockpit-panel" open>
               <summary className="cursor-pointer select-none list-none p-4 border-b border-[var(--keyline-primary)]">
                 <div className="flex items-center justify-between">
                   <div className="cockpit-label text-xs uppercase tracking-wider">
-                    FRONTIER MODULE
+                    PoC NAVIGATOR
                   </div>
                   <ChevronDown className="cockpit-chevron h-5 w-5 opacity-70" />
                 </div>

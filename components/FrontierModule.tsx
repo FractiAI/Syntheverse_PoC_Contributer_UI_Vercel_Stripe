@@ -402,7 +402,7 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
           {/* Module Header */}
           <div className="mb-4 flex items-center justify-between border-b border-[var(--keyline-primary)] pb-3 md:mb-6 md:pb-4">
             <div>
-              <div className="cockpit-label">FRONTIER MODULE</div>
+              <div className="cockpit-label">PoC NAVIGATOR</div>
               <div className="cockpit-title mt-1 text-2xl">PoC SUBMISSIONS ARCHIVE</div>
             </div>
             <div className="flex items-center gap-3">
