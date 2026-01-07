@@ -49,6 +49,10 @@ export const contributionsTable = pgTable('contributions', {
   registration_tx_hash: text('registration_tx_hash'), // Blockchain transaction hash
   stripe_payment_id: text('stripe_payment_id'), // Stripe payment ID for registration
   archived_at: timestamp('archived_at'), // Timestamp when archived (for reset tracking)
+  // Seed and Sweet Spot Edge Detection
+  is_seed: boolean('is_seed').default(false), // First submission to sandbox - receives 15% multiplier (×1.15)
+  has_sweet_spot_edges: boolean('has_sweet_spot_edges').default(false), // Overlap in sweet spot range (9.2%-19.2%, centered at 14.2%) - receives bonus multiplier
+  overlap_percent: numeric('overlap_percent', { precision: 5, scale: 2 }).default('0'), // Percentage overlap with archive (0-100)
   created_at: timestamp('created_at').defaultNow().notNull(),
   updated_at: timestamp('updated_at').defaultNow().notNull(),
 });
@@ -244,6 +248,10 @@ export const enterpriseContributionsTable = pgTable('enterprise_contributions', 
   registration_date: timestamp('registration_date'),
   registration_tx_hash: text('registration_tx_hash'),
   stripe_payment_id: text('stripe_payment_id'),
+  // Seed and Sweet Spot Edge Detection
+  is_seed: boolean('is_seed').default(false), // First submission to sandbox - receives 15% multiplier (×1.15)
+  has_sweet_spot_edges: boolean('has_sweet_spot_edges').default(false), // Overlap in sweet spot range (9.2%-19.2%, centered at 14.2%) - receives bonus multiplier
+  overlap_percent: numeric('overlap_percent', { precision: 5, scale: 2 }).default('0'), // Percentage overlap with archive (0-100)
   created_at: timestamp('created_at').defaultNow().notNull(),
   updated_at: timestamp('updated_at').defaultNow().notNull(),
 });

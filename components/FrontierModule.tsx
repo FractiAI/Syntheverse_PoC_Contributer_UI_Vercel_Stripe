@@ -17,7 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Loader2, RefreshCw, CreditCard, ExternalLink, FileText } from 'lucide-react';
+import { Loader2, RefreshCw, CreditCard, ExternalLink, FileText, Sprout, Zap } from 'lucide-react';
 import Link from 'next/link';
 
 interface PoCSubmission {
@@ -54,6 +54,10 @@ interface PoCSubmission {
     full_evaluation?: any;
     raw_grok_response?: string;
   };
+  // Seed and Sweet Spot Edge Detection
+  is_seed?: boolean | null;
+  has_sweet_spot_edges?: boolean | null;
+  overlap_percent?: number | null;
 }
 
 interface FrontierModuleProps {
@@ -470,7 +474,27 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
                       className="cursor-pointer"
                     >
                       <td>
-                        <div className="font-medium">{submission.title}</div>
+                        <div className="flex items-center gap-2">
+                          <div className="font-medium">{submission.title}</div>
+                          {submission.is_seed && (
+                            <span 
+                              className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                              title="Seed Submission - First in sandbox (+15% multiplier)"
+                            >
+                              <Sprout className="h-3 w-3" />
+                              SEED
+                            </span>
+                          )}
+                          {submission.has_sweet_spot_edges && (
+                            <span 
+                              className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded bg-amber-500/20 text-amber-400 border border-amber-500/30"
+                              title="Sweet Spot Edge - Optimal overlap (9.2%-19.2%)"
+                            >
+                              <Zap className="h-3 w-3" />
+                              EDGE
+                            </span>
+                          )}
+                        </div>
                         {submission.category && (
                           <div className="cockpit-text mt-1 text-xs capitalize">
                             {submission.category}
@@ -526,7 +550,27 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
       <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
         <DialogContent className="max-h-[90vh] max-w-3xl overflow-y-auto border-[var(--keyline-primary)] bg-[var(--cockpit-obsidian)]">
           <DialogHeader>
-            <DialogTitle className="cockpit-title text-xl">{selectedSubmission?.title}</DialogTitle>
+            <div className="flex items-center gap-2 flex-wrap">
+              <DialogTitle className="cockpit-title text-xl">{selectedSubmission?.title}</DialogTitle>
+              {selectedSubmission?.is_seed && (
+                <span 
+                  className="inline-flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                  title="Seed Submission - First in sandbox (+15% multiplier)"
+                >
+                  <Sprout className="h-3.5 w-3.5" />
+                  SEED
+                </span>
+              )}
+              {selectedSubmission?.has_sweet_spot_edges && (
+                <span 
+                  className="inline-flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-amber-500/20 text-amber-400 border border-amber-500/30"
+                  title="Sweet Spot Edge - Optimal overlap (9.2%-19.2%)"
+                >
+                  <Zap className="h-3.5 w-3.5" />
+                  EDGE
+                </span>
+              )}
+            </div>
             <DialogDescription className="cockpit-text">Submission Details</DialogDescription>
           </DialogHeader>
 

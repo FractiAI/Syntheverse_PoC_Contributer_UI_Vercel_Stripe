@@ -121,12 +121,22 @@ export async function POST(request: NextRequest, { params }: { params: { hash: s
     // Extract archive data (abstract, formulas, constants) for permanent storage
     const archiveData = extractArchiveData(contrib.text_content, contrib.title);
 
+    // Extract seed and sweet spot detection from evaluation metadata
+    const isSeed = evaluation.is_seed_submission || false;
+    const overlapPercent = evaluation.redundancy_overlap_percent || evaluation.redundancy || 0;
+    // Sweet spot range is 9.2%-19.2% (centered at 14.2%)
+    const hasSweetSpotEdges = overlapPercent >= 9.2 && overlapPercent <= 19.2;
+
     // Update contribution with evaluation results
     await db
       .update(enterpriseContributionsTable)
       .set({
         status: qualified ? 'qualified' : 'unqualified',
         metals: evaluation.metals,
+        // Seed and Sweet Spot Edge Detection (for UI highlighting)
+        is_seed: isSeed,
+        has_sweet_spot_edges: hasSweetSpotEdges,
+        overlap_percent: overlapPercent.toString(),
         metadata: {
           coherence: finalCoherence,
           density: finalDensity,
@@ -139,10 +149,15 @@ export async function POST(request: NextRequest, { params }: { params: { hash: s
           classification: evaluation.classification,
           redundancy_analysis: evaluation.redundancy_analysis,
           metal_justification: evaluation.metal_justification,
+          is_seed_submission: isSeed, // Also store in metadata for backwards compatibility
           grok_evaluation_details: {
             base_novelty: evaluation.base_novelty,
             base_density: evaluation.base_density,
             redundancy_overlap_percent: evaluation.redundancy_overlap_percent,
+            overlap_percent: overlapPercent,
+            bonus_multiplier_applied: evaluation.bonus_multiplier || 1.0,
+            seed_multiplier_applied: isSeed ? 1.15 : 1.0,
+            has_sweet_spot_edges: hasSweetSpotEdges,
             full_evaluation: evaluation,
             raw_grok_response: (evaluation as any).raw_grok_response || null,
           },

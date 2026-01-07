@@ -252,12 +252,22 @@ export async function POST(request: NextRequest, { params }: { params: { hash: s
     // Get current metadata to preserve existing values
     const currentMetadata = (contrib.metadata as any) || {};
 
+    // Extract seed and sweet spot detection from evaluation metadata
+    const isSeed = evaluation.is_seed_submission || false;
+    const overlapPercent = evaluation.redundancy_overlap_percent || evaluation.redundancy || 0;
+    // Sweet spot range is 9.2%-19.2% (centered at 14.2%)
+    const hasSweetSpotEdges = overlapPercent >= 9.2 && overlapPercent <= 19.2;
+
     // Update contribution with evaluation results and vector data
     await db
       .update(contributionsTable)
       .set({
         status: qualified ? 'qualified' : 'unqualified',
         metals: evaluation.metals,
+        // Seed and Sweet Spot Edge Detection (for UI highlighting)
+        is_seed: isSeed,
+        has_sweet_spot_edges: hasSweetSpotEdges,
+        overlap_percent: overlapPercent.toString(),
         metadata: {
           ...currentMetadata,
           coherence: evaluation.coherence,
@@ -275,12 +285,17 @@ export async function POST(request: NextRequest, { params }: { params: { hash: s
           qualified_founder: qualified,
           qualified_epoch: displayEpoch || evaluation.qualified_epoch || null, // Store the epoch this submission qualifies for
           allocation_status: qualified ? 'pending_admin_approval' : 'not_qualified', // Token allocation requires admin approval
+          is_seed_submission: isSeed, // Also store in metadata for backwards compatibility
           // Store detailed Grok evaluation details for detailed report
           grok_evaluation_details: {
             base_novelty: evaluation.base_novelty,
             base_density: evaluation.base_density,
             redundancy_penalty_percent: evaluation.redundancy_penalty_percent,
             density_penalty_percent: evaluation.density_penalty_percent,
+            overlap_percent: overlapPercent,
+            bonus_multiplier_applied: evaluation.bonus_multiplier || 1.0,
+            seed_multiplier_applied: isSeed ? 1.15 : 1.0,
+            has_sweet_spot_edges: hasSweetSpotEdges,
             full_evaluation: evaluation, // Store full evaluation object
             raw_grok_response: (evaluation as any).raw_grok_response || null, // Store raw Grok API response text/markdown
           },
