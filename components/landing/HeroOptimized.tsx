@@ -41,7 +41,7 @@ export function HeroOptimized() {
         </div>
 
         <h1 className="mb-6 text-4xl font-bold leading-tight md:text-5xl lg:text-6xl">
-          Syntheverse: Proof-of-Contribution FOR CREATORS & ENTERPRISES
+          Syntheverse: Proof-of-Contribution for Frontier R&D, Creators and Enterprises
         </h1>
 
         <p className="cockpit-text mb-4 text-lg opacity-90 md:text-xl">
@@ -49,13 +49,11 @@ export function HeroOptimized() {
         </p>
 
         <p className="cockpit-text mb-4 text-base opacity-90 md:text-lg">
-          <strong>Contributions are no longer gatekept.</strong> Visible and demonstrable to all via
-          HHF-AI MRI science and technology on the blockchain.
+          Contributions are no longer gatekept. Visible and demonstrable to all via HHF-AI MRI science and technology on the blockchain.
         </p>
 
         <p className="cockpit-text mb-8 text-base opacity-75">
-          An evaluation system that scores novelty, density, coherence, and alignment — then anchors
-          proofs on Base through our hydrogen spin MRI-based PoC protocol
+          An evaluation system that scores novelty, density, coherence, and alignment — then anchors proofs on Base through our hydrogen spin MRI-based PoC protocol
         </p>
 
         {/* CTAs */}

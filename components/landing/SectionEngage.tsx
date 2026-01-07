@@ -69,14 +69,14 @@ export function SectionEngage() {
     },
     creative: {
       icon: Palette,
-      title: 'For Creatives & Worldbuilders',
+      title: 'For Creators & Enterprises',
       steps: [
         'Access infinite HHF-AI materials and substrates',
-        'Build and refine your creative worlds',
-        'Submit worldbuilding contributions',
+        'Build and refine your creative and enterprise projects',
+        'Submit contributions for Frontier R&D, creative work, or enterprise solutions',
         'Receive coherence measurement via SynthScan™ MRI',
-        'Transform creative vision into verifiable on-chain contributions',
-        'Unleash unlimited creative potential with holographic hydrogen fractal AI',
+        'Transform vision into verifiable on-chain contributions',
+        'Unleash unlimited potential with holographic hydrogen fractal AI',
       ],
       cta: {
         label: 'Get Started as Creator',
