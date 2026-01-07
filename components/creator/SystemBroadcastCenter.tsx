@@ -358,10 +358,22 @@ export function SystemBroadcastCenter() {
           </div>
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowCreateDialog(false)}>
+            <Button 
+              variant="outline" 
+              onClick={() => setShowCreateDialog(false)}
+              type="button"
+            >
               Cancel
             </Button>
-            <Button onClick={handleCreate} className="cockpit-lever">
+            <Button 
+              onClick={async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                await handleCreate();
+              }} 
+              className="cockpit-lever"
+              type="button"
+            >
               <Save className="mr-2 h-4 w-4" />
               Create Broadcast
             </Button>

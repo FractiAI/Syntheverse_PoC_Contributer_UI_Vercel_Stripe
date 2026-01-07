@@ -476,6 +476,28 @@ details[open] .cockpit-chevron {
   color: rgba(255, 255, 255, 0.3);
 }
 
+/* Select dropdown styling - ensure text is visible */
+.cockpit-input select,
+select.cockpit-input {
+  color: #ffffff !important;
+  background-color: var(--cockpit-carbon) !important;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.cockpit-input select option,
+select.cockpit-input option {
+  color: #ffffff !important;
+  background-color: var(--cockpit-carbon) !important;
+}
+
+/* Ensure select dropdown arrow is visible */
+.cockpit-input select::-ms-expand,
+select.cockpit-input::-ms-expand {
+  display: none;
+}
+
 .cockpit-select {
   font-family: var(--font-cockpit);
   width: 100%;
