@@ -19,6 +19,7 @@ import { ReactorCore } from '@/components/ReactorCore';
 import CockpitHeader from '@/components/CockpitHeader';
 import { QuickActionsPanel } from '@/components/QuickActionsPanel';
 import { OperatorBroadcastBanner } from '@/components/OperatorBroadcastBanner';
+import { CloudChannel } from '@/components/CloudChannel';
 import { Settings, Activity, FileText, BookOpen, Shield } from 'lucide-react';
 import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
@@ -49,12 +50,17 @@ export default async function OperatorDashboard() {
   }
 
   return (
-    <div className="cockpit-bg holographic-grid min-h-screen">
+    <div className="cockpit-bg holographic-grid min-h-screen flex flex-col">
       <div className="nebula-background" style={{opacity: 0.3}} />
       <CockpitHeader />
       {/* Quick Actions Panel - Upper Right */}
       <QuickActionsPanel isCreator={false} isOperator={isOperator} showContributorDashboard={true} />
-      <div className="container mx-auto space-y-6 px-6 py-8 relative z-10">
+      
+      {/* Main Layout: Content + Cloud Channel */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Main Content Area */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="container mx-auto space-y-6 px-6 py-8 relative z-10">
         {/* Mobile Status Indicators - Top of mobile dashboards */}
         <div className="block md:hidden">
           <MobileStatusIndicators />
@@ -184,6 +190,13 @@ export default async function OperatorDashboard() {
             <ActivityAnalytics />
           </div>
         </details>
+          </div>
+        </div>
+
+        {/* Cloud Channel - Right Sidebar (Hidden on mobile) */}
+        <aside className="hidden lg:block w-[400px] border-l border-[var(--keyline-primary)] flex-shrink-0">
+          <CloudChannel />
+        </aside>
       </div>
     </div>
   );

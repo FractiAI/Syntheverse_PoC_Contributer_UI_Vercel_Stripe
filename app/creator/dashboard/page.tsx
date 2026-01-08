@@ -28,6 +28,7 @@ import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
 import { MobileStatusIndicators } from '@/components/MobileStatusIndicators';
 import { MultiplierToggleWrapper } from '@/components/MultiplierToggleWrapper';
+import { CloudChannel } from '@/components/CloudChannel';
 import '../../control-lab.css';
 
 export const dynamic = 'force-dynamic';
@@ -55,10 +56,10 @@ export default async function CreatorDashboard() {
   }
 
   return (
-    <div className="lab-bg holographic-grid min-h-screen relative">
+    <div className="lab-bg holographic-grid min-h-screen relative flex flex-col">
       <div className="nebula-background" style={{opacity: 0.3}} />
       {/* Control Lab Header - Scientific Control Station */}
-      <div className="lab-header relative z-10">
+      <div className="lab-header relative z-10 flex-shrink-0">
         <div className="lab-header-grid">
           <div>
             <div className="holographic-badge badge-quantum-synthesist mb-3">
@@ -98,7 +99,12 @@ export default async function CreatorDashboard() {
       <StatusPanel />
       {/* Quick Actions Panel - Upper Right */}
       <QuickActionsPanel isCreator={isCreator} isOperator={isOperator} showContributorDashboard={true} />
-      <div className="container mx-auto space-y-6 px-6 py-8">
+      
+      {/* Main Layout: Content + Cloud Channel */}
+      <div className="flex flex-1 overflow-hidden relative z-10">
+        {/* Main Content Area */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="container mx-auto space-y-6 px-6 py-8">
         {/* Mobile Status Indicators - Top of mobile dashboards */}
         <div className="block md:hidden">
           <MobileStatusIndicators />
@@ -306,6 +312,13 @@ export default async function CreatorDashboard() {
             <ActivityAnalytics />
           </div>
         </details>
+          </div>
+        </div>
+
+        {/* Cloud Channel - Right Sidebar (Hidden on mobile) */}
+        <aside className="hidden lg:block w-[400px] border-l border-[var(--keyline-primary)] flex-shrink-0">
+          <CloudChannel />
+        </aside>
       </div>
     </div>
   );
