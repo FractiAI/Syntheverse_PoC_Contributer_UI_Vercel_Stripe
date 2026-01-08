@@ -23,7 +23,7 @@ import { Settings, Activity, FileText, BookOpen, Shield } from 'lucide-react';
 import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
 import { MobileStatusIndicators } from '@/components/MobileStatusIndicators';
-import { MultiplierToggle } from '@/components/MultiplierToggle';
+import { MultiplierToggleWrapper } from '@/components/MultiplierToggleWrapper';
 
 export const dynamic = 'force-dynamic';
 
@@ -81,7 +81,7 @@ export default async function OperatorDashboard() {
 
         {/* Scoring Multiplier Controls - Testing/Tuning */}
         <div className="mb-6">
-          <MultiplierToggle />
+          <MultiplierToggleWrapper />
         </div>
 
         {/* Navigation Modules - Collapsible */}
