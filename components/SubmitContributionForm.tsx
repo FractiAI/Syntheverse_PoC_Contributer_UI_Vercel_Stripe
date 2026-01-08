@@ -534,7 +534,7 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
               <AlertDescription className="text-green-700">
                 Your contribution has been submitted successfully.
                 <br />
-                <strong>Submission Hash:</strong> {submissionHash}
+                <strong>HHF-AI HASH:</strong> {submissionHash}
                 <br />
                 <br />
                 <span className="text-sm">
@@ -1343,11 +1343,8 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                       <>
                         <Button
                           onClick={() => {
-                            setEvaluationStatus(null);
-                            setSuccess(false);
-                            setSubmissionHash(null);
-                            setFormData({ title: '', text_content: '' });
-                            router.push('/dashboard');
+                            // Use hard redirect instead of router.push for mobile compatibility
+                            window.location.href = '/dashboard';
                           }}
                           variant="outline"
                         >
@@ -1355,11 +1352,8 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                         </Button>
                         <Button
                           onClick={() => {
-                            setEvaluationStatus(null);
-                            setSuccess(false);
-                            setSubmissionHash(null);
-                            setFormData({ title: '', text_content: '' });
-                            router.push('/dashboard');
+                            // Use hard redirect instead of router.push for mobile compatibility
+                            window.location.href = '/dashboard';
                           }}
                         >
                           View on Dashboard

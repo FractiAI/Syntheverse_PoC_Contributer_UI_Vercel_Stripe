@@ -1117,7 +1117,7 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                   <div>{new Date(selectedSubmission.created_at).toLocaleString()}</div>
                 </div>
                 <div>
-                  <div className="text-muted-foreground">Hash</div>
+                  <div className="text-muted-foreground">HHF-AI HASH</div>
                   <div className="break-all font-mono text-xs">
                     {selectedSubmission.submission_hash}
                   </div>
@@ -1306,7 +1306,7 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                             </div>
                             <div className="space-y-1 text-sm">
                               <div>
-                                <span className="font-medium">Hash:</span>{' '}
+                                <span className="font-medium">HHF-AI HASH:</span>{' '}
                                 <code className="rounded bg-gray-100 px-1 text-xs">
                                   {reg.submissionHash.substring(0, 16)}...
                                 </code>

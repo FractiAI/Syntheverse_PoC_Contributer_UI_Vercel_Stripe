@@ -899,7 +899,7 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
                   </div>
                 </div>
                 <div>
-                  <div className="cockpit-label mb-1">Hash</div>
+                  <div className="cockpit-label mb-1">HHF-AI HASH</div>
                   <div className="cockpit-text break-all font-mono text-xs">
                     {selectedSubmission.submission_hash}
                   </div>
