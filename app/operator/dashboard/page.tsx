@@ -118,7 +118,7 @@ export default async function OperatorDashboard() {
                 </p>
               </div>
               <div className="flex items-center gap-2">
-                <Link href="/blog" className="cockpit-lever inline-block text-center" onClick={(e) => e.stopPropagation()}>
+                <Link href="/blog" className="cockpit-lever inline-block text-center">
                   <FileText className="mr-2 inline h-4 w-4" />
                   Blog
                 </Link>

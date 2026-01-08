@@ -173,7 +173,7 @@ export default async function CreatorDashboard() {
                 Creator control interface for liberated contributions, on-chain proofs, and system
                 coherence. All actions are logged and auditable.
               </p>
-              <Link href="/blog" className="lab-button lab-button-primary" onClick={(e) => e.stopPropagation()}>
+              <Link href="/blog" className="lab-button lab-button-primary">
                 <FileText className="h-4 w-4" />
                 <span>Blog Management</span>
               </Link>
