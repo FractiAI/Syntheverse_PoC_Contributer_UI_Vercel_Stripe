@@ -14,7 +14,7 @@ import {
   calculateVectorRedundancy,
   Vector3D,
 } from '@/utils/vectors';
-import { SYNTHEVERSE_SYSTEM_PROMPT } from '@/utils/groq/system-prompt';
+import { SYNTHEVERSE_SYSTEM_PROMPT } from '@/utils/grok/system-prompt';
 import crypto from 'crypto';
 // SCALABILITY FIX: Removed archive utilities - using vectors-only approach for infinite scalability
 
@@ -1646,7 +1646,7 @@ ${answer}`;
         .update(systemPrompt)
         .digest('hex')
         .substring(0, 16), // Hash for verification
-      system_prompt_file: 'utils/groq/system-prompt.ts', // Reference to full prompt location
+      system_prompt_file: 'utils/grok/system-prompt.ts', // Reference to full prompt location (note: "grok" is folder name, Groq is the API provider)
       evaluation_timestamp_ms: evaluationTimestamp.getTime(),
     };
 
