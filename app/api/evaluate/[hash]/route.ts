@@ -254,6 +254,7 @@ export async function POST(request: NextRequest, { params }: { params: { hash: s
 
     // Extract seed and sweet spot detection from evaluation metadata
     const isSeed = evaluation.is_seed_submission || false;
+    const isEdge = evaluation.is_edge_submission || false;
     const overlapPercent = evaluation.redundancy_overlap_percent || evaluation.redundancy || 0;
     // Sweet spot range is 9.2%-19.2% (centered at 14.2%)
     const hasSweetSpotEdges = overlapPercent >= 9.2 && overlapPercent <= 19.2;
@@ -264,8 +265,9 @@ export async function POST(request: NextRequest, { params }: { params: { hash: s
       .set({
         status: qualified ? 'qualified' : 'unqualified',
         metals: evaluation.metals,
-        // Seed and Sweet Spot Edge Detection (for UI highlighting)
+        // Seed and Edge Detection (content-based) + Sweet Spot Detection (overlap-based)
         is_seed: isSeed,
+        is_edge: isEdge,
         has_sweet_spot_edges: hasSweetSpotEdges,
         overlap_percent: overlapPercent.toString(),
         metadata: {
@@ -286,6 +288,9 @@ export async function POST(request: NextRequest, { params }: { params: { hash: s
           qualified_epoch: displayEpoch || evaluation.qualified_epoch || null, // Store the epoch this submission qualifies for
           allocation_status: qualified ? 'pending_admin_approval' : 'not_qualified', // Token allocation requires admin approval
           is_seed_submission: isSeed, // Also store in metadata for backwards compatibility
+          seed_justification: evaluation.seed_justification || null,
+          is_edge_submission: isEdge, // Content-based edge detection (E₀-E₆)
+          edge_justification: evaluation.edge_justification || null,
           // Store detailed Groq evaluation details for detailed report
           // Note: Field name uses "grok" for database backwards compatibility (refers to Groq AI provider)
           grok_evaluation_details: {
@@ -296,7 +301,12 @@ export async function POST(request: NextRequest, { params }: { params: { hash: s
             overlap_percent: overlapPercent,
             bonus_multiplier_applied: evaluation.sweet_spot_bonus_multiplier || 1.0,
             seed_multiplier_applied: isSeed ? 1.15 : 1.0,
+            edge_multiplier_applied: isEdge ? 1.15 : 1.0,
             has_sweet_spot_edges: hasSweetSpotEdges,
+            is_seed_submission: isSeed,
+            seed_justification: evaluation.seed_justification || null,
+            is_edge_submission: isEdge,
+            edge_justification: evaluation.edge_justification || null,
             full_evaluation: evaluation, // Store full evaluation object
             raw_grok_response: (evaluation as any).raw_groq_response || null, // Store raw Groq API response text/markdown
           },
