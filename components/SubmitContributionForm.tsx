@@ -441,7 +441,7 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
             </p>
             <p className="mt-2 border-t border-[var(--keyline-primary)] pt-2 text-xs">
               <strong>Redundancy Overlap:</strong> Measured by 3D vector similarity to archived
-              contributions. Sweet spot (9.2%-19.2%) receives bonus. Excess (>30%) receives penalty.
+              contributions. Sweet spot (9.2%-19.2%) receives bonus. Excess (&gt;30%) receives penalty.
             </p>
           </div>
         </div>
@@ -665,7 +665,6 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
             </div>
 
             <div className="p-6">
-              <div>
           {error && (
             <Alert variant="destructive" className="mb-4">
               <AlertTriangle className="h-4 w-4" />
