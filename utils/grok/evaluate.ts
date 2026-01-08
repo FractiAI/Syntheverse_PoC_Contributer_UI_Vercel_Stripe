@@ -1445,20 +1445,23 @@ ${answer}`;
     let edgeMultiplierEnabled = true;
     
     try {
-      const { createClient } = await import('@/utils/supabase/server');
-      const supabase = createClient();
-      const { data: configData } = await supabase
-        .from('scoring_config')
-        .select('config_value')
-        .eq('config_key', 'multiplier_toggles')
-        .single();
+      // Use direct database query to avoid dynamic import issues
+      const { db } = await import('@/utils/db/db');
+      const { scoringConfigTable } = await import('@/utils/db/schema');
+      const { eq } = await import('drizzle-orm');
       
-      if (configData?.config_value) {
-        seedMultiplierEnabled = configData.config_value.seed_enabled !== false;
-        edgeMultiplierEnabled = configData.config_value.edge_enabled !== false;
+      const configResult = await db
+        .select()
+        .from(scoringConfigTable)
+        .where(eq(scoringConfigTable.config_key, 'multiplier_toggles'))
+        .limit(1);
+      
+      if (configResult && configResult.length > 0 && configResult[0].config_value) {
+        seedMultiplierEnabled = configResult[0].config_value.seed_enabled !== false;
+        edgeMultiplierEnabled = configResult[0].config_value.edge_enabled !== false;
       }
     } catch (error) {
-      // Default to enabled if config fetch fails
+      // Default to enabled if config fetch fails (table might not exist yet)
       console.warn('Failed to fetch multiplier config, using defaults:', error);
     }
     
