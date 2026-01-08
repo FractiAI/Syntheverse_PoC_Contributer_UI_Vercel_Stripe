@@ -542,9 +542,11 @@ ${calculatedRedundancy.nearest_10_neighbors ? `- nearest_10_neighbors: μ=${calc
   // Evaluation query with contribution details + minimal extra instructions.
   // IMPORTANT: We want a detailed narrative review AND parseable JSON (embedded).
   // SCALABILITY FIX: Using vectors-only approach - removed archivedPoCsContext to prevent prompt bloat
-  const seedSubmissionNote = isSeedSubmission
-    ? `\n**⚠️ SEED SUBMISSION DETECTED ⚠️**\nThis is a seed submission (first submission to this sandbox). Seed submissions establish the foundational framework and receive a 15% score multiplier (×1.15) after bonus multipliers, recognizing their disproportionately high generative value density (GVD). Apply the seed multiplier in your scoring calculation.\n`
-    : '';
+  
+  // Seed detection instruction (content-based, not timing-based)
+  const seedDetectionNote = emptyArchive
+    ? '\n**Seed Detection:** Archive is empty. Carefully analyze if this content exhibits SEED characteristics (irreducibility, generative capacity, foundational nature). Set "is_seed_submission" field accordingly.\n'
+    : '\n**Seed Detection:** Archive has prior submissions. Still analyze if this exhibits SEED characteristics. Set "is_seed_submission" field accordingly.\n';
 
   const evaluationQuery = `Evaluate this Proof-of-Contribution (PoC) using the system prompt rules.
 
@@ -552,12 +554,12 @@ ${calculatedRedundancy.nearest_10_neighbors ? `- nearest_10_neighbors: μ=${calc
 ${scoreConfigId}
 ${sandboxId}
 ${archiveVersion}
-${isSeedSubmission ? 'seed_submission=true' : 'seed_submission=false'}
+archive_status=${emptyArchive ? 'empty' : `${archivedVectors.length}_prior_submissions`}
 
 Title: ${title}
 Category: ${category || 'scientific'}
 ${tokenomicsContext ? `\n${tokenomicsContext}` : ''}
-${seedSubmissionNote}
+${seedDetectionNote}
 Submission Content:
 ${truncatedText}
 
@@ -566,7 +568,8 @@ ${calculatedRedundancyContext ? `\n${calculatedRedundancyContext}` : ''}
 Notes:
 - Use the vector-based redundancy information above to determine overlap and redundancy penalties.
 - Apply redundancy penalty ONLY to the composite/total score (as specified in the system prompt).
-${isSeedSubmission ? '- This is a SEED SUBMISSION: apply the 15% seed multiplier (×1.15) after bonus multipliers in your final score calculation.\n' : ''}- You MUST include scoring_metadata, pod_composition, and archive_similarity_distribution in your JSON response.
+- You MUST include scoring_metadata, pod_composition, and archive_similarity_distribution in your JSON response.
+- You MUST include "is_seed_submission" (boolean) and "seed_justification" (string) fields based on content analysis.
 - Output: Provide a detailed narrative review (clear + specific), AND include the REQUIRED JSON structure from the system prompt.
 - The JSON may be placed in a markdown code block, but it MUST be valid parseable JSON.
 `;
