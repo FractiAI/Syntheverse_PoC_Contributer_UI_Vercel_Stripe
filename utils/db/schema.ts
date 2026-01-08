@@ -49,8 +49,9 @@ export const contributionsTable = pgTable('contributions', {
   registration_tx_hash: text('registration_tx_hash'), // Blockchain transaction hash
   stripe_payment_id: text('stripe_payment_id'), // Stripe payment ID for registration
   archived_at: timestamp('archived_at'), // Timestamp when archived (for reset tracking)
-  // Seed and Sweet Spot Edge Detection
-  is_seed: boolean('is_seed').default(false), // First submission to sandbox - receives 15% multiplier (×1.15)
+  // Seed and Edge Detection (content-based), plus Sweet Spot Edge Detection (overlap-based)
+  is_seed: boolean('is_seed').default(false), // Content exhibits seed characteristics (S₀-S₈) - receives 15% multiplier (×1.15)
+  is_edge: boolean('is_edge').default(false), // Content exhibits edge characteristics (E₀-E₆) - receives 15% multiplier (×1.15)
   has_sweet_spot_edges: boolean('has_sweet_spot_edges').default(false), // Overlap in sweet spot range (9.2%-19.2%, centered at 14.2%) - receives bonus multiplier
   overlap_percent: numeric('overlap_percent', { precision: 5, scale: 2 }).default('0'), // Percentage overlap with archive (0-100)
   created_at: timestamp('created_at').defaultNow().notNull(),
@@ -248,8 +249,9 @@ export const enterpriseContributionsTable = pgTable('enterprise_contributions', 
   registration_date: timestamp('registration_date'),
   registration_tx_hash: text('registration_tx_hash'),
   stripe_payment_id: text('stripe_payment_id'),
-  // Seed and Sweet Spot Edge Detection
-  is_seed: boolean('is_seed').default(false), // First submission to sandbox - receives 15% multiplier (×1.15)
+  // Seed and Edge Detection (content-based), plus Sweet Spot Edge Detection (overlap-based)
+  is_seed: boolean('is_seed').default(false), // Content exhibits seed characteristics (S₀-S₈) - receives 15% multiplier (×1.15)
+  is_edge: boolean('is_edge').default(false), // Content exhibits edge characteristics (E₀-E₆) - receives 15% multiplier (×1.15)
   has_sweet_spot_edges: boolean('has_sweet_spot_edges').default(false), // Overlap in sweet spot range (9.2%-19.2%, centered at 14.2%) - receives bonus multiplier
   overlap_percent: numeric('overlap_percent', { precision: 5, scale: 2 }).default('0'), // Percentage overlap with archive (0-100)
   created_at: timestamp('created_at').defaultNow().notNull(),
@@ -455,3 +457,20 @@ export type InsertSocialPostLike = typeof socialPostLikesTable.$inferInsert;
 export type SelectSocialPostLike = typeof socialPostLikesTable.$inferSelect;
 export type InsertSocialPostComment = typeof socialPostCommentsTable.$inferInsert;
 export type SelectSocialPostComment = typeof socialPostCommentsTable.$inferSelect;
+
+// Scoring Configuration Table (for testing/tuning multipliers)
+export const scoringConfigTable = pgTable('scoring_config', {
+  id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
+  config_key: text('config_key').notNull().unique(),
+  config_value: jsonb('config_value').notNull().$type<{
+    seed_enabled?: boolean;
+    edge_enabled?: boolean;
+    [key: string]: any;
+  }>(),
+  updated_at: timestamp('updated_at').defaultNow().notNull(),
+  updated_by: text('updated_by'),
+  created_at: timestamp('created_at').defaultNow().notNull(),
+});
+
+export type InsertScoringConfig = typeof scoringConfigTable.$inferInsert;
+export type SelectScoringConfig = typeof scoringConfigTable.$inferSelect;
