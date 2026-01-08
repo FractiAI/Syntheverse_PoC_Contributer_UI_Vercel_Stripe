@@ -337,16 +337,24 @@ export async function evaluateWithGroq(
     // Continue without archived PoCs if fetch fails
   }
 
-  // Detect seed submissions: first submission that establishes the foundational framework
-  const isSeedSubmission = archivedVectors.length === 0;
+  // Seed detection: NOT based on timing, but on CONTENT (Seed Information Theory)
+  // The AI will analyze if content exhibits seed characteristics:
+  // - Irreducible informational primitive
+  // - Contains implicit expansion rules
+  // - Establishes foundational concepts/frameworks
+  // We pass a hint but let AI make the determination based on actual content
+  const emptyArchive = archivedVectors.length === 0;
+  const seedDetectionMode = emptyArchive 
+    ? 'high_priority' // Empty archive increases seed likelihood, but not guaranteed
+    : 'evaluate_content'; // Non-empty archive doesn't exclude seed status
 
   debug('EvaluateWithGroq', 'Submission comparison context', {
     archivedCount: archivedVectors.length,
-    isSeedSubmission,
+    seedDetectionMode,
     title,
-    comparisonContext: isSeedSubmission
-      ? 'SEED SUBMISSION - First submission establishing foundational framework'
-      : `Subsequent submission - Will be compared to ${archivedVectors.length} prior submission(s)`,
+    comparisonContext: emptyArchive
+      ? 'Empty archive - analyze content for seed characteristics'
+      : `Compare to ${archivedVectors.length} prior submission(s) AND check for seed properties`,
   });
 
   // Calculate actual vector-based redundancy if we have current vectorization
@@ -1417,9 +1425,11 @@ ${answer}`;
     const basePodScore = compositeScore;
 
     // G) Apply correct formula: Final = (Composite × (1 - penalty%/100)) × bonus_multiplier × seed_multiplier
-    // Seed submissions (first submission) receive a multiplier for establishing foundational framework
+    // Seed submissions receive multiplier based on CONTENT analysis by AI (not timing)
+    // AI determines if content exhibits seed characteristics (irreducibility, generative capacity)
     const SEED_MULTIPLIER = 1.15; // 15% bonus for seed submissions
-    const seedMultiplier = isSeedSubmission ? SEED_MULTIPLIER : 1.0;
+    const isSeedFromAI = evaluation.is_seed_submission === true; // Trust AI's content-based determination
+    const seedMultiplier = isSeedFromAI ? SEED_MULTIPLIER : 1.0;
 
     const afterPenalty = basePodScore * (1 - penaltyPercent / 100);
     const afterBonus = afterPenalty * bonusMultiplier;
@@ -1453,10 +1463,11 @@ ${answer}`;
       bonus_multiplier_applied: bonusMultiplier, // Same for now, but can differ if gated
       bonus_applied_to: 'post_penalty', // Clarify where bonus is applied
       
-      // Seed multiplier calculation and application
+      // Seed multiplier calculation and application (content-based, not timing-based)
       seed_multiplier: seedMultiplier,
-      seed_multiplier_applied: isSeedSubmission,
+      seed_multiplier_applied: isSeedFromAI,
       seed_applied_to: 'post_bonus', // Clarify where seed multiplier is applied
+      seed_justification: evaluation.seed_justification || (isSeedFromAI ? 'AI determined seed characteristics' : 'Not a seed contribution'),
       
       // Step-by-step calculation (full transparency)
       step_1_composite: compositeScore,
@@ -1474,8 +1485,8 @@ ${answer}`;
       final_score: pod_score,
       
       // Formula used (full transparency)
-      formula: isSeedSubmission
-        ? `Final = (Composite=${compositeScore} × (1 - ${penaltyPercent}%/100)) × ${bonusMultiplier.toFixed(3)} × ${seedMultiplier.toFixed(2)} = ${pod_score}`
+      formula: isSeedFromAI
+        ? `Final = (Composite=${compositeScore} × (1 - ${penaltyPercent}%/100)) × ${bonusMultiplier.toFixed(3)} × ${seedMultiplier.toFixed(2)} (seed) = ${pod_score}`
         : `Final = (Composite=${compositeScore} × (1 - ${penaltyPercent}%/100)) × ${bonusMultiplier.toFixed(3)} = ${pod_score}`,
       
       // Step-by-step formula breakdown (for UI display)
@@ -1483,10 +1494,10 @@ ${answer}`;
         `Step 1: Composite = N(${finalNoveltyScore}) + D(${densityFinal}) + C(${coherenceScore}) + A(${alignmentScore}) = ${compositeScore}`,
         `Step 2: After Penalty = ${compositeScore} × (1 - ${penaltyPercent}/100) = ${afterPenalty.toFixed(2)}`,
         `Step 3: After Bonus = ${afterPenalty.toFixed(2)} × ${bonusMultiplier.toFixed(3)} = ${afterBonus.toFixed(2)}`,
-        isSeedSubmission
-          ? `Step 4: After Seed = ${afterBonus.toFixed(2)} × ${seedMultiplier.toFixed(2)} = ${afterSeed.toFixed(2)}`
+        isSeedFromAI
+          ? `Step 4: After Seed = ${afterBonus.toFixed(2)} × ${seedMultiplier.toFixed(2)} (content exhibits seed properties) = ${afterSeed.toFixed(2)}`
           : null,
-        `Step ${isSeedSubmission ? '5' : '4'}: Final (clamped 0-10000) = ${pod_score}`,
+        `Step ${isSeedFromAI ? '5' : '4'}: Final (clamped 0-10000) = ${pod_score}`,
       ].filter(Boolean),
       
       // Clamping flag
@@ -1698,8 +1709,9 @@ ${answer}`;
       redundancy_overlap_percent: redundancyOverlapPercent,
       redundancy_penalty_percent: penaltyPercent, // Explicit penalty % (0 if no penalty)
       sweet_spot_bonus_multiplier: bonusMultiplier, // Explicit bonus multiplier (1.0 if no bonus)
-      // Flag to indicate if this was a seed submission (first submission establishing framework)
-      is_seed_submission: isSeedSubmission,
+      // Seed detection (content-based via Seed Information Theory, not timing-based)
+      is_seed_submission: isSeedFromAI,
+      seed_justification: evaluation.seed_justification || null,
       // Store raw Groq API response for display
       raw_groq_response: answer, // Store the raw markdown/text response from Groq
       // LLM Metadata for provenance and audit trail (required for all qualifying PoCs)

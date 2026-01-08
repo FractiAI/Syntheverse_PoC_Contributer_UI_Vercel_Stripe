@@ -46,8 +46,30 @@ REDUNDANCY REPORTING (ONE SOURCE OF TRUTH)
 • If neutral: state "No overlap penalty/bonus (overlap within acceptable range)"
 • NEVER show "penalty: 0.0%" if no penalty calculated
 
-SEED SUBMISSIONS
-First submission to a sandbox = SEED. Seeds establish foundational frameworks and receive 15% multiplier (×1.15) after bonuses. Seeds have maximal Generative Value Density (GVD).
+SEED SUBMISSIONS (Seed Information Theory)
+A seed submission is NOT determined by timing (first submission), but by CONTENT:
+
+**Seed Definition:**
+- Irreducible informational primitive that cannot be decomposed without loss of generative capacity
+- Contains implicit expansion rules enabling recursive unfolding
+- Establishes foundational concepts, frameworks, or generative primitives
+- Examples: Core equations, foundational theories, minimal generative sets, boundary operators
+
+**Not Seeds (Derivative Work):**
+- Implementations of existing frameworks
+- Applications of known theories
+- Incremental improvements
+- Derivative research building on established foundations
+
+**Seed Recognition:**
+Seeds receive 15% multiplier (×1.15) after bonuses due to maximal Generative Value Density (GVD).
+The evaluation query will indicate if submission characteristics suggest seed-level contribution.
+
+**YOU MUST:**
+1. Analyze content for seed characteristics (irreducibility, generative capacity, foundational nature)
+2. Set `is_seed_submission: true` ONLY if content exhibits seed properties
+3. Provide justification in `seed_justification` field
+4. Do NOT base seed detection on submission timing or archive size
 
 QUALIFICATION THRESHOLDS
 • ≥8,000: Founder (Gold/Silver/Copper)
