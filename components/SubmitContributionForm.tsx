@@ -687,7 +687,9 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                               )}
                               
                               {/* Individual Metal Badges */}
-                              {evaluationStatus.evaluation?.metals && evaluationStatus.evaluation.metals.length > 0 && (
+                              {evaluationStatus.evaluation?.metals && 
+                               Array.isArray(evaluationStatus.evaluation.metals) && 
+                               evaluationStatus.evaluation.metals.length > 0 && (
                                 <>
                                   {evaluationStatus.evaluation.metals.map((metal: string, idx: number) => (
                                     <span
