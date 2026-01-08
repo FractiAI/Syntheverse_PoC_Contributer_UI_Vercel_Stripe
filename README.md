@@ -12,8 +12,9 @@
 > **📖 New to the codebase?** See the [Senior Engineer Production Briefing](docs/SENIOR_ENGINEER_PRODUCTION_BRIEFING.md) for a comprehensive system overview covering architecture, workflows, key features, and operational considerations.
 
 > **🔧 Latest Update (Jan 8, 2026):** 
-> - **Environment Variable Fix**: Added validation and graceful error handling for Supabase environment variables to prevent Server Components render errors. All environment variables now validated before use with clear error messages.
-> - **Multiplier Toggle Controls**: Creator and Operator dashboards now include on/off toggles for seed (×1.15) and edge (×1.15) multipliers for real-time scoring tuning during testing phase. Temporary feature for calibration.
+> - **Overlap Adjustments Toggle**: Added third toggle for redundancy overlap adjustments (sweet spot bonus & excess penalty). Complete scoring control: seed (×1.15), edge (×1.15), and overlap (bonus/penalty).
+> - **Environment Variable Fix**: Added validation and graceful error handling for Supabase environment variables to prevent Server Components render errors.
+> - **Multiplier Toggle Controls**: Creator and Operator dashboards now include on/off toggles for all three multipliers for real-time scoring tuning during testing phase.
 > - **Vercel CLI Configuration**: Added scripts for automated environment variable setup via Vercel API.
 > - **Troubleshooting Documentation**: New comprehensive guides for environment setup and error resolution.
 
@@ -147,11 +148,16 @@ See [Environment Variables](#environment-variables) section for complete configu
   - **Combined Multiplier**: Seed + Edge = ×1.3225 (32.25% total bonus)
   - Full justifications provided for both seed and edge characteristics
 - **🧪 Multiplier Toggle Controls** (Testing/Tuning - Temporary Feature):
-  - **Creator/Operator Dashboard**: On/off toggles for seed and edge multipliers
+  - **Creator/Operator Dashboard**: On/off toggles for seed, edge, and overlap adjustments
+  - **Three Independent Toggles**:
+    - **Seed Multiplier (×1.15)**: Green toggle - content-based seed detection bonus
+    - **Edge Multiplier (×1.15)**: Blue toggle - boundary operator detection bonus
+    - **Overlap Adjustments**: Purple toggle - sweet spot bonus & excess penalty (redundancy adjustments)
   - **Real-Time Configuration**: Toggle multipliers during scoring calibration without code changes
   - **Automatic Refresh**: Page refreshes automatically on state changes
   - **Database-Backed**: Configuration persisted in `scoring_config` table with audit trail
   - **Access Control**: Creator and Operator roles only
+  - **Testing Use Case**: Toggle overlap off to see raw composite scores without redundancy adjustments
   - **Will be removed** once scoring is stable (estimated 2-4 weeks)
   - See [`docs/MULTIPLIER_TOGGLE_IMPLEMENTATION.md`](docs/MULTIPLIER_TOGGLE_IMPLEMENTATION.md) for complete details
 - **Operator Mode**: Special exemption for operator accounts
