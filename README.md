@@ -137,7 +137,11 @@ See [Environment Variables](#environment-variables) section for complete configu
 - **Database**: PostgreSQL via Supabase with Drizzle ORM
 - **Blockchain**: ✅ **Base Mainnet Production** - Lens event emission, token allocation ready
 - **LLM Metadata**: Full capture of evaluation metadata (timestamp, model, version, prompts)
-- **Seed Submission Recognition**: Content-based seed detection using Seed Information Theory - AI analyzes submissions for irreducibility, generative capacity, and foundational nature; seeds receive 15% score multiplier (×1.15) with justification
+- **Seed & Edge Detection**: Content-based detection using Seed Information Theory and Boundary Operator Theory
+  - **Seeds (S₀-S₈)**: AI analyzes for irreducibility, generative capacity, foundational nature; 15% multiplier (×1.15)
+  - **Edges (E₀-E₆)**: AI analyzes for boundary operators, interaction mechanisms, transformation rules; 15% multiplier (×1.15)
+  - **Combined Multiplier**: Seed + Edge = ×1.3225 (32.25% total bonus)
+  - Full justifications provided for both seed and edge characteristics
 - **Operator Mode**: Special exemption for operator accounts
 - **Creator Dashboard**: Creator-only destructive controls for PoC lifecycle management and user administration
 - **Mobile UI Optimization**: Crisp, beautiful desktop-quality display on mobile with proper typography hierarchy, proportional spacing, and maintained visual polish
@@ -399,6 +403,7 @@ See [`SYNTHSCAN_PROMPT_TRANSFORMATION.md`](SYNTHSCAN_PROMPT_TRANSFORMATION.md) f
 - ✅ Ready for production PoC registrations
 - ✅ **Zero Scores Issue Fixed** (Jan 8, 2026): Groq AI evaluation now working properly
 - ✅ **Seed Detection Fixed** (Jan 8, 2026): Changed from timing-based to content-based detection per Seed Information Theory
+- ✅ **Edge Detection Implemented** (Jan 8, 2026): Content-based edge detection for boundary operators (E₀-E₆) with 15% multiplier; combined seed+edge = 32.25% total bonus
 - 🎯 **SYNTH90T MOTHERLODE VAULT Opening**: Spring Equinox, March 20, 2026
 - ⏰ **Submission Deadline**: March 19, 2026
 
@@ -826,9 +831,11 @@ Built for the Syntheverse ecosystem with ❤️
 ---
 
 **Last Updated**: January 8, 2026  
-**Version**: 2.29 (Content-Based Seed Detection & Groq Fix)
+**Version**: 2.30 (Content-Based Edge Detection & Database Reset)
 
 ### Version History
+
+- **v2.30** (January 8, 2026): Content-Based Edge Detection & Database Reset - Implemented content-based edge detection for boundary operators (E₀-E₆) per "Seeds and Edges" paper. AI now analyzes submissions for edge characteristics: boundary operators, interaction enablers, constraint/directionality/transformation rules, motion/energy/differentiation generators. Edges receive 15% multiplier (×1.15) with justification. Combined seed+edge submissions receive ×1.3225 (32.25%) total bonus. Added `is_edge` column to database, `is_edge_submission` and `edge_justification` to evaluation response, and comprehensive edge detection to system prompt. Updated all UI tooltips and onboarding content to distinguish between content-based seed/edge detection vs overlap-based sweet spot bonuses. Database migration provided for `is_edge` column with indexes and views. All documentation aligned with seed and edge concepts from Seed Information Theory and Boundary Operator Theory. See [`docs/EDGE_DETECTION_IMPLEMENTATION.md`](docs/EDGE_DETECTION_IMPLEMENTATION.md) and [`supabase/migrations/add_edge_detection.sql`](supabase/migrations/add_edge_detection.sql) for complete details.
 
 - **v2.29** (January 8, 2026): Content-Based Seed Detection & Groq API Fix - Fixed zero scores issue caused by environment variable name mismatch (`NEXT_PUBLIC_GROK_API_KEY` vs `NEXT_PUBLIC_GROQ_API_KEY`). Code now accepts both spellings for backwards compatibility. Completely redesigned seed detection from timing-based (first submission) to content-based analysis per Seed Information Theory. AI now analyzes content for seed characteristics: irreducibility, generative capacity, foundational nature. Seeds are irreducible informational primitives with expansion rules, not just first submissions. Updated system prompt with precise seed definition from "Seeds and Edges" paper (9 seeds S₀-S₈, 7 edges E₀-E₆). Added `is_seed_submission` and `seed_justification` fields to evaluation response. Seed multiplier (×1.15) now applied based on CONTENT not TIMING. Examples: Holographic Hydrogen (Element 0), minimal viable generative sets, core foundational equations are TRUE seeds; implementations and derivative work are NOT seeds. See [`docs/SEED_DETECTION_FIX.md`](docs/SEED_DETECTION_FIX.md) and [`docs/ZERO_SCORES_FIX.md`](docs/ZERO_SCORES_FIX.md) for complete details.
 
