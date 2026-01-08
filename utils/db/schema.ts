@@ -324,20 +324,37 @@ export type SelectSandboxSynthTransaction = typeof sandboxSynthTransactionsTable
 export type InsertSandboxMetrics = typeof sandboxMetricsTable.$inferInsert;
 export type SelectSandboxMetrics = typeof sandboxMetricsTable.$inferSelect;
 
-// Audit Log Table (for tracking destructive actions)
+// Audit Log Table (for tracking destructive actions + mode transitions)
 export const auditLogTable = pgTable('audit_log', {
   id: text('id').primaryKey(),
   actor_email: text('actor_email').notNull(),
   actor_role: text('actor_role').notNull(),
-  action_type: text('action_type').notNull(), // 'archive_reset', 'user_delete', 'user_soft_delete', 'role_grant', 'role_revoke'
-  action_mode: text('action_mode'), // 'soft', 'hard' for resets/deletes
-  target_type: text('target_type'), // 'archive', 'user', 'role'
-  target_identifier: text('target_identifier'), // email, submission_hash, etc.
+  action_type: text('action_type').notNull(), // 'archive_reset', 'user_delete', 'user_soft_delete', 'role_grant', 'role_revoke', 'mode_transition', 'score_config_update'
+  action_mode: text('action_mode'), // 'soft', 'hard' for resets/deletes; 'manual', 'automatic' for mode transitions
+  target_type: text('target_type'), // 'archive', 'user', 'role', 'scoring_config'
+  target_identifier: text('target_identifier'), // email, submission_hash, config_key, etc.
   affected_count: integer('affected_count'), // Number of records affected
   metadata: jsonb('metadata').$type<{
     confirmation_phrase?: string;
     ip_address?: string;
     user_agent?: string;
+    // Mode transition tracking
+    mode_state_before?: {
+      seed_on?: boolean;
+      edge_on?: boolean;
+      overlap_on?: boolean;
+      metal_policy_on?: boolean;
+      score_config_version?: string;
+      [key: string]: any;
+    };
+    mode_state_after?: {
+      seed_on?: boolean;
+      edge_on?: boolean;
+      overlap_on?: boolean;
+      metal_policy_on?: boolean;
+      score_config_version?: string;
+      [key: string]: any;
+    };
     [key: string]: any;
   }>(),
   created_at: timestamp('created_at').defaultNow().notNull(),
@@ -469,11 +486,23 @@ export const scoringConfigTable = pgTable('scoring_config', {
   id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
   config_key: text('config_key').notNull().unique(),
   config_value: jsonb('config_value').notNull().$type<{
+    // Mode toggles
     seed_enabled?: boolean;
     edge_enabled?: boolean;
     overlap_enabled?: boolean;
+    metal_policy_enabled?: boolean;
+    
+    // Sweet spot parameters (HHF bridge - tunable, not dogmatic)
+    sweet_spot_center?: number;      // Default: 0.142 (14.2%)
+    sweet_spot_tolerance?: number;   // Default: 0.05 (±5%)
+    penalty_threshold?: number;      // Default: 0.30 (30%)
+    
+    // Overlap operator declaration
+    overlap_operator?: "axis" | "kiss" | "embedding_cosine" | "embedding_euclidean" | string;
+    
     [key: string]: any;
   }>(),
+  version: text('version').notNull().default('v1.0.0'), // Explicit versioning per Marek/Simba
   updated_at: timestamp('updated_at').defaultNow().notNull(),
   updated_by: text('updated_by'),
   created_at: timestamp('created_at').defaultNow().notNull(),

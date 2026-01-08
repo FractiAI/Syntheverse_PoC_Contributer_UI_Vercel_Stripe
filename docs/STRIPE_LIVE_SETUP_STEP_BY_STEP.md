@@ -7,7 +7,250 @@
 
 ---
 
-## Step 1: Get Your Secret Key (Standard Key is Fine)
+## Step 1: Get Your Secret Key (Standard Key is Fine)fix: Edge detection storage and iPhone black screen issues #254
+All jobs
+Run details
+Triggered via push 4 hours ago
+@AiwonA1AiwonA1
+pushed
+ cdb6339
+main
+Status
+Failure
+Total duration
+1m 10s
+Artifacts
+–
+
+Lint and Type Check
+1m 5s
+Oh hello! Nice to see you.
+
+Made with ❤️ by humans.txt
+
+Annotations
+2 errors and 1 warning
+Lint and Type Check
+Process completed with exit code 2.
+Lint and Type Check: app/api/evaluate/[hash]/route.ts#L270
+Object literal may only specify known properties, and 'is_edge' does not exist in type '{ submission_hash?: string | SQL<unknown> | undefined; title?: string | SQL<unknown> | undefined; contributor?: string | SQL<unknown> | undefined; content_hash?: string | SQL<unknown> | undefined; ... 21 more ...; updated_at?: Date | ... 1 more ... | undefined; }'.
+Lint and Type Check
+The process '/usr/bin/git' failed with exit code 128
+fix: Mobile evaluation dialog visibility and edge badge display #255
+All jobs
+Run details
+Triggered via push 4 hours ago
+@AiwonA1AiwonA1
+pushed
+ 3ffd86b
+main
+Status
+Failure
+Total duration
+1m 5s
+Artifacts
+–
+
+Lint and Type Check
+1m 1s
+Oh hello! Nice to see you.
+
+Made with ❤️ by humans.txt
+
+Annotations
+2 errors and 1 warning
+Lint and Type Check
+Process completed with exit code 2.
+Lint and Type Check: app/api/evaluate/[hash]/route.ts#L270
+Object literal may only specify known properties, and 'is_edge' does not exist in type '{ submission_hash?: string | SQL<unknown> | undefined; title?: string | SQL<unknown> | undefined; contributor?: string | SQL<unknown> | undefined; content_hash?: string | SQL<unknown> | undefined; ... 21 more ...; updated_at?: Date | ... 1 more ... | undefined; }'.
+Lint and Type Check
+The process '/usr/bin/git' failed with exit code 128
+fix: Handle classification as both string and array (Safari crash fix) #256
+All jobs
+Run details
+Triggered via push 3 hours ago
+@AiwonA1AiwonA1
+pushed
+ 5a85fb6
+main
+Status
+Failure
+Total duration
+1m 8s
+Artifacts
+–
+
+Lint and Type Check
+1m 3s
+Oh hello! Nice to see you.
+
+Made with ❤️ by humans.txt
+
+Annotations
+2 errors and 1 warning
+Lint and Type Check
+Process completed with exit code 2.
+Lint and Type Check: app/api/evaluate/[hash]/route.ts#L270
+Object literal may only specify known properties, and 'is_edge' does not exist in type '{ submission_hash?: string | SQL<unknown> | undefined; title?: string | SQL<unknown> | undefined; contributor?: string | SQL<unknown> | undefined; content_hash?: string | SQL<unknown> | undefined; ... 21 more ...; updated_at?: Date | ... 1 more ... | undefined; }'.
+Lint and Type Check
+The process '/usr/bin/git' failed with exit code 128feat: Add badges to evaluation report and Back to Dashboard button #257
+All jobs
+Run details
+Triggered via push 3 hours ago
+@AiwonA1AiwonA1
+pushed
+ 16c2264
+main
+Status
+Failure
+Total duration
+1m 4s
+Artifacts
+–
+
+Lint and Type Check
+1m 0s
+Oh hello! Nice to see you.
+
+Made with ❤️ by humans.txt
+
+Annotations
+4 errors and 1 warning
+Lint and Type Check
+Process completed with exit code 2.
+Lint and Type Check: components/SubmitContributionForm.tsx#L682
+Cannot find name 'Link2'. Did you mean 'Link'?
+Lint and Type Check: components/SubmitContributionForm.tsx#L671
+Cannot find name 'Sprout'.
+Lint and Type Check: app/api/evaluate/[hash]/route.ts#L270
+Object literal may only specify known properties, and 'is_edge' does not exist in type '{ submission_hash?: string | SQL<unknown> | undefined; title?: string | SQL<unknown> | undefined; contributor?: string | SQL<unknown> | undefined; content_hash?: string | SQL<unknown> | undefined; ... 21 more ...; updated_at?: Date | ... 1 more ... | undefined; }'.
+Lint and Type Check
+The process '/usr/bin/git' failed with exit code 128
+docs: Update README with mobile/Safari submission flow fixes #258
+All jobs
+Run details
+Triggered via push 3 hours ago
+@AiwonA1AiwonA1
+pushed
+ 9710fc0
+main
+Status
+Failure
+Total duration
+1m 3s
+Artifacts
+–
+
+Lint and Type Check
+59s
+Oh hello! Nice to see you.
+
+Made with ❤️ by humans.txt
+
+Annotations
+4 errors and 1 warning
+Lint and Type Check
+Process completed with exit code 2.
+Lint and Type Check: components/SubmitContributionForm.tsx#L682
+Cannot find name 'Link2'. Did you mean 'Link'?
+Lint and Type Check: components/SubmitContributionForm.tsx#L671
+Cannot find name 'Sprout'.
+Lint and Type Check: app/api/evaluate/[hash]/route.ts#L270
+Object literal may only specify known properties, and 'is_edge' does not exist in type '{ submission_hash?: string | SQL<unknown> | undefined; title?: string | SQL<unknown> | undefined; contributor?: string | SQL<unknown> | undefined; content_hash?: string | SQL<unknown> | undefined; ... 21 more ...; updated_at?: Date | ... 1 more ... | undefined; }'.
+Lint and Type Check
+The process '/usr/bin/git' failed with exit code 128
+fix: Add missing Sprout and Link2 icon imports to SubmitContributionForm #259
+All jobs
+Run details
+Triggered via push 3 hours ago
+@AiwonA1AiwonA1
+pushed
+ 316afdc
+main
+Status
+Failure
+Total duration
+1m 6s
+Artifacts
+–
+
+Lint and Type Check
+59s
+Oh hello! Nice to see you.
+
+Made with ❤️ by humans.txt
+
+Annotations
+2 errors and 1 warning
+Lint and Type Check
+Process completed with exit code 2.
+Lint and Type Check: app/api/evaluate/[hash]/route.ts#L270
+Object literal may only specify known properties, and 'is_edge' does not exist in type '{ submission_hash?: string | SQL<unknown> | undefined; title?: string | SQL<unknown> | undefined; contributor?: string | SQL<unknown> | undefined; content_hash?: string | SQL<unknown> | undefined; ... 21 more ...; updated_at?: Date | ... 1 more ... | undefined; }'.
+Lint and Type Check
+The process '/usr/bin/git' failed with exit code 128
+fix: Add Array.isArray() check for metals to prevent iPhone crash #260
+All jobs
+Run details
+Triggered via push 3 hours ago
+@AiwonA1AiwonA1
+pushed
+ 282093a
+main
+Status
+Failure
+Total duration
+1m 12s
+Artifacts
+–
+
+Lint and Type Check
+1m 3s
+Oh hello! Nice to see you.
+
+Made with ❤️ by humans.txt
+
+Annotations
+2 errors and 1 warning
+Lint and Type Check
+Process completed with exit code 2.
+Lint and Type Check: app/api/evaluate/[hash]/route.ts#L270
+Object literal may only specify known properties, and 'is_edge' does not exist in type '{ submission_hash?: string | SQL<unknown> | undefined; title?: string | SQL<unknown> | undefined; contributor?: string | SQL<unknown> | undefined; content_hash?: string | SQL<unknown> | undefined; ... 21 more ...; updated_at?: Date | ... 1 more ... | undefined; }'.
+Lint and Type Check
+The process '/usr/bin/git' failed with exit code 128
+fix: Add is_edge to API responses for badge display in navigator #261
+All jobs
+Run details
+Triggered via push 3 hours ago
+@AiwonA1AiwonA1
+pushed
+ 278fb7f
+main
+Status
+Failure
+Total duration
+1m 13s
+Artifacts
+–
+
+Lint and Type Check
+1m 8s
+Oh hello! Nice to see you.
+
+Made with ❤️ by humans.txt
+
+Annotations
+4 errors and 1 warning
+Lint and Type Check
+Process completed with exit code 2.
+Lint and Type Check: app/api/evaluate/[hash]/route.ts#L270
+Object literal may only specify known properties, and 'is_edge' does not exist in type '{ submission_hash?: string | SQL<unknown> | undefined; title?: string | SQL<unknown> | undefined; contributor?: string | SQL<unknown> | undefined; content_hash?: string | SQL<unknown> | undefined; ... 21 more ...; updated_at?: Date | ... 1 more ... | undefined; }'.
+Lint and Type Check: app/api/archive/contributions/route.ts#L100
+Property 'is_edge' does not exist on type 'PgTableWithColumns<{ name: "contributions"; schema: undefined; columns: { submission_hash: PgColumn<{ name: "submission_hash"; tableName: "contributions"; dataType: "string"; columnType: "PgText"; data: string; driverParam: string; ... 7 more ...; generated: undefined; }, {}, {}>; ... 24 more ...; updated_at: PgColu...'.
+Lint and Type Check: app/api/archive/contributions/[hash]/route.ts#L51
+Property 'is_edge' does not exist on type '{ submission_hash: string; title: string; contributor: string; content_hash: string; text_content: string | null; pdf_path: string | null; status: string; category: string | null; metals: string[] | null; ... 16 more ...; updated_at: Date; }'.
+Lint and Type Check
+The process '/usr/bin/git' failed with exit code 128
+
 
 ### Option A: Use Standard Secret Key (Recommended for Now)
 

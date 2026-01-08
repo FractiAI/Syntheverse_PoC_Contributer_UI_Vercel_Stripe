@@ -1440,10 +1440,15 @@ ${answer}`;
     // Seed and Edge submissions receive multipliers based on CONTENT analysis by AI (not timing)
     // AI determines if content exhibits seed/edge characteristics
     
-    // Fetch multiplier config from database (creator/operator can toggle these during testing)
+    // Fetch scoring config from database (Marek/Simba: explicit versioning + tunable parameters)
     let seedMultiplierEnabled = true;
     let edgeMultiplierEnabled = true;
     let overlapAdjustmentsEnabled = true;
+    let scoreConfigVersion = 'v1.0.0';
+    let sweetSpotCenter = 0.142; // 14.2% default (Λ_edge ≈ 1.42 bridge)
+    let sweetSpotTolerance = 0.05; // ±5% default
+    let penaltyThreshold = 0.30; // 30% default
+    let overlapOperator = 'embedding_cosine'; // Explicit operator declaration
     
     try {
       // Use direct database query to avoid dynamic import issues
@@ -1457,14 +1462,29 @@ ${answer}`;
         .where(eq(scoringConfigTable.config_key, 'multiplier_toggles'))
         .limit(1);
       
-      if (configResult && configResult.length > 0 && configResult[0].config_value) {
-        seedMultiplierEnabled = configResult[0].config_value.seed_enabled !== false;
-        edgeMultiplierEnabled = configResult[0].config_value.edge_enabled !== false;
-        overlapAdjustmentsEnabled = configResult[0].config_value.overlap_enabled !== false;
+      if (configResult && configResult.length > 0) {
+        const config = configResult[0];
+        const configValue = config.config_value;
+        
+        // Mode toggles
+        seedMultiplierEnabled = configValue.seed_enabled !== false;
+        edgeMultiplierEnabled = configValue.edge_enabled !== false;
+        overlapAdjustmentsEnabled = configValue.overlap_enabled !== false;
+        
+        // Versioning (Marek/Simba requirement)
+        scoreConfigVersion = config.version || 'v1.0.0';
+        
+        // Sweet spot parameters (tunable per config, not dogmatic)
+        sweetSpotCenter = configValue.sweet_spot_center ?? 0.142;
+        sweetSpotTolerance = configValue.sweet_spot_tolerance ?? 0.05;
+        penaltyThreshold = configValue.penalty_threshold ?? 0.30;
+        
+        // Operator declaration (Marek/Simba: must be explicit)
+        overlapOperator = configValue.overlap_operator || 'embedding_cosine';
       }
     } catch (error) {
       // Default to enabled if config fetch fails (table might not exist yet)
-      console.warn('Failed to fetch multiplier config, using defaults:', error);
+      console.warn('Failed to fetch scoring config, using defaults:', error);
     }
     
     const SEED_MULTIPLIER = 1.15; // 15% bonus for seed submissions
@@ -1486,10 +1506,36 @@ ${answer}`;
     const afterPenalty = basePodScore * (1 - effectivePenaltyPercent / 100);
     const afterBonus = afterPenalty * effectiveBonusMultiplier;
     const afterSeedAndEdge = afterBonus * combinedMultiplier;
-    const pod_score = Math.max(0, Math.min(10000, Math.round(afterSeedAndEdge)));
+    
+    // Marek/Simba: final_preclamp MUST be tracked before clamping (for k-factor hygiene)
+    const final_preclamp = Math.round(afterSeedAndEdge);
+    const pod_score = Math.max(0, Math.min(10000, final_preclamp));
+    const wasClamped = pod_score !== final_preclamp;
 
-    // H) Score trace for transparency (Marek/Simba requirement)
+    // H) Score trace for transparency (Marek/Simba enhanced specification)
     const scoreTrace = {
+      // === IDs (Versioning + Traceability) - Marek/Simba P0 ===
+      score_config_id: scoreConfigVersion,
+      sandbox_id: sandboxContext?.id || 'main',
+      archive_snapshot_id: `snapshot_${new Date().toISOString().split('T')[0].replace(/-/g, '')}`, // TODO: Implement proper snapshot versioning
+      
+      // === Operator Declaration - Marek/Simba P0 (must be explicit) ===
+      overlap_operator: overlapOperator, // "embedding_cosine", "axis", "kiss", etc.
+      
+      // === Mode Toggles State - Marek/Simba requirement ===
+      toggles: {
+        overlap_on: overlapAdjustmentsEnabled,
+        seed_on: seedMultiplierEnabled,
+        edge_on: edgeMultiplierEnabled,
+        metal_policy_on: true, // Currently always on
+      },
+      
+      // === Sweet Spot Parameters (HHF Bridge - tunable) ===
+      sweet_spot_params: {
+        center: sweetSpotCenter,
+        tolerance: sweetSpotTolerance,
+        penalty_threshold: penaltyThreshold,
+      },
       // Dimension scores (inputs to formula)
       dimension_scores: {
         novelty: finalNoveltyScore,
@@ -1567,9 +1613,33 @@ ${answer}`;
         `Step ${(isSeedFromAI || isEdgeFromAI) ? '5' : '4'}: Final (clamped 0-10000) = ${pod_score}`,
       ].filter(Boolean),
       
-      // Clamping flag
-      clamped: pod_score === 10000 || pod_score === 0,
+      // === Multipliers Applied (Structured Array) - Marek/Simba requirement ===
+      multipliers_applied: [
+        ...(isSeedFromAI && seedMultiplierEnabled ? [{
+          name: 'seed',
+          value: seedMultiplier,
+          applied_to: 'post_bonus',
+          justification: evaluation.seed_justification || 'AI determined seed characteristics'
+        }] : []),
+        ...(isEdgeFromAI && edgeMultiplierEnabled ? [{
+          name: 'edge',
+          value: edgeMultiplier,
+          applied_to: 'post_bonus',
+          justification: evaluation.edge_justification || 'AI determined edge characteristics'
+        }] : []),
+      ],
+      
+      // === Finals (Pre-clamp vs Clamped) - Marek/Simba P0 CRITICAL ===
+      final_preclamp: final_preclamp,
+      final_clamped: pod_score,
+      clamped: wasClamped,
       clamped_reason: pod_score === 10000 ? 'max_score' : pod_score === 0 ? 'min_score' : null,
+      
+      // === Validator Hygiene - Marek/Simba warning ===
+      // NOTE: If computing k-factor, ALWAYS use final_preclamp, NEVER final_clamped
+      // k_factor = final_preclamp / composite (correct)
+      // k_factor = final_clamped / composite (WRONG if clamped!)
+      k_factor_source: 'preclamp', // Indicates this trace provides correct source for k-factor
     };
 
     // Extract scoring_metadata and pod_composition from Groq response (if provided)

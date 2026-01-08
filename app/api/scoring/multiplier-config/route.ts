@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST: Update multiplier config
+// POST: Update multiplier config (with mode transition logging per Marek/Simba)
 export async function POST(request: NextRequest) {
   try {
     const supabase = createClient();
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { isCreator, isOperator } = await getAuthenticatedUserWithRole();
+    const { isCreator, isOperator, role } = await getAuthenticatedUserWithRole();
 
     // Only creators and operators can update this config
     if (!isCreator && !isOperator) {
@@ -74,7 +74,36 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid config format' }, { status: 400 });
     }
 
-    const configValue = { seed_enabled, edge_enabled, overlap_enabled };
+    // Fetch current state BEFORE update (for mode transition logging)
+    const { data: currentConfig } = await supabase
+      .from('scoring_config')
+      .select('*')
+      .eq('config_key', 'multiplier_toggles')
+      .single();
+
+    const modeStateBefore = currentConfig ? {
+      seed_on: currentConfig.config_value.seed_enabled ?? true,
+      edge_on: currentConfig.config_value.edge_enabled ?? true,
+      overlap_on: currentConfig.config_value.overlap_enabled ?? true,
+      metal_policy_on: currentConfig.config_value.metal_policy_enabled ?? true,
+      score_config_version: currentConfig.version || 'v1.0.0',
+    } : null;
+
+    // Preserve existing sweet spot parameters and overlap operator
+    const configValue = {
+      ...currentConfig?.config_value,
+      seed_enabled,
+      edge_enabled,
+      overlap_enabled,
+    };
+
+    const modeStateAfter = {
+      seed_on: seed_enabled,
+      edge_on: edge_enabled,
+      overlap_on: overlap_enabled,
+      metal_policy_on: configValue.metal_policy_enabled ?? true,
+      score_config_version: currentConfig?.version || 'v1.1.0',
+    };
 
     // Upsert the config
     const { error: upsertError } = await supabase
@@ -96,14 +125,27 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to save config' }, { status: 500 });
     }
 
-    // Log the change for audit trail
-    await supabase.from('poc_log').insert({
-      operation: 'MULTIPLIER_CONFIG_UPDATE',
-      details: {
-        config: configValue,
-        updated_by: data.user.email,
+    // Mode Transition Logging (Marek/Simba requirement: explicit state machine tracking)
+    await supabase.from('audit_log').insert({
+      id: `mode_transition_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      actor_email: data.user.email || 'unknown',
+      actor_role: role || 'unknown',
+      action_type: 'mode_transition',
+      action_mode: 'manual', // Manual toggle (vs 'automatic' stability trigger)
+      target_type: 'scoring_config',
+      target_identifier: 'multiplier_toggles',
+      affected_count: 1,
+      metadata: {
+        mode_state_before: modeStateBefore,
+        mode_state_after: modeStateAfter,
+        changes: {
+          seed: modeStateBefore?.seed_on !== seed_enabled,
+          edge: modeStateBefore?.edge_on !== edge_enabled,
+          overlap: modeStateBefore?.overlap_on !== overlap_enabled,
+        },
         timestamp: new Date().toISOString(),
       },
+      created_at: new Date().toISOString(),
     });
 
     return NextResponse.json({ success: true, config: configValue });

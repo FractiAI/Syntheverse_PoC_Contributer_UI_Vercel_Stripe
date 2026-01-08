@@ -96,10 +96,9 @@ export async function GET(request: NextRequest) {
         registration_tx_hash: contributionsTable.registration_tx_hash,
         stripe_payment_id: contributionsTable.stripe_payment_id,
         // Seed, Edge, and Sweet Spot Detection
-        // Use COALESCE to handle missing columns gracefully (for deployments before migration)
-        is_seed: sql<boolean | null>`COALESCE(${contributionsTable.is_seed}, false)`,
-        is_edge: sql<boolean | null>`COALESCE(${contributionsTable.is_edge}, false)`,
-        has_sweet_spot_edges: sql<boolean | null>`COALESCE(${contributionsTable.has_sweet_spot_edges}, false)`,
+        is_seed: contributionsTable.is_seed,
+        is_edge: contributionsTable.is_edge,
+        has_sweet_spot_edges: contributionsTable.has_sweet_spot_edges,
         overlap_percent: contributionsTable.overlap_percent,
         created_at: contributionsTable.created_at,
         updated_at: contributionsTable.updated_at,
