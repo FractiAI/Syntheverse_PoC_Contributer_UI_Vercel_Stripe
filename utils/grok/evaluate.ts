@@ -1556,10 +1556,20 @@ ${answer}`;
       penalty_percent_applied: effectivePenaltyPercent, // Can differ if overlap toggle is off
       penalty_applied_to: 'composite', // Clarify where penalty is applied
       overlap_adjustments_enabled: overlapAdjustmentsEnabled, // Show toggle state
+      penalty_difference_reason: !overlapAdjustmentsEnabled 
+        ? 'Overlap adjustments disabled via config toggle - penalty computed but not applied'
+        : penaltyPercent !== effectivePenaltyPercent
+        ? 'Penalty modified by system configuration'
+        : null,
       
       // Bonus calculation and application
       bonus_multiplier_computed: bonusMultiplier,
       bonus_multiplier_applied: effectiveBonusMultiplier, // Can differ if overlap toggle is off
+      bonus_difference_reason: !overlapAdjustmentsEnabled
+        ? 'Overlap adjustments disabled via config toggle - bonus computed but not applied (1.0 used)'
+        : bonusMultiplier !== effectiveBonusMultiplier
+        ? 'Bonus multiplier modified by system configuration'
+        : null,
       bonus_applied_to: 'post_penalty', // Clarify where bonus is applied
       
       // Seed multiplier calculation and application (content-based, not timing-based)
@@ -1593,20 +1603,21 @@ ${answer}`;
       // Final score
       final_score: pod_score,
       
-      // Formula used (full transparency)
+      // Formula used (APPLIED values only - Marek/Simba fix for trace consistency)
+      // CRITICAL: Use effectivePenaltyPercent and effectiveBonusMultiplier (APPLIED) not computed values
       formula: (isSeedFromAI && isEdgeFromAI)
-        ? `Final = (Composite=${compositeScore} × (1 - ${penaltyPercent}%/100)) × ${bonusMultiplier.toFixed(3)} × ${seedMultiplier.toFixed(2)} (seed) × ${edgeMultiplier.toFixed(2)} (edge) = ${pod_score}`
+        ? `Final = (Composite=${compositeScore} × (1 - ${effectivePenaltyPercent}%/100)) × ${effectiveBonusMultiplier.toFixed(3)} × ${seedMultiplier.toFixed(2)} (seed) × ${edgeMultiplier.toFixed(2)} (edge) = ${pod_score}`
         : isSeedFromAI
-        ? `Final = (Composite=${compositeScore} × (1 - ${penaltyPercent}%/100)) × ${bonusMultiplier.toFixed(3)} × ${seedMultiplier.toFixed(2)} (seed) = ${pod_score}`
+        ? `Final = (Composite=${compositeScore} × (1 - ${effectivePenaltyPercent}%/100)) × ${effectiveBonusMultiplier.toFixed(3)} × ${seedMultiplier.toFixed(2)} (seed) = ${pod_score}`
         : isEdgeFromAI
-        ? `Final = (Composite=${compositeScore} × (1 - ${penaltyPercent}%/100)) × ${bonusMultiplier.toFixed(3)} × ${edgeMultiplier.toFixed(2)} (edge) = ${pod_score}`
-        : `Final = (Composite=${compositeScore} × (1 - ${penaltyPercent}%/100)) × ${bonusMultiplier.toFixed(3)} = ${pod_score}`,
+        ? `Final = (Composite=${compositeScore} × (1 - ${effectivePenaltyPercent}%/100)) × ${effectiveBonusMultiplier.toFixed(3)} × ${edgeMultiplier.toFixed(2)} (edge) = ${pod_score}`
+        : `Final = (Composite=${compositeScore} × (1 - ${effectivePenaltyPercent}%/100)) × ${effectiveBonusMultiplier.toFixed(3)} = ${pod_score}`,
       
-      // Step-by-step formula breakdown (for UI display)
+      // Step-by-step formula breakdown (for UI display) - APPLIED values only
       formula_steps: [
         `Step 1: Composite = N(${finalNoveltyScore}) + D(${densityFinal}) + C(${coherenceScore}) + A(${alignmentScore}) = ${compositeScore}`,
-        `Step 2: After Penalty = ${compositeScore} × (1 - ${penaltyPercent}/100) = ${afterPenalty.toFixed(2)}`,
-        `Step 3: After Bonus = ${afterPenalty.toFixed(2)} × ${bonusMultiplier.toFixed(3)} = ${afterBonus.toFixed(2)}`,
+        `Step 2: After Penalty = ${compositeScore} × (1 - ${effectivePenaltyPercent}/100) = ${afterPenalty.toFixed(2)}${effectivePenaltyPercent !== penaltyPercent ? ` [Computed: ${penaltyPercent}%, Applied: ${effectivePenaltyPercent}%]` : ''}`,
+        `Step 3: After Bonus = ${afterPenalty.toFixed(2)} × ${effectiveBonusMultiplier.toFixed(3)} = ${afterBonus.toFixed(2)}${effectiveBonusMultiplier !== bonusMultiplier ? ` [Computed: ${bonusMultiplier.toFixed(3)}, Applied: ${effectiveBonusMultiplier.toFixed(3)}]` : ''}`,
         (isSeedFromAI || isEdgeFromAI)
           ? `Step 4: After Multipliers = ${afterBonus.toFixed(2)} × ${combinedMultiplier.toFixed(4)} ${isSeedFromAI && isEdgeFromAI ? '(seed × edge)' : isSeedFromAI ? '(seed)' : '(edge)'} = ${afterSeedAndEdge.toFixed(2)}`
           : null,
@@ -1651,6 +1662,7 @@ ${answer}`;
       evaluation_timestamp: new Date().toISOString(),
     };
 
+    // Marek/Simba fix: Use APPLIED values only in pod_composition (trace consistency)
     const podComposition = evaluation.pod_composition || {
       sum_dims: {
         novelty: finalNoveltyScore,
@@ -1660,13 +1672,23 @@ ${answer}`;
         composite: compositeScore,
       },
       multipliers: {
-        sweet_spot_multiplier: bonusMultiplier,
+        sweet_spot_multiplier: effectiveBonusMultiplier, // APPLIED value
         seed_multiplier: seedMultiplier,
-        total_multiplier: bonusMultiplier * seedMultiplier,
+        edge_multiplier: edgeMultiplier,
+        total_multiplier: effectiveBonusMultiplier * seedMultiplier * edgeMultiplier,
       },
       penalties: {
-        overlap_penalty_percent: penaltyPercent,
-        total_penalty_percent: penaltyPercent,
+        overlap_penalty_percent: effectivePenaltyPercent, // APPLIED value
+        total_penalty_percent: effectivePenaltyPercent, // APPLIED value
+      },
+      // Show computed vs applied for transparency
+      computed_vs_applied: {
+        penalty_computed: penaltyPercent,
+        penalty_applied: effectivePenaltyPercent,
+        bonus_computed: bonusMultiplier,
+        bonus_applied: effectiveBonusMultiplier,
+        differs: penaltyPercent !== effectivePenaltyPercent || bonusMultiplier !== effectiveBonusMultiplier,
+        reason: !overlapAdjustmentsEnabled ? 'overlap_toggle_disabled' : null,
       },
       sandbox_factor: 1.0, // Default, can be overridden
       final_clamped: pod_score,
@@ -1844,8 +1866,12 @@ ${answer}`;
       base_novelty: baseNoveltyScore,
       base_density: baseDensityScore,
       redundancy_overlap_percent: redundancyOverlapPercent,
-      redundancy_penalty_percent: penaltyPercent, // Explicit penalty % (0 if no penalty)
-      sweet_spot_bonus_multiplier: bonusMultiplier, // Explicit bonus multiplier (1.0 if no bonus)
+      // Marek/Simba fix: Return APPLIED values as primary fields
+      redundancy_penalty_percent: effectivePenaltyPercent, // APPLIED penalty % (may differ from computed)
+      sweet_spot_bonus_multiplier: effectiveBonusMultiplier, // APPLIED bonus multiplier (may differ from computed)
+      // Also include computed values for transparency
+      redundancy_penalty_percent_computed: penaltyPercent, // Computed penalty (before toggle consideration)
+      sweet_spot_bonus_multiplier_computed: bonusMultiplier, // Computed bonus (before toggle consideration)
       // Seed and Edge detection (content-based, not timing-based)
       is_seed_submission: isSeedFromAI,
       seed_justification: evaluation.seed_justification || null,

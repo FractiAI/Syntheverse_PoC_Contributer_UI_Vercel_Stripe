@@ -198,7 +198,7 @@ export default function SynthonautSchool() {
                   isActive ? 'scale-105 ring-2' : 'hover:scale-102'
                 }`}
                 style={{
-                  ringColor: isActive ? track.color : 'transparent',
+                  ...(isActive && { '--tw-ring-color': track.color } as React.CSSProperties),
                 }}
               >
                 <div className="flex flex-col items-center text-center">
@@ -375,7 +375,7 @@ export default function SynthonautSchool() {
                       selectedTrack === track.id ? 'ring-2' : ''
                     }`}
                     style={{
-                      ringColor: selectedTrack === track.id ? track.color : 'transparent',
+                      ...(selectedTrack === track.id && { '--tw-ring-color': track.color } as React.CSSProperties),
                     }}
                   >
                     <TrackIcon className="w-6 h-6" style={{ color: track.color }} />
