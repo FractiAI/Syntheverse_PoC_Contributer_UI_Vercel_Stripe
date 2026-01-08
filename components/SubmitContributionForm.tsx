@@ -14,6 +14,8 @@ import {
   Loader2,
   CheckCircle2,
   CreditCard,
+  Sprout,
+  Link2,
 } from 'lucide-react';
 import Link from 'next/link';
 import '../app/synthscan-mri.css';
