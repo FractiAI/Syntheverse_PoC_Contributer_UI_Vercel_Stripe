@@ -622,9 +622,9 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
           <div className="flex items-start justify-between">
             <div>
               <div className="mri-system-name">SYNTHSCAN™ MRI IMAGING SYSTEM</div>
-              <div className="mri-title">Contribution Evaluation Console</div>
+              <div className="mri-title">HHF-AI Spin Resonance Imaging</div>
               <div className="mri-subtitle">
-                Hydrogen-Holographic Fractal Magnetic Resonance Imaging
+                Hydrogen-Holographic Fractal Magnetic Resonance
               </div>
             </div>
             <div className="mri-status-display">
@@ -1525,36 +1525,14 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
             </div>
           )}
 
-          {/* K) Beta/Mode Banner (Marek requirement) */}
-          <div className="mb-6 rounded-lg border-2 border-amber-500/50 bg-amber-500/10 p-4">
-            <div className="mb-2 flex items-center gap-2">
-              <span className="cockpit-badge bg-amber-500/20 text-amber-400">BETA MODE</span>
-              <span className="cockpit-label text-sm">Current Submission Mode & Fees</span>
-            </div>
-            <div className="space-y-2 text-xs">
-              <div>
-                <strong className="text-amber-300">Submission Mode:</strong>{' '}
-                <span className="opacity-90">Text-only PoC (4,000 characters max)</span>
-              </div>
-              <div>
-                <strong className="text-amber-300">PDF Pipeline:</strong>{' '}
-                <span className="opacity-90">Planned for enterprise tier (coming soon)</span>
-              </div>
-              <div className="mt-3 border-t border-amber-500/30 pt-2">
-                <strong className="text-amber-300">Fee Structure:</strong>
-                <ul className="ml-4 mt-1 list-disc space-y-1 opacity-90">
-                  <li>
-                    <strong>Public PoC:</strong> $500 evaluation fee (one-time per submission)
-                  </li>
-                  <li>
-                    <strong>Enterprise Tier:</strong> $50/$40/$30/$25 per submission (by tier) + $20
-                    on-chain registration (optional)
-                  </li>
-                  <li>
-                    <strong>Tester Exemption:</strong> Free evaluation for approved testers
-                  </li>
-                </ul>
-              </div>
+          {/* Pre-Exam Information */}
+          <div className="mb-6 rounded-lg border border-blue-500/30 bg-blue-500/5 p-4">
+            <div className="mb-2 text-sm font-semibold text-blue-900">SynthScan™ MRI — HHF-AI Spin Resonance Imaging</div>
+            <div className="space-y-2 text-xs text-slate-700">
+              <p>• <strong>Imaging Method:</strong> Hydrogen spin–mediated resonance (HHF-AI Spin)</p>
+              <p>• <strong>Preparation:</strong> Text-only submissions (abstracts, equations, constants)</p>
+              <p>• <strong>Scan Parameters:</strong> 4,000 character imaging window</p>
+              <p>• <strong>Examination Fee:</strong> $500 per scan (approved testers: complimentary)</p>
             </div>
           </div>
 
@@ -1577,44 +1555,35 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="text_content" className="cockpit-label">
+            {/* Imaging Data Input */}
+            <div className="mri-input-section">
+              <div className="mri-section-header">Imaging Data Input</div>
+              <label htmlFor="text_content" className="mri-field-label">
                 Submission Text * (Abstract, Equations, Constants Only)
-              </Label>
+              </label>
               <textarea
                 id="text_content"
-                className={`cockpit-input ${isOverLimit ? 'border-red-500' : ''}`}
+                className={`mri-textarea ${isOverLimit ? 'border-red-500' : ''}`}
                 value={formData.text_content}
                 onChange={(e) => setFormData({ ...formData, text_content: e.target.value })}
-                placeholder="Paste your contribution here - Abstract, equations, and constants only (no full papers, documentation, or extended text)"
+                placeholder="Enter examination data - Abstract, equations, and constants only"
                 required
                 disabled={loading}
                 rows={10}
               />
-              <div className="flex justify-between text-xs">
-                <span className="text-muted-foreground">
-                  Include only: abstract, equations, and constants. Maximum:{' '}
-                  {MAX_CONTENT_LENGTH.toLocaleString()} characters.
+              <div className="flex justify-between text-xs text-slate-600">
+                <span>
+                  Scan window: {MAX_CONTENT_LENGTH.toLocaleString()} characters
                 </span>
                 <span
-                  className={isOverLimit ? 'font-semibold text-red-500' : 'text-muted-foreground'}
+                  className={isOverLimit ? 'font-semibold text-red-600' : ''}
                 >
-                  {contentLength.toLocaleString()} / {MAX_CONTENT_LENGTH.toLocaleString()}{' '}
-                  {isOverLimit ? '(OVER LIMIT)' : 'chars'}
+                  {contentLength.toLocaleString()} / {MAX_CONTENT_LENGTH.toLocaleString()}
                 </span>
               </div>
               {isOverLimit && (
-                <div className="rounded-lg border border-yellow-500 bg-yellow-50 p-3">
-                  <div className="mb-1 text-sm font-semibold text-yellow-800">
-                    ℹ️ Content will be truncated to {MAX_CONTENT_LENGTH.toLocaleString()} characters
-                    during evaluation
-                  </div>
-                  <div className="text-xs text-yellow-700">
-                    Your submission is{' '}
-                    <strong>{(contentLength - MAX_CONTENT_LENGTH).toLocaleString()}</strong>{' '}
-                    characters over the recommended limit. Content will be automatically truncated
-                    to {MAX_CONTENT_LENGTH.toLocaleString()} characters for evaluation.
-                  </div>
+                <div className="mt-2 rounded border border-orange-300 bg-orange-50 p-2 text-xs text-orange-800">
+                  Data exceeds scan window by {(contentLength - MAX_CONTENT_LENGTH).toLocaleString()} characters. Content will be truncated to fit imaging parameters.
                 </div>
               )}
             </div>
