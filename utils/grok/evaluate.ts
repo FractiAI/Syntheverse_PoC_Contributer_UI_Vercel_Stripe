@@ -1452,6 +1452,11 @@ ${answer}`;
       step_4_after_seed: afterSeed,
       step_5_clamped: pod_score,
       
+      // Required for type compatibility
+      after_penalty: afterPenalty,
+      after_bonus: afterBonus,
+      after_seed: afterSeed,
+      
       // Final score
       final_score: pod_score,
       
@@ -1481,7 +1486,7 @@ ${answer}`;
     const scoringMetadata = evaluation.scoring_metadata || {
       score_config_id: scoreConfigId,
       sandbox_id: sandboxContext?.id || 'pru-default',
-      archive_version: archiveVersionId,
+      archive_version: archiveVersion,
       evaluation_timestamp: new Date().toISOString(),
     };
 
