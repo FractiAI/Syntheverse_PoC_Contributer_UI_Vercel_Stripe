@@ -6155,7 +6155,7 @@ export function OnboardingNavigator() {
         <div className="academy-header mb-6 md:mb-8 rounded-lg">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="flex-1">
-              <div className="academy-badge mb-3">🚀 SYNTHENAUT TRAINING ACADEMY</div>
+              <div className="academy-badge mb-3">🚀 SYNTHENAUT ACADEMY</div>
               <h1 className="academy-title">Earn Your Wings</h1>
               <p className="academy-subtitle">
                 Progressive flight training from cadet to certified synthenaut
@@ -6250,7 +6250,7 @@ export function OnboardingNavigator() {
             </div>
             <div className="academy-text space-y-3 text-sm">
               <p>
-                Welcome to the Syntheverse Training Academy. This <strong>interactive training system</strong> guides you through core concepts, hands-on exercises, and real-world applications.
+                Welcome to the Syntheverse Academy. This <strong>interactive training system</strong> guides you through core concepts, hands-on exercises, and real-world applications.
               </p>
               <p>
                 Each module includes: <strong>Learning Objectives</strong> → <strong>Core Content</strong> → <strong>Hands-On Exercise</strong> → <strong>Knowledge Check</strong> → <strong>Real-World Application</strong>
