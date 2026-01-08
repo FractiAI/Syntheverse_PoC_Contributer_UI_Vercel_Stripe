@@ -46,6 +46,11 @@ export async function GET(request: NextRequest, { params }: { params: { hash: st
       registration_tx_hash: contrib.registration_tx_hash || null,
       stripe_payment_id: contrib.stripe_payment_id || null,
       allocation_amount: allocationAmount > 0 ? allocationAmount : null,
+      // Seed, Edge, and Sweet Spot Detection
+      is_seed: contrib.is_seed ?? false,
+      is_edge: contrib.is_edge ?? false,
+      has_sweet_spot_edges: contrib.has_sweet_spot_edges ?? false,
+      overlap_percent: contrib.overlap_percent ? Number(contrib.overlap_percent) : null,
       created_at: contrib.created_at?.toISOString() || '',
       updated_at: contrib.updated_at?.toISOString() || '',
     };

@@ -95,8 +95,9 @@ export async function GET(request: NextRequest) {
         registration_date: contributionsTable.registration_date,
         registration_tx_hash: contributionsTable.registration_tx_hash,
         stripe_payment_id: contributionsTable.stripe_payment_id,
-        // Seed and Sweet Spot Edge Detection
+        // Seed, Edge, and Sweet Spot Detection
         is_seed: contributionsTable.is_seed,
+        is_edge: contributionsTable.is_edge,
         has_sweet_spot_edges: contributionsTable.has_sweet_spot_edges,
         overlap_percent: contributionsTable.overlap_percent,
         created_at: contributionsTable.created_at,
@@ -193,8 +194,9 @@ export async function GET(request: NextRequest) {
         stripe_payment_id: contrib.stripe_payment_id || null,
         allocated: allocatedHashes.has(contrib.submission_hash),
         allocation_amount: allocationAmounts.get(contrib.submission_hash) || null, // Total SYNTH tokens allocated
-        // Seed and Sweet Spot Edge Detection (for UI highlighting)
+        // Seed, Edge, and Sweet Spot Detection (for UI highlighting)
         is_seed: contrib.is_seed ?? false,
+        is_edge: contrib.is_edge ?? false,
         has_sweet_spot_edges: contrib.has_sweet_spot_edges ?? false,
         overlap_percent: contrib.overlap_percent ? Number(contrib.overlap_percent) : null,
         // NOTE: Do not include full metadata in list view (it can be very large).
