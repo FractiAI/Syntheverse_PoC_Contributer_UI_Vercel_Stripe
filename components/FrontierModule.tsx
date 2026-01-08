@@ -54,8 +54,9 @@ interface PoCSubmission {
     full_evaluation?: any;
     raw_grok_response?: string;
   };
-  // Seed and Sweet Spot Edge Detection
+  // Seed and Edge Detection (content-based) + Sweet Spot (overlap-based)
   is_seed?: boolean | null;
+  is_edge?: boolean | null;
   has_sweet_spot_edges?: boolean | null;
   overlap_percent?: number | null;
 }
@@ -485,6 +486,15 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
                               SEED
                             </span>
                           )}
+                          {submission.is_edge && (
+                            <span 
+                              className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded bg-blue-500/20 text-blue-400 border border-blue-500/30"
+                              title="Edge Submission - Defines boundary operators (E₀-E₆) (+15% multiplier)"
+                            >
+                              <Zap className="h-3 w-3" />
+                              EDGE
+                            </span>
+                          )}
                           {submission.has_sweet_spot_edges && (
                             <span 
                               className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded bg-amber-500/20 text-amber-400 border border-amber-500/30"
@@ -559,6 +569,15 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
                 >
                   <Sprout className="h-3.5 w-3.5" />
                   SEED
+                </span>
+              )}
+              {selectedSubmission?.is_edge && (
+                <span 
+                  className="inline-flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-blue-500/20 text-blue-400 border border-blue-500/30"
+                  title="Edge Submission - Defines boundary operators (E₀-E₆) (+15% multiplier)"
+                >
+                  <Zap className="h-3.5 w-3.5" />
+                  EDGE
                 </span>
               )}
               {selectedSubmission?.has_sweet_spot_edges && (

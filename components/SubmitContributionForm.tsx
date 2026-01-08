@@ -562,18 +562,18 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
           {/* Evaluation Status Dialog - Shows automatically while evaluation is in progress */}
           {evaluationStatus && (
             <div
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
               onClick={(e) => {
                 // Close dialog when clicking backdrop (only if evaluation completed or errored)
                 if (evaluationStatus.completed || evaluationStatus.error) {
                   if (e.target === e.currentTarget) {
                     setEvaluationStatus(null);
-                    router.push('/dashboard');
+                    window.location.href = '/dashboard';
                   }
                 }
               }}
             >
-              <div className="mri-report-card max-w-5xl" onClick={(e) => e.stopPropagation()}>
+              <div className="mri-report-card w-full max-w-5xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
                 {/* MRI Report Header */}
                 <div className="mri-report-header">
                   <div className="flex items-start justify-between">

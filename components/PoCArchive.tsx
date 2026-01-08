@@ -28,6 +28,8 @@ import {
   ExternalLink,
   Link2,
   AlertCircle,
+  Sprout,
+  Zap,
 } from 'lucide-react';
 import Link from 'next/link';
 import { debug, debugError } from '@/utils/debug';
@@ -67,6 +69,11 @@ interface PoCSubmission {
     full_evaluation?: any;
     raw_grok_response?: string; // Raw Groq API response text/markdown (stored as "grok" for legacy reasons)
   };
+  // Seed and Edge Detection (content-based) + Sweet Spot (overlap-based)
+  is_seed?: boolean | null;
+  is_edge?: boolean | null;
+  has_sweet_spot_edges?: boolean | null;
+  overlap_percent?: number | null;
 }
 
 interface PoCArchiveProps {
@@ -557,7 +564,36 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                     onClick={() => handleRowClick(submission)}
                   >
                     <td className="p-2">
-                      <div className="font-medium">{submission.title}</div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <div className="font-medium">{submission.title}</div>
+                        {submission.is_seed && (
+                          <span 
+                            className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded bg-emerald-500/20 text-emerald-600 border border-emerald-500/30"
+                            title="Seed Submission - Defines irreducible primitives (S₀-S₈) (+15% multiplier)"
+                          >
+                            <Sprout className="h-3 w-3" />
+                            SEED
+                          </span>
+                        )}
+                        {submission.is_edge && (
+                          <span 
+                            className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded bg-blue-500/20 text-blue-600 border border-blue-500/30"
+                            title="Edge Submission - Defines boundary operators (E₀-E₆) (+15% multiplier)"
+                          >
+                            <Zap className="h-3 w-3" />
+                            EDGE
+                          </span>
+                        )}
+                        {submission.has_sweet_spot_edges && (
+                          <span 
+                            className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded bg-amber-500/20 text-amber-600 border border-amber-500/30"
+                            title="Sweet Spot Overlap - Optimal redundancy (9.2%-19.2%)"
+                          >
+                            <Zap className="h-3 w-3" />
+                            SWEET SPOT
+                          </span>
+                        )}
+                      </div>
                       {submission.category && (
                         <div className="text-xs capitalize text-muted-foreground">
                           {submission.category}
@@ -733,7 +769,36 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                           onClick={() => handleRowClick(submission)}
                         >
                           <td className="p-2">
-                            <div className="font-medium">{submission.title}</div>
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <div className="font-medium">{submission.title}</div>
+                              {submission.is_seed && (
+                                <span 
+                                  className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded bg-emerald-500/20 text-emerald-600 border border-emerald-500/30"
+                                  title="Seed Submission - Defines irreducible primitives (S₀-S₈) (+15% multiplier)"
+                                >
+                                  <Sprout className="h-3 w-3" />
+                                  SEED
+                                </span>
+                              )}
+                              {submission.is_edge && (
+                                <span 
+                                  className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded bg-blue-500/20 text-blue-600 border border-blue-500/30"
+                                  title="Edge Submission - Defines boundary operators (E₀-E₆) (+15% multiplier)"
+                                >
+                                  <Zap className="h-3 w-3" />
+                                  EDGE
+                                </span>
+                              )}
+                              {submission.has_sweet_spot_edges && (
+                                <span 
+                                  className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded bg-amber-500/20 text-amber-600 border border-amber-500/30"
+                                  title="Sweet Spot Overlap - Optimal redundancy (9.2%-19.2%)"
+                                >
+                                  <Zap className="h-3 w-3" />
+                                  SWEET SPOT
+                                </span>
+                              )}
+                            </div>
                             {submission.category && (
                               <div className="text-xs capitalize text-muted-foreground">
                                 {submission.category}
@@ -818,7 +883,36 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
       <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
         <DialogContent className="max-h-[90vh] max-w-3xl overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{selectedSubmission?.title}</DialogTitle>
+            <div className="flex items-center gap-2 flex-wrap">
+              <DialogTitle>{selectedSubmission?.title}</DialogTitle>
+              {selectedSubmission?.is_seed && (
+                <span 
+                  className="inline-flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-emerald-500/20 text-emerald-600 border border-emerald-500/30"
+                  title="Seed Submission - Defines irreducible primitives (S₀-S₈) (+15% multiplier)"
+                >
+                  <Sprout className="h-3.5 w-3.5" />
+                  SEED
+                </span>
+              )}
+              {selectedSubmission?.is_edge && (
+                <span 
+                  className="inline-flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-blue-500/20 text-blue-600 border border-blue-500/30"
+                  title="Edge Submission - Defines boundary operators (E₀-E₆) (+15% multiplier)"
+                >
+                  <Zap className="h-3.5 w-3.5" />
+                  EDGE
+                </span>
+              )}
+              {selectedSubmission?.has_sweet_spot_edges && (
+                <span 
+                  className="inline-flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-amber-500/20 text-amber-600 border border-amber-500/30"
+                  title="Sweet Spot Overlap - Optimal redundancy (9.2%-19.2%)"
+                >
+                  <Zap className="h-3.5 w-3.5" />
+                  SWEET SPOT
+                </span>
+              )}
+            </div>
             <DialogDescription>Submission Details</DialogDescription>
           </DialogHeader>
 
