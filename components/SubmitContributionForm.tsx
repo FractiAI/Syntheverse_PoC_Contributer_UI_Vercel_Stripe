@@ -764,12 +764,12 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                             </div>
 
                             {/* Classification */}
-                            {evaluationStatus.evaluation.classification &&
-                              evaluationStatus.evaluation.classification.length > 0 && (
-                                <div className="rounded-lg bg-muted p-4">
-                                  <div className="mb-2 text-sm font-semibold">Classification</div>
-                                  <div className="flex flex-wrap gap-2">
-                                    {evaluationStatus.evaluation.classification.map(
+                            {evaluationStatus.evaluation.classification && (
+                              <div className="rounded-lg bg-muted p-4">
+                                <div className="mb-2 text-sm font-semibold">Classification</div>
+                                <div className="flex flex-wrap gap-2">
+                                  {Array.isArray(evaluationStatus.evaluation.classification) ? (
+                                    evaluationStatus.evaluation.classification.map(
                                       (cls: string, idx: number) => (
                                         <span
                                           key={idx}
@@ -778,10 +778,15 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                                           {cls}
                                         </span>
                                       )
-                                    )}
-                                  </div>
+                                    )
+                                  ) : (
+                                    <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                                      {evaluationStatus.evaluation.classification}
+                                    </span>
+                                  )}
                                 </div>
-                              )}
+                              </div>
+                            )}
 
                             {/* Metal Alignment with Justification */}
                             {evaluationStatus.evaluation.metals &&
