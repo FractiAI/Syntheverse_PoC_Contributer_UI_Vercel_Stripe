@@ -1443,6 +1443,7 @@ ${answer}`;
     // Fetch multiplier config from database (creator/operator can toggle these during testing)
     let seedMultiplierEnabled = true;
     let edgeMultiplierEnabled = true;
+    let overlapAdjustmentsEnabled = true;
     
     try {
       // Use direct database query to avoid dynamic import issues
@@ -1459,6 +1460,7 @@ ${answer}`;
       if (configResult && configResult.length > 0 && configResult[0].config_value) {
         seedMultiplierEnabled = configResult[0].config_value.seed_enabled !== false;
         edgeMultiplierEnabled = configResult[0].config_value.edge_enabled !== false;
+        overlapAdjustmentsEnabled = configResult[0].config_value.overlap_enabled !== false;
       }
     } catch (error) {
       // Default to enabled if config fetch fails (table might not exist yet)
@@ -1477,8 +1479,12 @@ ${answer}`;
     // Combined multiplier: if both seed AND edge (and both enabled), multiply both (1.15 × 1.15 = 1.3225 = 32.25% bonus)
     const combinedMultiplier = seedMultiplier * edgeMultiplier;
 
-    const afterPenalty = basePodScore * (1 - penaltyPercent / 100);
-    const afterBonus = afterPenalty * bonusMultiplier;
+    // Apply overlap adjustments (penalty/bonus) only if enabled by config
+    const effectivePenaltyPercent = overlapAdjustmentsEnabled ? penaltyPercent : 0;
+    const effectiveBonusMultiplier = overlapAdjustmentsEnabled ? bonusMultiplier : 1.0;
+
+    const afterPenalty = basePodScore * (1 - effectivePenaltyPercent / 100);
+    const afterBonus = afterPenalty * effectiveBonusMultiplier;
     const afterSeedAndEdge = afterBonus * combinedMultiplier;
     const pod_score = Math.max(0, Math.min(10000, Math.round(afterSeedAndEdge)));
 
@@ -1501,12 +1507,13 @@ ${answer}`;
       
       // Penalty calculation and application
       penalty_percent_computed: penaltyPercent,
-      penalty_percent_applied: penaltyPercent, // Same for now, but can differ if gated
+      penalty_percent_applied: effectivePenaltyPercent, // Can differ if overlap toggle is off
       penalty_applied_to: 'composite', // Clarify where penalty is applied
+      overlap_adjustments_enabled: overlapAdjustmentsEnabled, // Show toggle state
       
       // Bonus calculation and application
       bonus_multiplier_computed: bonusMultiplier,
-      bonus_multiplier_applied: bonusMultiplier, // Same for now, but can differ if gated
+      bonus_multiplier_applied: effectiveBonusMultiplier, // Can differ if overlap toggle is off
       bonus_applied_to: 'post_penalty', // Clarify where bonus is applied
       
       // Seed multiplier calculation and application (content-based, not timing-based)

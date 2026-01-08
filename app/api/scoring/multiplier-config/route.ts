@@ -31,6 +31,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({
         seed_enabled: true,
         edge_enabled: true,
+        overlap_enabled: true,
       });
     }
 
@@ -41,6 +42,7 @@ export async function GET(request: NextRequest) {
       {
         seed_enabled: true,
         edge_enabled: true,
+        overlap_enabled: true,
       },
       { status: 200 }
     );
@@ -65,14 +67,14 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { seed_enabled, edge_enabled } = body;
+    const { seed_enabled, edge_enabled, overlap_enabled } = body;
 
     // Validate input
-    if (typeof seed_enabled !== 'boolean' || typeof edge_enabled !== 'boolean') {
+    if (typeof seed_enabled !== 'boolean' || typeof edge_enabled !== 'boolean' || typeof overlap_enabled !== 'boolean') {
       return NextResponse.json({ error: 'Invalid config format' }, { status: 400 });
     }
 
-    const configValue = { seed_enabled, edge_enabled };
+    const configValue = { seed_enabled, edge_enabled, overlap_enabled };
 
     // Upsert the config
     const { error: upsertError } = await supabase

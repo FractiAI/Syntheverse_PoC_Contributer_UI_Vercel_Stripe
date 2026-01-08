@@ -6,12 +6,14 @@ import { Settings, RefreshCw } from 'lucide-react';
 interface MultiplierConfig {
   seed_enabled: boolean;
   edge_enabled: boolean;
+  overlap_enabled: boolean;
 }
 
 export function MultiplierToggle() {
   const [config, setConfig] = useState<MultiplierConfig>({
     seed_enabled: true,
     edge_enabled: true,
+    overlap_enabled: true,
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -34,7 +36,7 @@ export function MultiplierToggle() {
     loadConfig();
   }, []);
 
-  const handleToggle = async (field: 'seed_enabled' | 'edge_enabled') => {
+  const handleToggle = async (field: 'seed_enabled' | 'edge_enabled' | 'overlap_enabled') => {
     const newConfig = { ...config, [field]: !config[field] };
     setConfig(newConfig);
     setSaving(true);
@@ -144,6 +146,37 @@ export function MultiplierToggle() {
             }`}
           >
             {config.edge_enabled ? 'ON' : 'OFF'}
+          </div>
+        </div>
+
+        {/* Overlap Adjustments Toggle */}
+        <div className="flex items-center justify-between p-3 rounded bg-[var(--cockpit-carbon)] border border-[var(--keyline-primary)]">
+          <div className="flex items-center gap-3">
+            <div
+              className={`w-12 h-6 rounded-full transition-colors cursor-pointer relative ${
+                config.overlap_enabled ? 'bg-purple-500' : 'bg-gray-600'
+              }`}
+              onClick={() => handleToggle('overlap_enabled')}
+            >
+              <div
+                className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${
+                  config.overlap_enabled ? 'translate-x-6' : 'translate-x-0'
+                }`}
+              ></div>
+            </div>
+            <div>
+              <div className="text-sm font-semibold text-white">Overlap Adjustments</div>
+              <div className="text-xs text-gray-400">
+                {config.overlap_enabled ? 'Enabled' : 'Disabled'} - Sweet spot bonus & excess penalty
+              </div>
+            </div>
+          </div>
+          <div
+            className={`px-3 py-1 rounded text-xs font-mono ${
+              config.overlap_enabled ? 'bg-purple-500/20 text-purple-300' : 'bg-gray-600/20 text-gray-400'
+            }`}
+          >
+            {config.overlap_enabled ? 'ON' : 'OFF'}
           </div>
         </div>
       </div>
