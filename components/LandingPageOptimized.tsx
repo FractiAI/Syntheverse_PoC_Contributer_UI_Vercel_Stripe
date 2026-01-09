@@ -1,5 +1,5 @@
 import { HeroOptimized } from './landing/HeroOptimized';
-import { SectionWhat } from './landing/SectionWhat';
+import { SectionExecutiveSummary } from './landing/SectionExecutiveSummary';
 import { SectionWhy } from './landing/SectionWhy';
 import { SectionTechnical } from './landing/SectionTechnical';
 import { SectionMotherlode } from './landing/SectionMotherlode';
@@ -11,8 +11,8 @@ export default function LandingPageOptimized() {
       {/* Hero */}
       <HeroOptimized />
 
-      {/* Section 2: What Syntheverse Is */}
-      <SectionWhat />
+      {/* Section 2: Executive Summary - Value Propositions */}
+      <SectionExecutiveSummary />
 
       {/* Section 3: Why It Matters */}
       <SectionWhy />

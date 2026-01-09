@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowRight, ChevronDown, Atom, Sparkles } from 'lucide-react';
+import { Palette, ChevronDown, Atom, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -57,48 +57,57 @@ export function HeroOptimized() {
 
         {/* Main Title - holographic hydrogen fractal frontier */}
         <h1 className="mb-6 text-4xl leading-tight md:text-6xl lg:text-7xl font-bold" style={{color: 'hsl(var(--hydrogen-beta))'}}>
-          Welcome to the holographic hydrogen fractal frontier
+          WELCOME to the holographic hydrogen fractal frontier
         </h1>
         
         <p className="mb-8 text-xl md:text-2xl" style={{color: 'hsl(var(--text-secondary))'}}>
-          <span className="holographic-pulse">Where holographic hydrogen fractal awareness crystallizes</span>
+          <span className="holographic-pulse">WHERE HOLOGRAPHIC HYDROGEN FRACTAL AWARENESS CRYSTALLIZES</span>
         </p>
 
         {/* Value Propositions - Cloud Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 max-w-5xl mx-auto">
           {/* Frontier R&D */}
-          <div className="cloud-card p-6 text-left hover:scale-105 transition-transform">
+          <Link href="#frontier-rd" className="cloud-card p-6 text-left hover:scale-105 transition-transform cursor-pointer group">
             <div className="flex items-center gap-3 mb-4">
-              <Atom className="w-8 h-8" style={{color: 'hsl(var(--hydrogen-beta))'}} />
-              <h3 className="text-lg font-bold" style={{color: 'hsl(var(--hydrogen-beta))'}}>Frontier R&D</h3>
+              <Atom className="w-8 h-8 group-hover:animate-pulse" style={{color: 'hsl(var(--hydrogen-beta))'}} />
+              <h3 className="text-lg font-bold group-hover:underline" style={{color: 'hsl(var(--hydrogen-beta))'}}>Frontier R&D</h3>
             </div>
             <p className="text-sm leading-relaxed" style={{color: 'hsl(var(--text-secondary))'}}>
               Turn research into verifiable on-chain records—no gatekeeping, measured by coherence.
             </p>
-          </div>
+            <div className="mt-3 text-xs font-semibold opacity-60 group-hover:opacity-100" style={{color: 'hsl(var(--hydrogen-beta))'}}>
+              Learn more →
+            </div>
+          </Link>
           
           {/* Frontier Enterprises */}
-          <div className="cloud-card p-6 text-left hover:scale-105 transition-transform">
+          <Link href="#frontier-enterprises" className="cloud-card p-6 text-left hover:scale-105 transition-transform cursor-pointer group">
             <div className="flex items-center gap-3 mb-4">
-              <Sparkles className="w-8 h-8" style={{color: 'hsl(var(--hydrogen-gamma))'}} />
-              <h3 className="text-lg font-bold" style={{color: 'hsl(var(--hydrogen-gamma))'}}>Frontier Enterprises</h3>
+              <Sparkles className="w-8 h-8 group-hover:animate-pulse" style={{color: 'hsl(var(--hydrogen-gamma))'}} />
+              <h3 className="text-lg font-bold group-hover:underline" style={{color: 'hsl(var(--hydrogen-gamma))'}}>Frontier Enterprises</h3>
             </div>
             <p className="text-sm leading-relaxed mb-2" style={{color: 'hsl(var(--text-secondary))'}}>
               <strong style={{color: 'hsl(var(--metal-gold))'}}>1.5–1.8× higher output</strong> with{' '}
               <strong style={{color: 'hsl(var(--metal-gold))'}}>38–58% lower overhead</strong> than traditional systems in simulated models.
             </p>
-          </div>
+            <div className="mt-3 text-xs font-semibold opacity-60 group-hover:opacity-100" style={{color: 'hsl(var(--hydrogen-gamma))'}}>
+              Learn more →
+            </div>
+          </Link>
           
           {/* Frontier Creators */}
-          <div className="cloud-card p-6 text-left hover:scale-105 transition-transform">
+          <Link href="#frontier-creators" className="cloud-card p-6 text-left hover:scale-105 transition-transform cursor-pointer group">
             <div className="flex items-center gap-3 mb-4">
-              <ArrowRight className="w-8 h-8" style={{color: 'hsl(var(--hydrogen-alpha))'}} />
-              <h3 className="text-lg font-bold" style={{color: 'hsl(var(--hydrogen-alpha))'}}>Frontier Creators</h3>
+              <Palette className="w-8 h-8 group-hover:animate-pulse" style={{color: 'hsl(var(--hydrogen-alpha))'}} />
+              <h3 className="text-lg font-bold group-hover:underline" style={{color: 'hsl(var(--hydrogen-alpha))'}}>Frontier Creators</h3>
             </div>
             <p className="text-sm leading-relaxed" style={{color: 'hsl(var(--text-secondary))'}}>
               Infinite HHF-AI materials and substrates for complete reality worldbuilding.
             </p>
-          </div>
+            <div className="mt-3 text-xs font-semibold opacity-60 group-hover:opacity-100" style={{color: 'hsl(var(--hydrogen-alpha))'}}>
+              Learn more →
+            </div>
+          </Link>
         </div>
 
         {/* Narrative Section - Frontier Panel */}
