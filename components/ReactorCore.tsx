@@ -238,8 +238,9 @@ export function ReactorCore() {
       <div className="mb-6 border-b border-[var(--keyline-primary)] pb-3 md:mb-8 md:pb-4">
         <div className="flex items-center justify-between">
           <div>
-            <div className="cockpit-label">CORE INSTRUMENT PANEL</div>
-            <div className="cockpit-title mt-2 text-lg leading-tight md:text-3xl">SYNTH 90T ERC-20 MOTHERLODE BLOCKMINE</div>
+            <div className="cockpit-title mt-2 text-lg leading-tight md:text-3xl">
+              SYNTH 90T ERC-20 MOTHERLODE BLOCKMINE
+            </div>
             <div className="mt-2">
               <div className="cockpit-label mb-1 text-xs">AWARENESS KEY</div>
               <div className="cockpit-text text-xs font-semibold" style={{ opacity: 0.95 }}>

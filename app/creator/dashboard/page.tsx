@@ -114,11 +114,6 @@ export default async function CreatorDashboard() {
         <details className="mb-6" open>
           <summary className="lab-collapsible-trigger list-none mb-0">
             <div className="flex items-center gap-3">
-              <Activity className="h-5 w-5 text-[var(--lab-primary)]" />
-              <div>
-                <div className="lab-section-label mb-0 border-0 pb-0">REACTOR CORE</div>
-                <div className="text-xs text-[var(--lab-text-secondary)] font-medium">Primary System Metrics</div>
-              </div>
             </div>
             <ChevronDown className="lab-chevron h-5 w-5" />
           </summary>

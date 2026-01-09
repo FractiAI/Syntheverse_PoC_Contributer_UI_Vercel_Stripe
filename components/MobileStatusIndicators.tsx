@@ -6,12 +6,34 @@
 
 'use client';
 
+import { useState, useEffect } from 'react';
+
 interface StatusIndicator {
   name: string;
   status: 'healthy' | 'attention' | 'warning';
 }
 
 export function MobileStatusIndicators() {
+  const [currentTime, setCurrentTime] = useState<string>('');
+  
+  useEffect(() => {
+    // Update time every second
+    const updateTime = () => {
+      const now = new Date();
+      setCurrentTime(now.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit',
+        hour12: true 
+      }));
+    };
+    
+    updateTime(); // Initial update
+    const timeInterval = setInterval(updateTime, 1000);
+    
+    return () => clearInterval(timeInterval);
+  }, []);
+  
   // All indicators are healthy by default (green, solid)
   // Red indicators would pulse for attention required
   const indicators: StatusIndicator[] = [
@@ -24,10 +46,15 @@ export function MobileStatusIndicators() {
 
   return (
     <div className="cockpit-panel mb-4 p-3 md:p-4">
-      <div className="mb-3 flex items-center border-b border-[var(--keyline-primary)] pb-2">
+      <div className="mb-3 flex items-center justify-between border-b border-[var(--keyline-primary)] pb-2">
         <div className="cockpit-label text-[10px] md:text-xs uppercase tracking-wider">
           STATUS
         </div>
+        {currentTime && (
+          <div className="cockpit-text text-[10px] opacity-70">
+            {currentTime}
+          </div>
+        )}
       </div>
       <div className="flex flex-wrap items-center gap-3 md:gap-4">
         {indicators.map((indicator) => {

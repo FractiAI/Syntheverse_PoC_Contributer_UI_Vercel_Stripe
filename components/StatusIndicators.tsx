@@ -53,11 +53,27 @@ export function StatusIndicators() {
   const [currentSandbox, setCurrentSandbox] = useState<SandboxInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
+  const [currentTime, setCurrentTime] = useState<string>('');
 
   useEffect(() => {
     setMounted(true);
+    
+    // Update time every second
+    const updateTime = () => {
+      const now = new Date();
+      setCurrentTime(now.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit',
+        hour12: true 
+      }));
+    };
+    
+    updateTime(); // Initial update
+    const timeInterval = setInterval(updateTime, 1000);
+    
     // Read selected sandbox from localStorage
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined') return () => clearInterval(timeInterval);
     const selectedSandboxId = localStorage.getItem('selectedSandbox') || 'syntheverse';
     
     if (selectedSandboxId === 'syntheverse') {
@@ -134,10 +150,13 @@ export function StatusIndicators() {
       window.addEventListener('sandboxChanged', handleSandboxChanged as EventListener);
 
       return () => {
+        clearInterval(timeInterval);
         window.removeEventListener('storage', handleStorageChange);
         window.removeEventListener('sandboxChanged', handleSandboxChanged as EventListener);
       };
     }
+    
+    return () => clearInterval(timeInterval);
   }, [mounted]);
 
   return (
@@ -193,8 +212,15 @@ export function StatusIndicators() {
         </div>
       </div>
 
-      {/* Beta Active Indicator - Far Right */}
-      <span className="cockpit-badge cockpit-badge-amber ml-auto">BETA ACTIVE</span>
+      {/* Local Time & Beta Active Indicator - Far Right */}
+      <div className="ml-auto flex items-center gap-2">
+        {currentTime && (
+          <span className="cockpit-text text-[10px] opacity-70 whitespace-nowrap">
+            {currentTime}
+          </span>
+        )}
+        <span className="cockpit-badge cockpit-badge-amber">BETA ACTIVE</span>
+      </div>
     </div>
   );
 }

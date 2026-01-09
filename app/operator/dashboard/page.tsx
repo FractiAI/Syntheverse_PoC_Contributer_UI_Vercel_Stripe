@@ -20,11 +20,11 @@ import CockpitHeader from '@/components/CockpitHeader';
 import { QuickActionsPanel } from '@/components/QuickActionsPanel';
 import { OperatorBroadcastBanner } from '@/components/OperatorBroadcastBanner';
 import { CloudChannel } from '@/components/CloudChannel';
-import { Settings, Activity, FileText, BookOpen, Shield } from 'lucide-react';
+import { Settings, Activity, FileText, BookOpen, Shield, Radio, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
-import { ChevronDown } from 'lucide-react';
 import { MobileStatusIndicators } from '@/components/MobileStatusIndicators';
 import { MultiplierToggleWrapper } from '@/components/MultiplierToggleWrapper';
+import '../../control-lab.css';
 
 export const dynamic = 'force-dynamic';
 
@@ -50,9 +50,47 @@ export default async function OperatorDashboard() {
   }
 
   return (
-    <div className="cockpit-bg holographic-grid min-h-screen flex flex-col">
+    <div className="lab-bg holographic-grid min-h-screen relative flex flex-col">
       <div className="nebula-background" style={{opacity: 0.3}} />
-      <CockpitHeader />
+      {/* Operator Control Center Header */}
+      <div className="lab-header relative z-10 flex-shrink-0">
+        <div className="lab-header-grid">
+          <div>
+            <div className="holographic-badge badge-horizon-navigator mb-3">
+              <Radio className="w-4 h-4" />
+              SYNTHEVERSE CLOUD CONTROL CENTER
+            </div>
+            <h1 className="lab-title" style={{color: 'hsl(var(--hydrogen-alpha))'}}>
+              Operator Cloud Control
+            </h1>
+            <p className="lab-subtitle" style={{color: 'hsl(var(--text-secondary))'}}>
+              Enterprise Cloud Operations · Broadcast Management · Scoring Coordination
+            </p>
+          </div>
+          <div className="lab-status-monitors">
+            <div className="lab-status-monitor">
+              <div className="lab-monitor-label">Center Status</div>
+              <div className="lab-monitor-status">
+                <div className="lab-indicator"></div>
+                <span>OPERATIONAL</span>
+              </div>
+            </div>
+            <div className="lab-status-monitor">
+              <div className="lab-monitor-label">System Time</div>
+              <div className="lab-monitor-value">
+                {new Date().toLocaleTimeString('en-US', { 
+                  hour: '2-digit', 
+                  minute: '2-digit',
+                  hour12: false 
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Status Panel - Top Bar */}
+      <StatusPanel />
       {/* Quick Actions Panel - Upper Right */}
       <QuickActionsPanel isCreator={false} isOperator={isOperator} showContributorDashboard={true} />
       
@@ -71,9 +109,6 @@ export default async function OperatorDashboard() {
           <div className="scan-line" />
           <summary className="cursor-pointer select-none list-none p-4 md:p-5 mb-0 border-b" style={{borderColor: 'hsl(var(--hydrogen-beta) / 0.1)'}}>
             <div className="flex items-center justify-between">
-              <div className="text-xs md:text-sm uppercase tracking-wider font-semibold" style={{color: 'hsl(var(--hydrogen-alpha))'}}>
-                REACTOR CORE
-              </div>
               <ChevronDown className="h-5 w-5 opacity-70" style={{color: 'hsl(var(--hydrogen-alpha))'}} />
             </div>
           </summary>
@@ -93,13 +128,14 @@ export default async function OperatorDashboard() {
         </div>
 
         {/* Navigation Modules - Collapsible */}
-        <details className="cockpit-panel" open>
-          <summary className="cursor-pointer select-none list-none p-4 md:p-5 border-b border-[var(--keyline-primary)]">
+        <details className="mb-6 frontier-panel relative" open>
+          <div className="scan-line" />
+          <summary className="cursor-pointer select-none list-none p-4 md:p-5 mb-0 border-b" style={{borderColor: 'hsl(var(--hydrogen-beta) / 0.1)'}}>
             <div className="flex items-center justify-between">
-              <div className="cockpit-label text-xs md:text-sm uppercase tracking-wider">
+              <div className="text-xs md:text-sm uppercase tracking-wider font-semibold" style={{color: 'hsl(var(--hydrogen-alpha))'}}>
                 NAVIGATION MODULES
               </div>
-              <ChevronDown className="cockpit-chevron h-5 w-5 opacity-70" />
+              <ChevronDown className="h-5 w-5 opacity-70" style={{color: 'hsl(var(--hydrogen-alpha))'}} />
             </div>
           </summary>
           <div className="px-4 md:px-5 pb-4 md:pb-5 space-y-6">
@@ -146,13 +182,14 @@ export default async function OperatorDashboard() {
         </details>
 
         {/* Core Metrics - Collapsible */}
-        <details className="cockpit-panel" open>
-          <summary className="cursor-pointer select-none list-none p-4 md:p-5 border-b border-[var(--keyline-primary)]">
+        <details className="mb-6 frontier-panel relative" open>
+          <div className="scan-line" />
+          <summary className="cursor-pointer select-none list-none p-4 md:p-5 mb-0 border-b" style={{borderColor: 'hsl(var(--hydrogen-beta) / 0.1)'}}>
             <div className="flex items-center justify-between">
-              <div className="cockpit-label text-xs md:text-sm uppercase tracking-wider">
+              <div className="text-xs md:text-sm uppercase tracking-wider font-semibold" style={{color: 'hsl(var(--hydrogen-alpha))'}}>
                 CORE METRICS
               </div>
-              <ChevronDown className="cockpit-chevron h-5 w-5 opacity-70" />
+              <ChevronDown className="h-5 w-5 opacity-70" style={{color: 'hsl(var(--hydrogen-alpha))'}} />
             </div>
           </summary>
           <div className="px-4 md:px-5 pb-4 md:pb-5">
@@ -161,13 +198,14 @@ export default async function OperatorDashboard() {
         </details>
 
         {/* Control Panels - Collapsible */}
-        <details className="cockpit-panel" open>
-          <summary className="cursor-pointer select-none list-none p-4 md:p-5 border-b border-[var(--keyline-primary)]">
+        <details className="mb-6 frontier-panel relative" open>
+          <div className="scan-line" />
+          <summary className="cursor-pointer select-none list-none p-4 md:p-5 mb-0 border-b" style={{borderColor: 'hsl(var(--hydrogen-beta) / 0.1)'}}>
             <div className="flex items-center justify-between">
-              <div className="cockpit-label text-xs md:text-sm uppercase tracking-wider">
+              <div className="text-xs md:text-sm uppercase tracking-wider font-semibold" style={{color: 'hsl(var(--hydrogen-alpha))'}}>
                 CONTROL PANELS
               </div>
-              <ChevronDown className="cockpit-chevron h-5 w-5 opacity-70" />
+              <ChevronDown className="h-5 w-5 opacity-70" style={{color: 'hsl(var(--hydrogen-alpha))'}} />
             </div>
           </summary>
           <div className="px-4 md:px-5 pb-4 md:pb-5">
@@ -177,13 +215,14 @@ export default async function OperatorDashboard() {
 
 
         {/* Activity Analytics - Collapsible */}
-        <details className="cockpit-panel" open>
-          <summary className="cursor-pointer select-none list-none p-4 md:p-5 border-b border-[var(--keyline-primary)]">
+        <details className="mb-6 frontier-panel relative" open>
+          <div className="scan-line" />
+          <summary className="cursor-pointer select-none list-none p-4 md:p-5 mb-0 border-b" style={{borderColor: 'hsl(var(--hydrogen-beta) / 0.1)'}}>
             <div className="flex items-center justify-between">
-              <div className="cockpit-label text-xs md:text-sm uppercase tracking-wider">
+              <div className="text-xs md:text-sm uppercase tracking-wider font-semibold" style={{color: 'hsl(var(--hydrogen-alpha))'}}>
                 ACTIVITY ANALYTICS
               </div>
-              <ChevronDown className="cockpit-chevron h-5 w-5 opacity-70" />
+              <ChevronDown className="h-5 w-5 opacity-70" style={{color: 'hsl(var(--hydrogen-alpha))'}} />
             </div>
           </summary>
           <div className="px-4 md:px-5 pb-4 md:pb-5">
