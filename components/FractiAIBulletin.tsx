@@ -17,7 +17,6 @@ import { useEffect, useState } from 'react';
 import FractiAIStatusWidget from '@/components/FractiAIStatusWidget';
 import { StatusIndicators } from './StatusIndicators';
 import { ConstantsEquationsCatalog } from './ConstantsEquationsCatalog';
-import { FinancialSupportBanner } from './FinancialSupportBanner';
 import { SectionProof } from './landing/SectionProof';
 
 type FractiAIBulletinProps = {
@@ -802,11 +801,6 @@ export default function FractiAIBulletin({ isAuthenticated = false }: FractiAIBu
                   </div>
                 </div>
               </div>
-            </div>
-
-            {/* Financial Support Banner */}
-            <div className="my-6">
-              <FinancialSupportBanner variant="full" />
             </div>
 
             {/* Constants & Equations Catalog */}
