@@ -11,7 +11,8 @@
 
 > **📖 New to the codebase?** See the [Senior Engineer Production Briefing](docs/SENIOR_ENGINEER_PRODUCTION_BRIEFING.md) for a comprehensive system overview covering architecture, workflows, key features, and operational considerations.
 
-> **🔬 Latest Major Updates (Jan 10, 2026):** 
+> **🔬 Latest Major Updates (Jan 9, 2026):** 
+> - **📱 Mobile Dashboard Fix**: Fixed critical iPhone Safari issue where Cloud Channel was blocking dashboard content. Desktop sidebar removed in favor of unified collapsible top panel across all screen sizes (450px desktop, 350px tablet, 280px mobile). All animations removed for clean, performant UI. See `docs/MOBILE_CLOUD_CHANNEL_FIX.md` and `docs/CLOUD_CHANNEL_TOP_PANEL_CONVERSION.md`.
 > - **🎨 Public Solution Pages**: Three new comprehensive public pages (no auth required) explaining executive problems, value propositions, and use cases:
 >   - `/solutions/research` - Contributor Copper Wings (R&D path with telescope icon)
 >   - `/solutions/enterprise` - Operator Silver Wings (Enterprise clouds with cloud icon)
