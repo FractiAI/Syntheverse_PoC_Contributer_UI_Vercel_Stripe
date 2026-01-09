@@ -52,7 +52,8 @@ export async function updateSession(request: NextRequest) {
     request.nextUrl.pathname.startsWith('/webhook') ||
     request.nextUrl.pathname.startsWith('/api') ||
     request.nextUrl.pathname.startsWith('/auth') ||
-    request.nextUrl.pathname.startsWith('/fractiai')
+    request.nextUrl.pathname.startsWith('/fractiai') ||
+    request.nextUrl.pathname.startsWith('/solutions')
   ) {
     return supabaseResponse;
   }
