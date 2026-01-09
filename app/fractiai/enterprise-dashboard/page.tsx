@@ -1,7 +1,5 @@
-import EnterpriseDashboard from '@/components/EnterpriseDashboard';
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
-import '../../dashboard-cockpit.css';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,7 +12,6 @@ export default async function EnterpriseDashboardPage() {
     redirect('/login');
   }
 
-  const user = data.user;
-
-  return <EnterpriseDashboard isAuthenticated={true} userEmail={user.email || null} />;
+  // Redirect to creator dashboard (enterprise mode)
+  redirect('/creator/dashboard');
 }

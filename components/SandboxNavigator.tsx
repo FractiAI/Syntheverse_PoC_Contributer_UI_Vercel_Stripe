@@ -53,7 +53,14 @@ export function SandboxNavigator({ userEmail, isCreator = false, isOperator = fa
       const res = await fetch('/api/enterprise/sandboxes');
       if (res.ok) {
         const data = await res.json();
-        setSandboxes(data.sandboxes || []);
+        const fetchedSandboxes = data.sandboxes || [];
+        setSandboxes(fetchedSandboxes);
+        
+        // If operator (not creator) and syntheverse is selected, switch to first available sandbox
+        if (isOperator && !isCreator && selectedSandbox === 'syntheverse' && fetchedSandboxes.length > 0) {
+          const firstSandbox = fetchedSandboxes[0];
+          handleSandboxClick(firstSandbox.id);
+        }
       }
     } catch (error) {
       console.error('Error fetching sandboxes:', error);
@@ -183,7 +190,7 @@ export function SandboxNavigator({ userEmail, isCreator = false, isOperator = fa
     );
   };
 
-  // Include Syntheverse as the first "sandbox"
+  // Include Syntheverse as the first "sandbox" (only for creators, not operators)
   const syntheverseSandbox: EnterpriseSandbox = {
     id: 'syntheverse',
     name: 'Syntheverse',
@@ -196,7 +203,10 @@ export function SandboxNavigator({ userEmail, isCreator = false, isOperator = fa
     vault_status: 'active',
   };
 
-  const allSandboxes: EnterpriseSandbox[] = [syntheverseSandbox, ...sandboxes];
+  // Operators (enterprise users) see only their own sandboxes, creators see everything
+  const allSandboxes: EnterpriseSandbox[] = isCreator 
+    ? [syntheverseSandbox, ...sandboxes]
+    : sandboxes;
 
   return (
     <div className="cockpit-module cockpit-panel">
