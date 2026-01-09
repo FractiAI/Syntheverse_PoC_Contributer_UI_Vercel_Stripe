@@ -45,7 +45,30 @@ export async function GET(
     const participantCount = participants?.length || 0;
 
     // Check if current user is a participant
-    const isConnected = participants?.some(p => p.user_email === user.email) || false;
+    let isConnected = participants?.some(p => p.user_email === user.email) || false;
+
+    // If not connected, auto-add them as participant
+    if (!isConnected) {
+      const { data: userData } = await supabase
+        .from('users')
+        .select('role')
+        .eq('email', user.email)
+        .single();
+
+      const userRole = userData?.role || 'contributor';
+
+      const { error: addError } = await supabase
+        .from('chat_participants')
+        .insert({
+          room_id: roomId,
+          user_email: user.email,
+          role: userRole,
+        });
+
+      if (!addError) {
+        isConnected = true;
+      }
+    }
 
     return NextResponse.json({
       room: {

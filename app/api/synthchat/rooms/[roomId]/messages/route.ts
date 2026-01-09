@@ -24,7 +24,18 @@ export async function GET(
 
     const { roomId } = params;
 
-    // Verify user is a participant of this room
+    // Check if room exists first
+    const { data: room, error: roomError } = await supabase
+      .from('chat_rooms')
+      .select('id')
+      .eq('id', roomId)
+      .single();
+
+    if (roomError || !room) {
+      return NextResponse.json({ error: 'Room not found' }, { status: 404 });
+    }
+
+    // Check if user is a participant of this room
     const { data: participant } = await supabase
       .from('chat_participants')
       .select('*')
@@ -32,8 +43,30 @@ export async function GET(
       .eq('user_email', user.email)
       .single();
 
+    // If not a participant, auto-add them (room is accessible to authenticated users)
     if (!participant) {
-      return NextResponse.json({ error: 'Not a participant of this room' }, { status: 403 });
+      // Get user role from users table
+      const { data: userData } = await supabase
+        .from('users')
+        .select('role')
+        .eq('email', user.email)
+        .single();
+
+      const userRole = userData?.role || 'contributor';
+
+      // Add user as participant
+      const { error: addError } = await supabase
+        .from('chat_participants')
+        .insert({
+          room_id: roomId,
+          user_email: user.email,
+          role: userRole,
+        });
+
+      if (addError) {
+        console.error('Error adding participant:', addError);
+        // Continue anyway - they might still be able to view
+      }
     }
 
     // Fetch messages with sender information

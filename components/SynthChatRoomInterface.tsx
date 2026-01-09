@@ -66,6 +66,7 @@ export function SynthChatRoomInterface({
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const [showSearch, setShowSearch] = useState(!!initialSearchTerm);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [uploadingFile, setUploadingFile] = useState(false);
@@ -119,9 +120,14 @@ export function SynthChatRoomInterface({
       if (response.ok) {
         const data = await response.json();
         setRoom(data.room);
+        setError(null);
+      } else {
+        const data = await response.json();
+        setError(data.error || 'Failed to load room');
       }
     } catch (error) {
       console.error('Failed to fetch room:', error);
+      setError('Failed to connect to chat room');
     } finally {
       setLoading(false);
     }
@@ -133,9 +139,15 @@ export function SynthChatRoomInterface({
       if (response.ok) {
         const data = await response.json();
         setMessages(data.messages || []);
+        setError(null);
+      } else {
+        const data = await response.json();
+        console.error('Failed to fetch messages:', data.error);
+        // Don't set error state for message fetch failures to avoid blocking UI
       }
     } catch (error) {
       console.error('Failed to fetch messages:', error);
+      // Don't set error state for message fetch failures to avoid blocking UI
     }
   };
 
@@ -304,11 +316,11 @@ export function SynthChatRoomInterface({
     );
   }
 
-  if (!room) {
+  if (error || !room) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <div className="text-lg mb-4">Chat room not found</div>
+          <div className="text-lg mb-4">{error || 'Chat room not found'}</div>
           <Link href="/dashboard" className="text-blue-500 hover:underline">
             Return to Dashboard
           </Link>
@@ -380,8 +392,6 @@ export function SynthChatRoomInterface({
         ref={messagesContainerRef}
         className="flex-1 overflow-y-auto px-4 py-4 space-y-3"
         style={{ 
-          backgroundImage: 'url(/chat-background.png)', 
-          backgroundSize: 'cover',
           backgroundColor: '#efeae2' 
         }}
       >

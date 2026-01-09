@@ -99,20 +99,7 @@ export function SynthChatNavigator() {
   }, []);
 
   const handleRoomClick = async (room: ChatRoom) => {
-    // Auto-join room if not connected
-    if (!room.is_connected) {
-      setJoining(room.id);
-      try {
-        await joinRoom(room.id);
-      } catch (error) {
-        console.error('Failed to join room:', error);
-        setJoining(null);
-        return;
-      }
-      setJoining(null);
-    }
-    
-    // Navigate to dedicated chat page
+    // Navigate to dedicated chat page (auto-join happens on page load)
     router.push(`/synthchat/${room.id}`);
   };
 
