@@ -124,7 +124,7 @@ export default async function OperatorDashboard() {
               <ChevronDown className="h-5 w-5 opacity-70" style={{color: 'hsl(var(--hydrogen-alpha))'}} />
             </div>
           </summary>
-          <div className="px-4 md:px-5 pb-4 md:pb-5 space-y-6">
+          <div className="px-4 md:px-5 pb-4 md:pb-5 space-y-6" style={{color: 'hsl(var(--text-primary))'}}>
             <SandboxNavigator userEmail={userEmail} isCreator={false} isOperator={isOperator} />
             <FrontierModule userEmail={userEmail} />
             <SynthChatNavigator />

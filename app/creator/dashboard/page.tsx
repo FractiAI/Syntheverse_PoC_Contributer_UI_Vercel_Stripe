@@ -131,7 +131,7 @@ export default async function CreatorDashboard() {
             </div>
             <ChevronDown className="lab-chevron h-5 w-5" />
           </summary>
-          <div className="p-6 space-y-6 border-t-2 border-[var(--lab-border)]">
+          <div className="p-6 space-y-6 border-t-2 border-[var(--lab-border)]" style={{color: 'var(--lab-text-primary)'}}>
             <SandboxNavigator userEmail={userEmail} isCreator={isCreator} isOperator={isOperator} />
             <FrontierModule userEmail={userEmail} />
             <SynthChatNavigator />
