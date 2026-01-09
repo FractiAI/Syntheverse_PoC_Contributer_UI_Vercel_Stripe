@@ -41,9 +41,12 @@ import '../app/academy.css';
 
 interface TrainingModule {
   id: string;
+  number?: number;
   title: string;
-  label: string;
+  subtitle?: string;
+  label?: string;
   icon: React.ReactNode;
+  duration?: string;
   content: React.ReactNode;
   learningObjectives?: string[];
   handsOnExercise?: React.ReactNode;
@@ -6312,7 +6315,9 @@ export function OnboardingNavigator() {
                     {module.icon}
                   </div>
                   <div className="flex-1">
-                    <div className="academy-label text-xs">{module.label}</div>
+                    <div className="academy-label text-xs">
+                      {module.label || `MODULE ${module.number || idx + 1}`}
+                    </div>
                     <div
                       className={`academy-text mt-1 text-sm ${idx === currentModule ? 'font-semibold' : ''}`}
                     >
@@ -6336,7 +6341,9 @@ export function OnboardingNavigator() {
           <div className="mb-6 flex items-center gap-4">
             <div style={{ color: '#ffb84d' }}>{modules[currentModule].icon}</div>
             <div className="flex-1 border-b border-[var(--academy-border)] pb-4">
-              <div className="academy-label">{modules[currentModule].label}</div>
+              <div className="academy-label">
+                {modules[currentModule].label || `MODULE ${modules[currentModule].number || currentModule + 1}`}
+              </div>
               <div className="academy-title mt-1 text-2xl">{modules[currentModule].title}</div>
             </div>
           </div>
