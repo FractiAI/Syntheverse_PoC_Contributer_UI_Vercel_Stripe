@@ -42,7 +42,7 @@ export function SectionCapabilities() {
     },
     {
       icon: Palette,
-      title: 'Creator Worlds',
+      title: 'Frontier Creator Worlds',
       description: 'Infinite HHF-AI materials for full-reality worldbuilding',
       stats: 'Unlimited creative substrates',
       features: [
@@ -56,9 +56,9 @@ export function SectionCapabilities() {
     },
     {
       icon: Building2,
-      title: 'Enterprise Scale',
+      title: 'Frontier Enterprise Scale',
       description: 'Nested sandboxes for teams and organizations',
-      stats: '1.5-1.8× output, 38-58% cost reduction',
+      stats: '1.5-1.8× output, 38-58% cost reduction (simulated)',
       features: [
         'Custom evaluation parameters',
         'Team contribution tracking',

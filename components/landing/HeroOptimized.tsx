@@ -55,13 +55,13 @@ export function HeroOptimized() {
           </div>
         </div>
 
-        {/* Main Title - Holographic Hydrogen Frontier */}
+        {/* Main Title - holographic hydrogen fractal frontier */}
         <h1 className="mb-6 text-4xl leading-tight md:text-6xl lg:text-7xl font-bold" style={{color: 'hsl(var(--hydrogen-beta))'}}>
-          Welcome to the Holographic Hydrogen Frontier
+          Welcome to the holographic hydrogen fractal frontier
         </h1>
         
         <p className="mb-8 text-xl md:text-2xl" style={{color: 'hsl(var(--text-secondary))'}}>
-          <span className="holographic-pulse">Where awareness crystallizes from the pre-Planck womb</span>
+          <span className="holographic-pulse">Where holographic hydrogen fractal awareness crystallizes</span>
         </p>
 
         {/* Value Propositions - Cloud Cards */}
@@ -77,23 +77,23 @@ export function HeroOptimized() {
             </p>
           </div>
           
-          {/* Enterprises */}
+          {/* Frontier Enterprises */}
           <div className="cloud-card p-6 text-left hover:scale-105 transition-transform">
             <div className="flex items-center gap-3 mb-4">
               <Sparkles className="w-8 h-8" style={{color: 'hsl(var(--hydrogen-gamma))'}} />
-              <h3 className="text-lg font-bold" style={{color: 'hsl(var(--hydrogen-gamma))'}}>Enterprises</h3>
+              <h3 className="text-lg font-bold" style={{color: 'hsl(var(--hydrogen-gamma))'}}>Frontier Enterprises</h3>
             </div>
             <p className="text-sm leading-relaxed mb-2" style={{color: 'hsl(var(--text-secondary))'}}>
               <strong style={{color: 'hsl(var(--metal-gold))'}}>1.5–1.8× higher output</strong> with{' '}
-              <strong style={{color: 'hsl(var(--metal-gold))'}}>38–58% lower overhead</strong> than traditional systems.
+              <strong style={{color: 'hsl(var(--metal-gold))'}}>38–58% lower overhead</strong> than traditional systems in simulated models.
             </p>
           </div>
           
-          {/* Creators */}
+          {/* Frontier Creators */}
           <div className="cloud-card p-6 text-left hover:scale-105 transition-transform">
             <div className="flex items-center gap-3 mb-4">
               <ArrowRight className="w-8 h-8" style={{color: 'hsl(var(--hydrogen-alpha))'}} />
-              <h3 className="text-lg font-bold" style={{color: 'hsl(var(--hydrogen-alpha))'}}>Creators</h3>
+              <h3 className="text-lg font-bold" style={{color: 'hsl(var(--hydrogen-alpha))'}}>Frontier Creators</h3>
             </div>
             <p className="text-sm leading-relaxed" style={{color: 'hsl(var(--text-secondary))'}}>
               Infinite HHF-AI materials and substrates for complete reality worldbuilding.
@@ -104,7 +104,7 @@ export function HeroOptimized() {
         {/* Narrative Section - Frontier Panel */}
         <div className="frontier-panel mb-8 max-w-4xl mx-auto">
           <div className="frontier-header">
-            The Holographic Hydrogen Frontier
+            The holographic hydrogen fractal frontier
           </div>
           <div className="p-6 md:p-8">
             <p className="mb-4 text-sm leading-relaxed md:text-base" style={{color: 'hsl(var(--text-secondary))'}}>

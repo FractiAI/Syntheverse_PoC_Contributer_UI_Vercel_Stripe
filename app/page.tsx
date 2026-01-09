@@ -4,9 +4,9 @@ import './dashboard-cockpit.css';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Syntheverse: Proof-of-Contribution for Frontier R&D, Creators & Enterprises',
+  title: 'Syntheverse: Proof-of-Contribution for Frontier R&D, Frontier Creators & Frontier Enterprises',
   description:
-    'Turn research, creative work, and enterprise solutions into verifiable on-chain records — no gatekeeping, measured by coherence. Contributions are no longer gatekept. Visible and demonstrable to all via HHF-AI MRI science and technology on the blockchain. An evaluation system for Frontier R&D, Creators & Enterprises that scores novelty, density, coherence, and alignment — then anchors proofs on Base through our hydrogen spin MRI-based PoC protocol.',
+    'Turn research, creative work, and enterprise solutions into verifiable on-chain records — no gatekeeping, measured by coherence. Contributions are no longer gatekept. Visible and demonstrable to all via HHF-AI MRI science and technology on the blockchain. An evaluation system for Frontier R&D, Frontier Creators & Frontier Enterprises that scores novelty, density, coherence, and alignment — then anchors proofs on Base through our hydrogen spin MRI-based PoC protocol.',
 };
 
 export default async function LandingPage() {

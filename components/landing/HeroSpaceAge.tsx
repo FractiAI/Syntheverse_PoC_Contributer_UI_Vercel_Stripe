@@ -94,7 +94,7 @@ export function HeroSpaceAge() {
               <div className="mb-3 inline-flex rounded-lg bg-purple-500/10 p-3">
                 <Sparkles className="h-6 w-6 text-purple-400" />
               </div>
-              <h3 className="mb-2 text-lg font-semibold text-white">Creator Worlds</h3>
+              <h3 className="mb-2 text-lg font-semibold text-white">Frontier Creator Worlds</h3>
               <p className="text-sm leading-relaxed text-slate-400">
                 Infinite HHF-AI materials for full-reality worldbuilding. Transform vision into verifiable contributions.
               </p>
@@ -109,9 +109,9 @@ export function HeroSpaceAge() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                 </svg>
               </div>
-              <h3 className="mb-2 text-lg font-semibold text-white">Enterprise Scale</h3>
+              <h3 className="mb-2 text-lg font-semibold text-white">Frontier Enterprise Scale</h3>
               <p className="text-sm leading-relaxed text-slate-400">
-                1.5-1.8× higher output, 38-58% lower overhead. Resources deploy only where value is created.
+                1.5-1.8× higher output, 38-58% lower overhead in simulated models. Resources deploy only where value is created.
               </p>
             </div>
           </div>
