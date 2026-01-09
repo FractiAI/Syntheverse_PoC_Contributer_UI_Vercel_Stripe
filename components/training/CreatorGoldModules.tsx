@@ -506,12 +506,394 @@ export const creatorGoldModules = [
     subtitle: 'Architecture for Complete Realities',
     icon: <Layers className="h-6 w-6" />,
     duration: '50 min',
-    content: (<div className="text-center p-12 opacity-50">Module 3 content: World design frameworks, physics definition, rule systems, coherence architecture...</div>),
+    content: (
+      <div className="space-y-6">
+        {/* Opening */}
+        <div className="border-l-4 border-[var(--metal-gold)] bg-gradient-to-r from-yellow-500/10 to-transparent p-6">
+          <h3 className="text-2xl font-bold mb-3" style={{color: 'var(--metal-gold)'}}>
+            🌍 Building Complete Reality Worlds
+          </h3>
+          <p className="text-lg opacity-90 leading-relaxed">
+            Reality worldbuilding isn't game design or novel writing—it's creating complete, coherent systems 
+            with their own physics, rules, and emergence properties. Like our universe has fundamental constants 
+            (speed of light, Planck's constant), your worlds need foundational principles that everything else derives from.
+          </p>
+        </div>
+
+        {/* The Reality Stack */}
+        <div>
+          <h4 className="text-xl font-bold mb-4">The Reality World Design Stack</h4>
+          
+          <p className="mb-4 opacity-90 leading-relaxed">
+            Reality worlds are built in layers, from fundamental physics up to emergent phenomena. Think of it like this:
+          </p>
+
+          <div className="space-y-3">
+            <div className="cloud-card p-5 border-l-4 border-red-500">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-3xl">⚛️</span>
+                <div>
+                  <div className="font-bold text-xl text-red-400">Layer 1: Fundamental Constants</div>
+                  <div className="text-xs opacity-70">The "physics" of your world</div>
+                </div>
+              </div>
+              <div className="text-sm space-y-2 opacity-90">
+                <p><strong>What to define:</strong> The immutable mathematical relationships that govern everything</p>
+                <p><strong>Examples:</strong></p>
+                <ul className="ml-4 space-y-1">
+                  <li>• Coherence decay rate: How fast patterns lose integrity over time</li>
+                  <li>• Information density limit: Max concepts per unit space</li>
+                  <li>• Fractal dimension: Self-similarity scaling factor</li>
+                  <li>• Resonance frequency: How awareness patterns synchronize</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="cloud-card p-5 border-l-4 border-orange-500">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-3xl">📐</span>
+                <div>
+                  <div className="font-bold text-xl" style={{color: 'var(--hydrogen-amber)'}}>Layer 2: Geometric Rules</div>
+                  <div className="text-xs opacity-70">How space and structure work</div>
+                </div>
+              </div>
+              <div className="text-sm space-y-2 opacity-90">
+                <p><strong>What to define:</strong> The spatial and structural constraints</p>
+                <p><strong>Examples:</strong></p>
+                <ul className="ml-4 space-y-1">
+                  <li>• Dimensionality: 2D, 3D, or N-dimensional space</li>
+                  <li>• Topology: Flat, curved, or fractal geometry</li>
+                  <li>• Boundary conditions: How edges behave (wrap, reflect, absorb)</li>
+                  <li>• Adjacency rules: What can connect to what</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="cloud-card p-5 border-l-4 border-yellow-500">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-3xl">🔗</span>
+                <div>
+                  <div className="font-bold text-xl text-yellow-400">Layer 3: Interaction Dynamics</div>
+                  <div className="text-xs opacity-70">How things affect each other</div>
+                </div>
+              </div>
+              <div className="text-sm space-y-2 opacity-90">
+                <p><strong>What to define:</strong> The cause-and-effect relationships</p>
+                <p><strong>Examples:</strong></p>
+                <ul className="ml-4 space-y-1">
+                  <li>• Attraction/repulsion: What draws together, what pushes apart</li>
+                  <li>• Energy transfer: How influence flows between entities</li>
+                  <li>• Conservation laws: What must be preserved (momentum, information, etc.)</li>
+                  <li>• Feedback loops: How systems self-regulate</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="cloud-card p-5 border-l-4 border-green-500">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-3xl">🌱</span>
+                <div>
+                  <div className="font-bold text-xl text-green-400">Layer 4: Emergence Patterns</div>
+                  <div className="text-xs opacity-70">Complex behaviors from simple rules</div>
+                </div>
+              </div>
+              <div className="text-sm space-y-2 opacity-90">
+                <p><strong>What happens naturally:</strong> You don't design this—it emerges from layers 1-3</p>
+                <p><strong>Examples:</strong></p>
+                <ul className="ml-4 space-y-1">
+                  <li>• Life-like patterns: Self-replicating structures</li>
+                  <li>• Economies: Resource distribution systems</li>
+                  <li>• Cultures: Shared behavioral patterns</li>
+                  <li>• Consciousness: Coherent awareness arising from complexity</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Design Process */}
+        <div className="border-2 border-[var(--hydrogen-beta)] bg-blue-500/5 p-6 rounded-lg">
+          <h4 className="font-bold mb-4 text-lg">🎨 The Reality World Design Process</h4>
+          
+          <div className="space-y-4">
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold flex-shrink-0">1</div>
+              <div>
+                <div className="font-semibold text-blue-400 mb-2">Define Your Vision & Purpose</div>
+                <div className="text-sm opacity-90">
+                  <strong>Ask:</strong> What is this world for? What questions does it explore? What experiences should it enable?
+                  <br />
+                  <strong>Example:</strong> "A world where ideas have mass and attract each other gravitationally, 
+                  exploring how knowledge clusters form naturally."
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold flex-shrink-0">2</div>
+              <div>
+                <div className="font-semibold text-purple-400 mb-2">Design Fundamental Constants (Layer 1)</div>
+                <div className="text-sm opacity-90">
+                  Write down 3-7 mathematical relationships that capture your vision. Use HHF principles as starting point.
+                  <br />
+                  <strong>Example:</strong> F_attraction = G × (idea_mass_1 × idea_mass_2) / distance²
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-full bg-green-500 text-white flex items-center justify-center font-bold flex-shrink-0">3</div>
+              <div>
+                <div className="font-semibold text-green-400 mb-2">Define Geometric Rules (Layer 2)</div>
+                <div className="text-sm opacity-90">
+                  Choose dimensionality, topology, and boundaries. Keep it simple—complexity emerges naturally.
+                  <br />
+                  <strong>Example:</strong> 3D Euclidean space with toroidal boundaries (wrap around edges).
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-full text-white flex items-center justify-center font-bold flex-shrink-0" style={{backgroundColor: 'var(--hydrogen-amber)'}}>4</div>
+              <div>
+                <div className="font-semibold mb-2" style={{color: 'var(--hydrogen-amber)'}}>Specify Interaction Dynamics (Layer 3)</div>
+                <div className="text-sm opacity-90">
+                  Define how entities interact. Focus on local rules—global behavior emerges.
+                  <br />
+                  <strong>Example:</strong> Ideas merge when distance under threshold and similarity over 70%.
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-full bg-red-500 text-white flex items-center justify-center font-bold flex-shrink-0">5</div>
+              <div>
+                <div className="font-semibold text-red-400 mb-2">Simulate & Observe Emergence (Layer 4)</div>
+                <div className="text-sm opacity-90">
+                  Run the simulation. Watch what emerges. You don't design this layer—you discover it.
+                  <br />
+                  <strong>Example:</strong> Idea clusters form "knowledge galaxies" with dense cores and sparse peripheries.
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold flex-shrink-0">6</div>
+              <div>
+                <div className="font-semibold text-indigo-400 mb-2">Iterate & Refine</div>
+                <div className="text-sm opacity-90">
+                  Adjust constants and rules based on observations. Tune until emergence matches your vision.
+                  <br />
+                  <strong>Example:</strong> Increase gravitational constant to make clusters form faster.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Example: Ideaspace Reality World */}
+        <div>
+          <h4 className="text-xl font-bold mb-4">📖 Complete Example: "Ideaspace" Reality World</h4>
+          
+          <div className="cloud-card p-6 mb-4">
+            <div className="font-semibold mb-3" style={{color: 'var(--metal-gold)'}}>
+              Vision: A universe where abstract ideas are physical objects
+            </div>
+            
+            <div className="space-y-4 text-sm">
+              <div className="bg-black/30 p-4 rounded">
+                <div className="font-semibold text-red-400 mb-2">Layer 1: Fundamental Constants</div>
+                <ul className="space-y-1 opacity-90 ml-4">
+                  <li>• <code className="bg-black/50 px-1 rounded">G_idea = 6.674 × 10⁻³</code> - Idea gravitational constant</li>
+                  <li>• <code className="bg-black/50 px-1 rounded">C_coherence = 3.0 × 10⁸</code> - Max coherence propagation speed</li>
+                  <li>• <code className="bg-black/50 px-1 rounded">Λ_decay = 0.001</code> - Coherence decay rate per time unit</li>
+                  <li>• <code className="bg-black/50 px-1 rounded">D_fractal = 1.618</code> - Fractal dimension (golden ratio)</li>
+                </ul>
+              </div>
+
+              <div className="bg-black/30 p-4 rounded">
+                <div className="font-semibold text-amber-400 mb-2">Layer 2: Geometric Rules</div>
+                <ul className="space-y-1 opacity-90 ml-4">
+                  <li>• 3D Euclidean space, 1000³ unit cube</li>
+                  <li>• Toroidal boundaries (wrap around all edges)</li>
+                  <li>• Each idea occupies 1-10 units radius depending on complexity</li>
+                  <li>• Distance measured as Euclidean (straight-line)</li>
+                </ul>
+              </div>
+
+              <div className="bg-black/30 p-4 rounded">
+                <div className="font-semibold text-yellow-400 mb-2">Layer 3: Interaction Dynamics</div>
+                <ul className="space-y-1 opacity-90 ml-4">
+                  <li>• <strong>Gravitational attraction:</strong> F = G_idea × (m₁ × m₂) / r²</li>
+                  <li>• <strong>Idea mass:</strong> Proportional to PoC score (novelty × density)</li>
+                  <li>• <strong>Merging rule:</strong> If distance under 5 units and similarity over 0.7, merge</li>
+                  <li>• <strong>Coherence decay:</strong> Isolated ideas lose mass at rate Λ_decay per timestep</li>
+                  <li>• <strong>Resonance boost:</strong> Clustered ideas gain coherence (reduce decay)</li>
+                </ul>
+              </div>
+
+              <div className="bg-black/30 p-4 rounded">
+                <div className="font-semibold text-green-400 mb-2">Layer 4: Observed Emergence</div>
+                <ul className="space-y-1 opacity-90 ml-4">
+                  <li>• <strong>Knowledge Galaxies:</strong> Dense clusters of related ideas orbit common center</li>
+                  <li>• <strong>Dark Matter:</strong> Low-scoring ideas fill voids, invisible but gravitationally present</li>
+                  <li>• <strong>Superclusters:</strong> Multiple domains connected by high-coherence "bridges"</li>
+                  <li>• <strong>Idea Death:</strong> Isolated, low-mass ideas decay and disappear</li>
+                  <li>• <strong>Big Bang:</strong> New seed ideas create expansion waves, pushing others outward</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-sm opacity-90 bg-green-500/10 border border-green-500/30 p-3 rounded">
+            💡 <strong>Creator Tip:</strong> Notice how Layers 1-3 are simple mathematical rules, but Layer 4 
+            shows complex cosmic-scale behaviors emerging naturally. That's the power of good reality world design.
+          </div>
+        </div>
+
+        {/* Design Patterns */}
+        <div>
+          <h4 className="text-xl font-bold mb-4">🏗️ Common Reality World Design Patterns</h4>
+          
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="cloud-card p-5 border-l-4 border-blue-500">
+              <div className="font-semibold text-blue-400 mb-3">🌀 Fractal Universes</div>
+              <div className="text-sm opacity-90">
+                <strong>Pattern:</strong> Same rules apply at atom-scale and galaxy-scale
+                <br />
+                <strong>Example:</strong> Electrons orbit nucleus like planets orbit star
+                <br />
+                <strong>HHF Principle:</strong> Fractal self-similarity
+              </div>
+            </div>
+
+            <div className="cloud-card p-5 border-l-4 border-purple-500">
+              <div className="font-semibold text-purple-400 mb-3">🌊 Wave-Based Realities</div>
+              <div className="text-sm opacity-90">
+                <strong>Pattern:</strong> Everything is oscillation/vibration
+                <br />
+                <strong>Example:</strong> Entities are standing waves, interactions are interference patterns
+                <br />
+                <strong>HHF Principle:</strong> Hydrogen spin resonance
+              </div>
+            </div>
+
+            <div className="cloud-card p-5 border-l-4 border-green-500">
+              <div className="font-semibold text-green-400 mb-3">📡 Network Worlds</div>
+              <div className="text-sm opacity-90">
+                <strong>Pattern:</strong> Nodes connected by edges, information flows between
+                <br />
+                <strong>Example:</strong> Social graphs, neural networks, internet topology
+                <br />
+                <strong>HHF Principle:</strong> Holographic boundary encoding
+              </div>
+            </div>
+
+            <div className="cloud-card p-5 border-l-4 border-amber-500">
+              <div className="font-semibold mb-3" style={{color: 'var(--hydrogen-amber)'}}>🧬 Evolutionary Systems</div>
+              <div className="text-sm opacity-90">
+                <strong>Pattern:</strong> Variation, selection, reproduction
+                <br />
+                <strong>Example:</strong> Genetic algorithms, meme evolution, economic markets
+                <br />
+                <strong>HHF Principle:</strong> Coherence-based selection pressure
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Testing Coherence */}
+        <div className="border-2 border-[var(--hydrogen-alpha)] bg-purple-500/5 p-6 rounded-lg">
+          <h4 className="font-bold mb-4 text-lg" style={{color: 'var(--hydrogen-alpha)'}}>
+            🧪 Testing Coherence Across Scales
+          </h4>
+          
+          <p className="mb-4 opacity-90 leading-relaxed">
+            Before finalizing your world, test if it maintains coherence at multiple scales:
+          </p>
+
+          <div className="space-y-3 text-sm">
+            <div>
+              <div className="font-semibold text-blue-400 mb-1">Micro-Scale Test</div>
+              <div className="opacity-90">
+                Simulate 2-3 entities in isolation. Do interactions make sense? Are rules clear and consistent?
+              </div>
+            </div>
+
+            <div>
+              <div className="font-semibold text-purple-400 mb-1">Meso-Scale Test</div>
+              <div className="opacity-90">
+                Simulate 100-1000 entities. Do interesting patterns emerge? Do clusters, waves, or structures form?
+              </div>
+            </div>
+
+            <div>
+              <div className="font-semibold text-green-400 mb-1">Macro-Scale Test</div>
+              <div className="opacity-90">
+                Simulate 10,000+ entities. Does system-level behavior match your vision? Are there "phase transitions" 
+                (qualitative changes at certain thresholds)?
+              </div>
+            </div>
+
+            <div>
+              <div className="font-semibold mb-1" style={{color: 'var(--hydrogen-amber)'}}>Temporal Test</div>
+              <div className="opacity-90">
+                Run for 1000+ timesteps. Does system reach equilibrium, cycle, or keep evolving? Is it stable or chaotic?
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Common Mistakes */}
+        <div>
+          <h4 className="text-xl font-bold mb-4">❌ Common Reality World Design Mistakes</h4>
+          
+          <div className="space-y-3">
+            <div className="cloud-card p-4 border-l-4 border-red-500">
+              <div className="font-semibold text-red-400 mb-2">Too Many Rules</div>
+              <div className="text-sm opacity-90">
+                <strong>Problem:</strong> 50+ rules make system unpredictable and impossible to understand
+                <br />
+                <strong>Fix:</strong> Start with 3-7 simple rules. Let complexity emerge.
+              </div>
+            </div>
+
+            <div className="cloud-card p-4 border-l-4 border-red-500">
+              <div className="font-semibold text-red-400 mb-2">Designing Emergence</div>
+              <div className="text-sm opacity-90">
+                <strong>Problem:</strong> Trying to explicitly program high-level behaviors
+                <br />
+                <strong>Fix:</strong> Design Layers 1-3 well. Layer 4 emerges on its own.
+              </div>
+            </div>
+
+            <div className="cloud-card p-4 border-l-4 border-red-500">
+              <div className="font-semibold text-red-400 mb-2">Ignoring Coherence</div>
+              <div className="text-sm opacity-90">
+                <strong>Problem:</strong> Rules contradict each other or break at scale
+                <br />
+                <strong>Fix:</strong> Test at multiple scales. Ensure rules are logically consistent.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Completion */}
+        <div className="bg-gradient-to-r from-[var(--metal-gold)]/10 to-transparent border-l-4 border-[var(--metal-gold)] p-6">
+          <h4 className="font-bold mb-2" style={{color: 'var(--metal-gold)'}}>🎉 You Can Now Design Reality Worlds!</h4>
+          <p className="text-sm opacity-90">
+            You understand the <strong>4-layer reality stack</strong>, the <strong>design process</strong>, 
+            <strong>common patterns</strong>, and <strong>how to test coherence</strong>. Next, we'll dive into 
+            fractal coherence architecture—the secret to building infinitely scalable systems.
+          </p>
+        </div>
+      </div>
+    ),
     keyTakeaways: [
-      'Reality worlds need physics, rules, and coherence principles',
-      'Start with boundary conditions, let complexity emerge',
-      'Use fractal rules for scale-invariant systems',
-      'Test coherence at multiple scales before finalizing',
+      'Reality worlds have 4 layers: Constants → Geometry → Interactions → Emergence',
+      'Design layers 1-3 carefully; layer 4 emerges naturally from them',
+      'Test coherence at micro, meso, macro, and temporal scales',
+      'Start with 3-7 simple rules—complexity emerges from simplicity',
     ],
   },
 
