@@ -125,13 +125,13 @@ export function ThemeParkEntrance() {
               </div>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8 pt-6">
+            <div className="grid md:grid-cols-3 gap-8 pt-6 md:pt-6">
               {/* FRONTIER R&D LAND */}
               <Link 
                 href="/fractiai"
                 onMouseEnter={() => setHoveredLand('rd')}
                 onMouseLeave={() => setHoveredLand(null)}
-                className="group relative"
+                className="group relative mt-6 md:mt-0"
               >
                 <div className={`
                   cloud-card p-8 h-full
@@ -140,7 +140,7 @@ export function ThemeParkEntrance() {
                   ${hoveredLand === 'rd' ? 'scale-105 shadow-2xl shadow-blue-500/50' : 'scale-100'}
                 `}>
                   {/* Land Banner */}
-                  <div className="absolute -top-4 left-6 right-6 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-lg">
+                  <div className="absolute -top-4 left-6 right-6 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-lg z-10">
                     <div className="text-center font-bold text-white uppercase tracking-wider text-sm">
                       🧪 Frontier R&D
                     </div>
@@ -155,11 +155,11 @@ export function ThemeParkEntrance() {
 
                   {/* Description */}
                   <h3 className="text-2xl font-bold mb-4 text-center" style={{color: 'var(--hydrogen-beta)'}}>
-                    Research Laboratory
+                    Research Labs & Engineering Shops
                   </h3>
                   <p className="text-center opacity-80 mb-6 leading-relaxed">
-                    Submit breakthrough research. Get AI evaluation. Earn blockchain-anchored proof. 
-                    No gatekeepers, no journals, pure science.
+                    Submit breakthrough research, engineering designs, or technical innovations. Get AI evaluation. 
+                    Earn blockchain-anchored proof. No gatekeepers, no journals, pure contribution.
                   </p>
 
                   {/* Attractions List */}
@@ -186,6 +186,9 @@ export function ThemeParkEntrance() {
                         Scientists
                       </span>
                       <span className="px-3 py-1 bg-blue-500/20 border border-blue-500/30 rounded-full text-xs">
+                        Engineers
+                      </span>
+                      <span className="px-3 py-1 bg-blue-500/20 border border-blue-500/30 rounded-full text-xs">
                         Researchers
                       </span>
                       <span className="px-3 py-1 bg-blue-500/20 border border-blue-500/30 rounded-full text-xs">
@@ -209,7 +212,7 @@ export function ThemeParkEntrance() {
                 href="/enterprise"
                 onMouseEnter={() => setHoveredLand('enterprises')}
                 onMouseLeave={() => setHoveredLand(null)}
-                className="group relative"
+                className="group relative mt-6 md:mt-0"
               >
                 <div className={`
                   cloud-card p-8 h-full
@@ -218,7 +221,7 @@ export function ThemeParkEntrance() {
                   ${hoveredLand === 'enterprises' ? 'scale-105 shadow-2xl shadow-purple-500/50' : 'scale-100'}
                 `}>
                   {/* Land Banner */}
-                  <div className="absolute -top-4 left-6 right-6 px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg shadow-lg">
+                  <div className="absolute -top-4 left-6 right-6 px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg shadow-lg z-10">
                     <div className="text-center font-bold text-white uppercase tracking-wider text-sm">
                       ⚡ Frontier Enterprises
                     </div>
@@ -287,7 +290,7 @@ export function ThemeParkEntrance() {
                 href="/creator"
                 onMouseEnter={() => setHoveredLand('creators')}
                 onMouseLeave={() => setHoveredLand(null)}
-                className="group relative"
+                className="group relative mt-6 md:mt-0"
               >
                 <div className={`
                   cloud-card p-8 h-full
@@ -296,7 +299,7 @@ export function ThemeParkEntrance() {
                   ${hoveredLand === 'creators' ? 'scale-105 shadow-2xl shadow-amber-500/50' : 'scale-100'}
                 `}>
                   {/* Land Banner */}
-                  <div className="absolute -top-4 left-6 right-6 px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg shadow-lg">
+                  <div className="absolute -top-4 left-6 right-6 px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg shadow-lg z-10">
                     <div className="text-center font-bold text-white uppercase tracking-wider text-sm">
                       🎨 Frontier Creators
                     </div>
