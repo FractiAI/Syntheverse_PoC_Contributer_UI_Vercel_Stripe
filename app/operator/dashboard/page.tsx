@@ -15,7 +15,6 @@ import { ActivityAnalytics } from '@/components/activity/ActivityAnalytics';
 import { SandboxNavigator } from '@/components/SandboxNavigator';
 import { SynthChatNavigator } from '@/components/SynthChatNavigator';
 import { BroadcastArchiveNavigator } from '@/components/BroadcastArchiveNavigator';
-import { ReactorCore } from '@/components/ReactorCore';
 import CockpitHeader from '@/components/CockpitHeader';
 import { QuickActionsPanel } from '@/components/QuickActionsPanel';
 import { OperatorBroadcastBanner } from '@/components/OperatorBroadcastBanner';
@@ -103,19 +102,6 @@ export default async function OperatorDashboard() {
         <div className="block md:hidden">
           <MobileStatusIndicators />
         </div>
-
-        {/* Core Instrument Panel - Reactor Core - Collapsible */}
-        <details className="mb-6 frontier-panel relative" open>
-          <div className="scan-line" />
-          <summary className="cursor-pointer select-none list-none p-4 md:p-5 mb-0 border-b" style={{borderColor: 'hsl(var(--hydrogen-beta) / 0.1)'}}>
-            <div className="flex items-center justify-between">
-              <ChevronDown className="h-5 w-5 opacity-70" style={{color: 'hsl(var(--hydrogen-alpha))'}} />
-            </div>
-          </summary>
-          <div className="mt-0">
-            <ReactorCore />
-          </div>
-        </details>
 
         {/* System Broadcast Banners - Priority Display */}
         <div className="mb-6">

@@ -19,7 +19,6 @@ import { ReferenceCustomersList } from '@/components/ReferenceCustomersList';
 import { SandboxNavigator } from '@/components/SandboxNavigator';
 import { SynthChatNavigator } from '@/components/SynthChatNavigator';
 import { BroadcastArchiveNavigator } from '@/components/BroadcastArchiveNavigator';
-import { ReactorCore } from '@/components/ReactorCore';
 import CockpitHeader from '@/components/CockpitHeader';
 import { QuickActionsPanel } from '@/components/QuickActionsPanel';
 import { OperatorBroadcastBanner } from '@/components/OperatorBroadcastBanner';
@@ -109,18 +108,6 @@ export default async function CreatorDashboard() {
         <div className="block md:hidden">
           <MobileStatusIndicators />
         </div>
-
-        {/* Core Instrument Panel - Reactor Core - Collapsible */}
-        <details className="mb-6" open>
-          <summary className="lab-collapsible-trigger list-none mb-0">
-            <div className="flex items-center gap-3">
-            </div>
-            <ChevronDown className="lab-chevron h-5 w-5" />
-          </summary>
-          <div className="mt-0">
-            <ReactorCore />
-          </div>
-        </details>
 
         {/* System Broadcast Banners - Priority Display */}
         <div className="mb-6">
