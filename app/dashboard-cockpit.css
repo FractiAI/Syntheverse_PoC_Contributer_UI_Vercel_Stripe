@@ -327,7 +327,6 @@ details[open] .cockpit-chevron {
     transparent 360deg
   );
   border-radius: 0;
-  animation: rotate-slow var(--animation-slow) linear infinite;
   z-index: -1;
 }
 
