@@ -66,6 +66,9 @@ interface ExerciseState {
 }
 
 import { WingsTrackSelector, WingTrack } from './WingsTrackSelector';
+import { contributorCopperModules } from './training/ContributorCopperModules';
+import { operatorSilverModules } from './training/OperatorSilverModules';
+import { creatorGoldModules } from './training/CreatorGoldModules';
 
 export function OnboardingNavigator() {
   const [currentModule, setCurrentModule] = useState(0);
@@ -107,7 +110,15 @@ export function OnboardingNavigator() {
     lessonRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, [currentModule]);
 
-  const modules: TrainingModule[] = [
+  // Select modules based on wing track
+  const modules: TrainingModule[] = 
+    wingTrack === 'contributor-copper' ? contributorCopperModules :
+    wingTrack === 'operator-silver' ? operatorSilverModules :
+    wingTrack === 'creator-gold' ? creatorGoldModules :
+    contributorCopperModules; // Default to Copper
+
+  // LEGACY MODULES (old white-paper style, replaced by new pedagogical modules above)
+  const legacyModules: TrainingModule[] = [
     {
       id: 'syntheverse',
       title: 'Welcome to Syntheverse',
