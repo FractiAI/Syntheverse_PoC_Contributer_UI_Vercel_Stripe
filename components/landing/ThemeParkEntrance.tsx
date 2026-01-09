@@ -23,7 +23,8 @@ import {
   TrendingUp,
   Atom,
   Telescope,
-  Cloud
+  Cloud,
+  Globe
 } from 'lucide-react';
 
 export function ThemeParkEntrance() {
@@ -302,13 +303,10 @@ export function ThemeParkEntrance() {
                     </div>
                   </div>
 
-                  {/* Icon - Wings for Creators */}
+                  {/* Icon - Globe for Reality Worldbuilding */}
                   <div className="flex justify-center mb-6 mt-4">
                     <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-gradient-to-br from-[#FFD700]/20 to-[#FFC700]/10 flex items-center justify-center border-2 border-[#FFD700]/50 group-hover:animate-pulse">
-                      <svg className="w-10 h-10 md:w-12 md:h-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{color: '#FFD700'}}>
-                        <path d="M12 3C12 3 8 6 4 8C4 12 4 16 12 21C20 16 20 12 20 8C16 6 12 3 12 3Z" strokeLinecap="round" strokeLinejoin="round"/>
-                        <path d="M12 3V21" strokeLinecap="round" strokeLinejoin="round" opacity="0.5"/>
-                      </svg>
+                      <Globe className="w-10 h-10 md:w-12 md:h-12" style={{color: '#FFD700'}} />
                     </div>
                   </div>
 
