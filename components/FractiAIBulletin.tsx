@@ -141,15 +141,6 @@ export default function FractiAIBulletin({ isAuthenticated = false }: FractiAIBu
             <div className="flex items-center gap-2 ml-auto">
               <div className="text-xs font-bold uppercase tracking-wider text-slate-500">All Systems</div>
               <StatusIndicators />
-              {isAuthenticated && (
-                <Link
-                  href="/dashboard"
-                  className="inline-flex items-center gap-2 border-2 border-[var(--hydrogen-amber)] bg-[var(--hydrogen-amber)] px-4 py-2 text-xs font-bold uppercase tracking-wider text-slate-950 transition-all hover:bg-transparent hover:text-[var(--hydrogen-amber)] ml-4"
-                >
-                  <LayoutDashboard className="h-4 w-4" />
-                  Dashboard
-                </Link>
-              )}
             </div>
           </div>
         </div>

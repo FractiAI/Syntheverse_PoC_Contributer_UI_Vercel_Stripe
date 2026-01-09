@@ -6,7 +6,7 @@
 'use client';
 
 import Link from 'next/link';
-import { BookOpen, Shield, Settings, FileText } from 'lucide-react';
+import { BookOpen, Shield, Settings, FileText, LayoutDashboard } from 'lucide-react';
 import { ClientProfileDropdown } from './ClientProfileDropdown';
 
 interface QuickActionsPanelProps {
@@ -33,6 +33,16 @@ export function QuickActionsPanel({
               <span className="mr-1.5">◎</span>
               FractiAI
             </Link>
+            {showContributorDashboard && (
+              <Link 
+                href="/dashboard" 
+                className="cockpit-lever inline-flex items-center whitespace-nowrap py-1.5 px-3 text-xs"
+              >
+                <LayoutDashboard className="mr-1.5 h-3 w-3" />
+                <span className="hidden sm:inline">Dashboard</span>
+                <span className="sm:hidden">Dash</span>
+              </Link>
+            )}
             <Link 
               href="/onboarding" 
               className="cockpit-lever inline-flex items-center whitespace-nowrap py-1.5 px-3 text-xs"
