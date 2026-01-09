@@ -10,6 +10,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { RefreshCw, MessageCircle, Users, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useRouter } from 'next/navigation';
 import {
   Dialog,
   DialogContent,
@@ -38,6 +39,7 @@ interface ChatRoom {
 }
 
 export function SynthChatNavigator() {
+  const router = useRouter();
   const [rooms, setRooms] = useState<ChatRoom[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentRoom, setCurrentRoom] = useState<ChatRoom | null>(null);
@@ -97,18 +99,21 @@ export function SynthChatNavigator() {
   }, []);
 
   const handleRoomClick = async (room: ChatRoom) => {
+    // Auto-join room if not connected
     if (!room.is_connected) {
       setJoining(room.id);
       try {
         await joinRoom(room.id);
-        await fetchRooms();
       } catch (error) {
         console.error('Failed to join room:', error);
-      } finally {
         setJoining(null);
+        return;
       }
+      setJoining(null);
     }
-    setCurrentRoom(room);
+    
+    // Navigate to dedicated chat page
+    router.push(`/synthchat/${room.id}`);
   };
 
   const handleLeaveRoom = async (roomId: string, e: React.MouseEvent) => {
