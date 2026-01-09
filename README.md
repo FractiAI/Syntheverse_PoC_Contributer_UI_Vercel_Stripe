@@ -12,11 +12,11 @@
 > **📖 New to the codebase?** See the [Senior Engineer Production Briefing](docs/SENIOR_ENGINEER_PRODUCTION_BRIEFING.md) for a comprehensive system overview covering architecture, workflows, key features, and operational considerations.
 
 > **🔧 Latest Update (Jan 9, 2026):** 
-> - **💬 WhatsApp-Style SynthChat**: Full-featured chat interface with dedicated `/synthchat/[roomId]` pages. Click any chat room → opens WhatsApp/iPhone-style interface with message bubbles, smart timestamps, real-time updates (3s polling).
-> - **🔍 Message Search**: Search messages by content, sender name, or email. Case-insensitive matching with results count display.
-> - **📸 File Upload Support**: Upload images (5MB, JPEG/PNG/GIF/WebP) and PDFs (10MB) directly in chat. Preview before sending, click to view full-size, download links for files.
-> - **✅ Auto-Participant Fix**: Resolved 403 errors by auto-adding users as participants when accessing rooms. No more hanging/loading issues. Graceful error handling with back navigation.
-> - **📱 Mobile-First Design**: Responsive WhatsApp-style bubbles (green for sent, white for received), sender names, participant count, back button to dashboard.
+> - **🔧 Critical Schema Fix**: Fixed table name error (`users` → `users_table`) causing query failures. Created complete SQL setup script (`20260109000002_synthchat_setup.sql`) with all tables, RLS policies, storage bucket, and indexes in one file.
+> - **✅ 403 Errors Resolved**: All SynthChat functionality now working. Users successfully ran schema setup in Supabase. Auto-participant joining, message sending, image uploads all functional.
+> - **💬 WhatsApp-Style SynthChat**: Full-featured chat interface with dedicated `/synthchat/[roomId]` pages. Message bubbles, smart timestamps, real-time updates (3s polling).
+> - **🔍 Enhanced Debugging**: Added detailed logging throughout APIs for easier troubleshooting. Console logs show auth checks, participant status, errors with full context.
+> - **📦 Complete Setup**: Single SQL file creates 3 tables, 12 RLS policies, storage bucket with 4 policies, performance indexes, unique constraints. Ready to deploy.
 
 ---
 
@@ -853,9 +853,11 @@ Built for the Syntheverse ecosystem with ❤️
 ---
 
 **Last Updated**: January 9, 2026  
-**Version**: 2.36 (WhatsApp-Style SynthChat + Auto-Participant Fix)
+**Version**: 2.37 (SynthChat Schema Fix + Complete Setup SQL)
 
 ### Version History
+
+- **v2.37** (January 9, 2026): **SynthChat Schema Fix + Complete Setup SQL** 🔧✅ - **Critical Table Name Fix**: Corrected all references from `from('users')` to `from('users_table')` (actual table name in schema). This was causing query failures when fetching user roles and sender names. Fixed in 3 locations: room details API, messages API (2 places). **Complete Schema Setup**: Created comprehensive `supabase/migrations/20260109000002_synthchat_setup.sql` (264 lines) with all necessary tables, RLS policies, storage bucket, indexes, and constraints. Single SQL file creates: `chat_rooms` (room management), `chat_messages` (with image_url, file_url, file_name columns), `chat_participants` (with auto-generated UUIDs), 12 RLS policies (4 per table), synthchat-images storage bucket with 4 policies, indexes on room_id/user_email/created_at, unique constraint on (room_id, user_email). **Enhanced Logging**: Added detailed console logging throughout APIs for debugging participant addition, auth checks, room access. **Tables Created**: chat_rooms (sandbox-based rooms), chat_messages (text/image/file support), chat_participants (auto-join tracking). **RLS Policies**: Authenticated users can view/create rooms, participants can view/send messages, auto-join functionality secured. **Storage**: Public read for images, auth required for upload/modify/delete. **Status**: Schema complete, table references fixed, 403 errors resolved, production-ready. User successfully ran SQL setup in Supabase. 🚀
 
 - **v2.36** (January 9, 2026): **WhatsApp-Style SynthChat + Auto-Participant Fix** 💬✅ - **Dedicated Chat Page**: Created `/synthchat/[roomId]` route with WhatsApp/iPhone-style interface. Full-screen dedicated page with back button, participant count, search toggle. Click any room in SynthChatNavigator → auto-navigates to chat page. **Message Interface** (`components/SynthChatRoomInterface.tsx`, 642 lines): WhatsApp-style bubbles (green for sent, white for received), smart timestamps (today: "3:45 PM", older: "Jan 8, 3:45 PM"), sender names on received messages, real-time updates (3s polling), responsive mobile-first design, solid #efeae2 background. **Message Search**: Click 🔍 icon → search bar appears, search by content/sender name/email, case-insensitive matching, results count display, clear button. **File Uploads**: Images (📷 icon, 5MB max, JPEG/PNG/GIF/WebP), PDFs (📄 icon, 10MB max), preview before sending, click images to view full-size, download file links. **API Endpoints**: `GET /api/synthchat/rooms/[roomId]` (room details), `GET /api/synthchat/rooms/[roomId]/messages` (fetch messages, auto-add participant), `POST /api/synthchat/upload-image` (image uploads to synthchat-images bucket). **403 Error Fix**: Auto-add users as participants when accessing rooms or messages (no more 403 errors), gets user role from users table, graceful degradation if add fails. Simplified SynthChatNavigator to navigate directly without manual join. **Error Handling**: Added error state tracking, displays error messages with back link, graceful handling of missing rooms. **Storage**: Requires `synthchat-images` Supabase bucket with RLS policies (setup guide in `docs/SYNTHCHAT_SETUP.md`). **Features**: Send text/images/PDFs, search messages, real-time updates, WhatsApp-style UI, auto-participant joining, 500 message history. **Status**: Production-ready, all TypeScript/linting clean. 🚀
 

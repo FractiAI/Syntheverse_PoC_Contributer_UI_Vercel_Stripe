@@ -6,18 +6,20 @@ The new WhatsApp-style SynthChat interface requires a Supabase storage bucket fo
 
 ## Required Setup
 
-### Step 1: Create Storage Bucket (if not exists)
+### Complete SQL Setup (ONE STEP!)
 
-1. Go to Supabase Dashboard → **Storage**
-2. Click **New Bucket**
-3. Create bucket with:
-   - **Name:** `synthchat-images`
-   - **Public bucket:** ✅ YES (toggle on)
-   - Click **Create bucket**
+Go to Supabase Dashboard → **SQL Editor** and run the complete setup script:
 
-### Step 2: Add RLS Policies
+**Location:** `supabase/migrations/20260109000002_synthchat_setup.sql`
 
-Go to **SQL Editor** and run this SQL:
+This single SQL file creates:
+- ✅ All 3 chat tables (chat_rooms, chat_messages, chat_participants)
+- ✅ All 12 RLS policies
+- ✅ Storage bucket (synthchat-images) with policies
+- ✅ Indexes for performance
+- ✅ Unique constraints
+
+**Or copy/paste this SQL:**
 
 ```sql
 -- Ensure bucket exists and is public
