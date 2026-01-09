@@ -6,7 +6,7 @@
 
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { RefreshCw, MessageCircle, Users, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -49,7 +49,6 @@ export function SynthChatNavigator() {
   const [newSandboxName, setNewSandboxName] = useState('');
   const [newSandboxDescription, setNewSandboxDescription] = useState('');
   const [creating, setCreating] = useState(false);
-  const [joining, setJoining] = useState<string | null>(null);
   const [leaving, setLeaving] = useState<string | null>(null);
   const [currentUserEmail, setCurrentUserEmail] = useState<string | null>(null);
 
@@ -85,23 +84,6 @@ export function SynthChatNavigator() {
       setLoading(false);
     }
   }, []);
-
-  const joinRoom = useCallback(async (roomId: string) => {
-    try {
-      await fetch('/api/synthchat/rooms', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ room_id: roomId }),
-      });
-    } catch (error) {
-      console.error('Failed to join room:', error);
-    }
-  }, []);
-
-  const handleRoomClick = async (room: ChatRoom) => {
-    // Navigate to dedicated chat page (auto-join happens on page load)
-    router.push(`/synthchat/${room.id}`);
-  };
 
   const handleLeaveRoom = async (roomId: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -271,8 +253,7 @@ export function SynthChatNavigator() {
                     return (
                       <tr
                         key={room.id}
-                        onClick={() => handleRoomClick(room)}
-                        className={`cursor-pointer ${isSelected ? 'bg-[var(--cockpit-carbon)]' : ''}`}
+                        className={isSelected ? 'bg-[var(--cockpit-carbon)]' : ''}
                       >
                         <td>
                           <div className="flex items-center gap-2">
@@ -318,33 +299,26 @@ export function SynthChatNavigator() {
                         </td>
                         <td>
                           <div className="flex items-center gap-2">
-                            {isSelected && (
-                              <span className="cockpit-text text-xs text-[var(--hydrogen-amber)]">
-                                Active
-                              </span>
-                            )}
-                            {room.is_connected ? (
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={(e) => handleLeaveRoom(room.id, e)}
-                                disabled={leaving === room.id}
-                                className="h-6 text-xs text-red-400 hover:text-red-300"
-                              >
-                                {leaving === room.id ? 'Leaving...' : 'Leave'}
-                              </Button>
-                            ) : (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => router.push(`/synthchat/${room.id}`)}
+                              className="h-7 px-3 text-xs cockpit-lever text-[var(--hydrogen-amber)] hover:text-[var(--hydrogen-beta)]"
+                            >
+                              Open Chat →
+                            </Button>
+                            {room.is_connected && (
                               <Button
                                 variant="ghost"
                                 size="sm"
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  handleRoomClick(room);
+                                  handleLeaveRoom(room.id, e);
                                 }}
-                                disabled={joining === room.id}
-                                className="h-6 text-xs text-green-400 hover:text-green-300"
+                                disabled={leaving === room.id}
+                                className="h-6 text-xs text-red-400 hover:text-red-300"
                               >
-                                {joining === room.id ? 'Joining...' : 'Join'}
+                                {leaving === room.id ? 'Leaving...' : 'Leave'}
                               </Button>
                             )}
                           </div>
