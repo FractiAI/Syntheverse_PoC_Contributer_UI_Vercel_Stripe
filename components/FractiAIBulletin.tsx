@@ -18,6 +18,8 @@ import FractiAIStatusWidget from '@/components/FractiAIStatusWidget';
 import { StatusIndicators } from './StatusIndicators';
 import { ConstantsEquationsCatalog } from './ConstantsEquationsCatalog';
 import { SectionProof } from './landing/SectionProof';
+import { ProofLibraryNavigator } from './ProofLibraryNavigator';
+import { NovelConstantsNavigator } from './NovelConstantsNavigator';
 
 type FractiAIBulletinProps = {
   isAuthenticated?: boolean;

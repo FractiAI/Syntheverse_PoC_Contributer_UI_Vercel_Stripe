@@ -996,30 +996,80 @@ html {
   }
 }
 
-@media (max-width: 768px) {
+/* Mobile: Horizontal banner at top */
+@media (max-width: 1024px) {
   .cloud-channel-container {
-    width: 280px !important;
-    min-width: 280px !important;
+    position: fixed;
+    top: 60px; /* Below navigation bar */
+    left: 0;
+    right: 0;
+    width: 100% !important;
+    min-width: 100% !important;
+    height: auto !important;
+    max-height: 400px;
+    z-index: 40;
+    border-left: none;
+    border-bottom: 2px solid hsl(var(--tropical-blue) / 0.3);
+    box-shadow: 0 4px 20px hsl(var(--tropical-blue) / 0.2);
+  }
+
+  .cloud-channel-container.collapsed {
+    max-height: 48px !important;
+    width: 100% !important;
+    min-width: 100% !important;
+  }
+
+  .cloud-channel-container.collapsed .cloud-channel-feed,
+  .cloud-channel-container.collapsed .cloud-channel-create-post {
+    display: none;
+  }
+
+  .cloud-channel-container.collapsed .cloud-channel-header {
+    display: flex;
+    padding: 0.5rem 1rem;
+  }
+
+  .cloud-channel-collapse-btn {
+    top: auto;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 48px;
+    height: 24px;
+    border-radius: 0 0 4px 4px;
+  }
+
+  .cloud-channel-container.collapsed .cloud-channel-collapse-btn {
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .cloud-channel-collapse-btn:hover {
+    transform: translateX(-50%) translateY(2px);
   }
 
   .cloud-channel-header {
-    padding: 0.75rem;
+    padding: 0.75rem 1rem;
   }
   
   .cloud-channel-feed {
-    padding: 0.25rem;
+    padding: 0.5rem;
+    max-height: 300px;
+    overflow-y: auto;
   }
   
   .cloud-channel-create-post {
     padding: 0.75rem;
   }
-}
 
-/* Extra small mobile devices (iPhone SE, etc.) */
-@media (max-width: 430px) {
-  .cloud-channel-container {
-    width: 240px !important;
-    min-width: 240px !important;
+  /* Horizontal animation for mobile */
+  .cloud-channel-container::before {
+    animation: scan-horizontal 3s ease-in-out infinite;
+  }
+
+  .cloud-channel-container::after {
+    display: none; /* Hide vertical line on mobile */
   }
 }
 
