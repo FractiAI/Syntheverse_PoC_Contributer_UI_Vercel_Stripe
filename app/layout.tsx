@@ -4,6 +4,7 @@ import './globals.css';
 import { Navigation } from '@/components/Navigation';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { Footer } from '@/components/Footer';
+import { GlobalSupportButton } from '@/components/GlobalSupportButton';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -36,6 +37,9 @@ export default function RootLayout({
             <Navigation />
             <main className="flex-1">{children}</main>
             <Footer />
+            
+            {/* Global floating support button */}
+            <GlobalSupportButton />
           </div>
         </ErrorBoundary>
       </body>
