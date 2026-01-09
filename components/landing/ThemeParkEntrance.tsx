@@ -17,7 +17,6 @@ import {
   Star,
   Shield,
   Crown,
-  Ticket,
   Map,
   Users,
   TrendingUp,
@@ -26,6 +25,7 @@ import {
   Cloud,
   Globe
 } from 'lucide-react';
+import { FaStar } from 'react-icons/fa6';
 
 export function ThemeParkEntrance() {
   const [hoveredLand, setHoveredLand] = useState<string | null>(null);
@@ -362,55 +362,6 @@ export function ThemeParkEntrance() {
             </div>
           </div>
 
-          {/* TICKET BOOTH & FAST PASS */}
-          <div className="max-w-5xl mx-auto w-full">
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* Get Your Tickets (Sign Up) */}
-              <div className="cloud-card p-8 border-2 border-[var(--metal-gold)] bg-gradient-to-br from-amber-500/10 to-transparent">
-                <div className="flex items-center gap-3 mb-4">
-                  <Ticket className="w-8 h-8" style={{color: 'var(--metal-gold)'}} />
-                  <h3 className="text-2xl font-bold" style={{color: 'var(--metal-gold)'}}>
-                    Get Your Tickets
-                  </h3>
-                </div>
-                <p className="opacity-80 mb-6 leading-relaxed">
-                  New to Syntheverse? Start your journey with free account creation. 
-                  Choose your path: Contributor, Operator, or Creator.
-                </p>
-                <Link 
-                  href="/signup"
-                  className="cockpit-lever inline-flex items-center gap-3 px-8 py-4 text-lg font-bold w-full justify-center"
-                  style={{backgroundColor: 'var(--metal-gold)', color: '#000'}}
-                >
-                  <Rocket className="w-5 h-5" />
-                  <span>Enter the Frontier</span>
-                  <ArrowRight className="w-5 h-5" />
-                </Link>
-              </div>
-
-              {/* Fast Pass (Already Have Account) */}
-              <div className="cloud-card p-8 border-2 border-green-500 bg-gradient-to-br from-green-500/10 to-transparent">
-                <div className="flex items-center gap-3 mb-4">
-                  <Zap className="w-8 h-8 text-green-400" />
-                  <h3 className="text-2xl font-bold text-green-400">
-                    Fast Pass Entry
-                  </h3>
-                </div>
-                <p className="opacity-80 mb-6 leading-relaxed">
-                  Already have an account? Skip the line and head straight 
-                  to your dashboard or choose your destination.
-                </p>
-                <Link 
-                  href="/login"
-                  className="cockpit-lever inline-flex items-center gap-3 px-8 py-4 text-lg font-bold w-full justify-center bg-green-600 hover:bg-green-500 text-white transition-colors"
-                >
-                  <Shield className="w-5 h-5" />
-                  <span>Login & Continue</span>
-                  <ArrowRight className="w-5 h-5" />
-                </Link>
-              </div>
-            </div>
-          </div>
         </section>
 
         {/* GUIDE CHARACTERS (Wings Personas) */}
@@ -419,7 +370,7 @@ export function ThemeParkEntrance() {
             <div className="text-center mb-16">
               <div className="inline-flex items-center gap-3 px-6 py-3 bg-black/40 border border-[var(--keyline-primary)] rounded-full backdrop-blur-md mb-4">
                 <Users className="w-5 h-5" style={{color: 'var(--hydrogen-gamma)'}} />
-                <span className="font-bold uppercase tracking-wider">Meet Your Guides</span>
+                <span className="font-bold uppercase tracking-wider">Choose Your Path</span>
               </div>
               <h2 className="text-4xl md:text-5xl font-bold mb-4 holographic-text">
                 Choose Your Adventure Path
@@ -433,8 +384,8 @@ export function ThemeParkEntrance() {
               {/* Copper Wings Guide */}
               <Link href="/onboarding" className="group">
                 <div className="cloud-card p-8 text-center hover:scale-105 transition-all duration-300 border-2 border-[var(--metal-copper)] hover:shadow-2xl hover:shadow-orange-500/50">
-                  <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-br from-orange-500/30 to-orange-600/10 flex items-center justify-center border-4 border-[var(--metal-copper)] group-hover:animate-pulse">
-                    <div className="text-6xl">🪙</div>
+                  <div className="flex justify-center mb-4">
+                    <FaStar className="w-16 h-16 group-hover:scale-110 transition-transform" style={{color: '#C77C5D'}} />
                   </div>
                   <h3 className="text-2xl font-bold mb-3" style={{color: 'var(--metal-copper)'}}>
                     Contributor Copper Wings
@@ -455,8 +406,8 @@ export function ThemeParkEntrance() {
               {/* Silver Wings Guide */}
               <Link href="/onboarding" className="group">
                 <div className="cloud-card p-8 text-center hover:scale-105 transition-all duration-300 border-2 border-[var(--metal-silver)] hover:shadow-2xl hover:shadow-gray-400/50">
-                  <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-br from-gray-400/30 to-gray-500/10 flex items-center justify-center border-4 border-[var(--metal-silver)] group-hover:animate-pulse">
-                    <div className="text-6xl">🛡️</div>
+                  <div className="flex justify-center mb-4">
+                    <FaStar className="w-16 h-16 group-hover:scale-110 transition-transform" style={{color: '#C0C0C0'}} />
                   </div>
                   <h3 className="text-2xl font-bold mb-3" style={{color: 'var(--metal-silver)'}}>
                     Operator Silver Wings
@@ -477,8 +428,8 @@ export function ThemeParkEntrance() {
               {/* Gold Wings Guide */}
               <Link href="/onboarding" className="group">
                 <div className="cloud-card p-8 text-center hover:scale-105 transition-all duration-300 border-2 border-[var(--metal-gold)] hover:shadow-2xl hover:shadow-yellow-500/50">
-                  <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-br from-yellow-500/30 to-yellow-600/10 flex items-center justify-center border-4 border-[var(--metal-gold)] group-hover:animate-pulse">
-                    <div className="text-6xl">👑</div>
+                  <div className="flex justify-center mb-4">
+                    <FaStar className="w-16 h-16 group-hover:scale-110 transition-transform" style={{color: '#FFD700'}} />
                   </div>
                   <h3 className="text-2xl font-bold mb-3" style={{color: 'var(--metal-gold)'}}>
                     Creator Gold Wings
