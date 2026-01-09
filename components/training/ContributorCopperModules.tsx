@@ -4,6 +4,7 @@
  * Pedagogically designed for adult learners with practical exercises
  */
 
+import Link from 'next/link';
 import { Brain, Target, Upload, Scan, Award, Rocket, Coins } from 'lucide-react';
 
 export const contributorCopperModules = [
