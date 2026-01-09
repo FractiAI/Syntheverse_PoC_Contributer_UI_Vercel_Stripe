@@ -166,7 +166,7 @@ export function ThemeParkEntrance() {
 
                   {/* Description */}
                   <h3 className="text-xl md:text-2xl font-bold mb-3 text-center" style={{color: '#C77C5D'}}>
-                    Research & Discovery
+                    Research & Development
                   </h3>
                   <p className="text-center opacity-80 mb-4 text-sm md:text-base leading-relaxed">
                     Submit research or innovations. Get AI evaluation. Earn blockchain proof. No gatekeepers.

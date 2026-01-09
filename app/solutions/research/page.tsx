@@ -23,11 +23,11 @@ export default function ResearchSolutionsPage() {
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               <span className="bg-gradient-to-r from-[#C77C5D] to-[#B5693D] text-transparent bg-clip-text">
-                Research & Discovery
+                Research & Development
               </span>
             </h1>
             <p className="text-xl md:text-2xl opacity-80 max-w-3xl mx-auto leading-relaxed">
-              Break free from journal gatekeepers. Get AI-powered evaluation, blockchain proof, and fair recognition for your breakthrough research.
+              Break free from journal gatekeepers. Get AI-powered evaluation, blockchain proof, and fair recognition for your breakthrough research and development.
             </p>
           </div>
         </div>

@@ -189,7 +189,7 @@ See [Environment Variables](#environment-variables) section for complete configu
 
 Three comprehensive public pages explaining problems, solutions, and value propositions for each path:
 
-#### 📡 **Research & Discovery** (`/solutions/research`)
+#### 📡 **Research & Development** (`/solutions/research`)
 **Contributor Copper Wings Path** - For researchers, engineers, and innovators
 - **Problems Solved**: Gatekeeping & bias, months of waiting, zero ownership, no proof of originality
 - **Value Props**: 10-minute AI evaluation, blockchain proof-of-contribution, SYNTH rewards
