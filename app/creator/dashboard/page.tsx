@@ -22,7 +22,7 @@ import { BroadcastArchiveNavigator } from '@/components/BroadcastArchiveNavigato
 import CockpitHeader from '@/components/CockpitHeader';
 import { QuickActionsPanel } from '@/components/QuickActionsPanel';
 import { OperatorBroadcastBanner } from '@/components/OperatorBroadcastBanner';
-import { Shield, Activity, FileText, BookOpen, Settings, Sparkles } from 'lucide-react';
+import { Shield, Activity, FileText, BookOpen, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
 import { MobileStatusIndicators } from '@/components/MobileStatusIndicators';
@@ -61,10 +61,6 @@ export default async function CreatorLab() {
       <div className="lab-header relative z-10 flex-shrink-0">
         <div className="lab-header-grid">
           <div>
-            <div className="holographic-badge badge-quantum-synthesist mb-3">
-              <Sparkles className="w-4 h-4" />
-              SYNTHEVERSE CLOUD LABORATORY
-            </div>
             <h1 className="lab-title" style={{color: 'hsl(var(--hydrogen-gamma))'}}>
               Creator Lab™
             </h1>

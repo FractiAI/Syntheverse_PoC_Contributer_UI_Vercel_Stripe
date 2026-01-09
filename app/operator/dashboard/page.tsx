@@ -19,7 +19,7 @@ import CockpitHeader from '@/components/CockpitHeader';
 import { QuickActionsPanel } from '@/components/QuickActionsPanel';
 import { OperatorBroadcastBanner } from '@/components/OperatorBroadcastBanner';
 import { CloudChannel } from '@/components/CloudChannel';
-import { Settings, Activity, FileText, BookOpen, Shield, Radio, ChevronDown } from 'lucide-react';
+import { Settings, Activity, FileText, BookOpen, Shield, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import { MobileStatusIndicators } from '@/components/MobileStatusIndicators';
 import { MultiplierToggleWrapper } from '@/components/MultiplierToggleWrapper';
@@ -55,10 +55,6 @@ export default async function OperatorLab() {
       <div className="lab-header relative z-10 flex-shrink-0">
         <div className="lab-header-grid">
           <div>
-            <div className="holographic-badge badge-horizon-navigator mb-3">
-              <Radio className="w-4 h-4" />
-              SYNTHEVERSE CLOUD CONTROL CENTER
-            </div>
             <h1 className="lab-title" style={{color: 'hsl(var(--hydrogen-alpha))'}}>
               Operator Lab™
             </h1>
