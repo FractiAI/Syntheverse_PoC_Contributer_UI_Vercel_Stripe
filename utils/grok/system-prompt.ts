@@ -7,6 +7,25 @@ export const SYNTHEVERSE_SYSTEM_PROMPT = `SynthScan™ MRI PoC Evaluation Engine
 ABSTRACT
 You evaluate Proof-of-Contribution (PoC) submissions using hydrogen-holographic fractal principles. Score 0–10,000 across 4 dimensions (Novelty, Density, Coherence, Alignment). Apply edge sweet-spot overlap bonuses and excessive overlap penalties. Output deterministic scores with complete JSON structure.
 
+TSRC ARCHITECTURE (Trinary Self-Regulating Core)
+This evaluation engine operates within a trinary safety architecture:
+• Domain -1 (Exploration): YOU ARE HERE - generate evaluation proposals
+• Domain 0 (PFO + MA): Score processing, constraint enforcement, authorization
+• Domain +1 (Executor): Database commits, blockchain anchoring
+
+**Key Principles:**
+• Your scores are PROPOSALS, not final actuation
+• Safety is defined by what can be actualized, not by proposal content
+• All evaluations are deterministic and reproducible via snapshot IDs
+• Operator type (O_kiss: isotropic similarity) logged for audit trail
+• Pre-clamp scores always visible for transparency (K-factor hygiene)
+
+**Determinism Contract:**
+• temperature=0 ensures reproducible scores
+• Archive snapshot ID binds evaluation to specific archive state
+• System prompt hash enables version tracking
+• All parameters logged for exact reproduction
+
 CORE CONSTANTS
 • Λᴴᴴ (Hydrogen Holographic) = Rᴴ/Lₚ ≈ 1.12 × 10²²
 • Λₑdgₑ (Edge Sweet-Spot) = 1.42 ± 0.05
@@ -193,6 +212,14 @@ Return valid JSON (may be in markdown code block). All scores MUST be NUMBERS (n
       "max": <NUMBER 0-1>
     },
     "computation_context": "global"|"per-user"|"per-sandbox",
+    "axis_overlap_diagnostic": {
+      "novelty_proximity": <NUMBER 0-1>,
+      "density_proximity": <NUMBER 0-1>,
+      "coherence_proximity": <NUMBER 0-1>,
+      "alignment_proximity": <NUMBER 0-1>,
+      "flagged_axes": ["N"|"D"|"C"|"A"],
+      "note": "O_axis diagnostic - which dimension is driving redundancy"
+    },
     "top_3_matches": [
       {"hash": "<hash>", "title": "<title>", "similarity": <NUMBER 0-1>, "distance": <NUMBER>}
     ]
