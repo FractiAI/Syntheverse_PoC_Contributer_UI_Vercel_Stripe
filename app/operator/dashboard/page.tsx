@@ -13,7 +13,7 @@ import { StatusPanel } from '@/components/StatusPanel';
 import { FrontierModule } from '@/components/FrontierModule';
 import { ActivityAnalytics } from '@/components/activity/ActivityAnalytics';
 import { SandboxNavigator } from '@/components/SandboxNavigator';
-import { SynthChatNavigator } from "@/components/WorkChat";
+import { WorkChatNavigator } from "@/components/WorkChatNavigator";
 import { BroadcastArchiveNavigator } from '@/components/BroadcastArchiveNavigator';
 import CockpitHeader from '@/components/CockpitHeader';
 import { QuickActionsPanel } from '@/components/QuickActionsPanel';

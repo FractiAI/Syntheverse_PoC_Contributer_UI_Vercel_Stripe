@@ -21,7 +21,7 @@ import {
 import { CreatorArchiveManagement } from './CreatorArchiveManagement';
 import { CreatorUserManagement } from './CreatorUserManagement';
 import { CreatorAuditLog } from './CreatorAuditLog';
-import { SynthChat } from '@/components/SynthChat';
+import { WorkChat } from '@/components/WorkChat';
 import { BlogPostCreator } from '@/components/BlogPostCreator';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -139,7 +139,7 @@ export function CreatorCockpitNavigation() {
               SYNTHCHAT - COLLABORATIVE SANDBOX CHAT
             </div>
             <div className="cockpit-panel bg-[var(--cockpit-carbon)] p-0 overflow-hidden">
-              <SynthChat embedded={true} />
+              <WorkChat embedded={true} />
             </div>
           </div>
         )}

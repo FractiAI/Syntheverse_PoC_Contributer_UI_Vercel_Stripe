@@ -9,7 +9,7 @@ import { ReactorCore } from '@/components/ReactorCore';
 import { OperatorBroadcastBanner } from '@/components/OperatorBroadcastBanner';
 import { getAuthenticatedUserWithRole } from '@/utils/auth/permissions';
 import { SandboxNavigator } from '@/components/SandboxNavigator';
-import { SynthChatNavigator } from "@/components/WorkChat";
+import { WorkChatNavigator } from "@/components/WorkChatNavigator";
 import { CloudChannel } from '@/components/CloudChannel';
 import { QuickActionsPanel } from '@/components/QuickActionsPanel';
 import { ChevronDown } from 'lucide-react';
@@ -98,7 +98,7 @@ export default async function Dashboard() {
                 </div>
               </PersistentDetails>
 
-              {/* SynthChat Navigator */}
+              {/* WorkChat Navigator */}
               <PersistentDetails storageKey="synthchat-navigator" defaultOpen={true} className="cockpit-panel">
                 <summary className="cursor-pointer select-none list-none p-3 border-b border-[var(--keyline-primary)]">
                   <div className="flex items-center justify-between">
