@@ -1,5 +1,8 @@
 -- Fix RLS policies for social-media-images storage bucket
 -- Allows authenticated users to upload, view, update, and delete their own images
+--
+-- IMPORTANT: owner column in storage.objects is UUID type, so we compare
+-- auth.uid() directly without casting to text (auth.uid() returns UUID)
 
 -- First, ensure the bucket exists and is public
 INSERT INTO storage.buckets (id, name, public)
@@ -37,11 +40,11 @@ FOR UPDATE
 TO authenticated
 USING (
   bucket_id = 'social-media-images' AND
-  auth.uid()::text = owner
+  auth.uid() = owner
 )
 WITH CHECK (
   bucket_id = 'social-media-images' AND
-  auth.uid()::text = owner
+  auth.uid() = owner
 );
 
 -- Policy 4: Allow users to delete their own uploaded images
@@ -51,6 +54,6 @@ FOR DELETE
 TO authenticated
 USING (
   bucket_id = 'social-media-images' AND
-  auth.uid()::text = owner
+  auth.uid() = owner
 );
 

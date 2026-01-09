@@ -71,11 +71,11 @@ FOR UPDATE
 TO authenticated
 USING (
   bucket_id = 'social-media-images' AND
-  auth.uid()::text = owner
+  auth.uid() = owner
 )
 WITH CHECK (
   bucket_id = 'social-media-images' AND
-  auth.uid()::text = owner
+  auth.uid() = owner
 );
 
 -- Policy 4: Allow users to delete their own uploaded images
@@ -85,7 +85,7 @@ FOR DELETE
 TO authenticated
 USING (
   bucket_id = 'social-media-images' AND
-  auth.uid()::text = owner
+  auth.uid() = owner
 );
 ```
 
