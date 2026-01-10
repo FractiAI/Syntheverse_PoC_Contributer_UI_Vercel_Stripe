@@ -1,4 +1,4 @@
-import { integer, pgTable, text, timestamp, jsonb, boolean, numeric } from 'drizzle-orm/pg-core';
+import { integer, pgTable, text, timestamp, jsonb, boolean, numeric, bigserial, uuid, serial } from 'drizzle-orm/pg-core';
 
 export const usersTable = pgTable('users_table', {
   id: text('id').primaryKey(),
@@ -514,3 +514,249 @@ export const scoringConfigTable = pgTable('scoring_config', {
 
 export type InsertScoringConfig = typeof scoringConfigTable.$inferInsert;
 export type SelectScoringConfig = typeof scoringConfigTable.$inferSelect;
+
+// ============================================================================
+// TSRC BøwTæCøre Gate Model Tables
+// ============================================================================
+
+// Layer -1: Proposal Envelopes (untrusted, no side-effects)
+export const proposalEnvelopesTable = pgTable('proposal_envelopes', {
+  id: bigserial('id', { mode: 'number' }).primaryKey(),
+  
+  // Core fields
+  proposal_id: uuid('proposal_id').unique().notNull().defaultRandom(),
+  timestamp: timestamp('timestamp').notNull().defaultNow(),
+  intent: text('intent').notNull(),
+  action_type: text('action_type').notNull(), // 'score_poc_proposal', 'create_payment_session', etc.
+  params: jsonb('params').notNull().default('{}'),
+  
+  // Trace
+  run_id: text('run_id').notNull(),
+  inputs_hash: text('inputs_hash').notNull(), // SHA-256 hex
+  
+  // Determinism contract
+  provider: text('provider').notNull(), // 'groq', 'openai', etc.
+  model: text('model').notNull(),
+  temperature: numeric('temperature', { precision: 5, scale: 3 }).notNull(),
+  prompt_hash: text('prompt_hash').notNull(), // SHA-256 hex
+  content_hash: text('content_hash'),
+  seed: integer('seed'),
+  score_config_id: text('score_config_id').notNull(),
+  archive_snapshot_id: text('archive_snapshot_id').notNull(),
+  mode_state: text('mode_state'), // 'growth', 'saturation', 'safe_mode', 'validation'
+  
+  // Score toggles
+  seed_on: boolean('seed_on').default(false),
+  edge_on: boolean('edge_on').default(false),
+  overlap_on: boolean('overlap_on').default(false),
+  
+  // Metadata (matches production types)
+  created_at: timestamp('created_at').notNull().defaultNow(),
+  user_id: text('user_id'), // TEXT to match users_table.id
+  submission_hash: text('submission_hash'), // TEXT to match contributions.submission_hash
+  
+  // Status tracking
+  status: text('status').notNull().default('pending'), // 'pending', 'projected', 'authorized', 'executed', 'vetoed', 'rejected'
+});
+
+export type InsertProposalEnvelope = typeof proposalEnvelopesTable.$inferInsert;
+export type SelectProposalEnvelope = typeof proposalEnvelopesTable.$inferSelect;
+
+// Layer 0a: Projected Commands (deterministic projector/veto)
+export const projectedCommandsTable = pgTable('projected_commands', {
+  id: bigserial('id', { mode: 'number' }).primaryKey(),
+  
+  // Core identifiers
+  projection_id: uuid('projection_id').unique().notNull().defaultRandom(),
+  proposal_id: uuid('proposal_id').notNull(), // FK to proposal_envelopes
+  
+  // Policy tracking
+  kman_hash: text('kman_hash').notNull(), // Capability manifest hash
+  bset_hash: text('bset_hash').notNull(), // Forbidden action set hash
+  policy_seq: integer('policy_seq').notNull(), // Monotonically increasing
+  
+  // Mode and closure
+  mode_id: text('mode_id').notNull(), // 'normal', 'safe_mode', 'validation'
+  closure_op: text('closure_op').notNull(), // 'axis', 'kiss', 'custom'
+  closure_d_def: text('closure_d_def').notNull(),
+  closure_d: integer('closure_d').notNull(),
+  
+  // Action
+  action_type: text('action_type').notNull(),
+  params: jsonb('params').notNull().default('{}'),
+  
+  // Risk and artifact classification
+  risk_tier: integer('risk_tier').notNull(), // 0, 1, 2, 3
+  artifact_sink_ref: text('artifact_sink_ref'),
+  artifact_class: text('artifact_class').notNull(), // 'data', 'control', 'na'
+  
+  // Checks and veto
+  checks_passed: text('checks_passed').array().default([]),
+  is_veto: boolean('is_veto').notNull().default(false),
+  veto_reason: text('veto_reason'),
+  
+  // Metadata
+  created_at: timestamp('created_at').notNull().defaultNow(),
+  projected_at: timestamp('projected_at').notNull().defaultNow(),
+  
+  // Status
+  status: text('status').notNull().default('pending'), // 'pending', 'authorized', 'executed', 'vetoed'
+});
+
+export type InsertProjectedCommand = typeof projectedCommandsTable.$inferInsert;
+export type SelectProjectedCommand = typeof projectedCommandsTable.$inferSelect;
+
+// Layer 0b: Authorizations (minimal authorizer with counters/leases/signatures)
+export const authorizationsTable = pgTable('authorizations', {
+  id: bigserial('id', { mode: 'number' }).primaryKey(),
+  
+  // Core identifiers
+  command_id: uuid('command_id').unique().notNull().defaultRandom(),
+  projection_id: uuid('projection_id').notNull(), // FK to projected_commands
+  
+  // Timing
+  issued_at: timestamp('issued_at').notNull().defaultNow(),
+  lease_id: uuid('lease_id').notNull(),
+  lease_valid_for_ms: integer('lease_valid_for_ms').notNull(),
+  expires_at: timestamp('expires_at').notNull(),
+  
+  // Anti-replay counter
+  cmd_counter: bigserial('cmd_counter', { mode: 'number' }).notNull(),
+  
+  // Policy tracking
+  kman_hash: text('kman_hash').notNull(),
+  bset_hash: text('bset_hash').notNull(),
+  policy_seq: integer('policy_seq').notNull(),
+  
+  // Mode and closure
+  mode_id: text('mode_id').notNull(),
+  closure_op: text('closure_op').notNull(),
+  closure_d_def: text('closure_d_def').notNull(),
+  closure_d: integer('closure_d').notNull(),
+  
+  // Action
+  action_type: text('action_type').notNull(),
+  params: jsonb('params').notNull().default('{}'),
+  
+  // Signature
+  sig_alg: text('sig_alg').notNull(), // 'hmac-sha256', 'ed25519'
+  sig_canonicalization: text('sig_canonicalization').notNull(), // 'jcs-rfc8785'
+  sig_key_id: text('sig_key_id').notNull(),
+  sig_payload_hash: text('sig_payload_hash').notNull(),
+  sig_b64: text('sig_b64').notNull(),
+  
+  // Status tracking
+  status: text('status').notNull().default('pending'), // 'pending', 'executed', 'expired', 'revoked'
+  executed_at: timestamp('executed_at'),
+  execution_result: jsonb('execution_result'),
+});
+
+export type InsertAuthorization = typeof authorizationsTable.$inferInsert;
+export type SelectAuthorization = typeof authorizationsTable.$inferSelect;
+
+// Command Counter Management (anti-replay)
+export const commandCountersTable = pgTable('command_counters', {
+  id: bigserial('id', { mode: 'number' }).primaryKey(),
+  
+  counter_scope: text('counter_scope').notNull(), // 'global', 'per_action_type', 'per_user'
+  scope_key: text('scope_key'), // NULL for global, action_type or user_id for scoped
+  
+  current_counter: bigserial('current_counter', { mode: 'number' }).notNull().default(0),
+  last_incremented_at: timestamp('last_incremented_at').notNull().defaultNow(),
+  
+  created_at: timestamp('created_at').notNull().defaultNow(),
+  updated_at: timestamp('updated_at').notNull().defaultNow(),
+});
+
+export type InsertCommandCounter = typeof commandCountersTable.$inferInsert;
+export type SelectCommandCounter = typeof commandCountersTable.$inferSelect;
+
+// Lease Management
+export const leasesTable = pgTable('leases', {
+  id: bigserial('id', { mode: 'number' }).primaryKey(),
+  
+  lease_id: uuid('lease_id').unique().notNull().defaultRandom(),
+  issued_at: timestamp('issued_at').notNull().defaultNow(),
+  valid_for_ms: integer('valid_for_ms').notNull(),
+  expires_at: timestamp('expires_at').notNull(),
+  
+  authorization_id: bigserial('authorization_id', { mode: 'number' }), // FK to authorizations
+  
+  status: text('status').notNull().default('active'), // 'active', 'expired', 'revoked'
+  revoked_at: timestamp('revoked_at'),
+  revoke_reason: text('revoke_reason'),
+  
+  created_at: timestamp('created_at').notNull().defaultNow(),
+});
+
+export type InsertLease = typeof leasesTable.$inferInsert;
+export type SelectLease = typeof leasesTable.$inferSelect;
+
+// Policy Versions (monotonic)
+export const policyVersionsTable = pgTable('policy_versions', {
+  id: bigserial('id', { mode: 'number' }).primaryKey(),
+  
+  policy_seq: integer('policy_seq').unique().notNull(),
+  kman_hash: text('kman_hash').notNull(),
+  bset_hash: text('bset_hash').notNull(),
+  
+  kman_content: jsonb('kman_content').notNull(), // Capability manifest
+  bset_content: jsonb('bset_content').notNull(), // Forbidden action set
+  
+  effective_at: timestamp('effective_at').notNull().defaultNow(),
+  superseded_at: timestamp('superseded_at'),
+  
+  created_by: text('created_by'),
+  justification: text('justification'),
+  
+  // Governance
+  requires_governance: boolean('requires_governance').default(false),
+  approved_by: text('approved_by').array().default([]),
+  approval_threshold: integer('approval_threshold'),
+  
+  created_at: timestamp('created_at').notNull().defaultNow(),
+});
+
+export type InsertPolicyVersion = typeof policyVersionsTable.$inferInsert;
+export type SelectPolicyVersion = typeof policyVersionsTable.$inferSelect;
+
+// Layer +1: Execution Audit Log (fail-closed executor records)
+export const executionAuditLogTable = pgTable('execution_audit_log', {
+  id: bigserial('id', { mode: 'number' }).primaryKey(),
+  
+  // References
+  command_id: uuid('command_id').notNull(), // FK to authorizations
+  authorization_id: bigserial('authorization_id', { mode: 'number' }).notNull(), // FK to authorizations
+  projection_id: uuid('projection_id').notNull(),
+  proposal_id: uuid('proposal_id').notNull(),
+  
+  // Execution details
+  executed_at: timestamp('executed_at').notNull().defaultNow(),
+  action_type: text('action_type').notNull(),
+  params: jsonb('params').notNull().default('{}'),
+  
+  // Result
+  success: boolean('success').notNull(),
+  result: jsonb('result'),
+  error_message: text('error_message'),
+  error_code: text('error_code'),
+  
+  // Side effects (what actually happened)
+  db_writes: jsonb('db_writes'), // Tables/rows affected
+  payment_created: jsonb('payment_created'), // Payment session details
+  blockchain_tx: jsonb('blockchain_tx'), // Transaction hash/details
+  
+  // Verification trace
+  counter_verified: boolean('counter_verified').notNull(),
+  lease_verified: boolean('lease_verified').notNull(),
+  policy_verified: boolean('policy_verified').notNull(),
+  signature_verified: boolean('signature_verified').notNull(),
+  
+  // Duration
+  duration_ms: integer('duration_ms'),
+  
+  created_at: timestamp('created_at').notNull().defaultNow(),
+});
+
+export type InsertExecutionAuditLog = typeof executionAuditLogTable.$inferInsert;
+export type SelectExecutionAuditLog = typeof executionAuditLogTable.$inferSelect;
