@@ -2910,7 +2910,7 @@ drawFractalTree(400, 600, 120, -Math.PI/2, 10);  // Start from bottom-center`}
     ),
     keyTakeaways: [
       'Fractal architecture: same patterns at component/service/system scales',
-      'Holographic redundancy: system state recoverable from any subsystem's interface',
+      'Holographic redundancy: system state recoverable from any subsystem interface',
       'Start monolith, extract services at natural coherence boundaries',
       '4-layer reality stack scales from prototype to production seamlessly',
     ],
