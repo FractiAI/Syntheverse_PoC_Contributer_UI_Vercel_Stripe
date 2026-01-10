@@ -5,7 +5,162 @@
  * TSRC is a trinary safety architecture where exploration can generate any proposals,
  * but external actuation can only happen through a constrained 0-axis and minimal authorizer.
  * Safety is defined by unreachability of a forbidden actuation set, not by proposal content.
+ * 
+ * INTEGRATED WITH BøwTæCøre GATE MODEL:
+ * -1 = Untrusted proposal generation (no side-effects)
+ * 0a = Deterministic projector / veto (PFO)
+ * 0b = Minimal authorizer (counters/leases/signatures)
+ * +1 = Executor (DB writes, payments, chain tx; fail-closed)
  */
+
+// ============================================================================
+// BøwTæCøre GATE MODEL TYPES (Bridge Pack Integration)
+// ============================================================================
+
+export type UUID = string;
+export type Hex = string;
+
+export type ClockAssumption =
+  | "wallclock_rfc3339_bounded_skew"
+  | "executor_monotonic"
+  | "none";
+
+export type RebootSafeAntiReplay = "persistent_counter" | "epoch_keys";
+export type CounterScope = "global" | "per_action_type";
+
+export type RiskTier = 0 | 1 | 2 | 3;
+
+export type ArtifactClass = "data" | "control" | "na";
+export type SinkClass = "data_only" | "control_consumed";
+
+export interface ScoreToggles {
+  seed_on: boolean;
+  edge_on: boolean;
+  overlap_on: boolean;
+}
+
+/**
+ * Layer -1: Untrusted proposal (no side-effects)
+ * Output from evaluation engine before any authorization
+ */
+export interface ProposalEnvelope {
+  proposal_id: UUID;
+  timestamp: string; // RFC3339
+  intent: string;
+  action_type: string; // e.g. "score_poc_proposal"
+  params: Record<string, unknown>;
+  trace: {
+    run_id: string;
+    inputs_hash: Hex;
+    determinism: BowTaeCoreContract;
+  };
+}
+
+/**
+ * Layer 0a: Deterministic projection with veto capability
+ * Normalizes, classifies, and can veto proposals
+ */
+export interface ProjectedCommand {
+  projection_id: UUID;
+  proposal_id: UUID;
+
+  kman_hash: Hex; // Capability manifest hash
+  bset_hash: Hex; // Forbidden action set hash
+  policy_seq: number; // Monotonically increasing policy version
+
+  mode_id: string; // "normal" | "safe_mode" | "validation"
+  closure_active: { op: "axis" | "kiss" | "custom"; d_def: string; d: number };
+
+  action_type: string;
+  params: Record<string, unknown>;
+
+  risk_tier: RiskTier;
+
+  artifact_sink_ref?: string;
+  artifact_class: ArtifactClass;
+
+  checks_passed: string[];
+
+  veto: { is_veto: boolean; reason: string };
+}
+
+/**
+ * Layer 0b: Authorization with signature/counter/lease
+ * Mints credentials for executor layer
+ */
+export interface Authorization {
+  command_id: UUID;
+  projection_id: UUID;
+
+  issued_at: string; // RFC3339
+  lease_id: UUID;
+  lease_valid_for_ms: number;
+
+  cmd_counter: number; // Anti-replay counter
+
+  kman_hash: Hex;
+  bset_hash: Hex;
+  policy_seq: number;
+
+  mode_id: string;
+  closure_active: { op: "axis" | "kiss" | "custom"; d_def: string; d: number };
+
+  action_type: string;
+  params: Record<string, unknown>;
+
+  signature: {
+    alg: "hmac-sha256" | "ed25519";
+    canonicalization: "jcs-rfc8785";
+    key_id: string;
+    payload_hash: Hex;
+    sig_b64: string;
+  };
+}
+
+/**
+ * BøwTæCøre determinism contract
+ * Extends the existing DeterminismContract with gate model fields
+ */
+export interface BowTaeCoreContract {
+  provider: "groq" | "openai" | "other" | string;
+  model: string;
+  temperature: number;
+  prompt_hash: Hex;
+  content_hash?: Hex;
+  seed?: number | null;
+  score_config_id: string;
+  archive_snapshot_id: string;
+  mode_state?: "growth" | "saturation" | "safe_mode" | "validation" | string;
+  toggles?: ScoreToggles;
+}
+
+/**
+ * Complete score trace including BøwTæCøre metadata
+ */
+export interface ScoreTrace {
+  dims: { N: number; D: number; C: number; A: number };
+  composite: number;
+
+  overlap_percent: number;
+  penalty_percent_applied: number;
+  bonus_multiplier_applied: number;
+
+  seed_multiplier_applied: number;
+  edge_multiplier_applied: number;
+
+  final_preclamp: number;
+  final_clamped: number;
+  clamped_reason?: "max_score" | "min_score" | null;
+
+  score_config_id: string;
+  archive_snapshot_id: string;
+
+  toggles: ScoreToggles;
+
+  determinism: BowTaeCoreContract;
+
+  formula_steps: string[]; // Human-readable computation steps
+}
 
 // ============================================================================
 // ARCHIVE SNAPSHOT SYSTEM
