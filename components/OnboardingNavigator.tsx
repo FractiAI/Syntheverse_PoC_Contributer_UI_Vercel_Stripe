@@ -6327,15 +6327,12 @@ export function OnboardingNavigator() {
                   )}
                 </div>
                 <div
-                  className="text-[var(--academy-accent-gold)] mb-2"
+                  className="text-[var(--academy-accent-gold)] mb-3"
                   style={{ opacity: idx === currentModule ? 1 : 0.6 }}
                 >
                   {module.icon}
                 </div>
-                <div className="academy-module-title text-xs mb-1">
-                  {module.label || `MODULE ${module.number || idx + 1}`}
-                </div>
-                <div className="academy-text text-xs leading-tight">
+                <div className="academy-module-title text-xs leading-tight">
                   {module.title}
                 </div>
                 {module.duration && (
