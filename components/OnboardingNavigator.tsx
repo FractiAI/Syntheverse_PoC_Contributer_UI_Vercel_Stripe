@@ -75,6 +75,7 @@ import { WingsTrackSelector, WingTrack } from './WingsTrackSelector';
 import { contributorCopperModules } from './training/ContributorCopperModules';
 import { operatorSilverModules } from './training/OperatorSilverModules';
 import { creatorGoldModules } from './training/CreatorGoldModules';
+import { OnboardingAIManager } from './OnboardingAIManager';
 
 export function OnboardingNavigator() {
   const [currentModule, setCurrentModule] = useState(0);
@@ -6372,6 +6373,15 @@ export function OnboardingNavigator() {
           <div className="min-h-[400px]">{modules[currentModule].content}</div>
         </div>
 
+        {/* AI Instructor - Floating Button */}
+        {wingTrack && (
+          <OnboardingAIManager
+            moduleTitle={modules[currentModule].title}
+            moduleNumber={modules[currentModule].number || currentModule + 1}
+            wingTrack={wingTrack}
+          />
+        )}
+
         {/* Navigation Controls */}
         <div className="flex items-center justify-between">
           <button onClick={prevModule} className="academy-button flex items-center gap-2">
@@ -6444,6 +6454,15 @@ export function OnboardingNavigator() {
               </div>
               <div className="text-lg leading-relaxed">{modules[currentModule].content}</div>
             </div>
+
+            {/* AI Instructor - In Full View */}
+            {wingTrack && (
+              <OnboardingAIManager
+                moduleTitle={modules[currentModule].title}
+                moduleNumber={modules[currentModule].number || currentModule + 1}
+                wingTrack={wingTrack}
+              />
+            )}
 
             {/* Full View Navigation */}
             <div className="flex items-center justify-between mt-6 sticky bottom-4 academy-panel p-4">
