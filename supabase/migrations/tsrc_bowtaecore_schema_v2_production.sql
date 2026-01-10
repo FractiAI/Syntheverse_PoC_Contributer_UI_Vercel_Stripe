@@ -1,6 +1,7 @@
 -- ============================================================================
--- TSRC BøwTæCøre Gate Model Schema
+-- TSRC BøwTæCøre Gate Model Schema - PRODUCTION VERSION
 -- ============================================================================
+-- FIXED FOR PRODUCTION: Type mismatches resolved, FK constraints compatible
 -- Layer -1: Proposal Envelopes (untrusted, no side-effects)
 -- Layer 0a: Projected Commands (deterministic projector/veto)
 -- Layer 0b: Authorizations (minimal authorizer with counters/leases)
@@ -15,7 +16,7 @@ CREATE TABLE IF NOT EXISTS proposal_envelopes (
   id BIGSERIAL PRIMARY KEY,
   
   -- Core fields
-  proposal_id UUID UNIQUE NOT NULL,
+  proposal_id UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),
   timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   intent TEXT NOT NULL,
   action_type TEXT NOT NULL,
@@ -23,7 +24,7 @@ CREATE TABLE IF NOT EXISTS proposal_envelopes (
   
   -- Trace
   run_id TEXT NOT NULL,
-  inputs_hash TEXT NOT NULL, -- SHA-256 hex
+  inputs_hash TEXT NOT NULL, -- SHA-256 hex (64 chars)
   
   -- Determinism contract
   provider TEXT NOT NULL, -- 'groq', 'openai', etc.
@@ -41,25 +42,28 @@ CREATE TABLE IF NOT EXISTS proposal_envelopes (
   edge_on BOOLEAN DEFAULT FALSE,
   overlap_on BOOLEAN DEFAULT FALSE,
   
-  -- Metadata
+  -- Metadata (FIXED: Changed types to match production schema)
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  user_id UUID, -- References auth.users(id) - FK constraint added separately if auth exists
-  submission_id UUID, -- References submissions(id) - FK constraint added separately if submissions exists
+  user_id TEXT, -- Changed from UUID to TEXT to match users_table.id
+  submission_hash TEXT, -- Changed from submission_id UUID, renamed to match contributions.submission_hash
   
   -- Status tracking
   status TEXT NOT NULL DEFAULT 'pending', -- 'pending', 'projected', 'authorized', 'executed', 'vetoed', 'rejected'
   
-  -- Indexes
-  CONSTRAINT proposal_envelopes_action_type_check CHECK (action_type IN ('score_poc_proposal', 'create_payment_session', 'register_blockchain', 'update_snapshot', 'other'))
+  -- Constraints
+  CONSTRAINT proposal_envelopes_action_type_check CHECK (action_type IN ('score_poc_proposal', 'create_payment_session', 'register_blockchain', 'update_snapshot', 'other')),
+  CONSTRAINT proposal_envelopes_mode_state_check CHECK (mode_state IS NULL OR mode_state IN ('growth', 'saturation', 'safe_mode', 'validation')),
+  CONSTRAINT proposal_envelopes_status_check CHECK (status IN ('pending', 'projected', 'authorized', 'executed', 'vetoed', 'rejected'))
 );
 
 CREATE INDEX idx_proposal_envelopes_proposal_id ON proposal_envelopes(proposal_id);
 CREATE INDEX idx_proposal_envelopes_timestamp ON proposal_envelopes(timestamp DESC);
 CREATE INDEX idx_proposal_envelopes_action_type ON proposal_envelopes(action_type);
 CREATE INDEX idx_proposal_envelopes_status ON proposal_envelopes(status);
-CREATE INDEX idx_proposal_envelopes_user_id ON proposal_envelopes(user_id);
-CREATE INDEX idx_proposal_envelopes_submission_id ON proposal_envelopes(submission_id);
+CREATE INDEX idx_proposal_envelopes_user_id ON proposal_envelopes(user_id) WHERE user_id IS NOT NULL;
+CREATE INDEX idx_proposal_envelopes_submission_hash ON proposal_envelopes(submission_hash) WHERE submission_hash IS NOT NULL;
 CREATE INDEX idx_proposal_envelopes_inputs_hash ON proposal_envelopes(inputs_hash);
+CREATE INDEX idx_proposal_envelopes_created_at ON proposal_envelopes(created_at DESC);
 
 -- ============================================================================
 -- LAYER 0a: PROJECTED COMMANDS
@@ -69,7 +73,7 @@ CREATE TABLE IF NOT EXISTS projected_commands (
   id BIGSERIAL PRIMARY KEY,
   
   -- Core identifiers
-  projection_id UUID UNIQUE NOT NULL,
+  projection_id UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),
   proposal_id UUID NOT NULL REFERENCES proposal_envelopes(proposal_id) ON DELETE CASCADE,
   
   -- Policy tracking
@@ -108,7 +112,8 @@ CREATE TABLE IF NOT EXISTS projected_commands (
   CONSTRAINT projected_commands_risk_tier_check CHECK (risk_tier IN (0, 1, 2, 3)),
   CONSTRAINT projected_commands_artifact_class_check CHECK (artifact_class IN ('data', 'control', 'na')),
   CONSTRAINT projected_commands_closure_op_check CHECK (closure_op IN ('axis', 'kiss', 'custom')),
-  CONSTRAINT projected_commands_veto_check CHECK ((is_veto = TRUE AND veto_reason IS NOT NULL) OR (is_veto = FALSE))
+  CONSTRAINT projected_commands_veto_check CHECK ((is_veto = TRUE AND veto_reason IS NOT NULL) OR (is_veto = FALSE)),
+  CONSTRAINT projected_commands_status_check CHECK (status IN ('pending', 'authorized', 'executed', 'vetoed'))
 );
 
 CREATE INDEX idx_projected_commands_projection_id ON projected_commands(projection_id);
@@ -127,7 +132,7 @@ CREATE TABLE IF NOT EXISTS authorizations (
   id BIGSERIAL PRIMARY KEY,
   
   -- Core identifiers
-  command_id UUID UNIQUE NOT NULL,
+  command_id UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),
   projection_id UUID NOT NULL REFERENCES projected_commands(projection_id) ON DELETE CASCADE,
   
   -- Timing
@@ -211,7 +216,7 @@ CREATE INDEX idx_command_counters_scope ON command_counters(counter_scope, scope
 CREATE TABLE IF NOT EXISTS leases (
   id BIGSERIAL PRIMARY KEY,
   
-  lease_id UUID UNIQUE NOT NULL,
+  lease_id UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),
   issued_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   valid_for_ms INTEGER NOT NULL,
   expires_at TIMESTAMPTZ NOT NULL,
@@ -230,7 +235,7 @@ CREATE TABLE IF NOT EXISTS leases (
 CREATE INDEX idx_leases_lease_id ON leases(lease_id);
 CREATE INDEX idx_leases_expires_at ON leases(expires_at);
 CREATE INDEX idx_leases_status ON leases(status);
-CREATE INDEX idx_leases_authorization_id ON leases(authorization_id);
+CREATE INDEX idx_leases_authorization_id ON leases(authorization_id) WHERE authorization_id IS NOT NULL;
 
 -- Policy Versions (monotonic)
 CREATE TABLE IF NOT EXISTS policy_versions (
@@ -310,6 +315,19 @@ CREATE INDEX idx_execution_audit_log_authorization_id ON execution_audit_log(aut
 CREATE INDEX idx_execution_audit_log_executed_at ON execution_audit_log(executed_at DESC);
 CREATE INDEX idx_execution_audit_log_success ON execution_audit_log(success);
 CREATE INDEX idx_execution_audit_log_action_type ON execution_audit_log(action_type);
+
+-- ============================================================================
+-- OPTIONAL: Add Foreign Key Constraints (if tables exist)
+-- ============================================================================
+-- Run these AFTER verifying users_table and contributions tables exist:
+
+-- ALTER TABLE proposal_envelopes 
+--   ADD CONSTRAINT fk_proposal_envelopes_user_id 
+--   FOREIGN KEY (user_id) REFERENCES users_table(id) ON DELETE SET NULL;
+
+-- ALTER TABLE proposal_envelopes 
+--   ADD CONSTRAINT fk_proposal_envelopes_submission_hash 
+--   FOREIGN KEY (submission_hash) REFERENCES contributions(submission_hash) ON DELETE CASCADE;
 
 -- ============================================================================
 -- FUNCTIONS
@@ -411,6 +429,8 @@ SELECT
   pe.action_type,
   pe.params AS proposal_params,
   pe.status AS proposal_status,
+  pe.user_id,
+  pe.submission_hash,
   
   pc.projection_id,
   pc.projected_at,
@@ -450,7 +470,8 @@ SELECT
   l.status AS lease_status,
   pc.action_type,
   pc.risk_tier,
-  pe.user_id
+  pe.user_id,
+  pe.submission_hash
 FROM authorizations a
 JOIN leases l ON a.lease_id = l.lease_id
 JOIN projected_commands pc ON a.projection_id = pc.projection_id
@@ -471,11 +492,31 @@ SELECT
   pe.proposal_id,
   pe.action_type,
   pe.user_id,
-  pe.submission_id
+  pe.submission_hash
 FROM projected_commands pc
 JOIN proposal_envelopes pe ON pc.proposal_id = pe.proposal_id
 WHERE pc.is_veto = TRUE
 ORDER BY pc.projected_at DESC;
+
+-- View: TSRC Health Check
+CREATE OR REPLACE VIEW tsrc_health_check AS
+SELECT 
+  'proposal_envelopes' AS table_name,
+  COUNT(*) AS total_rows,
+  COUNT(*) FILTER (WHERE status = 'pending') AS pending,
+  COUNT(*) FILTER (WHERE status = 'executed') AS executed,
+  COUNT(*) FILTER (WHERE status = 'vetoed') AS vetoed,
+  MAX(created_at) AS last_activity
+FROM proposal_envelopes
+UNION ALL
+SELECT 
+  'authorizations' AS table_name,
+  COUNT(*) AS total_rows,
+  COUNT(*) FILTER (WHERE status = 'pending') AS pending,
+  COUNT(*) FILTER (WHERE status = 'executed') AS executed,
+  COUNT(*) FILTER (WHERE status = 'expired') AS expired,
+  MAX(issued_at) AS last_activity
+FROM authorizations;
 
 -- ============================================================================
 -- INITIAL DATA
@@ -527,19 +568,6 @@ VALUES (
 ON CONFLICT (policy_seq) DO NOTHING;
 
 -- ============================================================================
--- OPTIONAL: Add Foreign Key Constraints (if submissions table exists)
--- ============================================================================
--- Uncomment these if you already have submissions and auth tables:
-
--- ALTER TABLE proposal_envelopes 
---   ADD CONSTRAINT fk_proposal_envelopes_user_id 
---   FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE SET NULL;
-
--- ALTER TABLE proposal_envelopes 
---   ADD CONSTRAINT fk_proposal_envelopes_submission_id 
---   FOREIGN KEY (submission_id) REFERENCES submissions(id) ON DELETE CASCADE;
-
--- ============================================================================
 -- PERMISSIONS (Supabase RLS)
 -- ============================================================================
 
@@ -552,38 +580,36 @@ ALTER TABLE leases ENABLE ROW LEVEL SECURITY;
 ALTER TABLE policy_versions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE execution_audit_log ENABLE ROW LEVEL SECURITY;
 
--- Policy: Users can read their own proposals (if auth is set up)
-CREATE POLICY "Users can read their own proposals"
-ON proposal_envelopes FOR SELECT
+-- Policy: Service role full access (recommended for MVP)
+CREATE POLICY "Service role full access to proposals"
+ON proposal_envelopes FOR ALL
 USING (
-  auth.role() = 'service_role' OR 
-  (auth.uid() IS NOT NULL AND auth.uid() = user_id)
+  current_setting('request.jwt.claims', true)::json->>'role' = 'service_role'
 );
 
--- Policy: Service role can insert proposals (Layer -1)
-CREATE POLICY "Service role can insert proposals"
-ON proposal_envelopes FOR INSERT
-WITH CHECK (auth.role() = 'service_role');
-
--- Policy: Service role can read/write all projections (Layer 0a)
-CREATE POLICY "Service role can manage projections"
+CREATE POLICY "Service role full access to projections"
 ON projected_commands FOR ALL
-USING (auth.role() = 'service_role');
+USING (
+  current_setting('request.jwt.claims', true)::json->>'role' = 'service_role'
+);
 
--- Policy: Service role can read/write all authorizations (Layer 0b)
-CREATE POLICY "Service role can manage authorizations"
+CREATE POLICY "Service role full access to authorizations"
 ON authorizations FOR ALL
-USING (auth.role() = 'service_role');
+USING (
+  current_setting('request.jwt.claims', true)::json->>'role' = 'service_role'
+);
 
--- Policy: Service role can read/write counters
-CREATE POLICY "Service role can manage counters"
+CREATE POLICY "Service role full access to counters"
 ON command_counters FOR ALL
-USING (auth.role() = 'service_role');
+USING (
+  current_setting('request.jwt.claims', true)::json->>'role' = 'service_role'
+);
 
--- Policy: Service role can read/write leases
-CREATE POLICY "Service role can manage leases"
+CREATE POLICY "Service role full access to leases"
 ON leases FOR ALL
-USING (auth.role() = 'service_role');
+USING (
+  current_setting('request.jwt.claims', true)::json->>'role' = 'service_role'
+);
 
 -- Policy: Everyone can read policy versions
 CREATE POLICY "Everyone can read policy versions"
@@ -593,21 +619,22 @@ USING (true);
 -- Policy: Only service role can create policy versions
 CREATE POLICY "Service role can create policy versions"
 ON policy_versions FOR INSERT
-WITH CHECK (auth.role() = 'service_role');
+WITH CHECK (
+  current_setting('request.jwt.claims', true)::json->>'role' = 'service_role'
+);
 
--- Policy: Service role can write audit log (Layer +1)
+-- Policy: Service role can write audit log
 CREATE POLICY "Service role can write audit log"
 ON execution_audit_log FOR INSERT
-WITH CHECK (auth.role() = 'service_role');
+WITH CHECK (
+  current_setting('request.jwt.claims', true)::json->>'role' = 'service_role'
+);
 
--- Policy: Users can read audit log for their commands (if auth is set up)
-CREATE POLICY "Users can read their audit log"
+-- Policy: Service role can read audit log
+CREATE POLICY "Service role can read audit log"
 ON execution_audit_log FOR SELECT
 USING (
-  auth.role() = 'service_role' OR
-  (auth.uid() IS NOT NULL AND proposal_id IN (
-    SELECT proposal_id FROM proposal_envelopes WHERE user_id = auth.uid()
-  ))
+  current_setting('request.jwt.claims', true)::json->>'role' = 'service_role'
 );
 
 -- ============================================================================
@@ -629,8 +656,9 @@ COMMENT ON FUNCTION expire_old_leases IS 'Batch expire leases past their expirat
 COMMENT ON VIEW pipeline_trace IS 'Complete audit trail from proposal → projection → authorization → execution';
 COMMENT ON VIEW active_authorizations IS 'Currently valid authorizations (not expired, not executed)';
 COMMENT ON VIEW veto_log IS 'All vetoed projections with reasons';
+COMMENT ON VIEW tsrc_health_check IS 'System health monitoring view';
 
 -- ============================================================================
--- END OF SCHEMA
+-- END OF SCHEMA - PRODUCTION VERSION
 -- ============================================================================
 

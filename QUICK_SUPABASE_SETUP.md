@@ -11,7 +11,9 @@
 
 ## Step 2: Copy This Entire SQL Schema
 
-👉 **File to copy**: `supabase/migrations/tsrc_bowtaecore_schema.sql`
+👉 **PRODUCTION FILE**: `supabase/migrations/tsrc_bowtaecore_schema_v2_production.sql`
+
+⚠️ **IMPORTANT**: Use the v2_production file, NOT the original schema file. The v2 version has been fixed to match your existing production database types.
 
 Or click below to expand and copy:
 
@@ -20,10 +22,13 @@ Or click below to expand and copy:
 
 ```sql
 -- Copy the entire contents of:
--- supabase/migrations/tsrc_bowtaecore_schema.sql
+-- supabase/migrations/tsrc_bowtaecore_schema_v2_production.sql
 --
--- It's too large to paste here, but the file is in your repo at:
--- supabase/migrations/tsrc_bowtaecore_schema.sql
+-- FIXED FOR PRODUCTION:
+-- ✅ user_id changed from UUID to TEXT (matches users_table.id)
+-- ✅ submission_id changed to submission_hash TEXT (matches contributions.submission_hash)
+-- ✅ RLS policies updated for service role access
+-- ✅ Foreign key constraints made optional (add separately if needed)
 ```
 
 </details>
@@ -141,8 +146,9 @@ After schema is set up:
 
 ## Full Documentation
 
+- **Production Review**: `docs/TSRC_SCHEMA_PRODUCTION_REVIEW.md` ⭐ **READ THIS FIRST**
 - **Complete Setup Guide**: `docs/SUPABASE_TSRC_SETUP.md`
-- **Schema File**: `supabase/migrations/tsrc_bowtaecore_schema.sql`
+- **Production Schema**: `supabase/migrations/tsrc_bowtaecore_schema_v2_production.sql` ✅ **USE THIS**
 - **Integration Guide**: `docs/TSRC_BOWTAECORE_INTEGRATION.md`
 - **Type Definitions**: `utils/tsrc/types.ts`
 
