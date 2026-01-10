@@ -1113,7 +1113,11 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                                 Final PoC Score
                               </span>
                               <span className="text-lg font-bold">
-                                {selectedSubmission.pod_score?.toLocaleString() || 'N/A'} / 10,000
+                                {/* MAREK/SIMBA FIX: Read from score_trace.final_score (authoritative) first */}
+                                {(selectedSubmission.metadata?.score_trace?.final_score ?? 
+                                  selectedSubmission.metadata?.pod_score ?? 
+                                  selectedSubmission.pod_score ?? 
+                                  0).toLocaleString()} / 10,000
                               </span>
                             </div>
                           </div>

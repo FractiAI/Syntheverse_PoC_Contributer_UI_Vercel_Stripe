@@ -822,7 +822,11 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
                             <div className="flex items-center justify-between">
                               <span className="cockpit-text font-medium">Final PoC Score</span>
                               <span className="cockpit-number cockpit-number-medium">
-                                {selectedSubmission.pod_score?.toLocaleString() || 'N/A'} / 10,000
+                                {/* MAREK/SIMBA FIX: Read from score_trace.final_score (authoritative) first */}
+                                {(selectedSubmission.metadata?.score_trace?.final_score ?? 
+                                  selectedSubmission.metadata?.pod_score ?? 
+                                  selectedSubmission.pod_score ?? 
+                                  0).toLocaleString()} / 10,000
                               </span>
                             </div>
                           </div>

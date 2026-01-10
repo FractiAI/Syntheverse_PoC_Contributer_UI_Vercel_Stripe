@@ -1,5 +1,7 @@
 
-e**: Critical Scoring Fixes After First Round Testing
+# Response to Marek & Simba: Scoring Inconsistency Fixes
+
+**: Critical Scoring Fixes After First Round Testing
 
 ---
 
