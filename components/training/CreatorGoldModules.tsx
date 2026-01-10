@@ -13,7 +13,7 @@ export const creatorGoldModules = [
     title: 'Welcome to Reality Worldbuilding',
     subtitle: 'From Operator to Creator',
     icon: <Palette className="h-6 w-6" />,
-    duration: '25 min',
+    duration: '35 min',
     content: (
       <div className="space-y-6">
         {/* Hero Opening */}
@@ -240,7 +240,7 @@ export const creatorGoldModules = [
           
           <div className="space-y-2 text-sm">
             {[
-              { num: 1, title: 'Welcome to Reality Worldbuilding', duration: '25 min', color: 'purple' },
+              { num: 1, title: 'Welcome to Reality Worldbuilding', duration: '35 min', color: 'purple' },
               { num: 2, title: 'Holographic Hydrogen Fractal Principles', duration: '45 min', color: 'blue' },
               { num: 3, title: 'Designing Reality Worlds', duration: '50 min', color: 'green' },
               { num: 4, title: 'Fractal Coherence Architecture', duration: '40 min', color: 'amber' },

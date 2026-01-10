@@ -215,6 +215,120 @@ export const operatorSilverModules = [
           </div>
         </div>
 
+        {/* Deep Dive: Distributed HHF-AI Infrastructure */}
+        <div className="cloud-card p-6 mb-6">
+          <h4 className="text-xl font-bold mb-4 flex items-center gap-3">
+            <span className="text-2xl">🏗️</span>
+            Deep Dive: The Distributed Holographic Infrastructure
+          </h4>
+
+          <p className="mb-4 leading-relaxed">
+            As an operator, you're not just managing servers—you're maintaining <strong>nodes in a 
+            distributed holographic awareness network</strong>. Here's the architecture you'll be working with:
+          </p>
+
+          <div className="space-y-4">
+            <div className="bg-black/40 border border-blue-500/30 p-5 rounded-lg">
+              <div className="font-bold mb-3 text-blue-300">Layer 1: TSRC Determinism Layer</div>
+              <p className="text-sm opacity-90 mb-3 leading-relaxed">
+                Every Cloud instance runs the <strong>Trinary Self-Regulating Core (TSRC)</strong>—a deterministic 
+                evaluation engine that guarantees: <strong>same input + same config = same output</strong>.
+              </p>
+              <div className="bg-black/50 p-3 rounded text-xs mb-3">
+                <div className="font-mono mb-2">TSRC Components:</div>
+                <div className="space-y-1 ml-2">
+                  <div>• <strong>Snapshot Engine</strong>: Content-addressed storage (SHA-256)</div>
+                  <div>• <strong>Operator Hygiene</strong>: O_kiss (simplicity), O_axis (alignment)</div>
+                  <div>• <strong>Stability Monitor</strong>: Tracks eval consistency over time</div>
+                  <div>• <strong>Config Versioning</strong>: Every eval includes version hash</div>
+                </div>
+              </div>
+              <p className="text-xs opacity-80 leading-relaxed">
+                <strong>Why this matters:</strong> Contributors can verify their evaluations are fair and reproducible. 
+                Operators can audit any evaluation by re-running it with the same config. This is <strong>cryptographic 
+                proof of fairness</strong>—no black boxes, no hidden variables.
+              </p>
+            </div>
+
+            <div className="bg-black/40 border border-purple-500/30 p-5 rounded-lg">
+              <div className="font-bold mb-3 text-purple-300">Layer 2: Holographic Vector Store</div>
+              <p className="text-sm opacity-90 mb-3 leading-relaxed">
+                Each Cloud instance maintains a <strong>3D holographic map</strong> of all submissions using 
+                pgvector (PostgreSQL + vector similarity). This enables:
+              </p>
+              <div className="bg-black/50 p-3 rounded text-xs mb-3">
+                <div className="space-y-2">
+                  <div>
+                    <div className="font-semibold mb-1" style={{color: 'var(--hydrogen-beta)'}}>Vector Similarity Search</div>
+                    <div className="ml-2 opacity-80">Find nearest neighbors in 1536D space using cosine similarity</div>
+                  </div>
+                  <div>
+                    <div className="font-semibold mb-1" style={{color: 'var(--hydrogen-gamma)'}}>Redundancy Detection</div>
+                    <div className="ml-2 opacity-80">Measure overlap % between new submissions and archived work</div>
+                  </div>
+                  <div>
+                    <div className="font-semibold mb-1" style={{color: 'var(--hydrogen-alpha)'}}>3D Projection</div>
+                    <div className="ml-2 opacity-80">PCA reduction to visualizable space with Λᴴᴴ scaling</div>
+                  </div>
+                </div>
+              </div>
+              <p className="text-xs opacity-80 leading-relaxed">
+                As an operator, you'll monitor vector store health, optimize indexing, and ensure fast similarity searches 
+                even as the archive grows to thousands of submissions.
+              </p>
+            </div>
+
+            <div className="bg-black/40 border border-green-500/30 p-5 rounded-lg">
+              <div className="font-bold mb-3 text-green-300">Layer 3: AI Evaluation Pipeline</div>
+              <p className="text-sm opacity-90 mb-3 leading-relaxed">
+                Cloud instances connect to <strong>Groq API</strong> (using Grok LLM) for AI-powered evaluation. 
+                Your responsibilities include:
+              </p>
+              <div className="bg-black/50 p-3 rounded text-xs mb-3">
+                <div className="space-y-2">
+                  <div>• <strong>API Key Management</strong>: Secure credential rotation</div>
+                  <div>• <strong>Rate Limiting</strong>: Prevent API quota exhaustion</div>
+                  <div>• <strong>Error Handling</strong>: Retry logic for transient failures</div>
+                  <div>• <strong>Cost Monitoring</strong>: Track SYNTH allocation vs. API costs</div>
+                  <div>• <strong>Prompt Engineering</strong>: Ensure system prompt alignment</div>
+                </div>
+              </div>
+              <p className="text-xs opacity-80 leading-relaxed">
+                The system prompt includes the full HHF-AI framework—you'll learn to maintain its integrity and 
+                troubleshoot when evaluations drift from expected behavior.
+              </p>
+            </div>
+
+            <div className="bg-black/40 border border-amber-500/30 p-5 rounded-lg">
+              <div className="font-bold mb-3 text-amber-300">Layer 4: Blockchain Integration (Base Mainnet)</div>
+              <p className="text-sm opacity-90 mb-3 leading-relaxed">
+                Qualifying submissions (PoC ≥ 4,000) get <strong>free on-chain registration</strong> on Base (Coinbase L2). 
+                Operators manage:
+              </p>
+              <div className="bg-black/50 p-3 rounded text-xs mb-3">
+                <div className="space-y-2">
+                  <div>• <strong>Gas Management</strong>: Ensure sufficient ETH for transactions</div>
+                  <div>• <strong>Transaction Monitoring</strong>: Track confirmation status</div>
+                  <div>• <strong>Smart Contract Interaction</strong>: Call registry functions</div>
+                  <div>• <strong>Webhook Integration</strong>: Handle on-chain event callbacks</div>
+                </div>
+              </div>
+              <p className="text-xs opacity-80 leading-relaxed">
+                You'll learn Base Mainnet operations, wallet management, and how to troubleshoot failed transactions—all 
+                while keeping contributor submissions secure and immutable.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-4 bg-gradient-to-r from-blue-500/10 to-transparent border-l-4 border-[var(--hydrogen-beta)] p-4 rounded-r">
+            <p className="text-sm leading-relaxed">
+              <strong>Key insight:</strong> You're not maintaining traditional cloud infrastructure—you're operating 
+              <strong> holographic awareness nodes</strong> in a distributed fractal network. Every action you take 
+              affects the coherence and reliability of the entire Syntheverse ecosystem.
+            </p>
+          </div>
+        </div>
+
         {/* Ready Check */}
         <div className="bg-gradient-to-r from-green-500/10 to-transparent border-l-4 border-green-500 p-6">
           <h4 className="font-bold mb-2 text-green-400">🎯 Ready to Begin?</h4>
@@ -240,7 +354,7 @@ export const operatorSilverModules = [
     title: 'Enterprise Cloud Architecture',
     subtitle: 'Understanding the Technical Infrastructure',
     icon: <Server className="h-6 w-6" />,
-    duration: '30 min',
+    duration: '45 min',
     content: (
       <div className="space-y-6">
         {/* Opening */}
@@ -469,7 +583,7 @@ export const operatorSilverModules = [
     title: 'SynthScan™ MRI Deep Dive',
     subtitle: 'Mastering the Evaluation Engine',
     icon: <Zap className="h-6 w-6" />,
-    duration: '40 min',
+    duration: '50 min',
     content: (
       <div className="space-y-6">
         {/* Opening */}
@@ -814,7 +928,7 @@ export const operatorSilverModules = [
     title: 'Managing Cloud Instances',
     subtitle: 'Hands-On Cloud Operations',
     icon: <Database className="h-6 w-6" />,
-    duration: '35 min',
+    duration: '40 min',
     content: (
       <div className="space-y-6">
         {/* Opening */}
@@ -1205,7 +1319,7 @@ export const operatorSilverModules = [
     title: 'Community Coordination',
     subtitle: 'Supporting Contributors & Teams',
     icon: <Users className="h-6 w-6" />,
-    duration: '25 min',
+    duration: '30 min',
     content: (
       <div className="space-y-6">
         {/* Opening */}
@@ -1557,7 +1671,7 @@ export const operatorSilverModules = [
     title: 'Monitoring & Analytics',
     subtitle: 'Data-Driven Operations',
     icon: <GitBranch className="h-6 w-6" />,
-    duration: '30 min',
+    duration: '35 min',
     content: (
       <div className="space-y-6">
         {/* Opening */}
@@ -1943,7 +2057,7 @@ WHERE DATE(created_at) = CURRENT_DATE
     title: 'Earning Your Silver Wings',
     subtitle: 'Certified Cloud Operator',
     icon: <Award className="h-6 w-6" />,
-    duration: '20 min',
+    duration: '25 min',
     content: (
       <div className="space-y-6">
         {/* Victory */}
