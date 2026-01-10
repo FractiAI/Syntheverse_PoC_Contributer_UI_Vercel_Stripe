@@ -6,7 +6,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Award, Shield, Sparkles, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Star, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export type WingTrack = 'contributor-copper' | 'operator-silver' | 'creator-gold';
 
@@ -22,9 +22,9 @@ export function WingsTrackSelector({ onSelectTrack, currentTrack }: WingsTrackSe
     {
       id: 'contributor-copper' as WingTrack,
       name: 'Contributor',
-      wings: 'Copper Wings',
-      icon: Award,
-      color: 'var(--metal-copper)',
+      wings: '🪙 Copper Wings',
+      icon: Star,
+      color: '#C77C5D', // Copper
       description: 'Learn the fundamentals of Syntheverse and earn your Copper Wings',
       modules: [
         'Welcome to Syntheverse',
@@ -40,9 +40,9 @@ export function WingsTrackSelector({ onSelectTrack, currentTrack }: WingsTrackSe
     {
       id: 'operator-silver' as WingTrack,
       name: 'Operator',
-      wings: 'Silver Wings',
-      icon: Shield,
-      color: 'var(--metal-silver)',
+      wings: '🛡️ Silver Wings',
+      icon: Star,
+      color: '#C0C0C0', // Silver
       description: 'Master sandbox operations and ecosystem coordination',
       modules: [
         'Sandbox Architecture & Setup',
@@ -59,9 +59,9 @@ export function WingsTrackSelector({ onSelectTrack, currentTrack }: WingsTrackSe
     {
       id: 'creator-gold' as WingTrack,
       name: 'Creator',
-      wings: 'Gold Wings',
-      icon: Sparkles,
-      color: 'var(--metal-gold)',
+      wings: '👑 Gold Wings',
+      icon: Star,
+      color: '#FFD700', // Gold
       description: 'Architect complete ecosystems and define the frontier',
       modules: [
         'System Architecture & Design',
@@ -122,8 +122,16 @@ export function WingsTrackSelector({ onSelectTrack, currentTrack }: WingsTrackSe
 
               {/* Icon & Title */}
               <div className="flex items-start gap-4 mb-4">
-                <div className="p-3 rounded-lg" style={{backgroundColor: `${track.color}20`}}>
-                  <Icon className="w-8 h-8" style={{color: track.color}} />
+                {/* Aviator Wings Badge with Stars */}
+                <div className="relative p-3 rounded-lg" style={{backgroundColor: `${track.color}20`}}>
+                  <div className="relative flex items-center justify-center">
+                    {/* Center star (larger) */}
+                    <Icon className="w-8 h-8" style={{color: track.color}} fill={track.color} />
+                    {/* Left wing star */}
+                    <Icon className="w-4 h-4 absolute -left-3 top-1" style={{color: track.color}} fill={track.color} />
+                    {/* Right wing star */}
+                    <Icon className="w-4 h-4 absolute -right-3 top-1" style={{color: track.color}} fill={track.color} />
+                  </div>
                 </div>
                 <div className="flex-1">
                   <div className="text-xs font-semibold uppercase tracking-wider mb-1 opacity-60">

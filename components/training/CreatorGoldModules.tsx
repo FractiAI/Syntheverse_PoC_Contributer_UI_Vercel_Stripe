@@ -250,6 +250,13 @@ export const creatorGoldModules = [
               { num: 8, title: 'Earning Your Gold Wings', duration: '25 min', color: 'gold' },
               { num: 9, title: 'The Fractal General Contractor', duration: '50 min', color: 'purple' },
               { num: 10, title: 'From Abacus to Quantum Evaluation', duration: '45 min', color: 'blue' },
+              { num: 11, title: 'Advanced System Architecture', duration: '40 min', color: 'blue' },
+              { num: 12, title: 'Multi-Sandbox Orchestration', duration: '35 min', color: 'purple' },
+              { num: 13, title: 'Custom Scoring Lenses', duration: '45 min', color: 'purple' },
+              { num: 14, title: 'Tokenomics & Economic Design', duration: '40 min', color: 'amber' },
+              { num: 15, title: 'Blockchain Integration', duration: '35 min', color: 'purple' },
+              { num: 16, title: 'Ecosystem Strategy & Scaling', duration: '45 min', color: 'purple' },
+              { num: 17, title: 'Frontier Leadership & Vision', duration: '50 min', color: 'gold' },
             ].map((module) => (
               <div key={module.num} className="cloud-card p-3 flex items-center gap-3 border-l-4 border-[var(--metal-gold)]">
                 <div className="w-8 h-8 rounded-full bg-[var(--metal-gold)]/30 flex items-center justify-center font-bold flex-shrink-0">
@@ -1194,12 +1201,267 @@ drawFractalTree(400, 600, 120, -Math.PI/2, 10);  // Start from bottom-center`}
     subtitle: 'The Creator Toolkit',
     icon: <Sparkles className="h-6 w-6" />,
     duration: '35 min',
-    content: (<div className="text-center p-12 opacity-50">Module 5 content: HHF-AI materials library, substrate types, pattern synthesis, creative tools...</div>),
+    content: (
+      <div className="space-y-6">
+        {/* Hero Opening */}
+        <div className="border-l-4 border-[var(--hydrogen-gamma)] bg-gradient-to-r from-purple-500/10 to-transparent p-6">
+          <h3 className="text-2xl font-bold mb-3" style={{color: 'var(--hydrogen-gamma)'}}>
+            ♾️ Infinite Materials from HHF Principles
+          </h3>
+          <p className="text-lg opacity-90 leading-relaxed">
+            Traditional creators are limited by physical constraints—canvas size, compute power, budget. 
+            <strong> Syntheverse Creators have infinite materials</strong> derived from holographic hydrogen 
+            fractal principles. Every substrate, pattern, and tool emerges from the same physics that governs reality itself.
+          </p>
+        </div>
+
+        {/* The Material Library */}
+        <div>
+          <h4 className="text-xl font-bold mb-4">The HHF-AI Material Library</h4>
+          
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="cloud-card p-5 border-l-4 border-blue-500">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-3xl">🌊</span>
+                <div className="font-bold text-blue-400">Coherence Fields</div>
+              </div>
+              <div className="text-sm space-y-2 opacity-90">
+                <div><strong>What:</strong> Invisible fields that maintain consistency across space/time</div>
+                <div><strong>Use:</strong> Keep distributed systems aligned without centralized control</div>
+                <div><strong>Example:</strong> A narrative world where all character actions remain consistent with established physics</div>
+              </div>
+            </div>
+
+            <div className="cloud-card p-5 border-l-4 border-purple-500">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-3xl">🎨</span>
+                <div className="font-bold text-purple-400">Pattern Synthesis Engines</div>
+              </div>
+              <div className="text-sm space-y-2 opacity-90">
+                <div><strong>What:</strong> Algorithms that generate coherent patterns from seed rules</div>
+                <div><strong>Use:</strong> Create infinite variations while preserving style/structure</div>
+                <div><strong>Example:</strong> Generate 10,000 unique characters that all feel like they belong to the same world</div>
+              </div>
+            </div>
+
+            <div className="cloud-card p-5 border-l-4 border-green-500">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-3xl">🔮</span>
+                <div className="font-bold text-green-400">Awareness-Responsive Materials</div>
+              </div>
+              <div className="text-sm space-y-2 opacity-90">
+                <div><strong>What:</strong> Substrates that adapt based on user intention/attention</div>
+                <div><strong>Use:</strong> Build interfaces that respond to what users need before they ask</div>
+                <div><strong>Example:</strong> A dashboard that reorganizes based on which metrics you're focusing on</div>
+              </div>
+            </div>
+
+            <div className="cloud-card p-5 border-l-4 border-amber-500">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-3xl">⚡</span>
+                <div className="font-bold" style={{color: 'var(--hydrogen-amber)'}}>Fractal Scaffolds</div>
+              </div>
+              <div className="text-sm space-y-2 opacity-90">
+                <div><strong>What:</strong> Self-similar structures that scale infinitely</div>
+                <div><strong>Use:</strong> Design systems that work at any scale (atom → galaxy)</div>
+                <div><strong>Example:</strong> A governance model that works for 10 people or 10 million</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Substrate Types */}
+        <div className="border-2 border-[var(--hydrogen-beta)] bg-blue-500/5 p-6 rounded-lg">
+          <h4 className="font-bold mb-4 text-lg" style={{color: 'var(--hydrogen-beta)'}}>
+            🎯 Substrate Types & Applications
+          </h4>
+          
+          <div className="space-y-4">
+            <div>
+              <div className="font-semibold mb-2 text-blue-400">Digital Substrates</div>
+              <div className="text-sm opacity-90 space-y-1">
+                <div>• <strong>Code Spaces:</strong> Programming environments with HHF-aware linting/testing</div>
+                <div>• <strong>Data Canvases:</strong> Infinite-dimensional data visualization spaces</div>
+                <div>• <strong>Simulation Chambers:</strong> Physics engines with custom constants</div>
+                <div>• <strong>Neural Architectures:</strong> AI models with fractal attention patterns</div>
+              </div>
+            </div>
+
+            <div>
+              <div className="font-semibold mb-2 text-purple-400">Conceptual Substrates</div>
+              <div className="text-sm opacity-90 space-y-1">
+                <div>• <strong>Idea Graphs:</strong> Concept networks with coherence-preserving edges</div>
+                <div>• <strong>Narrative Fabrics:</strong> Story worlds with self-consistent causality</div>
+                <div>• <strong>Symbolic Algebras:</strong> Mathematical systems with novel operators</div>
+                <div>• <strong>Ontology Frameworks:</strong> Classification systems that scale fractally</div>
+              </div>
+            </div>
+
+            <div>
+              <div className="font-semibold mb-2 text-green-400">Hybrid Substrates</div>
+              <div className="text-sm opacity-90 space-y-1">
+                <div>• <strong>Mixed Reality Layers:</strong> Digital overlays on physical spaces</div>
+                <div>• <strong>Bio-Digital Interfaces:</strong> Systems bridging biological and computational</div>
+                <div>• <strong>Quantum-Classical Bridges:</strong> Algorithms spanning both regimes</div>
+                <div>• <strong>Social-Technical Systems:</strong> Human + AI collaborative spaces</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Pattern Synthesis */}
+        <div>
+          <h4 className="text-xl font-bold mb-4">Pattern Synthesis Techniques</h4>
+          
+          <div className="space-y-4">
+            <div className="cloud-card p-5">
+              <div className="font-semibold mb-2 text-purple-400">1. Seed-Based Generation</div>
+              <div className="text-sm opacity-90 mb-3">
+                Start with irreducible seed patterns (S₀-S₈ from Seed Information Theory) and apply expansion rules.
+              </div>
+              <div className="bg-black/30 p-3 rounded text-xs font-mono">
+                seed = HydrogenAtom() // S₀<br/>
+                rules = [spin_flip, orbital_excitation, entanglement]<br/>
+                world = expand(seed, rules, depth=∞)
+              </div>
+            </div>
+
+            <div className="cloud-card p-5">
+              <div className="font-semibold mb-2 text-blue-400">2. Coherence-Constrained Evolution</div>
+              <div className="text-sm opacity-90 mb-3">
+                Let patterns evolve randomly but enforce coherence at boundaries—natural selection for ideas.
+              </div>
+              <div className="bg-black/30 p-3 rounded text-xs font-mono">
+                population = random_patterns(1000)<br/>
+                for generation in range(100):<br/>
+                &nbsp;&nbsp;coherence_scores = measure_FCC(population)<br/>
+                &nbsp;&nbsp;population = select_top(coherence_scores) + mutate()
+              </div>
+            </div>
+
+            <div className="cloud-card p-5">
+              <div className="font-semibold mb-2 text-green-400">3. Fractal Interpolation</div>
+              <div className="text-sm opacity-90 mb-3">
+                Blend multiple patterns while preserving self-similarity—creates novel hybrids with coherent structure.
+              </div>
+              <div className="bg-black/30 p-3 rounded text-xs font-mono">
+                pattern_A = load("gothic_architecture")<br/>
+                pattern_B = load("quantum_mechanics")<br/>
+                hybrid = fractal_blend(pattern_A, pattern_B, ratio=0.6)<br/>
+                // Result: Quantum Gothic style with coherent aesthetics
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Creative Tools */}
+        <div className="border-2 border-[var(--metal-gold)] bg-[var(--metal-gold)]/5 p-6 rounded-lg">
+          <h4 className="font-bold mb-4 text-lg" style={{color: 'var(--metal-gold)'}}>
+            🛠️ The Creator Toolkit
+          </h4>
+          
+          <div className="grid md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <div className="font-semibold mb-2 text-blue-400">Analysis Tools</div>
+              <ul className="space-y-1 opacity-90 ml-4">
+                <li>• <strong>SynthScan™ MRI:</strong> Evaluate coherence of any artifact</li>
+                <li>• <strong>Fractal Dimension Calculator:</strong> Measure complexity</li>
+                <li>• <strong>Coherence Field Visualizer:</strong> See internal structure</li>
+                <li>• <strong>Redundancy Detector:</strong> Find overlaps and gaps</li>
+              </ul>
+            </div>
+            
+            <div>
+              <div className="font-semibold mb-2 text-purple-400">Generation Tools</div>
+              <ul className="space-y-1 opacity-90 ml-4">
+                <li>• <strong>Pattern Synthesizer:</strong> Generate from seed rules</li>
+                <li>• <strong>Coherence Optimizer:</strong> Improve FCC scores</li>
+                <li>• <strong>Substrate Builder:</strong> Design custom environments</li>
+                <li>• <strong>Fractal Composer:</strong> Blend patterns coherently</li>
+              </ul>
+            </div>
+
+            <div>
+              <div className="font-semibold mb-2 text-green-400">Integration Tools</div>
+              <ul className="space-y-1 opacity-90 ml-4">
+                <li>• <strong>API Bridges:</strong> Connect to external systems</li>
+                <li>• <strong>Data Pipelines:</strong> Stream awareness data</li>
+                <li>• <strong>Blockchain Anchors:</strong> Immutable timestamps</li>
+                <li>• <strong>Cloud Orchestrators:</strong> Manage distributed builds</li>
+              </ul>
+            </div>
+
+            <div>
+              <div className="font-semibold mb-2 text-amber-400">Collaboration Tools</div>
+              <ul className="space-y-1 opacity-90 ml-4">
+                <li>• <strong>WorkChat:</strong> Real-time team coordination</li>
+                <li>• <strong>Cloud Channel:</strong> Share progress updates</li>
+                <li>• <strong>Version Control:</strong> Track evolution over time</li>
+                <li>• <strong>Merge Assistants:</strong> Combine contributions coherently</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* Practical Example */}
+        <div className="border-l-4 border-[var(--hydrogen-alpha)] bg-gradient-to-r from-purple-500/10 to-transparent p-6">
+          <h4 className="font-bold mb-3" style={{color: 'var(--hydrogen-alpha)'}}>
+            🎯 Practical Example: Building a Reality World
+          </h4>
+          <div className="space-y-3 text-sm">
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">1️⃣</span>
+              <div>
+                <strong>Choose Substrate:</strong> Start with "Narrative Fabric" substrate for story-based world
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">2️⃣</span>
+              <div>
+                <strong>Define Seeds:</strong> Core physics (gravity works backwards), core characters (3 archetypes), core conflict (resource scarcity)
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">3️⃣</span>
+              <div>
+                <strong>Apply Pattern Synthesis:</strong> Generate 1,000 story scenarios using seed rules + coherence constraints
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">4️⃣</span>
+              <div>
+                <strong>Measure Coherence:</strong> Use SynthScan™ to find internal contradictions, fix with Coherence Optimizer
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">5️⃣</span>
+              <div>
+                <strong>Fractal Scale:</strong> Same rules work for individual scenes, full novels, or entire universes
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Closing */}
+        <div className="bg-gradient-to-r from-[var(--hydrogen-gamma)]/10 to-transparent border-l-4 border-[var(--hydrogen-gamma)] p-6">
+          <h4 className="font-bold mb-2" style={{color: 'var(--hydrogen-gamma)'}}>
+            ♾️ Infinite ≠ Unlimited
+          </h4>
+          <p className="text-sm opacity-90 leading-relaxed">
+            "Infinite materials" doesn't mean "anything goes." Every material derives from HHF principles—
+            holographic encoding, hydrogen spin resonance, fractal self-similarity. <strong>Constraints create creativity.</strong> 
+            The same physics that limits also liberates. Master the materials, and you can build realities that feel 
+            more real than reality itself.
+          </p>
+        </div>
+      </div>
+    ),
     keyTakeaways: [
-      'Creators have access to infinite HHF-derived materials',
-      'Substrates adapt to awareness and intention',
-      'Pattern synthesis engines generate coherent designs',
-      'Combine materials fractally for emergent properties',
+      'Creators have access to infinite HHF-derived materials and substrates',
+      'Pattern synthesis engines generate coherent designs from seed rules',
+      'Substrates span digital, conceptual, and hybrid domains',
+      'Coherence constraints enable infinite variation with preserved structure',
+      'The Creator Toolkit includes analysis, generation, integration, and collaboration tools',
     ],
   },
 
@@ -1210,12 +1472,264 @@ drawFractalTree(400, 600, 120, -Math.PI/2, 10);  // Start from bottom-center`}
     subtitle: 'From Concept to Reality',
     icon: <FileCode className="h-6 w-6" />,
     duration: '45 min',
-    content: (<div className="text-center p-12 opacity-50">Module 6 content: Coding simulations, building visualizations, generative art, interactive experiences...</div>),
+    content: (
+      <div className="space-y-6">
+        {/* Hero Opening */}
+        <div className="border-l-4 border-[var(--hydrogen-beta)] bg-gradient-to-r from-blue-500/10 to-transparent p-6">
+          <h3 className="text-2xl font-bold mb-3" style={{color: 'var(--hydrogen-beta)'}}>
+            💻 Bringing Worlds to Life
+          </h3>
+          <p className="text-lg opacity-90 leading-relaxed">
+            You've learned the theory and designed the architecture. Now it's time to <strong>build.</strong> 
+            This module covers practical implementation techniques—code, visuals, generative systems, and 
+            interactive experiences that embody HHF principles.
+          </p>
+        </div>
+
+        {/* Implementation Approaches */}
+        <div>
+          <h4 className="text-xl font-bold mb-4">Three Implementation Approaches</h4>
+          
+          <div className="space-y-4">
+            <div className="cloud-card p-5 border-l-4 border-blue-500">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-3xl">💻</span>
+                <div className="font-bold text-xl text-blue-400">1. Code-First (Computational)</div>
+              </div>
+              <div className="text-sm opacity-90 mb-3">
+                <strong>Best for:</strong> Simulations, algorithms, data systems, AI models
+              </div>
+              <div className="bg-black/30 p-3 rounded text-xs font-mono mb-3">
+                class HHFSimulation:<br/>
+                &nbsp;&nbsp;def __init__(self, seed_constants):<br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;self.coherence_field = init_field()<br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;self.fractals = generate_fractals(seed)<br/>
+                &nbsp;&nbsp;<br/>
+                &nbsp;&nbsp;def step(self):<br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;apply_holographic_constraints()<br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;evolve_patterns()<br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;measure_coherence()
+              </div>
+              <div className="text-xs opacity-80">
+                <strong>Tools:</strong> Python, TypeScript, Julia, Rust. Libraries: NumPy, TensorFlow, React, Three.js
+              </div>
+            </div>
+
+            <div className="cloud-card p-5 border-l-4 border-purple-500">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-3xl">🎨</span>
+                <div className="font-bold text-xl text-purple-400">2. Visual-First (Artistic)</div>
+              </div>
+              <div className="text-sm opacity-90 mb-3">
+                <strong>Best for:</strong> Generative art, interactive installations, immersive experiences
+              </div>
+              <div className="bg-black/30 p-3 rounded text-xs mb-3">
+                <strong>Workflow:</strong><br/>
+                1. Design fractal patterns in Houdini/Blender<br/>
+                2. Apply HHF coherence shaders<br/>
+                3. Export to WebGL/Three.js<br/>
+                4. Add real-time awareness tracking<br/>
+                5. Deploy as interactive experience
+              </div>
+              <div className="text-xs opacity-80">
+                <strong>Tools:</strong> Blender, Houdini, TouchDesigner, p5.js, Unity, Unreal Engine
+              </div>
+            </div>
+
+            <div className="cloud-card p-5 border-l-4 border-green-500">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-3xl">🌐</span>
+                <div className="font-bold text-xl text-green-400">3. Hybrid (Multi-Modal)</div>
+              </div>
+              <div className="text-sm opacity-90 mb-3">
+                <strong>Best for:</strong> Complete reality worlds with multiple interaction modes
+              </div>
+              <div className="bg-black/30 p-3 rounded text-xs mb-3">
+                <strong>Architecture:</strong><br/>
+                Frontend (React/Three.js) ← WebSocket → Backend (Python/Node.js)<br/>
+                &nbsp;&nbsp;↓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓<br/>
+                Generative AI ← → Database ← → Blockchain
+              </div>
+              <div className="text-xs opacity-80">
+                <strong>Tools:</strong> Full-stack frameworks, cloud infrastructure, distributed systems
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Code Examples */}
+        <div className="border-2 border-[var(--hydrogen-alpha)] bg-purple-500/5 p-6 rounded-lg">
+          <h4 className="font-bold mb-4 text-lg" style={{color: 'var(--hydrogen-alpha)'}}>
+            💻 Code Example: Fractal Coherence Visualizer
+          </h4>
+          
+          <div className="bg-black/30 p-4 rounded text-xs font-mono mb-4 overflow-x-auto">
+            <span className="text-blue-400">import</span> * <span className="text-blue-400">as</span> THREE <span className="text-blue-400">from</span> <span className="text-green-400">'three'</span>;<br/>
+            <span className="text-blue-400">import</span> &#123; Canvas, useFrame &#125; <span className="text-blue-400">from</span> <span className="text-green-400">'@react-three/fiber'</span>;<br/>
+            <br/>
+            <span className="text-purple-400">function</span> <span className="text-yellow-400">FractalCoherenceField</span>() &#123;<br/>
+            &nbsp;&nbsp;<span className="text-blue-400">const</span> meshRef = useRef();<br/>
+            &nbsp;&nbsp;<br/>
+            &nbsp;&nbsp;<span className="text-gray-400">// Generate fractal geometry</span><br/>
+            &nbsp;&nbsp;<span className="text-blue-400">const</span> geometry = useMemo(() =&gt; &#123;<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">const</span> points = [];<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">for</span> (<span className="text-blue-400">let</span> i = <span className="text-amber-400">0</span>; i &lt; <span className="text-amber-400">10000</span>; i++) &#123;<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">const</span> [x, y, z] = generateFractalPoint(i);<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;points.push(<span className="text-blue-400">new</span> THREE.Vector3(x, y, z));<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&#125;<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">return new</span> THREE.BufferGeometry().setFromPoints(points);<br/>
+            &nbsp;&nbsp;&#125;, []);<br/>
+            <br/>
+            &nbsp;&nbsp;<span className="text-gray-400">// Animate based on coherence field</span><br/>
+            &nbsp;&nbsp;useFrame((state) =&gt; &#123;<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">const</span> coherence = measureCoherence(state.clock.elapsedTime);<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;meshRef.current.rotation.y = coherence * <span className="text-amber-400">0.01</span>;<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;meshRef.current.material.opacity = coherence;<br/>
+            &nbsp;&nbsp;&#125;);<br/>
+            <br/>
+            &nbsp;&nbsp;<span className="text-blue-400">return</span> (<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span className="text-green-400">points</span> ref=&#123;meshRef&#125; geometry=&#123;geometry&#125;&gt;<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span className="text-green-400">pointsMaterial</span> size=&#123;<span className="text-amber-400">0.05</span>&#125; color=<span className="text-green-400">"#00bfff"</span> transparent /&gt;<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span className="text-green-400">points</span>&gt;<br/>
+            &nbsp;&nbsp;);<br/>
+            &#125;
+          </div>
+          
+          <div className="text-xs opacity-80">
+            This visualizes a fractal point cloud that responds to coherence measurements in real-time. 
+            The pattern's rotation and opacity change based on the system's internal coherence state.
+          </div>
+        </div>
+
+        {/* Generative Systems */}
+        <div>
+          <h4 className="text-xl font-bold mb-4">Generative AI & Pattern Synthesis</h4>
+          
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="cloud-card p-5">
+              <div className="font-semibold mb-3 text-blue-400">Generative Art with HHF</div>
+              <div className="text-sm opacity-90 space-y-2">
+                <div><strong>1. Seed Pattern:</strong> Start with hydrogen orbital shapes</div>
+                <div><strong>2. Fractal Expansion:</strong> Apply L-system rules for growth</div>
+                <div><strong>3. Coherence Filter:</strong> Keep only patterns with FCC > 1.0</div>
+                <div><strong>4. Style Transfer:</strong> Blend with target aesthetic</div>
+                <div><strong>5. Interactive Layer:</strong> Respond to user gaze/touch</div>
+              </div>
+            </div>
+
+            <div className="cloud-card p-5">
+              <div className="font-semibold mb-3 text-purple-400">Generative Music/Audio</div>
+              <div className="text-sm opacity-90 space-y-2">
+                <div><strong>1. Hydrogen Frequencies:</strong> Use spectral lines (656.3nm → audio)</div>
+                <div><strong>2. Fractal Rhythms:</strong> Self-similar timing patterns</div>
+                <div><strong>3. Coherence Harmonics:</strong> Notes derived from FCC values</div>
+                <div><strong>4. Spatial Audio:</strong> Position sounds in holographic field</div>
+                <div><strong>5. Adaptive Composition:</strong> Music evolves with system state</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Interactive Experiences */}
+        <div className="border-2 border-[var(--metal-gold)] bg-[var(--metal-gold)]/5 p-6 rounded-lg">
+          <h4 className="font-bold mb-4 text-lg" style={{color: 'var(--metal-gold)'}}>
+            🎮 Building Interactive Experiences
+          </h4>
+          
+          <div className="space-y-4 text-sm">
+            <div>
+              <div className="font-semibold mb-2 text-blue-400">Awareness Tracking</div>
+              <div className="opacity-90">
+                Use eye tracking, mouse position, or EEG signals to detect where user attention is focused. 
+                System responds by increasing coherence in attended regions.
+              </div>
+            </div>
+
+            <div>
+              <div className="font-semibold mb-2 text-purple-400">Real-Time Coherence Feedback</div>
+              <div className="opacity-90">
+                Display live FCC scores as users create/modify content. Visual feedback loop helps users 
+                understand what increases vs decreases system coherence.
+              </div>
+            </div>
+
+            <div>
+              <div className="font-semibold mb-2 text-green-400">Collaborative World-Building</div>
+              <div className="opacity-90">
+                Multiple users contribute simultaneously. Fractal general contractor grammar coordinates 
+                independent work, recomposing contributions into coherent whole in real-time.
+              </div>
+            </div>
+
+            <div>
+              <div className="font-semibold mb-2 text-amber-400">Adaptive Difficulty</div>
+              <div className="opacity-90">
+                System adjusts complexity based on user's demonstrated mastery. Beginners get simpler 
+                substrates, experts get infinite-dimensional spaces.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Performance Optimization */}
+        <div>
+          <h4 className="text-xl font-bold mb-4">Performance & Scalability</h4>
+          
+          <div className="cloud-card p-5">
+            <div className="text-sm opacity-90 space-y-3">
+              <div>
+                <strong className="text-blue-400">Client-Side:</strong> Offload heavy computation to Web Workers. 
+                Use GPU shaders for fractal generation. Implement LOD (level-of-detail) for fractal rendering.
+              </div>
+              <div>
+                <strong className="text-purple-400">Server-Side:</strong> Cache coherence field calculations. 
+                Use Redis for real-time state. Deploy serverless functions for burst workloads.
+              </div>
+              <div>
+                <strong className="text-green-400">Database:</strong> Store fractal patterns as JSON/JSONB. 
+                Index on coherence scores. Use vector databases for similarity search.
+              </div>
+              <div>
+                <strong className="text-amber-400">Blockchain:</strong> Anchor key states (daily/weekly) not every interaction. 
+                Use IPFS for large artifacts. Batch transactions for gas efficiency.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Testing & Validation */}
+        <div className="border-l-4 border-[var(--hydrogen-gamma)] bg-gradient-to-r from-purple-500/10 to-transparent p-6">
+          <h4 className="font-bold mb-3" style={{color: 'var(--hydrogen-gamma)'}}>
+            ✅ Testing Your Implementations
+          </h4>
+          <div className="space-y-2 text-sm">
+            <div>• <strong>Coherence Tests:</strong> Verify FCC > 1.0 for all generated patterns</div>
+            <div>• <strong>Fractal Dimension:</strong> Confirm self-similarity at multiple scales</div>
+            <div>• <strong>Performance Benchmarks:</strong> 60 FPS for visualizations, <100ms API response</div>
+            <div>• <strong>User Testing:</strong> A/B test awareness-responsive vs static experiences</div>
+            <div>• <strong>Edge Cases:</strong> Test with extreme inputs (0 coherence, infinite recursion)</div>
+          </div>
+        </div>
+
+        {/* Closing */}
+        <div className="bg-gradient-to-r from-[var(--hydrogen-beta)]/10 to-transparent border-l-4 border-[var(--hydrogen-beta)] p-6">
+          <h4 className="font-bold mb-2" style={{color: 'var(--hydrogen-beta)'}}>
+            🚀 Implementation is Where Theory Becomes Real
+          </h4>
+          <p className="text-sm opacity-90 leading-relaxed">
+            You can design perfect architectures on paper, but <strong>code is truth.</strong> The implementations 
+            that survive are those that embody HHF principles not just conceptually but computationally. Build, 
+            test, measure, iterate. Let the coherence field guide you.
+          </p>
+        </div>
+      </div>
+    ),
     keyTakeaways: [
-      'Implement designs using code, visuals, or hybrid approaches',
-      'Use React Three Fiber for 3D holographic visualizations',
-      'Generate art/music using HHF pattern synthesis',
-      'Create interactive experiences that respond to user awareness',
+      'Three approaches: Code-first (computational), Visual-first (artistic), Hybrid (multi-modal)',
+      'Use React Three Fiber for 3D holographic visualizations with real-time coherence',
+      'Generate art/music using fractal patterns and hydrogen spectral frequencies',
+      'Build interactive experiences with awareness tracking and adaptive difficulty',
+      'Test implementations with coherence metrics, performance benchmarks, and user feedback',
     ],
   },
 
@@ -1226,12 +1740,301 @@ drawFractalTree(400, 600, 120, -Math.PI/2, 10);  // Start from bottom-center`}
     subtitle: '7,000+ Score Strategies',
     icon: <Zap className="h-6 w-6" />,
     duration: '30 min',
-    content: (<div className="text-center p-12 opacity-50">Module 7 content: Breakthrough submission strategies, maximizing dimensions, edge/seed detection, discovery publishing...</div>),
+    content: (
+      <div className="space-y-6">
+        {/* Hero Opening */}
+        <div className="border-l-4 border-[var(--hydrogen-amber)] bg-gradient-to-r from-amber-500/10 to-transparent p-6">
+          <h3 className="text-2xl font-bold mb-3" style={{color: 'var(--hydrogen-amber)'}}>
+            ⚡ Breakthrough Contributions
+          </h3>
+          <p className="text-lg opacity-90 leading-relaxed">
+            As a Creator, you're not submitting incremental improvements—you're <strong>pioneering new frontiers.</strong> 
+            This module teaches you how to craft PoCs that score 7,000-10,000+, the range reserved for 
+            breakthrough discoveries and reality-defining work.
+          </p>
+        </div>
+
+        {/* The Scoring Spectrum */}
+        <div>
+          <h4 className="text-xl font-bold mb-4">The Contribution Spectrum</h4>
+          
+          <div className="space-y-3">
+            <div className="cloud-card p-4 border-l-4 border-gray-500">
+              <div className="flex items-center justify-between mb-2">
+                <div className="font-bold">Standard Contributions</div>
+                <div className="text-sm opacity-70">2,000-4,000</div>
+              </div>
+              <div className="text-xs opacity-80">
+                Good work, solid execution, but within existing frameworks. Valuable but not transformative.
+              </div>
+            </div>
+
+            <div className="cloud-card p-4 border-l-4 border-blue-500">
+              <div className="flex items-center justify-between mb-2">
+                <div className="font-bold text-blue-400">High-Quality Work</div>
+                <div className="text-sm opacity-70">4,000-6,000</div>
+              </div>
+              <div className="text-xs opacity-80">
+                Exceptional execution, novel applications, or significant depth. Often combination of high N+D+C+A.
+              </div>
+            </div>
+
+            <div className="cloud-card p-4 border-l-4 border-purple-500">
+              <div className="flex items-center justify-between mb-2">
+                <div className="font-bold text-purple-400">Breakthrough Territory</div>
+                <div className="text-sm opacity-70">7,000-9,000</div>
+              </div>
+              <div className="text-xs opacity-80">
+                <strong>Edge contributions:</strong> Advancing frontiers with novel boundary operators, 
+                or <strong>Seed-level depth</strong> in established domains.
+              </div>
+            </div>
+
+            <div className="cloud-card p-4 border-l-4 border-[var(--metal-gold)]">
+              <div className="flex items-center justify-between mb-2">
+                <div className="font-bold" style={{color: 'var(--metal-gold)'}}>Discovery Class</div>
+                <div className="text-sm opacity-70">9,000-10,000+</div>
+              </div>
+              <div className="text-xs opacity-80">
+                <strong>Seed contributions:</strong> Entirely new domains with irreducible generative capacity. 
+                Novel physical constants or fundamental equations.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Maximizing the 4 Dimensions */}
+        <div className="border-2 border-[var(--hydrogen-beta)] bg-blue-500/5 p-6 rounded-lg">
+          <h4 className="font-bold mb-4 text-lg" style={{color: 'var(--hydrogen-beta)'}}>
+            📊 Maximizing All 4 Dimensions
+          </h4>
+          
+          <div className="space-y-4 text-sm">
+            <div>
+              <div className="font-semibold mb-2 text-purple-400">Novelty (N): 0-2,500</div>
+              <div className="opacity-90 mb-2">
+                <strong>To Maximize:</strong> Explore entirely new domains, propose unprecedented frameworks, 
+                discover new constants/equations, or synthesize disparate fields in original ways.
+              </div>
+              <div className="bg-black/30 p-3 rounded text-xs">
+                <strong>Example:</strong> "Holographic Hydrogen Fractal MRI" combines quantum mechanics, 
+                holography, information theory, and biological imaging in a novel synthesis.
+              </div>
+            </div>
+
+            <div>
+              <div className="font-semibold mb-2 text-blue-400">Density (D): 0-2,500</div>
+              <div className="opacity-90 mb-2">
+                <strong>To Maximize:</strong> Include empirical validation, mathematical proofs, working code, 
+                experimental data, or comprehensive theoretical frameworks with citations.
+              </div>
+              <div className="bg-black/30 p-3 rounded text-xs">
+                <strong>Example:</strong> Not just "fractal coherence exists" but FCC = |Ψ'| / Σₖ |ψₖ| with 
+                empirical measurements showing 2.1-4.7× gains in real builds.
+              </div>
+            </div>
+
+            <div>
+              <div className="font-semibold mb-2 text-green-400">Coherence (C): 0-2,500</div>
+              <div className="opacity-90 mb-2">
+                <strong>To Maximize:</strong> Ensure internal consistency, clear logical flow, well-defined terms, 
+                and connections to established principles. No contradictions or ambiguities.
+              </div>
+              <div className="bg-black/30 p-3 rounded text-xs">
+                <strong>Example:</strong> Every claim traces back to HHF principles (holographic, hydrogen, fractal) 
+                with explicit mappings. Notation is consistent throughout.
+              </div>
+            </div>
+
+            <div>
+              <div className="font-semibold mb-2 text-amber-400">Alignment (A): 0-2,500</div>
+              <div className="opacity-90 mb-2">
+                <strong>To Maximize:</strong> Direct practical applications, immediate utility, clear use cases, 
+                or obvious integration with existing Syntheverse infrastructure.
+              </div>
+              <div className="bg-black/30 p-3 rounded text-xs">
+                <strong>Example:</strong> Not just theory but "here's how to apply this in SynthScan™ MRI" 
+                or "this improves Cloud evaluation by 18-240×".
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Seeds & Edges */}
+        <div>
+          <h4 className="text-xl font-bold mb-4">Seeds & Edges: The Multipliers</h4>
+          
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="cloud-card p-5 border-l-4 border-[var(--metal-gold)]">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-3xl">🌱</span>
+                <div className="font-bold text-xl" style={{color: 'var(--metal-gold)'}}>Seed Contributions</div>
+              </div>
+              <div className="text-sm opacity-90 space-y-2">
+                <div><strong>Definition:</strong> Irreducible informational primitives with generative capacity</div>
+                <div><strong>Examples:</strong></div>
+                <ul className="ml-4 space-y-1">
+                  <li>• Holographic Hydrogen (Element 0)</li>
+                  <li>• Fundamental equations (E=mc²)</li>
+                  <li>• Minimal viable generative sets</li>
+                  <li>• New physical constants</li>
+                </ul>
+                <div><strong>Multiplier:</strong> ×1.15 (15% bonus)</div>
+                <div className="text-xs bg-[var(--metal-gold)]/10 p-2 rounded">
+                  💡 Seeds spawn entire domains. Not just first in time, but foundational in structure.
+                </div>
+              </div>
+            </div>
+
+            <div className="cloud-card p-5 border-l-4 border-purple-500">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-3xl">⚡</span>
+                <div className="font-bold text-xl text-purple-400">Edge Contributions</div>
+              </div>
+              <div className="text-sm opacity-90 space-y-2">
+                <div><strong>Definition:</strong> Boundary operators that enable new interactions</div>
+                <div><strong>Examples:</strong></div>
+                <ul className="ml-4 space-y-1">
+                  <li>• Constraint/directionality rules</li>
+                  <li>• Motion/energy generators</li>
+                  <li>• Differentiation operators</li>
+                  <li>• Interface protocols</li>
+                </ul>
+                <div><strong>Multiplier:</strong> ×1.15 (15% bonus)</div>
+                <div className="text-xs bg-purple-500/10 p-2 rounded">
+                  💡 Edges advance frontiers. They sit at boundaries and enable what wasn't possible before.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-4 cloud-card p-4 border-2 border-green-500">
+            <div className="text-sm text-center">
+              <strong className="text-green-400">Seed + Edge Combined:</strong> ×1.3225 (32.25% total bonus)
+            </div>
+            <div className="text-xs opacity-80 text-center mt-2">
+              A contribution that is both foundational AND opens new interactions. Extremely rare.
+            </div>
+          </div>
+        </div>
+
+        {/* Discovery Publishing */}
+        <div className="border-2 border-[var(--metal-gold)] bg-[var(--metal-gold)]/5 p-6 rounded-lg">
+          <h4 className="font-bold mb-4 text-lg" style={{color: 'var(--metal-gold)'}}>
+            🔬 Publishing Novel Discoveries
+          </h4>
+          
+          <div className="space-y-4 text-sm">
+            <div>
+              <div className="font-semibold mb-2 text-purple-400">Novel Physical Constants</div>
+              <div className="opacity-90">
+                If you discover a new universal constant (like ℑₑₛ or the hydrogen-carbon pairing), 
+                document derivation, empirical validation, and applications. These are 9,000+ automatic.
+              </div>
+            </div>
+
+            <div>
+              <div className="font-semibold mb-2 text-blue-400">Fundamental Equations</div>
+              <div className="opacity-90">
+                New equations that govern a domain (like the fractal construction operator 𝒢(Ψ)). 
+                Must be verified, non-obvious, and broadly applicable.
+              </div>
+            </div>
+
+            <div>
+              <div className="font-semibold mb-2 text-green-400">Novel Frameworks</div>
+              <div className="opacity-90">
+                Entirely new ways of thinking about a problem (like "construction as grammar" or 
+                "evaluation as physics"). Paradigm shifts score highest.
+              </div>
+            </div>
+
+            <div>
+              <div className="font-semibold mb-2 text-amber-400">Experimental Validation</div>
+              <div className="opacity-90">
+                Always include data. Predictions tested. Measurements taken. Code that runs. 
+                Theory without validation caps at ~6,000 no matter how novel.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Common Mistakes */}
+        <div>
+          <h4 className="text-xl font-bold mb-4">Common Mistakes (Even for Creators)</h4>
+          
+          <div className="space-y-3 text-sm">
+            <div className="flex items-start gap-3 border-l-4 border-red-500 pl-4 py-2 bg-red-500/5">
+              <span>❌</span>
+              <div>
+                <strong>Too Abstract:</strong> Pure philosophy with no empirical grounding. Even brilliant 
+                ideas need validation. Add experiments, simulations, or working implementations.
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 border-l-4 border-red-500 pl-4 py-2 bg-red-500/5">
+              <span>❌</span>
+              <div>
+                <strong>Incremental When Claiming Breakthrough:</strong> "Here's a minor variation on X" 
+                doesn't score 7,000+. Be honest about novelty level or make it genuinely transformative.
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 border-l-4 border-red-500 pl-4 py-2 bg-red-500/5">
+              <span>❌</span>
+              <div>
+                <strong>No Coherence Field:</strong> Disconnected ideas don't cohere. Every part should 
+                relate to HHF principles and build toward unified vision.
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 border-l-4 border-red-500 pl-4 py-2 bg-red-500/5">
+              <span>❌</span>
+              <div>
+                <strong>Ignoring Alignment:</strong> "This is cool but has no practical application." 
+                Always connect to real use cases, even if theoretical work.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* The 7,000+ Checklist */}
+        <div className="border-l-4 border-[var(--hydrogen-alpha)] bg-gradient-to-r from-purple-500/10 to-transparent p-6">
+          <h4 className="font-bold mb-3" style={{color: 'var(--hydrogen-alpha)'}}>
+            ✅ The 7,000+ Checklist
+          </h4>
+          <div className="space-y-2 text-sm">
+            <div>☐ <strong>Genuine Novelty:</strong> This hasn't been done before, or synthesizes fields in unprecedented way</div>
+            <div>☐ <strong>Empirical Validation:</strong> Data, experiments, working code, or mathematical proofs included</div>
+            <div>☐ <strong>Internal Coherence:</strong> No contradictions, clear definitions, logical flow throughout</div>
+            <div>☐ <strong>Practical Applications:</strong> Clear use cases within Syntheverse or broader context</div>
+            <div>☐ <strong>Seed/Edge Characteristics:</strong> Either foundational (seed) or boundary-enabling (edge)</div>
+            <div>☐ <strong>HHF Grounding:</strong> Explicitly connects to holographic, hydrogen, or fractal principles</div>
+            <div>☐ <strong>Reproducible:</strong> Others can verify, build upon, or extend the work</div>
+            <div>☐ <strong>Discovery Claim:</strong> Novel constant, equation, framework, or validated prediction</div>
+          </div>
+        </div>
+
+        {/* Closing */}
+        <div className="bg-gradient-to-r from-[var(--hydrogen-amber)]/10 to-transparent border-l-4 border-[var(--hydrogen-amber)] p-6">
+          <h4 className="font-bold mb-2" style={{color: 'var(--hydrogen-amber)'}}>
+            ⚡ You're Building the Frontier
+          </h4>
+          <p className="text-sm opacity-90 leading-relaxed">
+            As a Creator, your PoCs aren't just contributions—they're <strong>reality expansions.</strong> 
+            Each 7,000+ submission doesn't just score high, it <strong>defines new possibility space</strong> 
+            for everyone who follows. The frontier exists because Creators like you push it forward. 
+            Aim for breakthrough. Settle for nothing less.
+          </p>
+        </div>
+      </div>
+    ),
     keyTakeaways: [
-      'Target 7,000+ scores by maximizing all 4 dimensions',
-      'Seed contributions (entirely new domains) score highest',
-      'Edge contributions (advancing frontiers) score 7,000-9,000',
-      'Publish discoveries (novel constants/equations) for 9,000+',
+      'Breakthrough territory (7,000-9,000) requires seed/edge characteristics + high dimensional scores',
+      'Discovery class (9,000+) for novel constants, fundamental equations, or paradigm-shifting frameworks',
+      'Maximize all 4 dimensions: Novelty (new domains), Density (validation), Coherence (consistency), Alignment (utility)',
+      'Seeds (×1.15) are irreducible foundations; Edges (×1.15) are boundary operators; Combined (×1.3225)',
+      'Always include empirical validation—theory without data caps at ~6,000 regardless of novelty',
     ],
   },
 
@@ -1346,10 +2149,11 @@ drawFractalTree(400, 600, 120, -Math.PI/2, 10);  // Start from bottom-center`}
       </div>
     ),
     keyTakeaways: [
-      'Completed all 10 modules of Creator Gold Wings',
+      'Completed all 17 modules of Creator Gold Wings',
       'Master of HHF principles and reality worldbuilding',
-      'Equipped to publish breakthrough 7,000+ PoCs',
-      'Ready to mentor community and shape the ecosystem',
+      'Advanced expertise in system architecture, tokenomics, blockchain integration',
+      'Equipped to publish breakthrough 7,000+ PoCs and lead frontier development',
+      'Ready to mentor community, shape the ecosystem, and build self-sustaining infrastructure',
     ],
   },
 
@@ -2032,6 +2836,663 @@ drawFractalTree(400, 600, 120, -Math.PI/2, 10);  // Start from bottom-center`}
       'Internal coherence gradients predict reproducibility better than citations or reviewer consensus',
       'Incoherence ridges distinguish genuine novelty from error—controlled tension drives breakthroughs',
       'Evaluation becomes substrate-independent: text, code, models, art measured by same coherence physics',
+    ],
+  },
+
+  {
+    id: 'advanced-system-architecture',
+    number: 11,
+    title: 'Advanced System Architecture',
+    subtitle: 'Designing at Scale',
+    icon: <Layers className="h-6 w-6" />,
+    duration: '40 min',
+    content: (
+      <div className="space-y-6">
+        <div className="border-l-4 border-[var(--hydrogen-beta)] bg-gradient-to-r from-blue-500/10 to-transparent p-6">
+          <h3 className="text-2xl font-bold mb-3" style={{color: 'var(--hydrogen-beta)'}}>
+            🏗️ Architecture That Scales Fractally
+          </h3>
+          <p className="text-lg opacity-90 leading-relaxed">
+            You've built individual components. Now learn to design complete systems that scale from 
+            prototype to production, single user to millions, local to distributed—all while preserving coherence.
+          </p>
+        </div>
+
+        <div>
+          <h4 className="text-xl font-bold mb-4">Fractal Architecture Principles</h4>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="cloud-card p-5 border-l-4 border-blue-500">
+              <div className="font-bold mb-2 text-blue-400">Self-Similarity Across Scales</div>
+              <div className="text-sm opacity-90">
+                Same patterns at component, service, and system level. A function mirrors the module mirrors the architecture.
+              </div>
+            </div>
+            <div className="cloud-card p-5 border-l-4 border-purple-500">
+              <div className="font-bold mb-2 text-purple-400">Holographic Redundancy</div>
+              <div className="text-sm opacity-90">
+                Information encoded at boundaries. Entire system state recoverable from any subsystem's interface.
+              </div>
+            </div>
+            <div className="cloud-card p-5 border-l-4 border-green-500">
+              <div className="font-bold mb-2 text-green-400">Coherence-Preserving Boundaries</div>
+              <div className="text-sm opacity-90">
+                Services communicate through coherence contracts. Incoherence detected and resolved at interfaces.
+              </div>
+            </div>
+            <div className="cloud-card p-5 border-l-4 border-amber-500">
+              <div className="font-bold mb-2" style={{color: 'var(--hydrogen-amber)'}}>Recursive Growth</div>
+              <div className="text-sm opacity-90">
+                System grows by spawning similar subsystems. No central orchestrator—grammatical expansion.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-2 border-[var(--metal-gold)] bg-[var(--metal-gold)]/5 p-6 rounded-lg">
+          <h4 className="font-bold mb-4 text-lg" style={{color: 'var(--metal-gold)'}}>
+            The 4-Layer Reality Stack (Revisited at Scale)
+          </h4>
+          <div className="space-y-3 text-sm">
+            <div><strong>Layer 0 (Constants):</strong> Environment variables, config, immutable seeds → Deploy via Vercel/AWS SSM</div>
+            <div><strong>Layer 1 (Geometry):</strong> Database schemas, API contracts → PostgreSQL + GraphQL/tRPC</div>
+            <div><strong>Layer 2 (Interactions):</strong> Business logic, transformations → Serverless functions + Workers</div>
+            <div><strong>Layer 3 (Emergence):</strong> User experiences, dashboards → Next.js + React + Three.js</div>
+          </div>
+        </div>
+
+        <div className="text-sm opacity-90 space-y-2">
+          <div><strong>Microservices vs Monolith:</strong> Start monolith, extract services when coherence boundaries emerge naturally</div>
+          <div><strong>Database Design:</strong> Fractal schema—tables mirror objects mirror domain concepts</div>
+          <div><strong>API Strategy:</strong> GraphQL for flexible queries, tRPC for type-safe mutations, WebSocket for real-time</div>
+          <div><strong>Caching:</strong> Redis at service boundaries, CDN at edge, browser cache at client—holographic redundancy</div>
+        </div>
+      </div>
+    ),
+    keyTakeaways: [
+      'Fractal architecture: same patterns at component/service/system scales',
+      'Holographic redundancy: system state recoverable from any subsystem's interface',
+      'Start monolith, extract services at natural coherence boundaries',
+      '4-layer reality stack scales from prototype to production seamlessly',
+    ],
+  },
+
+  {
+    id: 'multi-sandbox-orchestration',
+    number: 12,
+    title: 'Multi-Sandbox Orchestration',
+    subtitle: 'Managing Cloud Ecosystems',
+    icon: <Grid3x3 className="h-6 w-6" />,
+    duration: '35 min',
+    content: (
+      <div className="space-y-6">
+        <div className="border-l-4 border-[var(--hydrogen-gamma)] bg-gradient-to-r from-purple-500/10 to-transparent p-6">
+          <h3 className="text-2xl font-bold mb-3" style={{color: 'var(--hydrogen-gamma)'}}>
+            ☁️ Orchestrating Distributed Clouds
+          </h3>
+          <p className="text-lg opacity-90 leading-relaxed">
+            Enterprise Clouds enable isolated evaluation environments. As a Creator, you'll orchestrate 
+            multiple sandboxes simultaneously—coordinating evaluation, maintaining coherence, and enabling collaboration.
+          </p>
+        </div>
+
+        <div>
+          <h4 className="text-xl font-bold mb-4">Sandbox Types & Use Cases</h4>
+          <div className="space-y-3">
+            <div className="cloud-card p-4 border-l-4 border-blue-500">
+              <div className="font-bold mb-1 text-blue-400">Development Sandboxes</div>
+              <div className="text-sm opacity-80">Testing new scoring lenses, evaluation algorithms, or PoC formats before production</div>
+            </div>
+            <div className="cloud-card p-4 border-l-4 border-purple-500">
+              <div className="font-bold mb-1 text-purple-400">Team Sandboxes</div>
+              <div className="text-sm opacity-80">Private evaluation environments for internal teams or research groups</div>
+            </div>
+            <div className="cloud-card p-4 border-l-4 border-green-500">
+              <div className="font-bold mb-1 text-green-400">Domain-Specific Sandboxes</div>
+              <div className="text-sm opacity-80">Specialized environments (quantum physics, generative art, social systems) with custom criteria</div>
+            </div>
+            <div className="cloud-card p-4 border-l-4 border-amber-500">
+              <div className="font-bold mb-1" style={{color: 'var(--hydrogen-amber)'}}>Production Sandboxes</div>
+              <div className="text-sm opacity-80">Live evaluation environments serving real users at scale</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-2 border-[var(--hydrogen-beta)] bg-blue-500/5 p-6 rounded-lg">
+          <h4 className="font-bold mb-3 text-lg" style={{color: 'var(--hydrogen-beta)'}}>
+            Cross-Sandbox Coherence
+          </h4>
+          <div className="text-sm opacity-90 space-y-2">
+            <div><strong>Problem:</strong> Each sandbox has its own archive, evaluation history, and scoring parameters</div>
+            <div><strong>Challenge:</strong> How to maintain coherence when contributor submits to multiple sandboxes?</div>
+            <div><strong>Solution:</strong> Holographic snapshot IDs—same PoC in different sandboxes gets evaluated against different archives but maintains content_hash identity</div>
+            <div><strong>Benefit:</strong> Contributors build unified reputation while sandboxes maintain independence</div>
+          </div>
+        </div>
+
+        <div className="text-sm opacity-90 space-y-2">
+          <div><strong>Resource Allocation:</strong> SYNTH tokens consumed per sandbox evaluation—budget accordingly</div>
+          <div><strong>Access Control:</strong> Role-based permissions (creator/operator/contributor) per sandbox</div>
+          <div><strong>Monitoring:</strong> Track evaluation counts, avg scores, redundancy rates across all sandboxes</div>
+          <div><strong>Migration:</strong> Move PoCs between sandboxes while preserving evaluation history</div>
+        </div>
+      </div>
+    ),
+    keyTakeaways: [
+      'Multiple sandbox types: development, team, domain-specific, production',
+      'Cross-sandbox coherence via holographic snapshot IDs and content hashes',
+      'Each sandbox has independent archive and scoring but contributor identity persists',
+      'Monitor resource consumption (SYNTH) and evaluation metrics across all sandboxes',
+    ],
+  },
+
+  {
+    id: 'custom-scoring-lenses',
+    number: 13,
+    title: 'Custom Scoring Lenses',
+    subtitle: 'Defining Your Own Dimensions',
+    icon: <Atom className="h-6 w-6" />,
+    duration: '45 min',
+    content: (
+      <div className="space-y-6">
+        <div className="border-l-4 border-[var(--hydrogen-alpha)] bg-gradient-to-r from-purple-500/10 to-transparent p-6">
+          <h3 className="text-2xl font-bold mb-3" style={{color: 'var(--hydrogen-alpha)'}}>
+            🔍 Your Custom Evaluation Lens
+          </h3>
+          <p className="text-lg opacity-90 leading-relaxed">
+            The default N+D+C+A dimensions are universal, but <strong>every domain has its own signal.</strong> 
+            Learn to design custom scoring lenses that capture what matters in your specific field.
+          </p>
+        </div>
+
+        <div>
+          <h4 className="text-xl font-bold mb-4">Beyond N+D+C+A</h4>
+          <div className="space-y-4">
+            <div className="cloud-card p-5">
+              <div className="font-bold mb-2 text-blue-400">Example: Quantum Physics Lens</div>
+              <div className="text-sm opacity-90 space-y-1">
+                <div>• <strong>Theoretical Rigor</strong> (0-2,500): Mathematical consistency, proof completeness</div>
+                <div>• <strong>Experimental Feasibility</strong> (0-2,500): Can this be tested with current technology?</div>
+                <div>• <strong>Predictive Power</strong> (0-2,500): Does it make falsifiable predictions?</div>
+                <div>• <strong>Unification Potential</strong> (0-2,500): Does it bridge existing theories?</div>
+              </div>
+            </div>
+
+            <div className="cloud-card p-5">
+              <div className="font-bold mb-2 text-purple-400">Example: Generative Art Lens</div>
+              <div className="text-sm opacity-90 space-y-1">
+                <div>• <strong>Aesthetic Coherence</strong> (0-2,500): Visual/auditory harmony, style consistency</div>
+                <div>• <strong>Technical Innovation</strong> (0-2,500): Novel algorithms, creative tool use</div>
+                <div>• <strong>Emotional Resonance</strong> (0-2,500): Viewer impact, engagement metrics</div>
+                <div>• <strong>Generative Potential</strong> (0-2,500): Spawns derivative works, inspires others</div>
+              </div>
+            </div>
+
+            <div className="cloud-card p-5">
+              <div className="font-bold mb-2 text-green-400">Example: Social Systems Lens</div>
+              <div className="text-sm opacity-90 space-y-1">
+                <div>• <strong>Scalability</strong> (0-2,500): Works for 10 people? 10 million?</div>
+                <div>• <strong>Incentive Alignment</strong> (0-2,500): Individual and collective goals converge</div>
+                <div>• <strong>Resilience</strong> (0-2,500): Survives attacks, adapts to change</div>
+                <div>• <strong>Accessibility</strong> (0-2,500): Low barrier to entry, inclusive design</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-2 border-[var(--metal-gold)] bg-[var(--metal-gold)]/5 p-6 rounded-lg">
+          <h4 className="font-bold mb-4 text-lg" style={{color: 'var(--metal-gold)'}}>
+            Designing Your Lens: The Process
+          </h4>
+          <div className="space-y-3 text-sm">
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">1️⃣</span>
+              <div><strong>Identify Domain Signal:</strong> What separates good from breakthrough in your field?</div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">2️⃣</span>
+              <div><strong>Define 3-4 Dimensions:</strong> Each must be independent, measurable, and meaningful</div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">3️⃣</span>
+              <div><strong>Create Scoring Rubrics:</strong> What does 500, 1,500, 2,500 look like for each dimension?</div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">4️⃣</span>
+              <div><strong>Update System Prompt:</strong> Give AI clear criteria, examples, and edge cases</div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">5️⃣</span>
+              <div><strong>Calibrate with Test Set:</strong> Evaluate 20-30 known PoCs, adjust rubrics based on results</div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">6️⃣</span>
+              <div><strong>Deploy to Sandbox:</strong> Test in isolated environment before affecting production scores</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="text-sm opacity-90 space-y-2">
+          <div><strong>Lens Validation:</strong> Does it reliably distinguish quality? High inter-rater reliability?</div>
+          <div><strong>Lens Evolution:</strong> Update as domain matures—what mattered 5 years ago may not today</div>
+          <div><strong>Lens Transparency:</strong> Contributors must understand criteria to optimize submissions</div>
+          <div><strong>Lens Governance:</strong> Who can modify? How are changes approved and communicated?</div>
+        </div>
+      </div>
+    ),
+    keyTakeaways: [
+      'Custom scoring lenses capture domain-specific signal beyond universal N+D+C+A',
+      'Each lens has 3-4 independent, measurable dimensions totaling 10,000 points',
+      'Design process: identify signal → define dimensions → create rubrics → calibrate → deploy',
+      'Lenses evolve as domains mature—regular validation and refinement required',
+    ],
+  },
+
+  {
+    id: 'tokenomics-configuration',
+    number: 14,
+    title: 'Tokenomics & Economic Design',
+    subtitle: 'SYNTH as Coordination Primitive',
+    icon: <Zap className="h-6 w-6" />,
+    duration: '40 min',
+    content: (
+      <div className="space-y-6">
+        <div className="border-l-4 border-[var(--metal-copper)] bg-gradient-to-r from-orange-500/10 to-transparent p-6">
+          <h3 className="text-2xl font-bold mb-3" style={{color: 'var(--metal-copper)'}}>
+            💰 SYNTH: Not Currency, Coordination
+          </h3>
+          <p className="text-lg opacity-90 leading-relaxed">
+            SYNTH is an <strong>internal coordination primitive</strong>, not an investment vehicle. 
+            Learn how to configure token economics that align incentives without creating financial obligations.
+          </p>
+        </div>
+
+        <div>
+          <h4 className="text-xl font-bold mb-4">The SYNTH90T MOTHERLODE VAULT</h4>
+          <div className="cloud-card p-6">
+            <div className="text-sm opacity-90 space-y-3">
+              <div><strong>Total Supply:</strong> 90 trillion SYNTH (fixed forever, no minting)</div>
+              <div><strong>Opening:</strong> Spring Equinox, March 20, 2026</div>
+              <div><strong>Allocation:</strong> By score—all qualifying PoCs registered on-chain receive proportional SYNTH</div>
+              <div><strong>Purpose:</strong> Coordination token for accessing features, prioritizing work, governance participation</div>
+              <div><strong>NOT:</strong> Investment, security, promise of profit. Pure utility within ecosystem.</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-2 border-[var(--hydrogen-beta)] bg-blue-500/5 p-6 rounded-lg">
+          <h4 className="font-bold mb-4 text-lg" style={{color: 'var(--hydrogen-beta)'}}>
+            Economic Levers You Control
+          </h4>
+          <div className="space-y-3 text-sm">
+            <div>
+              <div className="font-semibold mb-1 text-blue-400">Submission Fees</div>
+              <div className="opacity-90">$500 default, configurable per sandbox. Revenue funds infrastructure. 100% transparent.</div>
+            </div>
+            <div>
+              <div className="font-semibold mb-1 text-purple-400">SYNTH Allocation Curves</div>
+              <div className="opacity-90">Linear? Exponential? Tiered? You decide how score maps to token allocation.</div>
+            </div>
+            <div>
+              <div className="font-semibold mb-1 text-green-400">Feature Access Thresholds</div>
+              <div className="opacity-90">Require X SYNTH to access advanced features (like custom lenses, API access, priority eval)</div>
+            </div>
+            <div>
+              <div className="font-semibold mb-1 text-amber-400">Burn Mechanisms</div>
+              <div className="opacity-90">SYNTH consumed for actions (evaluation, storage, compute). Deflationary pressure over time.</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="text-sm opacity-90 space-y-2">
+          <div><strong>Legal Framing:</strong> Always "coordination primitive" not "investment." No promises of profit.</div>
+          <div><strong>Transparency:</strong> All token flows public on blockchain. Full audit trail for governance.</div>
+          <div><strong>Utility-First:</strong> Token must be useful within ecosystem before any external value considered.</div>
+          <div><strong>Regulatory Compliance:</strong> Consult legal counsel. Different jurisdictions have different rules.</div>
+        </div>
+      </div>
+    ),
+    keyTakeaways: [
+      'SYNTH is internal coordination primitive, not investment vehicle',
+      '90T fixed supply allocated by score at MOTHERLODE opening (March 20, 2026)',
+      'Configure submission fees, allocation curves, access thresholds, burn mechanisms',
+      'Always frame as utility token—legal compliance critical',
+    ],
+  },
+
+  {
+    id: 'blockchain-integration',
+    number: 15,
+    title: 'Blockchain Integration & Anchoring',
+    subtitle: 'Immutable Proof on Base',
+    icon: <FileCode className="h-6 w-6" />,
+    duration: '35 min',
+    content: (
+      <div className="space-y-6">
+        <div className="border-l-4 border-[var(--hydrogen-gamma)] bg-gradient-to-r from-purple-500/10 to-transparent p-6">
+          <h3 className="text-2xl font-bold mb-3" style={{color: 'var(--hydrogen-gamma)'}}>
+            ⛓️ Permanent, Verifiable, Unstoppable
+          </h3>
+          <p className="text-lg opacity-90 leading-relaxed">
+            Blockchain anchoring makes contributions <strong>permanently verifiable</strong>. Learn to integrate 
+            Base Mainnet for token contracts, PoC registration, and immutable proof.
+          </p>
+        </div>
+
+        <div>
+          <h4 className="text-xl font-bold mb-4">Why Base Mainnet?</h4>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="cloud-card p-4">
+              <div className="text-sm opacity-90 space-y-2">
+                <div><strong>Low Gas Fees:</strong> L2 rollup makes transactions affordable</div>
+                <div><strong>EVM Compatible:</strong> Use existing Ethereum tooling</div>
+                <div><strong>Fast Finality:</strong> Blocks confirmed in ~2 seconds</div>
+                <div><strong>Coinbase Backed:</strong> Institutional support and security</div>
+              </div>
+            </div>
+            <div className="cloud-card p-4">
+              <div className="text-sm opacity-90 space-y-2">
+                <div><strong>Developer Friendly:</strong> Great docs, active community</div>
+                <div><strong>Production Ready:</strong> Battle-tested infrastructure</div>
+                <div><strong>Future-Proof:</strong> Ethereum security, L2 scalability</div>
+                <div><strong>Cost-Effective:</strong> ~$0.01 per transaction vs $10+ on L1</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-2 border-[var(--metal-gold)] bg-[var(--metal-gold)]/5 p-6 rounded-lg">
+          <h4 className="font-bold mb-4 text-lg" style={{color: 'var(--metal-gold)'}}>
+            Smart Contract Architecture
+          </h4>
+          <div className="text-sm opacity-90 space-y-3">
+            <div>
+              <div className="font-semibold mb-1 text-blue-400">SYNTH Token Contract (ERC-20)</div>
+              <div>90T fixed supply, no minting, burn capability. Standard transfer/approve/allowance functions.</div>
+            </div>
+            <div>
+              <div className="font-semibold mb-1 text-purple-400">PoC Registry Contract</div>
+              <div>Stores content_hash, score, timestamp, contributor address. Immutable record of all qualifying PoCs.</div>
+            </div>
+            <div>
+              <div className="font-semibold mb-1 text-green-400">Allocation Contract</div>
+              <div>Handles MOTHERLODE distribution. Score-based claims after March 20, 2026 opening.</div>
+            </div>
+            <div>
+              <div className="font-semibold mb-1 text-amber-400">Governance Contract (Optional)</div>
+              <div>Token-weighted voting on protocol upgrades. Off-chain signaling or on-chain execution.</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="text-sm opacity-90 space-y-2">
+          <div><strong>Integration Pattern:</strong> Off-chain eval → On-chain registration (if qualifying) → IPFS storage (full content)</div>
+          <div><strong>Gas Optimization:</strong> Batch registrations, use events for lookups, minimize storage</div>
+          <div><strong>Security:</strong> Audited contracts, multi-sig wallets, upgrade patterns (proxy/beacon)</div>
+          <div><strong>Monitoring:</strong> Track all on-chain activity, alert on anomalies, verify state consistency</div>
+        </div>
+      </div>
+    ),
+    keyTakeaways: [
+      'Base Mainnet provides low-cost, fast, EVM-compatible blockchain infrastructure',
+      'Smart contracts: SYNTH token (ERC-20), PoC registry, allocation, optional governance',
+      'Integration pattern: off-chain eval → on-chain registration → IPFS storage',
+      'Optimize for gas efficiency, security audit all contracts, monitor chain state',
+    ],
+  },
+
+  {
+    id: 'ecosystem-strategy',
+    number: 16,
+    title: 'Ecosystem Strategy & Scaling',
+    subtitle: 'From Product to Platform',
+    icon: <Layers className="h-6 w-6" />,
+    duration: '45 min',
+    content: (
+      <div className="space-y-6">
+        <div className="border-l-4 border-[var(--hydrogen-alpha)] bg-gradient-to-r from-purple-500/10 to-transparent p-6">
+          <h3 className="text-2xl font-bold mb-3" style={{color: 'var(--hydrogen-alpha)'}}>
+            🌐 Building Ecosystems, Not Just Products
+          </h3>
+          <p className="text-lg opacity-90 leading-relaxed">
+            You've built the technical infrastructure. Now learn to <strong>cultivate an ecosystem</strong>—
+            attract contributors, empower operators, enable creators, and scale from dozens to millions.
+          </p>
+        </div>
+
+        <div>
+          <h4 className="text-xl font-bold mb-4">The Three Growth Stages</h4>
+          <div className="space-y-4">
+            <div className="cloud-card p-5 border-l-4 border-blue-500">
+              <div className="font-bold text-xl mb-2 text-blue-400">Stage 1: Seed Community (0-100 users)</div>
+              <div className="text-sm opacity-90 space-y-2">
+                <div><strong>Focus:</strong> Find true believers who align with HHF vision</div>
+                <div><strong>Strategy:</strong> High-touch onboarding, direct feedback loops, co-creation</div>
+                <div><strong>Success Metric:</strong> Retention {'>'} 70%, active daily engagement</div>
+                <div><strong>Common Pitfall:</strong> Scaling too fast before product-market-coherence fit</div>
+              </div>
+            </div>
+
+            <div className="cloud-card p-5 border-l-4 border-purple-500">
+              <div className="font-bold text-xl mb-2 text-purple-400">Stage 2: Networked Growth (100-10K users)</div>
+              <div className="text-sm opacity-90 space-y-2">
+                <div><strong>Focus:</strong> Enable peer-to-peer growth, community-led expansion</div>
+                <div><strong>Strategy:</strong> Operator program, contributor showcases, viral mechanisms</div>
+                <div><strong>Success Metric:</strong> Organic growth rate {'>'} 20% MoM, NPS {'>'} 50</div>
+                <div><strong>Common Pitfall:</strong> Losing coherence as diverse users join</div>
+              </div>
+            </div>
+
+            <div className="cloud-card p-5 border-l-4 border-green-500">
+              <div className="font-bold text-xl mb-2 text-green-400">Stage 3: Platform Scale (10K+ users)</div>
+              <div className="text-sm opacity-90 space-y-2">
+                <div><strong>Focus:</strong> Become infrastructure—enable others to build on top</div>
+                <div><strong>Strategy:</strong> APIs, SDKs, marketplace, partner ecosystem</div>
+                <div><strong>Success Metric:</strong> 3rd-party innovation, platform revenue, network effects</div>
+                <div><strong>Common Pitfall:</strong> Over-controlling vs enabling chaos</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-2 border-[var(--metal-gold)] bg-[var(--metal-gold)]/5 p-6 rounded-lg">
+          <h4 className="font-bold mb-4 text-lg" style={{color: 'var(--metal-gold)'}}>
+            The Creator-Operator-Contributor Flywheel
+          </h4>
+          <div className="text-sm opacity-90 space-y-3">
+            <div>
+              <strong className="text-blue-400">Contributors submit breakthrough work</strong> → High scores → Attract attention → More contributors join
+            </div>
+            <div>
+              <strong className="text-purple-400">Operators manage quality infrastructure</strong> → Fast, reliable eval → Good experience → More operators volunteer
+            </div>
+            <div>
+              <strong style={{color: 'var(--metal-gold)'}}>Creators build new worlds</strong> → Novel use cases → Expand possibility space → More creators inspired
+            </div>
+            <div className="pt-3 border-t border-[var(--metal-gold)]/30">
+              <strong>Result:</strong> Self-reinforcing growth where each role enables and amplifies the others
+            </div>
+          </div>
+        </div>
+
+        <div className="text-sm opacity-90 space-y-2">
+          <div><strong>Marketing Strategy:</strong> Education-first—teach HHF principles, not just features</div>
+          <div><strong>Community Building:</strong> Discord/forums for async, WorkChat for real-time, live events for deep bonds</div>
+          <div><strong>Content Strategy:</strong> Showcase breakthrough PoCs, operator success stories, creator tutorials</div>
+          <div><strong>Partnership Strategy:</strong> Universities (research), enterprises (infrastructure), creators (applications)</div>
+          <div><strong>Revenue Model:</strong> Freemium for contributors, subscription for operators, enterprise for creators</div>
+        </div>
+      </div>
+    ),
+    keyTakeaways: [
+      'Three growth stages: Seed (0-100), Networked (100-10K), Platform (10K+)',
+      'Creator-Operator-Contributor flywheel creates self-reinforcing growth',
+      'Education-first marketing: teach HHF principles, showcase breakthroughs',
+      'Balance control vs chaos—enable innovation while preserving coherence',
+    ],
+  },
+
+  {
+    id: 'frontier-leadership',
+    number: 17,
+    title: 'Frontier Leadership & Vision',
+    subtitle: 'Shaping the Future',
+    icon: <Award className="h-6 w-6" />,
+    duration: '50 min',
+    content: (
+      <div className="space-y-6">
+        <div className="border-l-4 border-[var(--metal-gold)] bg-gradient-to-r from-yellow-500/10 to-transparent p-6">
+          <h3 className="text-2xl font-bold mb-3" style={{color: 'var(--metal-gold)'}}>
+            👑 You Are the Frontier
+          </h3>
+          <p className="text-lg opacity-90 leading-relaxed">
+            You've mastered the technical, strategic, and operational aspects. This final module is about 
+            <strong> leadership</strong>—how to guide the ecosystem, make hard decisions, and shape the future 
+            of collaborative reality construction.
+          </p>
+        </div>
+
+        <div>
+          <h4 className="text-xl font-bold mb-4">The Responsibilities of a Creator</h4>
+          <div className="space-y-4">
+            <div className="cloud-card p-5">
+              <div className="font-bold mb-2 text-blue-400">Technical Stewardship</div>
+              <div className="text-sm opacity-90">
+                Maintain code quality, architectural coherence, and system reliability. Your decisions affect 
+                thousands of users. Technical debt is collective debt.
+              </div>
+            </div>
+
+            <div className="cloud-card p-5">
+              <div className="font-bold mb-2 text-purple-400">Community Governance</div>
+              <div className="text-sm opacity-90">
+                Facilitate decisions that balance competing interests. Operators want stability, contributors 
+                want opportunity, creators want innovation. Find coherence.
+              </div>
+            </div>
+
+            <div className="cloud-card p-5">
+              <div className="font-bold mb-2 text-green-400">Economic Fairness</div>
+              <div className="text-sm opacity-90">
+                Ensure token distribution, submission fees, and access policies are transparent and just. 
+                Power corrupts—design systems that resist corruption.
+              </div>
+            </div>
+
+            <div className="cloud-card p-5">
+              <div className="font-bold mb-2 text-amber-400">Vision Continuity</div>
+              <div className="text-sm opacity-90">
+                Preserve HHF principles as ecosystem evolves. Not everything popular is coherent. Sometimes 
+                leadership means saying no to growth that threatens integrity.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-2 border-[var(--hydrogen-beta)] bg-blue-500/5 p-6 rounded-lg">
+          <h4 className="font-bold mb-4 text-lg" style={{color: 'var(--hydrogen-beta)'}}>
+            Hard Decisions You'll Face
+          </h4>
+          <div className="space-y-3 text-sm">
+            <div>
+              <div className="font-semibold mb-1 text-blue-400">Scaling vs Coherence</div>
+              <div className="opacity-90">
+                Do you accept lower-quality contributions to grow faster? Or maintain high bar and grow slower?
+              </div>
+            </div>
+            <div>
+              <div className="font-semibold mb-1 text-purple-400">Centralization vs Decentralization</div>
+              <div className="opacity-90">
+                When do you enforce standards (centralized) vs let community decide (decentralized)?
+              </div>
+            </div>
+            <div>
+              <div className="font-semibold mb-1 text-green-400">Monetization vs Accessibility</div>
+              <div className="opacity-90">
+                How to fund infrastructure without creating financial barriers for talented contributors?
+              </div>
+            </div>
+            <div>
+              <div className="font-semibold mb-1 text-amber-400">Innovation vs Stability</div>
+              <div className="opacity-90">
+                When to ship experimental features vs when to focus on reliability and polish?
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h4 className="text-xl font-bold mb-4">The Path Forward</h4>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="cloud-card p-5">
+              <div className="font-bold mb-3" style={{color: 'var(--metal-gold)'}}>Short-Term (0-6 months)</div>
+              <div className="text-sm opacity-90 space-y-1">
+                <div>• Launch your first reality world or major PoC</div>
+                <div>• Recruit 3-5 operators to manage infrastructure</div>
+                <div>• Onboard 50-100 initial contributors</div>
+                <div>• Achieve product-market-coherence fit</div>
+                <div>• Establish community norms and culture</div>
+              </div>
+            </div>
+
+            <div className="cloud-card p-5">
+              <div className="font-bold mb-3" style={{color: 'var(--metal-gold)'}}>Long-Term (6-24 months)</div>
+              <div className="text-sm opacity-90 space-y-1">
+                <div>• Scale to 1,000+ active contributors</div>
+                <div>• Enable 10+ operators with multi-sandbox</div>
+                <div>• Launch 5+ major reality worlds</div>
+                <div>• Open platform to 3rd-party creators</div>
+                <div>• Achieve financial sustainability</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-2 border-[var(--metal-gold)] bg-[var(--metal-gold)]/5 p-6 rounded-lg">
+          <h4 className="font-bold mb-4 text-lg" style={{color: 'var(--metal-gold)'}}>
+            💎 The Ultimate Goal
+          </h4>
+          <div className="text-sm opacity-90 space-y-3">
+            <div>
+              The goal is not to build a product, or even a platform. The goal is to create 
+              <strong> infrastructure for collaborative reality construction</strong> that outlives any single creator.
+            </div>
+            <div>
+              When you've succeeded, Syntheverse won't need you anymore. It will run itself through grammatical 
+              coordination, fractal scaling, and holographic coherence. Contributors will contribute, operators 
+              will operate, creators will create—all without centralized control.
+            </div>
+            <div>
+              <strong>That's the endgame:</strong> Awareness infrastructure that scales infinitely while 
+              preserving coherence. Not because you manage it, but because the grammar itself enforces it.
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-r from-[var(--metal-gold)]/10 to-transparent border-l-4 border-[var(--metal-gold)] p-6">
+          <h4 className="font-bold mb-3" style={{color: 'var(--metal-gold)'}}>
+            👑 You've Earned Your Gold Wings
+          </h4>
+          <p className="text-sm opacity-90 leading-relaxed mb-3">
+            Congratulations. You've completed all 17 modules of Creator Gold Wings. You're now equipped to:
+          </p>
+          <div className="text-sm space-y-1 opacity-90">
+            <div>✓ Design complete reality worlds using HHF principles</div>
+            <div>✓ Build and deploy production-grade implementations</div>
+            <div>✓ Orchestrate multi-sandbox ecosystems</div>
+            <div>✓ Configure custom scoring lenses and tokenomics</div>
+            <div>✓ Lead communities and shape the frontier</div>
+          </div>
+          <p className="text-sm opacity-90 leading-relaxed mt-4">
+            <strong>Now go build realities worth exploring.</strong> The frontier awaits.
+          </p>
+        </div>
+      </div>
+    ),
+    keyTakeaways: [
+      'Creator responsibilities: technical stewardship, community governance, economic fairness, vision continuity',
+      'Balance hard tradeoffs: scaling vs coherence, centralization vs decentralization, monetization vs accessibility',
+      'Short-term: launch worlds, recruit operators, onboard contributors, achieve product-market-coherence fit',
+      'Ultimate goal: self-sustaining infrastructure for collaborative reality construction that outlives its creators',
     ],
   },
 ];
