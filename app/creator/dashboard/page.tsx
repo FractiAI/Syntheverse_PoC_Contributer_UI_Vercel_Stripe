@@ -9,6 +9,7 @@ import { createClient } from '@/utils/supabase/server';
 import { getAuthenticatedUserWithRole } from '@/utils/auth/permissions';
 import { CreatorCockpitStats } from '@/components/creator/CreatorCockpitStats';
 import { CreatorCockpitNavigation } from '@/components/creator/CreatorCockpitNavigation';
+import { CreatorUserManagement } from '@/components/creator/CreatorUserManagement';
 import { StatusPanel } from '@/components/StatusPanel';
 import { SalesTracking } from '@/components/SalesTracking';
 import { WorkChat } from "@/components/WorkChat";
@@ -22,7 +23,7 @@ import { BroadcastArchiveNavigator } from '@/components/BroadcastArchiveNavigato
 import CockpitHeader from '@/components/CockpitHeader';
 import { QuickActionsPanel } from '@/components/QuickActionsPanel';
 import { OperatorBroadcastBanner } from '@/components/OperatorBroadcastBanner';
-import { Shield, Activity, FileText, BookOpen, Settings } from 'lucide-react';
+import { Shield, Activity, FileText, BookOpen, Settings, Users } from 'lucide-react';
 import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
 import { MobileStatusIndicators } from '@/components/MobileStatusIndicators';
@@ -173,6 +174,33 @@ export default async function CreatorLab() {
             </div>
           </div>
         </details>
+
+        {/* User Management - Dedicated Section (Always Visible) */}
+        {isCreator && (
+          <details className="lab-panel" open>
+            <summary className="lab-panel-header cursor-pointer select-none list-none">
+              <div className="flex items-center justify-between">
+                <div className="lab-panel-title">
+                  <Users className="lab-panel-icon text-purple-500" />
+                  <span>User Management</span>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="lab-badge lab-badge-info">
+                    <Users className="h-3 w-3 mr-1" />
+                    OPERATOR ADMINISTRATION
+                  </div>
+                  <ChevronDown className="lab-chevron h-5 w-5" />
+                </div>
+              </div>
+              <div className="lab-panel-description mt-2">
+                Manage operator privileges, grant/revoke roles, and delete user accounts
+              </div>
+            </summary>
+            <div className="lab-panel-body">
+              <CreatorUserManagement />
+            </div>
+          </details>
+        )}
 
         {/* Core Metrics - Collapsible */}
         <details className="lab-panel" open>
