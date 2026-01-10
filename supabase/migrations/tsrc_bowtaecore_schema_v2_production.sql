@@ -466,15 +466,38 @@ ORDER BY pe.timestamp DESC;
 -- View: Active authorizations (not expired, not executed)
 CREATE OR REPLACE VIEW active_authorizations AS
 SELECT 
-  a.*,
+  a.id,
+  a.command_id,
+  a.projection_id,
+  a.issued_at,
+  a.lease_id,
+  a.lease_valid_for_ms,
+  a.expires_at,
+  a.cmd_counter,
+  a.kman_hash,
+  a.bset_hash,
+  a.policy_seq,
+  a.mode_id,
+  a.closure_op,
+  a.closure_d_def,
+  a.closure_d,
+  a.action_type,
+  a.params,
+  a.sig_alg,
+  a.sig_canonicalization,
+  a.sig_key_id,
+  a.sig_payload_hash,
+  a.sig_b64,
+  a.status,
+  a.executed_at,
+  a.execution_result,
   l.status AS lease_status,
-  pc.action_type,
   pc.risk_tier,
   pe.user_id,
   pe.submission_hash
 FROM authorizations a
 JOIN leases l ON a.lease_id = l.lease_id
-JOIN projected_commands pc ON a.projection_id = pc.projection_id
+JOIN projected_commands pc ON a.projection_id = a.projection_id
 JOIN proposal_envelopes pe ON pc.proposal_id = pe.proposal_id
 WHERE a.status = 'pending'
   AND l.status = 'active'
