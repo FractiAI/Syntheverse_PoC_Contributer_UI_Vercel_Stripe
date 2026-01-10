@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Users, Trash2, Shield, ShieldOff, AlertTriangle, Search } from 'lucide-react';
+import { Users, Trash2, Shield, ShieldOff, AlertTriangle, Search, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -136,6 +136,10 @@ export function CreatorUserManagement() {
     setManagingRole(true);
     setError(null);
 
+    // Create an AbortController with timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
     try {
       const response = await fetch(`/api/creator/users/${encodeURIComponent(email)}/role`, {
         method: 'POST',
@@ -144,7 +148,10 @@ export function CreatorUserManagement() {
           action,
           role: 'operator',
         }),
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       const data = await response.json();
 
@@ -153,9 +160,20 @@ export function CreatorUserManagement() {
         alert(`Operator role ${action === 'grant' ? 'granted' : 'revoked'} successfully.`);
       } else {
         setError(data.error || `Failed to ${action} operator role`);
+        alert(`Error: ${data.error || `Failed to ${action} operator role`}`);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : `Failed to ${action} operator role`);
+      clearTimeout(timeoutId);
+      if (err instanceof Error && err.name === 'AbortError') {
+        const timeoutError = 'Request timed out after 30 seconds. Please check your connection and try again.';
+        setError(timeoutError);
+        alert(timeoutError);
+      } else {
+        const errorMsg = err instanceof Error ? err.message : `Failed to ${action} operator role`;
+        setError(errorMsg);
+        alert(`Error: ${errorMsg}`);
+      }
+      console.error('Role change error:', err);
     } finally {
       setManagingRole(false);
       setRoleAction({ email: '', action: null });
@@ -295,8 +313,12 @@ export function CreatorUserManagement() {
                         disabled={managingRole}
                         className="cockpit-lever"
                       >
-                        <ShieldOff className="mr-1 h-3 w-3" />
-                        Revoke Operator
+                        {managingRole && roleAction.email === user.email ? (
+                          <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                        ) : (
+                          <ShieldOff className="mr-1 h-3 w-3" />
+                        )}
+                        {managingRole && roleAction.email === user.email ? 'Revoking...' : 'Revoke Operator'}
                       </Button>
                     ) : (
                       <Button
@@ -306,8 +328,12 @@ export function CreatorUserManagement() {
                         disabled={managingRole}
                         className="cockpit-lever"
                       >
-                        <Shield className="mr-1 h-3 w-3" />
-                        Grant Operator
+                        {managingRole && roleAction.email === user.email ? (
+                          <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                        ) : (
+                          <Shield className="mr-1 h-3 w-3" />
+                        )}
+                        {managingRole && roleAction.email === user.email ? 'Granting...' : 'Grant Operator'}
                       </Button>
                     )}
                     <Button
