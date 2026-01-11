@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
+import { Sparkles, Save, Trash2, Edit, PlusCircle, Loader2 } from 'lucide-react';
 
 interface Hero {
   id: string;
@@ -420,63 +421,63 @@ Always prioritize user experience and goal achievement.`;
   if (loading) {
     return (
       <div className="p-8 text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400 mx-auto"></div>
-        <p className="mt-4 text-slate-400">Loading creator console...</p>
+        <Loader2 className="h-12 w-12 animate-spin text-[var(--lab-primary)] mx-auto" />
+        <p className="mt-4 text-[var(--lab-text-secondary)]">Loading creator console...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-purple-950 p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-purple-400 mb-2">Hero Creator Console</h1>
-          <p className="text-slate-400">Full catalog management with AI-assisted prompt creation</p>
-        </div>
-
-        {/* Tabs */}
-        <div className="flex gap-4 mb-6 border-b border-slate-700">
+    <div className="space-y-6">
+      {/* Lab-style Tabs */}
+      <div className="lab-instrument-panel">
+        <div className="flex gap-2 border-b-2 border-[var(--lab-border)]">
           <button
             onClick={() => setActiveTab('heroes')}
-            className={`px-6 py-3 font-semibold transition-all ${
+            className={`px-6 py-3 font-semibold text-sm uppercase tracking-wider transition-all ${
               activeTab === 'heroes'
-                ? 'text-purple-400 border-b-2 border-purple-400'
-                : 'text-slate-400 hover:text-slate-200'
+                ? 'text-[var(--lab-primary)] border-b-2 border-[var(--lab-primary)] -mb-[2px]'
+                : 'text-[var(--lab-text-secondary)] hover:text-[var(--lab-text-primary)]'
             }`}
           >
             Heroes ({heroes.length})
           </button>
           <button
             onClick={() => setActiveTab('stories')}
-            className={`px-6 py-3 font-semibold transition-all ${
+            className={`px-6 py-3 font-semibold text-sm uppercase tracking-wider transition-all ${
               activeTab === 'stories'
-                ? 'text-purple-400 border-b-2 border-purple-400'
-                : 'text-slate-400 hover:text-slate-200'
+                ? 'text-[var(--lab-primary)] border-b-2 border-[var(--lab-primary)] -mb-[2px]'
+                : 'text-[var(--lab-text-secondary)] hover:text-[var(--lab-text-primary)]'
             }`}
           >
             Stories ({stories.length})
           </button>
           <button
             onClick={() => setActiveTab('ai-assistant')}
-            className={`px-6 py-3 font-semibold transition-all ${
+            className={`px-6 py-3 font-semibold text-sm uppercase tracking-wider transition-all ${
               activeTab === 'ai-assistant'
-                ? 'text-purple-400 border-b-2 border-purple-400'
-                : 'text-slate-400 hover:text-slate-200'
+                ? 'text-[var(--lab-primary)] border-b-2 border-[var(--lab-primary)] -mb-[2px]'
+                : 'text-[var(--lab-text-secondary)] hover:text-[var(--lab-text-primary)]'
             }`}
           >
-            🤖 AI Assistant
+            <Sparkles className="inline h-4 w-4 mr-1" /> AI Assistant
           </button>
         </div>
+      </div>
 
-        {/* Heroes Tab */}
-        {activeTab === 'heroes' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Hero Form */}
-            <div className="lg:col-span-1 bg-slate-900/50 backdrop-blur-sm rounded-lg border border-slate-700 p-6">
-              <h2 className="text-xl font-bold text-purple-400 mb-4">
-                {selectedHero ? 'Edit Hero' : 'Create Hero'}
-              </h2>
+      {/* Heroes Tab */}
+      {activeTab === 'heroes' && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Hero Form */}
+          <div className="lg:col-span-1">
+            <div className="lab-card">
+              <div className="lab-card-header">
+                <h3 className="lab-card-title">
+                  {selectedHero ? <Edit className="inline h-4 w-4 mr-2" /> : <PlusCircle className="inline h-4 w-4 mr-2" />}
+                  {selectedHero ? 'Edit Hero' : 'Create Hero'}
+                </h3>
+              </div>
+              <div className="lab-card-body">
               
               <div className="space-y-4">
                 <div>
