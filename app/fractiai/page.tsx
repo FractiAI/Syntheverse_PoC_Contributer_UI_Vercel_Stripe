@@ -10,6 +10,7 @@ import { createClient } from '@/utils/supabase/server';
 import { getAuthenticatedUserWithRole } from '@/utils/auth/permissions';
 import { QuickActionsPanel } from '@/components/QuickActionsPanel';
 import { HeroPanel } from '@/components/HeroPanel';
+import { HeroAIManager } from '@/components/HeroAIManager';
 import Image from 'next/image';
 import { Cpu, Binary, Lock } from 'lucide-react';
 import '../dashboard-cockpit.css';
@@ -130,6 +131,14 @@ export default async function FractiAIPage() {
           isCreator={isCreator}
           isOperator={isOperator}
         />
+        
+        {/* Alan Turing AI Guide */}
+        <div className="fixed bottom-4 left-4 z-50">
+          <HeroAIManager
+            pageContext="fractiai"
+            additionalContext="FractiAI Command Center - AI evaluation and computational intelligence"
+          />
+        </div>
       </div>
 
       {/* Turing's Closing Wisdom */}

@@ -19,6 +19,7 @@ import { HeroPanel } from '@/components/HeroPanel';
 import { ObservationalStudiesNavigator } from '@/components/contributor/ObservationalStudiesNavigator';
 import { WorkshopToolsNavigator } from '@/components/contributor/WorkshopToolsNavigator';
 import { InventionNotebooksNavigator } from '@/components/contributor/InventionNotebooksNavigator';
+import { HeroAIManager } from '@/components/HeroAIManager';
 import { Eye, Palette, ScrollText, Settings, Database } from 'lucide-react';
 import Image from 'next/image';
 import { MobileStatusIndicators } from '@/components/MobileStatusIndicators';
@@ -287,6 +288,14 @@ export default async function Dashboard() {
             </p>
           </div>
         </div>
+      </div>
+
+      {/* Leonardo da Vinci AI Guide */}
+      <div className="fixed bottom-4 left-4 z-50">
+        <HeroAIManager
+          pageContext="dashboard"
+          additionalContext="Contributors Lab - Observation, creation, and proof-of-contribution"
+        />
       </div>
 
       {/* Hero Panel - Fixed Bottom Right */}

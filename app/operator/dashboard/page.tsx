@@ -19,6 +19,7 @@ import HeroOperatorPanel from '@/components/HeroOperatorPanel';
 import { FieldMeasurementsNavigator } from '@/components/operator/FieldMeasurementsNavigator';
 import { LaboratoryApparatusNavigator } from '@/components/operator/LaboratoryApparatusNavigator';
 import { ExperimentalRecordsNavigator } from '@/components/operator/ExperimentalRecordsNavigator';
+import { HeroAIManager } from '@/components/HeroAIManager';
 import { Settings, Zap, FlaskConical, BookOpen } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -206,6 +207,14 @@ export default async function OperatorLab() {
               </div>
             </div>
             <HeroOperatorPanel />
+          </div>
+
+          {/* Michael Faraday AI Guide */}
+          <div className="fixed bottom-4 left-4 z-50">
+            <HeroAIManager
+              pageContext="operator"
+              additionalContext="Operator Console - Cloud management, system monitoring, and experimental operations"
+            />
           </div>
 
           {/* Field Measurements Navigator */}

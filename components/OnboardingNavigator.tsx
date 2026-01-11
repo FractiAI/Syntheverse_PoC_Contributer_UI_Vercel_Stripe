@@ -75,7 +75,7 @@ import { WingsTrackSelector, WingTrack } from './WingsTrackSelector';
 import { contributorCopperModules } from './training/ContributorCopperModules';
 import { operatorSilverModules } from './training/OperatorSilverModules';
 import { creatorGoldModules } from './training/CreatorGoldModules';
-import { OnboardingAIManager } from './OnboardingAIManager';
+import { HeroAIManager } from './HeroAIManager';
 
 export function OnboardingNavigator() {
   const [currentModule, setCurrentModule] = useState(0);
@@ -6373,14 +6373,12 @@ export function OnboardingNavigator() {
           <div className="min-h-[400px]">{modules[currentModule].content}</div>
         </div>
 
-        {/* AI Instructor - Floating Button */}
-        {wingTrack && (
-          <OnboardingAIManager
-            moduleTitle={modules[currentModule].title}
-            moduleNumber={modules[currentModule].number || currentModule + 1}
-            wingTrack={wingTrack}
-          />
-        )}
+        {/* AI Guide - Humboldt Explorer */}
+        <HeroAIManager
+          pageContext="onboarding"
+          moduleTitle={modules[currentModule].title}
+          moduleNumber={modules[currentModule].number || currentModule + 1}
+        />
 
         {/* Navigation Controls */}
         <div className="flex items-center justify-between">

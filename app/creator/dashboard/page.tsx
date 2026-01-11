@@ -23,6 +23,7 @@ import { SystemMetricsNavigator } from '@/components/creator/SystemMetricsNaviga
 import { SalesTrackingNavigator } from '@/components/creator/SalesTrackingNavigator';
 import { ReferenceCustomersNavigator } from '@/components/creator/ReferenceCustomersNavigator';
 import { ActivityAnalyticsNavigator } from '@/components/creator/ActivityAnalyticsNavigator';
+import { HeroAIManager } from '@/components/HeroAIManager';
 import { Shield, Settings, Users, Sparkles, Hexagon } from 'lucide-react';
 import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
@@ -264,6 +265,14 @@ export default async function CreatorLab() {
               <HeroCreatorConsole />
             </div>
           )}
+
+          {/* Buckminster Fuller AI Guide */}
+          <div className="fixed bottom-4 left-4 z-50">
+            <HeroAIManager
+              pageContext="creator"
+              additionalContext="Creator Studio - Comprehensive design, ecosystem architecture, and synergetic thinking"
+            />
+          </div>
 
           {/* Configuration Controls */}
           <div className="cockpit-panel p-6" style={{
