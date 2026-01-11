@@ -212,10 +212,16 @@ export default async function CreatorLab() {
                 </p>
               </div>
             </div>
-            <Link href="/blog" className="inline-flex items-center gap-2 px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500 rounded transition-colors">
-              <Shield className="h-4 w-4" />
-              <span>Blog Management</span>
-            </Link>
+            <div className="flex flex-wrap gap-3">
+              <Link href="/blog" className="inline-flex items-center gap-2 px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500 rounded transition-colors">
+                <Shield className="h-4 w-4" />
+                <span>Blog Management</span>
+              </Link>
+              <Link href="/operator/dashboard" className="inline-flex items-center gap-2 px-4 py-2 bg-[#4169E1]/10 hover:bg-[#4169E1]/20 text-[#4169E1] border border-[#4169E1] rounded transition-colors">
+                <Settings className="h-4 w-4" />
+                <span>Faraday Operator Console</span>
+              </Link>
+            </div>
           </div>
 
           {/* User Management */}

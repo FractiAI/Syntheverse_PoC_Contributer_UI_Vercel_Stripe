@@ -1,0 +1,75 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Candle Base -->
+  <rect x="24" y="48" width="16" height="12" rx="1" fill="url(#candleGradient)"/>
+  
+  <!-- Candle Body -->
+  <path d="M26 48 L26 32 Q26 30 28 30 L36 30 Q38 30 38 32 L38 48" fill="url(#waxGradient)"/>
+  
+  <!-- Wick -->
+  <line x1="32" y1="30" x2="32" y2="24" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round"/>
+  
+  <!-- Flame Outer -->
+  <ellipse cx="32" cy="18" rx="8" ry="12" fill="url(#flameOuter)"/>
+  
+  <!-- Flame Middle -->
+  <ellipse cx="32" cy="18" rx="6" ry="9" fill="url(#flameMiddle)"/>
+  
+  <!-- Flame Core -->
+  <ellipse cx="32" cy="19" rx="3" ry="5" fill="url(#flameCore)"/>
+  
+  <!-- Electromagnetic Field Lines (invisible forces made visible) -->
+  <path d="M 20 18 Q 16 18 14 22 Q 12 26 14 30" stroke="url(#fieldGradient)" stroke-width="0.5" fill="none" opacity="0.6"/>
+  <path d="M 44 18 Q 48 18 50 22 Q 52 26 50 30" stroke="url(#fieldGradient)" stroke-width="0.5" fill="none" opacity="0.6"/>
+  <path d="M 32 8 Q 32 4 28 2" stroke="url(#fieldGradient)" stroke-width="0.5" fill="none" opacity="0.4"/>
+  <path d="M 32 8 Q 32 4 36 2" stroke="url(#fieldGradient)" stroke-width="0.5" fill="none" opacity="0.4"/>
+  
+  <!-- Light Rays -->
+  <line x1="32" y1="18" x2="22" y2="8" stroke="#FFD700" stroke-width="0.8" opacity="0.3" stroke-linecap="round"/>
+  <line x1="32" y1="18" x2="42" y2="8" stroke="#FFD700" stroke-width="0.8" opacity="0.3" stroke-linecap="round"/>
+  <line x1="32" y1="18" x2="18" y2="14" stroke="#FFD700" stroke-width="0.8" opacity="0.2" stroke-linecap="round"/>
+  <line x1="32" y1="18" x2="46" y2="14" stroke="#FFD700" stroke-width="0.8" opacity="0.2" stroke-linecap="round"/>
+  
+  <defs>
+    <!-- Candle Base Gradient -->
+    <linearGradient id="candleGradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8B4513"/>
+      <stop offset="100%" stop-color="#654321"/>
+    </linearGradient>
+    
+    <!-- Wax Gradient -->
+    <linearGradient id="waxGradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFF8DC"/>
+      <stop offset="50%" stop-color="#FAEBD7"/>
+      <stop offset="100%" stop-color="#DEB887"/>
+    </linearGradient>
+    
+    <!-- Flame Outer (Orange) -->
+    <radialGradient id="flameOuter">
+      <stop offset="0%" stop-color="#FF4500" stop-opacity="0.9"/>
+      <stop offset="70%" stop-color="#FF6347" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#FF8C00" stop-opacity="0.3"/>
+    </radialGradient>
+    
+    <!-- Flame Middle (Yellow-Orange) -->
+    <radialGradient id="flameMiddle">
+      <stop offset="0%" stop-color="#FFD700"/>
+      <stop offset="70%" stop-color="#FFA500"/>
+      <stop offset="100%" stop-color="#FF4500" stop-opacity="0.8"/>
+    </radialGradient>
+    
+    <!-- Flame Core (Bright Yellow-White) -->
+    <radialGradient id="flameCore">
+      <stop offset="0%" stop-color="#FFFACD"/>
+      <stop offset="50%" stop-color="#FFD700"/>
+      <stop offset="100%" stop-color="#FFA500" stop-opacity="0.9"/>
+    </radialGradient>
+    
+    <!-- Electromagnetic Field Gradient (Electric Blue to Purple) -->
+    <linearGradient id="fieldGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4169E1"/>
+      <stop offset="50%" stop-color="#7B68EE"/>
+      <stop offset="100%" stop-color="#9370DB"/>
+    </linearGradient>
+  </defs>
+</svg>
+

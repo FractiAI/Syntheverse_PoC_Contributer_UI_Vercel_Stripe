@@ -1,27 +1,27 @@
 /**
- * Operator Lab™ - Syntheverse Cockpit
- * Operator-controlled command center for PoC lifecycle and system administration
- * Accessible to Operators (users with role='operator' in database)
+ * Michael Faraday Operator's Console™
+ * "Nothing is too wonderful to be true" - Electromagnetic Command Center
+ * Victorian Experimental Science Applied to Cloud Operations
+ * Only accessible to Operators (users with role='operator' in database)
  */
 
 import { redirect } from 'next/navigation';
 import { createClient } from '@/utils/supabase/server';
 import { getAuthenticatedUserWithRole } from '@/utils/auth/permissions';
-import { CreatorCockpitStats } from '@/components/creator/CreatorCockpitStats';
-import { CreatorCockpitNavigation } from '@/components/creator/CreatorCockpitNavigation';
 import { StatusPanel } from '@/components/StatusPanel';
 import { FrontierModule } from '@/components/FrontierModule';
-import { ActivityAnalytics } from '@/components/activity/ActivityAnalytics';
-import { SandboxNavigator } from '@/components/SandboxNavigator';
+import { CloudNavigator } from '@/components/CloudNavigator';
 import { WorkChatNavigator } from "@/components/WorkChatNavigator";
 import { BroadcastArchiveNavigator } from '@/components/BroadcastArchiveNavigator';
-import CockpitHeader from '@/components/CockpitHeader';
 import { QuickActionsPanel } from '@/components/QuickActionsPanel';
 import { OperatorBroadcastBanner } from '@/components/OperatorBroadcastBanner';
 import HeroOperatorPanel from '@/components/HeroOperatorPanel';
-// import { CloudChannel } from '@/components/CloudChannel'; // Temporarily disabled
-import { Settings, Activity, FileText, BookOpen, Shield, ChevronDown } from 'lucide-react';
+import { FieldMeasurementsNavigator } from '@/components/operator/FieldMeasurementsNavigator';
+import { LaboratoryApparatusNavigator } from '@/components/operator/LaboratoryApparatusNavigator';
+import { ExperimentalRecordsNavigator } from '@/components/operator/ExperimentalRecordsNavigator';
+import { Settings, Zap, FlaskConical, BookOpen } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { MobileStatusIndicators } from '@/components/MobileStatusIndicators';
 import { MultiplierToggleWrapper } from '@/components/MultiplierToggleWrapper';
 import '../../control-lab.css';
@@ -50,37 +50,75 @@ export default async function OperatorLab() {
   }
 
   return (
-    <div className="lab-bg holographic-grid min-h-screen relative flex flex-col">
-      <div className="nebula-background" style={{opacity: 0.3}} />
+    <div className="min-h-screen relative flex flex-col" style={{
+      background: 'linear-gradient(135deg, #0a0a1a 0%, #1a0a1a 50%, #0a0a1a 100%)',
+    }}>
+      {/* Electromagnetic Field Lines Background */}
+      <div className="absolute inset-0 opacity-8 pointer-events-none">
+        <div style={{
+          backgroundImage: `
+            radial-gradient(ellipse at center, transparent 0%, transparent 40%, rgba(65, 105, 225, 0.03) 40%, transparent 40.5%),
+            radial-gradient(ellipse at center, transparent 0%, transparent 60%, rgba(147, 112, 219, 0.03) 60%, transparent 60.5%),
+            radial-gradient(ellipse at center, transparent 0%, transparent 80%, rgba(123, 104, 238, 0.03) 80%, transparent 80.5%)
+          `,
+          backgroundSize: '100% 100%',
+          backgroundPosition: 'center center',
+          width: '100%',
+          height: '100%',
+        }}></div>
+      </div>
       
-      {/* Operator Control Center Header */}
-      <div className="lab-header relative z-10 flex-shrink-0">
-        <div className="lab-header-grid">
-          <div>
-            <h1 className="lab-title" style={{color: 'hsl(var(--hydrogen-alpha))'}}>
-              Operator Lab™
-            </h1>
-            <p className="lab-subtitle" style={{color: 'hsl(var(--text-secondary))'}}>
-              Cloud Infrastructure Management · Community Coordination · System Operations
-            </p>
-          </div>
-          <div className="lab-status-monitors">
-            <div className="lab-status-monitor">
-              <div className="lab-monitor-label">Center Status</div>
-              <div className="lab-monitor-status">
-                <div className="lab-indicator"></div>
-                <span>OPERATIONAL</span>
+      {/* Michael Faraday Operator's Console Header */}
+      <div className="relative z-10 flex-shrink-0" style={{
+        background: 'linear-gradient(to right, rgba(65, 105, 225, 0.15), rgba(147, 112, 219, 0.08))',
+        borderBottom: '3px solid #4169E1',
+        boxShadow: '0 4px 20px rgba(65, 105, 225, 0.3)',
+      }}>
+        <div className="container mx-auto px-6 py-6">
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center gap-4">
+              {/* Faraday Candle Icon */}
+              <div className="relative w-16 h-16 flex-shrink-0">
+                <Image 
+                  src="/faraday-candle.svg" 
+                  alt="Faraday's Candle" 
+                  width={64} 
+                  height={64}
+                  className="animate-pulse"
+                />
+              </div>
+              <div>
+                <h1 className="text-3xl md:text-4xl font-bold tracking-tight" style={{
+                  color: '#4169E1',
+                  textShadow: '0 0 20px rgba(65, 105, 225, 0.5)',
+                }}>
+                  Michael Faraday Operator's Console™
+                </h1>
+                <p className="text-sm md:text-base mt-1" style={{color: 'rgba(65, 105, 225, 0.8)'}}>
+                  Electromagnetic Discovery · Experimental Observation · Lines of Force
+                </p>
+                <p className="text-xs mt-1 italic" style={{color: 'rgba(147, 112, 219, 0.7)'}}>
+                  "Nothing is too wonderful to be true, if it be consistent with the laws of nature."
+                </p>
               </div>
             </div>
-            <div className="lab-status-monitor">
-              <div className="lab-monitor-label">System Time</div>
-              <div className="lab-monitor-value">
-                {new Date().toLocaleTimeString('en-US', { 
-                  hour: '2-digit', 
-                  minute: '2-digit',
-                  hour12: false 
-                })}
+            <div className="flex items-center gap-3">
+              <div className="text-right">
+                <div className="text-xs uppercase tracking-wider" style={{color: 'rgba(65, 105, 225, 0.7)'}}>
+                  Laboratory Time
+                </div>
+                <div className="text-lg font-mono font-bold" style={{color: '#4169E1'}}>
+                  {new Date().toLocaleTimeString('en-US', { 
+                    hour: '2-digit', 
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false 
+                  })}
+                </div>
               </div>
+              <div className="w-3 h-3 rounded-full bg-[#4169E1] animate-pulse shadow-lg" style={{
+                boxShadow: '0 0 10px #4169E1',
+              }}></div>
             </div>
           </div>
         </div>
@@ -91,153 +129,136 @@ export default async function OperatorLab() {
       {/* Quick Actions Panel - Upper Right */}
       <QuickActionsPanel isCreator={false} isOperator={isOperator} showContributorDashboard={true} />
       
-      {/* Main Layout: Content + Cloud Channel */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Main Content Area */}
-        <div className="flex-1 overflow-y-auto">
-          <div className="container mx-auto space-y-6 px-6 py-8 relative z-10">
-        {/* Mobile Status Indicators - Top of mobile dashboards */}
-        <div className="block md:hidden">
-          <MobileStatusIndicators />
-        </div>
-
-        {/* System Broadcast Banners - Priority Display */}
-        <div className="mb-6">
-          <OperatorBroadcastBanner />
-        </div>
-
-        {/* Scoring Multiplier Controls - Testing/Tuning */}
-        <div className="mb-6">
-          <MultiplierToggleWrapper />
-        </div>
-
-        {/* Navigation Modules - Collapsible */}
-        <details className="mb-6 frontier-panel relative" open>
-          <div className="scan-line" />
-          <summary className="cursor-pointer select-none list-none p-4 md:p-5 mb-0 border-b" style={{borderColor: 'hsl(var(--hydrogen-beta) / 0.1)'}}>
-            <div className="flex items-center justify-between">
-              <div className="text-xs md:text-sm uppercase tracking-wider font-semibold" style={{color: 'hsl(var(--hydrogen-alpha))'}}>
-                NAVIGATION MODULES
-              </div>
-              <ChevronDown className="h-5 w-5 opacity-70" style={{color: 'hsl(var(--hydrogen-alpha))'}} />
-            </div>
-          </summary>
-          <div className="px-4 md:px-5 pb-4 md:pb-5 space-y-6" style={{color: 'hsl(var(--text-primary))'}}>
-            <SandboxNavigator userEmail={userEmail} isCreator={false} isOperator={isOperator} />
-            <FrontierModule userEmail={userEmail} />
-            <WorkChatNavigator />
-            <BroadcastArchiveNavigator />
+      {/* Main Content Area */}
+      <div className="flex-1 overflow-y-auto relative z-10">
+        <div className="container mx-auto space-y-6 px-6 py-8">
+          {/* Mobile Status Indicators */}
+          <div className="block md:hidden">
+            <MobileStatusIndicators />
           </div>
-        </details>
 
-        {/* Hero Operator Panel - Collapsible */}
-        <details className="mb-6 frontier-panel relative" open>
-          <div className="scan-line" />
-          <summary className="cursor-pointer select-none list-none p-4 md:p-5 mb-0 border-b" style={{borderColor: 'hsl(var(--hydrogen-beta) / 0.1)'}}>
-            <div className="flex items-center justify-between">
-              <div className="text-xs md:text-sm uppercase tracking-wider font-semibold" style={{color: 'hsl(var(--hydrogen-alpha))'}}>
-                🤖 HERO HOST OPERATORS
-              </div>
-              <ChevronDown className="h-5 w-5 opacity-70" style={{color: 'hsl(var(--hydrogen-alpha))'}} />
-            </div>
-          </summary>
-          <div className="px-4 md:px-5 pb-4 md:pb-5" style={{color: 'hsl(var(--text-primary))'}}>
-            <HeroOperatorPanel />
-          </div>
-        </details>
-
-        {/* Cloud Control Center Header - Collapsible */}
-        <details className="frontier-panel relative" style={{borderLeft: '4px solid hsl(var(--hydrogen-beta))'}} open>
-          <div className="scan-line" />
-          <summary className="cursor-pointer select-none list-none p-6">
-            <div className="mb-4 flex items-center justify-between">
+          {/* Faraday's Welcome Message */}
+          <div className="cockpit-panel p-6" style={{
+            background: 'linear-gradient(135deg, rgba(65, 105, 225, 0.1) 0%, rgba(147, 112, 219, 0.05) 100%)',
+            borderLeft: '4px solid #4169E1',
+          }}>
+            <div className="flex items-start gap-4">
+              <div className="text-4xl">🕯️</div>
               <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2" style={{color: 'hsl(var(--hydrogen-beta))'}}>
-                  <Settings className="h-4 w-4" />
-                  <span className="text-xs uppercase tracking-wider font-semibold">CLOUD OPERATOR</span>
-                </div>
-                <h1 className="mb-2 text-3xl font-bold" style={{color: 'hsl(var(--hydrogen-beta))'}}>
-                  Cloud Control Center
-                </h1>
-                <p className="text-sm" style={{color: 'hsl(var(--text-secondary))'}}>
-                  Operator interface for managing PoC submissions, cloud instances, and system operations.
-                  All actions are logged and auditable.
+                <h3 className="text-lg font-bold mb-2" style={{color: '#4169E1'}}>
+                  The Experimental Philosophy of Operations
+                </h3>
+                <p className="text-sm text-[var(--text-secondary)] mb-2">
+                  This console embodies Michael Faraday's principles: <strong>electromagnetic induction</strong>, 
+                  <strong> experimental rigor</strong>, and <strong>lines of force</strong>. Each section below 
+                  represents an instrument in the grand apparatus of discovery.
+                </p>
+                <p className="text-xs italic" style={{color: 'rgba(147, 112, 219, 0.8)'}}>
+                  "The important thing is to know how to take all things quietly. I have been so electrically 
+                  occupied of late that I feel as if hungry for a little chemistry."
                 </p>
               </div>
-              <div className="flex items-center gap-2">
-                <Link href="/blog" className="hydrogen-btn hydrogen-btn-gamma inline-flex items-center gap-2 px-4 py-2 text-sm">
-                  <FileText className="h-4 w-4" />
-                  Blog
-                </Link>
-                <Activity className="h-5 w-5 holographic-pulse" style={{color: 'hsl(var(--status-active))'}} />
-                <ChevronDown className="h-5 w-5 opacity-70 ml-2" style={{color: 'hsl(var(--hydrogen-beta))'}} />
-              </div>
-            </div>
-          </summary>
-          <div className="px-6 pb-6">
-            <div className="mt-3 border-t pt-3 text-xs" style={{borderColor: 'hsl(var(--hydrogen-beta) / 0.2)', color: 'hsl(var(--text-tertiary))'}}>
-              CLOUD OPERATOR ACCESS · HOLOGRAPHIC HYDROGEN FRONTIER
             </div>
           </div>
-        </details>
 
-        {/* Core Metrics - Collapsible */}
-        <details className="mb-6 frontier-panel relative" open>
-          <div className="scan-line" />
-          <summary className="cursor-pointer select-none list-none p-4 md:p-5 mb-0 border-b" style={{borderColor: 'hsl(var(--hydrogen-beta) / 0.1)'}}>
-            <div className="flex items-center justify-between">
-              <div className="text-xs md:text-sm uppercase tracking-wider font-semibold" style={{color: 'hsl(var(--hydrogen-alpha))'}}>
-                CORE METRICS
+          {/* System Broadcast Banners */}
+          <OperatorBroadcastBanner />
+
+          {/* Scoring Multiplier Controls */}
+          <MultiplierToggleWrapper />
+
+          {/* Electromagnetic Navigation Fields */}
+          <div className="cockpit-panel p-6" style={{
+            borderLeft: '4px solid #7B68EE',
+            background: 'linear-gradient(135deg, rgba(123, 104, 238, 0.08) 0%, rgba(0, 0, 0, 0) 100%)',
+          }}>
+            <div className="mb-4">
+              <div className="flex items-center gap-3 mb-2">
+                <Zap className="h-6 w-6 text-[#7B68EE]" />
+                <h2 className="text-xl font-bold" style={{color: '#7B68EE'}}>
+                  Electromagnetic Navigation Fields
+                </h2>
               </div>
-              <ChevronDown className="h-5 w-5 opacity-70" style={{color: 'hsl(var(--hydrogen-alpha))'}} />
+              <p className="text-sm text-[var(--text-secondary)]">
+                Navigate the invisible forces that bind the system together
+              </p>
             </div>
-          </summary>
-          <div className="px-4 md:px-5 pb-4 md:pb-5">
-            <CreatorCockpitStats />
+            <div className="space-y-4">
+              <CloudNavigator userEmail={userEmail} isCreator={false} isOperator={isOperator} />
+              <FrontierModule userEmail={userEmail} />
+              <WorkChatNavigator />
+              <BroadcastArchiveNavigator />
+            </div>
           </div>
-        </details>
 
-        {/* Control Panels - Collapsible */}
-        <details className="mb-6 frontier-panel relative" open>
-          <div className="scan-line" />
-          <summary className="cursor-pointer select-none list-none p-4 md:p-5 mb-0 border-b" style={{borderColor: 'hsl(var(--hydrogen-beta) / 0.1)'}}>
-            <div className="flex items-center justify-between">
-              <div className="text-xs md:text-sm uppercase tracking-wider font-semibold" style={{color: 'hsl(var(--hydrogen-alpha))'}}>
-                CONTROL PANELS
+          {/* Hero Operator Panel */}
+          <div className="cockpit-panel p-6" style={{
+            borderLeft: '4px solid #BA55D3',
+            background: 'linear-gradient(135deg, rgba(186, 85, 211, 0.08) 0%, rgba(0, 0, 0, 0) 100%)',
+          }}>
+            <div className="flex items-center gap-3 mb-4">
+              <FlaskConical className="h-6 w-6 text-[#BA55D3]" />
+              <div>
+                <h2 className="text-xl font-bold text-[#BA55D3]">🤖 Experimental Hosts & Operators</h2>
+                <p className="text-sm text-[var(--text-secondary)]">
+                  AI assistants configured for your cloud operations
+                </p>
               </div>
-              <ChevronDown className="h-5 w-5 opacity-70" style={{color: 'hsl(var(--hydrogen-alpha))'}} />
             </div>
-          </summary>
-          <div className="px-4 md:px-5 pb-4 md:pb-5">
-            <CreatorCockpitNavigation />
+            <HeroOperatorPanel />
           </div>
-        </details>
 
+          {/* Field Measurements Navigator */}
+          <FieldMeasurementsNavigator />
 
-        {/* Activity Analytics - Collapsible */}
-        <details className="mb-6 frontier-panel relative" open>
-          <div className="scan-line" />
-          <summary className="cursor-pointer select-none list-none p-4 md:p-5 mb-0 border-b" style={{borderColor: 'hsl(var(--hydrogen-beta) / 0.1)'}}>
-            <div className="flex items-center justify-between">
-              <div className="text-xs md:text-sm uppercase tracking-wider font-semibold" style={{color: 'hsl(var(--hydrogen-alpha))'}}>
-                ACTIVITY ANALYTICS
+          {/* Laboratory Apparatus Navigator */}
+          <LaboratoryApparatusNavigator />
+
+          {/* Cloud Operations Authority */}
+          <div className="cockpit-panel p-6" style={{
+            borderLeft: '4px solid #4682B4',
+            background: 'linear-gradient(135deg, rgba(70, 130, 180, 0.1) 0%, rgba(0, 0, 0, 0) 100%)',
+          }}>
+            <div className="flex items-center gap-3 mb-4">
+              <Settings className="h-6 w-6 text-[#4682B4]" />
+              <div>
+                <h2 className="text-xl font-bold text-[#4682B4]">Cloud Operations Authority</h2>
+                <p className="text-sm text-[var(--text-secondary)]">
+                  Command interface for system administration
+                </p>
               </div>
-              <ChevronDown className="h-5 w-5 opacity-70" style={{color: 'hsl(var(--hydrogen-alpha))'}} />
             </div>
-          </summary>
-          <div className="px-4 md:px-5 pb-4 md:pb-5">
-            <ActivityAnalytics />
+            <div className="mb-4 p-3 bg-[#4682B4]/5 border-l-2 border-[#4682B4] rounded">
+              <p className="text-sm text-[var(--text-secondary)] italic">
+                "The five regular solids, the sphere, and the cylinder are the only perfect forms. All others are but approximations."
+                <span className="block mt-2 text-xs text-[#4682B4]">— Michael Faraday on geometric perfection</span>
+              </p>
+            </div>
+            <Link href="/blog" className="inline-flex items-center gap-2 px-4 py-2 bg-[#4682B4]/10 hover:bg-[#4682B4]/20 text-[#4682B4] border border-[#4682B4] rounded transition-colors">
+              <BookOpen className="h-4 w-4" />
+              <span>Laboratory Blog</span>
+            </Link>
           </div>
-        </details>
+
+          {/* Experimental Records Navigator */}
+          <ExperimentalRecordsNavigator />
+
+          {/* Faraday's Closing Wisdom */}
+          <div className="cockpit-panel p-6 text-center" style={{
+            background: 'linear-gradient(135deg, rgba(65, 105, 225, 0.1) 0%, rgba(147, 112, 219, 0.05) 100%)',
+            borderTop: '2px solid #4169E1',
+          }}>
+            <div className="text-3xl mb-3">⚡</div>
+            <p className="text-sm text-[var(--text-secondary)] italic mb-2">
+              "Work. Finish. Publish. The lectures I shall deliver for the Royal Institution will be 
+              of the most perfect experimental kind, and I am preparing all the necessary apparatus."
+            </p>
+            <p className="text-xs" style={{color: '#4169E1'}}>
+              — Michael Faraday, Royal Institution Christmas Lectures
+            </p>
           </div>
         </div>
-
-        {/* Cloud Channel - Right Sidebar (Temporarily disabled for debugging) */}
-        {/* <aside className="hidden lg:flex border-l border-[var(--keyline-primary)] flex-shrink-0" style={{ width: 'auto', transition: 'all 0.3s ease' }}>
-          <CloudChannel />
-        </aside> */}
       </div>
     </div>
   );
 }
-
