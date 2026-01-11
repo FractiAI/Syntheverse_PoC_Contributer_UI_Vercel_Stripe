@@ -899,7 +899,7 @@ Always prioritize user experience and goal achievement.`;
                     <textarea
                       value={aiPromptInput}
                       onChange={(e) => setAiPromptInput(e.target.value)}
-                      className="lab-textarea h-64"
+                      className="lab-textarea h-32"
                       placeholder={
                         aiMode === 'hero'
                           ? "Describe the hero's name, personality, role, expertise, and tone..."
