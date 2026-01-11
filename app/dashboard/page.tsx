@@ -163,7 +163,7 @@ export default async function Dashboard() {
       </div>
 
       {/* Hero Panel - Fixed Bottom Right */}
-      <HeroPanel pageAssignment="dashboard" pillarAssignment="contributor" />
+      <HeroPanel pageContext="dashboard" pillarContext="contributor" userEmail={user.email!} />
     </div>
   );
 }

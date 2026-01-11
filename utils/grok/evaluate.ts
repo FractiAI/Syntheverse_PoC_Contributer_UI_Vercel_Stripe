@@ -83,6 +83,9 @@ interface GroqEvaluationResult {
   redundancy_penalty_percent_computed?: number;
   sweet_spot_bonus_multiplier_computed?: number;
   atomic_score?: any; // THALET Protocol: Atomic score payload
+  score_trace?: any; // THALET Protocol: Score trace
+  scoring_metadata?: any; // THALET Protocol: Scoring metadata
+  pod_composition?: any; // THALET Protocol: Pod composition
 }
 
 // Sandbox context for customizing system prompt
@@ -222,6 +225,8 @@ export async function evaluateWithGroq(
     sandbox_factor: number;
     final_clamped: number;
   };
+  // THALET Protocol: Atomic Score (Single Source of Truth)
+  atomic_score?: any;
 }> {
   // Try both GROQ and GROK variants for backwards compatibility
   const groqApiKey = process.env.NEXT_PUBLIC_GROQ_API_KEY || process.env.NEXT_PUBLIC_GROK_API_KEY;

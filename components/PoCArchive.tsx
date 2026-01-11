@@ -33,6 +33,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { debug, debugError } from '@/utils/debug';
+import { IntegrityValidator } from '@/utils/validation/IntegrityValidator';
 
 interface PoCSubmission {
   submission_hash: string;
