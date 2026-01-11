@@ -481,55 +481,55 @@ Always prioritize user experience and goal achievement.`;
               
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1">Name *</label>
+                  <label className="lab-label">Name *</label>
                   <input
                     type="text"
                     value={heroForm.name}
                     onChange={(e) => setHeroForm({ ...heroForm, name: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-100 focus:ring-2 focus:ring-purple-500"
+                    className="lab-input"
                     placeholder="e.g., Navigator Nova"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1">Icon (emoji or URL)</label>
+                  <label className="lab-label">Icon (emoji or URL)</label>
                   <input
                     type="text"
                     value={heroForm.icon_url}
                     onChange={(e) => setHeroForm({ ...heroForm, icon_url: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-100 focus:ring-2 focus:ring-purple-500"
+                    className="lab-input"
                     placeholder="🚀 or https://..."
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1">Tagline</label>
+                  <label className="lab-label">Tagline</label>
                   <input
                     type="text"
                     value={heroForm.tagline}
                     onChange={(e) => setHeroForm({ ...heroForm, tagline: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-100 focus:ring-2 focus:ring-purple-500"
+                    className="lab-input"
                     placeholder="Your friendly guide"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1">Description</label>
+                  <label className="lab-label">Description</label>
                   <textarea
                     value={heroForm.description}
                     onChange={(e) => setHeroForm({ ...heroForm, description: e.target.value })}
-                    className="w-full h-20 px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-100 focus:ring-2 focus:ring-purple-500"
+                    className="lab-textarea h-20"
                     placeholder="Brief description..."
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">Page</label>
+                    <label className="lab-label">Page</label>
                     <select
                       value={heroForm.page_assignment}
                       onChange={(e) => setHeroForm({ ...heroForm, page_assignment: e.target.value })}
-                      className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-100 focus:ring-2 focus:ring-purple-500"
+                      className="lab-input"
                     >
                       <option value="">Any</option>
                       <option value="dashboard">Dashboard</option>
@@ -540,11 +540,11 @@ Always prioritize user experience and goal achievement.`;
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">Pillar</label>
+                    <label className="lab-label">Pillar</label>
                     <select
                       value={heroForm.pillar_assignment}
                       onChange={(e) => setHeroForm({ ...heroForm, pillar_assignment: e.target.value })}
-                      className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-100 focus:ring-2 focus:ring-purple-500"
+                      className="lab-input"
                     >
                       <option value="">Any</option>
                       <option value="contributor">Contributor</option>
@@ -555,21 +555,21 @@ Always prioritize user experience and goal achievement.`;
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1">Default System Prompt</label>
+                  <label className="lab-label">Default System Prompt</label>
                   <textarea
                     value={heroForm.default_system_prompt}
                     onChange={(e) => setHeroForm({ ...heroForm, default_system_prompt: e.target.value })}
-                    className="w-full h-32 px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-100 focus:ring-2 focus:ring-purple-500 text-sm"
+                    className="lab-textarea h-32 text-sm"
                     placeholder="Default behavior and personality..."
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1">Status</label>
+                  <label className="lab-label">Status</label>
                   <select
                     value={heroForm.status}
                     onChange={(e) => setHeroForm({ ...heroForm, status: e.target.value as any })}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-100 focus:ring-2 focus:ring-purple-500"
+                    className="lab-input"
                   >
                     <option value="offline">Offline</option>
                     <option value="online">Online</option>
@@ -583,13 +583,13 @@ Always prioritize user experience and goal achievement.`;
                       <button
                         onClick={updateHero}
                         disabled={saving}
-                        className="flex-1 px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white font-semibold rounded transition-all disabled:opacity-50"
+                        className="lab-button flex-1 disabled:opacity-50"
                       >
                         {saving ? 'Saving...' : 'Update'}
                       </button>
                       <button
                         onClick={resetHeroForm}
-                        className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded transition-all"
+                        className="lab-button-secondary"
                       >
                         Cancel
                       </button>
@@ -598,7 +598,7 @@ Always prioritize user experience and goal achievement.`;
                     <button
                       onClick={createHero}
                       disabled={saving}
-                      className="w-full px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white font-semibold rounded transition-all disabled:opacity-50"
+                      className="lab-button w-full disabled:opacity-50"
                     >
                       {saving ? 'Creating...' : 'Create Hero'}
                     </button>
@@ -607,32 +607,39 @@ Always prioritize user experience and goal achievement.`;
               </div>
             </div>
 
-            {/* Heroes List */}
-            <div className="lg:col-span-2 bg-slate-900/50 backdrop-blur-sm rounded-lg border border-slate-700 p-6">
-              <h2 className="text-xl font-bold text-purple-400 mb-4">Existing Heroes</h2>
+          </div>
+          </div>
+          
+          {/* Heroes List */}
+          <div className="lg:col-span-2">
+            <div className="lab-card">
+              <div className="lab-card-header">
+                <h3 className="lab-card-title">Existing Heroes</h3>
+              </div>
+              <div className="lab-card-body">
               
-              <div className="space-y-3">
-                {heroes.map(hero => (
-                  <div key={hero.id} className="p-4 bg-slate-800/50 rounded-lg border border-slate-600 hover:border-slate-500 transition-all">
+                <div className="space-y-3">
+                  {heroes.map(hero => (
+                    <div key={hero.id} className="p-4 bg-[var(--lab-bg-instrument)] rounded-lg border border-[var(--lab-border)] hover:border-[var(--lab-primary)] transition-all">
                     <div className="flex items-start justify-between">
                       <div className="flex items-start gap-3 flex-1">
                         <div className="text-2xl">{hero.icon_url || '🤖'}</div>
                         <div className="flex-1">
-                          <h3 className="font-semibold text-slate-100">{hero.name}</h3>
-                          <p className="text-sm text-slate-400">{hero.tagline}</p>
+                          <h3 className="font-semibold text-[var(--lab-text-primary)]">{hero.name}</h3>
+                          <p className="text-sm text-[var(--lab-text-secondary)]">{hero.tagline}</p>
                           <div className="flex gap-2 mt-2">
                             {hero.page_assignment && (
-                              <span className="text-xs px-2 py-1 bg-slate-700 rounded">
+                              <span className="lab-badge">
                                 {hero.page_assignment}
                               </span>
                             )}
                             {hero.pillar_assignment && (
-                              <span className="text-xs px-2 py-1 bg-slate-700 rounded">
+                              <span className="lab-badge">
                                 {hero.pillar_assignment}
                               </span>
                             )}
-                            <span className={`text-xs px-2 py-1 rounded ${
-                              hero.status === 'online' ? 'bg-green-900/30 text-green-400' : 'bg-slate-700 text-slate-400'
+                            <span className={`lab-badge ${
+                              hero.status === 'online' ? 'bg-[var(--lab-success)]/10 text-[var(--lab-success)] border-[var(--lab-success)]' : ''
                             }`}>
                               {hero.status}
                             </span>
@@ -642,41 +649,48 @@ Always prioritize user experience and goal achievement.`;
                       <div className="flex gap-2">
                         <button
                           onClick={() => editHero(hero)}
-                          className="px-3 py-1 bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 rounded border border-purple-700 transition-all text-sm"
+                          className="lab-button-secondary text-sm"
                         >
-                          Edit
+                          <Edit className="inline h-3 w-3 mr-1" /> Edit
                         </button>
                         <button
                           onClick={() => deleteHero(hero.id)}
-                          className="px-3 py-1 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded border border-red-700 transition-all text-sm"
+                          className="px-3 py-1 bg-red-500/10 hover:bg-red-500/20 text-red-600 rounded border border-red-300 hover:border-red-500 transition-all text-sm"
                         >
-                          Delete
+                          <Trash2 className="inline h-3 w-3 mr-1" /> Delete
                         </button>
                       </div>
                     </div>
-                  </div>
-                ))}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* Stories Tab */}
-        {activeTab === 'stories' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Story Form */}
-            <div className="lg:col-span-1 bg-slate-900/50 backdrop-blur-sm rounded-lg border border-slate-700 p-6">
-              <h2 className="text-xl font-bold text-purple-400 mb-4">
-                {selectedStory ? 'Edit Story' : 'Create Story'}
-              </h2>
+      {/* Stories Tab */}
+      {activeTab === 'stories' && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Story Form */}
+          <div className="lg:col-span-1">
+            <div className="lab-card">
+              <div className="lab-card-header">
+                <h3 className="lab-card-title">
+                  {selectedStory ? <Edit className="inline h-4 w-4 mr-2" /> : <PlusCircle className="inline h-4 w-4 mr-2" />}
+                  {selectedStory ? 'Edit Story' : 'Create Story'}
+                </h3>
+              </div>
+              <div className="lab-card-body">
               
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1">Hero *</label>
+                  <label className="lab-label">Hero *</label>
                   <select
                     value={storyForm.hero_id}
                     onChange={(e) => setStoryForm({ ...storyForm, hero_id: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-100 focus:ring-2 focus:ring-purple-500"
+                    className="lab-input"
                   >
                     <option value="">Select a hero</option>
                     {heroes.map(hero => (
@@ -686,38 +700,38 @@ Always prioritize user experience and goal achievement.`;
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1">Title *</label>
+                  <label className="lab-label">Title *</label>
                   <input
                     type="text"
                     value={storyForm.title}
                     onChange={(e) => setStoryForm({ ...storyForm, title: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-100 focus:ring-2 focus:ring-purple-500"
+                    className="lab-input"
                     placeholder="e.g., Getting Started Guide"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1">Description</label>
+                  <label className="lab-label">Description</label>
                   <textarea
                     value={storyForm.description}
                     onChange={(e) => setStoryForm({ ...storyForm, description: e.target.value })}
-                    className="w-full h-20 px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-100 focus:ring-2 focus:ring-purple-500"
+                    className="lab-textarea h-20"
                     placeholder="Brief description..."
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1">System Prompt *</label>
+                  <label className="lab-label">System Prompt *</label>
                   <textarea
                     value={storyForm.system_prompt}
                     onChange={(e) => setStoryForm({ ...storyForm, system_prompt: e.target.value })}
-                    className="w-full h-32 px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-100 focus:ring-2 focus:ring-purple-500 text-sm"
+                    className="lab-textarea h-32 text-sm"
                     placeholder="Story-specific system prompt..."
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1">Context</label>
+                  <label className="lab-label">Context</label>
                   <textarea
                     value={storyForm.context}
                     onChange={(e) => setStoryForm({ ...storyForm, context: e.target.value })}
@@ -727,11 +741,11 @@ Always prioritize user experience and goal achievement.`;
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1">Interaction Style</label>
+                  <label className="lab-label">Interaction Style</label>
                   <select
                     value={storyForm.interaction_style}
                     onChange={(e) => setStoryForm({ ...storyForm, interaction_style: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-100 focus:ring-2 focus:ring-purple-500"
+                    className="lab-input"
                   >
                     <option value="">Default</option>
                     <option value="tutorial">Tutorial</option>
@@ -747,13 +761,13 @@ Always prioritize user experience and goal achievement.`;
                       <button
                         onClick={updateStory}
                         disabled={saving}
-                        className="flex-1 px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white font-semibold rounded transition-all disabled:opacity-50"
+                        className="lab-button flex-1 disabled:opacity-50"
                       >
                         {saving ? 'Saving...' : 'Update'}
                       </button>
                       <button
                         onClick={resetStoryForm}
-                        className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded transition-all"
+                        className="lab-button-secondary"
                       >
                         Cancel
                       </button>
@@ -762,7 +776,7 @@ Always prioritize user experience and goal achievement.`;
                     <button
                       onClick={createStory}
                       disabled={saving}
-                      className="w-full px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white font-semibold rounded transition-all disabled:opacity-50"
+                      className="lab-button w-full disabled:opacity-50"
                     >
                       {saving ? 'Creating...' : 'Create Story'}
                     </button>
@@ -771,26 +785,34 @@ Always prioritize user experience and goal achievement.`;
               </div>
             </div>
 
-            {/* Stories List */}
-            <div className="lg:col-span-2 bg-slate-900/50 backdrop-blur-sm rounded-lg border border-slate-700 p-6">
-              <h2 className="text-xl font-bold text-purple-400 mb-4">Existing Stories</h2>
+              </div>
+            </div>
+          </div>
+          
+          {/* Stories List */}
+          <div className="lg:col-span-2">
+            <div className="lab-card">
+              <div className="lab-card-header">
+                <h3 className="lab-card-title">Existing Stories</h3>
+              </div>
+              <div className="lab-card-body">
               
-              <div className="space-y-3">
-                {stories.map(story => {
-                  const hero = heroes.find(h => h.id === story.hero_id);
-                  return (
-                    <div key={story.id} className="p-4 bg-slate-800/50 rounded-lg border border-slate-600 hover:border-slate-500 transition-all">
+                <div className="space-y-3">
+                  {stories.map(story => {
+                    const hero = heroes.find(h => h.id === story.hero_id);
+                    return (
+                      <div key={story.id} className="p-4 bg-[var(--lab-bg-instrument)] rounded-lg border border-[var(--lab-border)] hover:border-[var(--lab-primary)] transition-all">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
-                            <h3 className="font-semibold text-slate-100">{story.title}</h3>
-                            <span className="text-xs px-2 py-1 bg-purple-900/30 text-purple-400 rounded">
+                            <h3 className="font-semibold text-[var(--lab-text-primary)]">{story.title}</h3>
+                            <span className="text-xs px-2 py-1 bg-[var(--lab-primary)]/10 text-[var(--lab-primary)] border border-[var(--lab-primary)]/30 rounded">
                               {hero?.name || 'Unknown Hero'}
                             </span>
                           </div>
-                          <p className="text-sm text-slate-400">{story.description}</p>
+                          <p className="text-sm text-[var(--lab-text-secondary)]">{story.description}</p>
                           {story.interaction_style && (
-                            <span className="inline-block mt-2 text-xs px-2 py-1 bg-slate-700 rounded">
+                            <span className="inline-block mt-2 lab-badge">
                               {story.interaction_style}
                             </span>
                           )}
@@ -798,106 +820,121 @@ Always prioritize user experience and goal achievement.`;
                         <div className="flex gap-2">
                           <button
                             onClick={() => editStory(story)}
-                            className="px-3 py-1 bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 rounded border border-purple-700 transition-all text-sm"
+                            className="lab-button-secondary text-sm"
                           >
-                            Edit
+                            <Edit className="inline h-3 w-3 mr-1" /> Edit
                           </button>
                           <button
                             onClick={() => deleteStory(story.id)}
-                            className="px-3 py-1 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded border border-red-700 transition-all text-sm"
+                            className="px-3 py-1 bg-red-500/10 hover:bg-red-500/20 text-red-600 rounded border border-red-300 hover:border-red-500 transition-all text-sm"
                           >
-                            Delete
+                            <Trash2 className="inline h-3 w-3 mr-1" /> Delete
                           </button>
                         </div>
                       </div>
                     </div>
-                  );
-                })}
+                      );
+                  })}
+                </div>
               </div>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* AI Assistant Tab */}
-        {activeTab === 'ai-assistant' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Input */}
-            <div className="bg-slate-900/50 backdrop-blur-sm rounded-lg border border-slate-700 p-6">
-              <h2 className="text-xl font-bold text-purple-400 mb-4">🤖 AI-Assisted Prompt Creator</h2>
+      {/* AI Assistant Tab */}
+      {activeTab === 'ai-assistant' && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Input */}
+          <div className="lab-card">
+            <div className="lab-card-header">
+              <h3 className="lab-card-title">
+                <Sparkles className="inline h-4 w-4 mr-2" /> AI-Assisted Prompt Creator
+              </h3>
+            </div>
+            <div className="lab-card-body">
               
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Generation Mode</label>
-                  <div className="grid grid-cols-3 gap-2">
-                    <button
-                      onClick={() => setAiMode('hero')}
-                      className={`px-4 py-2 rounded font-medium transition-all ${
-                        aiMode === 'hero'
-                          ? 'bg-purple-500 text-white'
-                          : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
-                      }`}
-                    >
-                      Hero Persona
-                    </button>
-                    <button
-                      onClick={() => setAiMode('story')}
-                      className={`px-4 py-2 rounded font-medium transition-all ${
-                        aiMode === 'story'
-                          ? 'bg-purple-500 text-white'
-                          : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
-                      }`}
-                    >
-                      Story
-                    </button>
-                    <button
-                      onClick={() => setAiMode('interaction')}
-                      className={`px-4 py-2 rounded font-medium transition-all ${
-                        aiMode === 'interaction'
-                          ? 'bg-purple-500 text-white'
-                          : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
-                      }`}
-                    >
-                      Interaction
-                    </button>
+                <div className="space-y-4">
+                  <div>
+                    <label className="lab-label">Generation Mode</label>
+                    <div className="grid grid-cols-3 gap-2">
+                      <button
+                        onClick={() => setAiMode('hero')}
+                        className={`px-4 py-2 rounded font-medium transition-all ${
+                          aiMode === 'hero'
+                            ? 'lab-button'
+                            : 'lab-button-secondary'
+                        }`}
+                      >
+                        Hero Persona
+                      </button>
+                      <button
+                        onClick={() => setAiMode('story')}
+                        className={`px-4 py-2 rounded font-medium transition-all ${
+                          aiMode === 'story'
+                            ? 'lab-button'
+                            : 'lab-button-secondary'
+                        }`}
+                      >
+                        Story
+                      </button>
+                      <button
+                        onClick={() => setAiMode('interaction')}
+                        className={`px-4 py-2 rounded font-medium transition-all ${
+                          aiMode === 'interaction'
+                            ? 'lab-button'
+                            : 'lab-button-secondary'
+                        }`}
+                      >
+                        Interaction
+                      </button>
+                    </div>
                   </div>
-                </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
-                    Describe your {aiMode === 'hero' ? 'hero' : aiMode === 'story' ? 'story' : 'interaction behavior'}
-                  </label>
-                  <textarea
-                    value={aiPromptInput}
-                    onChange={(e) => setAiPromptInput(e.target.value)}
-                    className="w-full h-64 px-4 py-3 bg-slate-800 border border-slate-600 rounded text-slate-100 focus:ring-2 focus:ring-purple-500"
-                    placeholder={
-                      aiMode === 'hero'
-                        ? "Describe the hero's name, personality, role, expertise, and tone..."
-                        : aiMode === 'story'
-                        ? "Describe the story narrative, objectives, user journey, and desired outcomes..."
-                        : "Describe the interaction patterns, user engagement style, and behavioral guidelines..."
-                    }
-                  />
-                </div>
+                  <div>
+                    <label className="lab-label">
+                      Describe your {aiMode === 'hero' ? 'hero' : aiMode === 'story' ? 'story' : 'interaction behavior'}
+                    </label>
+                    <textarea
+                      value={aiPromptInput}
+                      onChange={(e) => setAiPromptInput(e.target.value)}
+                      className="lab-textarea h-64"
+                      placeholder={
+                        aiMode === 'hero'
+                          ? "Describe the hero's name, personality, role, expertise, and tone..."
+                          : aiMode === 'story'
+                          ? "Describe the story narrative, objectives, user journey, and desired outcomes..."
+                          : "Describe the interaction patterns, user engagement style, and behavioral guidelines..."
+                      }
+                    />
+                  </div>
 
-                <button
-                  onClick={generatePrompt}
-                  disabled={aiGenerating}
-                  className="w-full px-6 py-3 bg-purple-500 hover:bg-purple-600 text-white font-semibold rounded transition-all disabled:opacity-50"
-                >
-                  {aiGenerating ? '🤖 Generating...' : '✨ Generate System Prompt'}
-                </button>
+                  <button
+                    onClick={generatePrompt}
+                    disabled={aiGenerating}
+                    className="lab-button w-full disabled:opacity-50"
+                  >
+                    {aiGenerating ? (
+                      <><Loader2 className="inline h-4 w-4 animate-spin mr-2" /> Generating...</>
+                    ) : (
+                      <><Sparkles className="inline h-4 w-4 mr-2" /> Generate System Prompt</>
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
 
             {/* Output */}
-            <div className="bg-slate-900/50 backdrop-blur-sm rounded-lg border border-slate-700 p-6">
-              <h2 className="text-xl font-bold text-purple-400 mb-4">Generated System Prompt</h2>
+            <div className="lab-card">
+              <div className="lab-card-header">
+                <h3 className="lab-card-title">Generated System Prompt</h3>
+              </div>
+              <div className="lab-card-body">
               
               {aiGeneratedOutput ? (
                 <div className="space-y-4">
-                  <div className="p-4 bg-slate-800 border border-slate-600 rounded">
-                    <pre className="whitespace-pre-wrap text-sm text-slate-200 font-mono">
+                  <div className="p-4 bg-[var(--lab-bg-instrument)] border border-[var(--lab-border)] rounded">
+                    <pre className="whitespace-pre-wrap text-sm text-[var(--lab-text-primary)] font-mono">
                       {aiGeneratedOutput}
                     </pre>
                   </div>
@@ -905,13 +942,13 @@ Always prioritize user experience and goal achievement.`;
                   <div className="flex gap-2">
                     <button
                       onClick={applyGeneratedPrompt}
-                      className="flex-1 px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded transition-all"
+                      className="flex-1 px-4 py-2 bg-[var(--lab-success)] hover:bg-[var(--lab-success)]/90 text-white font-semibold rounded transition-all"
                     >
-                      ✓ Apply to Form
+                      <Save className="inline h-4 w-4 mr-2" /> Apply to Form
                     </button>
                     <button
                       onClick={() => navigator.clipboard.writeText(aiGeneratedOutput)}
-                      className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded transition-all"
+                      className="lab-button-secondary"
                     >
                       📋 Copy
                     </button>
