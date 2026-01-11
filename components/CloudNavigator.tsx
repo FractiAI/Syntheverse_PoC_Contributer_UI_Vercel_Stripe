@@ -98,29 +98,29 @@ export function CloudNavigator({ userEmail, isCreator = false, isOperator = fals
 
       if (res.ok) {
         // Refresh clouds list
-        await fetchSandboxes();
-        // If deleted sandbox was selected, reset to Syntheverse
-        if (selectedSandbox === sandboxId) {
-          handleSandboxClick('syntheverse');
+        await fetchClouds();
+        // If deleted cloud was selected, reset to Syntheverse
+        if (selectedCloud === cloudId) {
+          handleCloudClick('syntheverse');
         }
       } else {
         const error = await res.json();
-        alert(error.error || 'Failed to delete sandbox');
+        alert(error.error || 'Failed to delete cloud');
       }
     } catch (error) {
-      console.error('Error deleting sandbox:', error);
-      alert('Failed to delete sandbox');
+      console.error('Error deleting cloud:', error);
+      alert('Failed to delete cloud');
     } finally {
-      setDeletingSandboxId(null);
+      setDeletingCloudId(null);
     }
   };
 
   const handleSaveConfig = async (config: any) => {
-    if (!editingSandbox) return;
+    if (!editingCloud) return;
 
     try {
-      // Update sandbox via PATCH endpoint
-      const res = await fetch(`/api/enterprise/sandboxes/${editingSandbox.id}`, {
+      // Update cloud via PATCH endpoint
+      const res = await fetch(`/api/enterprise/sandboxes/${editingCloud.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -141,35 +141,35 @@ export function CloudNavigator({ userEmail, isCreator = false, isOperator = fals
 
       if (res.ok) {
         setShowEditDialog(false);
-        setEditingSandbox(null);
-        await fetchSandboxes();
-        alert('Sandbox configuration saved successfully');
+        setEditingCloud(null);
+        await fetchClouds();
+        alert('Cloud configuration saved successfully');
       } else {
         const error = await res.json();
-        alert(error.error || 'Failed to save sandbox configuration');
+        alert(error.error || 'Failed to save cloud configuration');
       }
     } catch (error) {
-      console.error('Error saving sandbox configuration:', error);
-      alert('Failed to save sandbox configuration');
+      console.error('Error saving cloud configuration:', error);
+      alert('Failed to save cloud configuration');
     }
   };
 
-  const canDelete = (sandbox: EnterpriseSandbox): boolean => {
-    if (sandbox.id === 'syntheverse') return false;
+  const canDelete = (cloud: EnterpriseCloud): boolean => {
+    if (cloud.id === 'syntheverse') return false;
     if (isCreator || isOperator) return true;
-    if (userEmail && sandbox.operator === userEmail) return true;
+    if (userEmail && cloud.operator === userEmail) return true;
     return false;
   };
 
-  const canEdit = (sandbox: EnterpriseSandbox): boolean => {
-    if (sandbox.id === 'syntheverse') return false;
+  const canEdit = (cloud: EnterpriseCloud): boolean => {
+    if (cloud.id === 'syntheverse') return false;
     if (isCreator || isOperator) return true;
-    if (userEmail && sandbox.operator === userEmail) return true;
+    if (userEmail && cloud.operator === userEmail) return true;
     return false;
   };
 
-  const getStatusBadge = (sandbox: EnterpriseSandbox) => {
-    if (sandbox.synth_activated) {
+  const getStatusBadge = (cloud: EnterpriseCloud) => {
+    if (cloud.synth_activated) {
       return (
         <span className="cockpit-badge bg-green-500/20 text-green-400 border-green-500/50">
           Activated
@@ -190,8 +190,8 @@ export function CloudNavigator({ userEmail, isCreator = false, isOperator = fals
     );
   };
 
-  // Include Syntheverse as the first "sandbox" (only for creators, not operators)
-  const syntheverseSandbox: EnterpriseSandbox = {
+  // Include Syntheverse as the first "cloud" (only for creators, not operators)
+  const syntherverseCloud: EnterpriseCloud = {
     id: 'syntheverse',
     name: 'Syntheverse',
     description: 'Main Syntheverse Protocol',
@@ -203,10 +203,10 @@ export function CloudNavigator({ userEmail, isCreator = false, isOperator = fals
     vault_status: 'active',
   };
 
-  // Operators (enterprise users) see only their own sandboxes, creators see everything
-  const allSandboxes: EnterpriseSandbox[] = isCreator 
-    ? [syntheverseSandbox, ...sandboxes]
-    : sandboxes;
+  // Operators (enterprise users) see only their own clouds, creators see everything
+  const allClouds: EnterpriseCloud[] = isCreator 
+    ? [syntherverseCloud, ...clouds]
+    : clouds;
 
   return (
     <div className="cockpit-module cockpit-panel">
@@ -219,7 +219,7 @@ export function CloudNavigator({ userEmail, isCreator = false, isOperator = fals
           </div>
           <div className="flex items-center gap-3">
             <button
-              onClick={() => fetchSandboxes()}
+              onClick={() => fetchClouds()}
               className="cockpit-lever px-4 py-2 text-sm"
             >
               <RefreshCw className="mr-2 inline h-4 w-4" />
@@ -231,18 +231,18 @@ export function CloudNavigator({ userEmail, isCreator = false, isOperator = fals
         {/* Table */}
         {loading ? (
           <div className="py-12 text-center">
-            <div className="cockpit-text opacity-60">Loading sandboxes...</div>
+            <div className="cockpit-text opacity-60">Loading clouds...</div>
           </div>
-        ) : allSandboxes.length === 0 ? (
+        ) : allClouds.length === 0 ? (
           <div className="py-12 text-center">
-            <div className="cockpit-text mb-4">No sandboxes found</div>
+            <div className="cockpit-text mb-4">No clouds found</div>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="cockpit-table">
               <thead>
                 <tr>
-                  <th>Sandbox Name</th>
+                  <th>Cloud Name</th>
                   <th>Description</th>
                   <th>Tier</th>
                   <th>Status</th>
@@ -253,37 +253,37 @@ export function CloudNavigator({ userEmail, isCreator = false, isOperator = fals
                 </tr>
               </thead>
               <tbody>
-                {allSandboxes.map((sandbox) => {
-                  const isSelected = selectedSandbox === sandbox.id;
+                {allClouds.map((cloud) => {
+                  const isSelected = selectedCloud === cloud.id;
                   return (
                     <tr
-                      key={sandbox.id}
-                      onClick={() => handleSandboxClick(sandbox.id)}
+                      key={cloud.id}
+                      onClick={() => handleCloudClick(cloud.id)}
                       className={`cursor-pointer ${isSelected ? 'bg-[var(--cockpit-carbon)]' : ''}`}
                     >
                       <td>
                         <div className="flex items-center gap-2">
                           <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--hydrogen-amber)]/30 to-purple-500/30 text-xs font-semibold">
-                            {sandbox.id === 'syntheverse' ? 'S' : sandbox.name.charAt(0).toUpperCase()}
+                            {cloud.id === 'syntheverse' ? 'S' : cloud.name.charAt(0).toUpperCase()}
                           </div>
-                          <div className="font-medium">{sandbox.name}</div>
+                          <div className="font-medium">{cloud.name}</div>
                         </div>
                       </td>
                       <td className="cockpit-text text-sm">
-                        {sandbox.description || '—'}
+                        {cloud.description || '—'}
                       </td>
                       <td className="cockpit-text text-sm">
-                        {sandbox.subscription_tier || (sandbox.id === 'syntheverse' ? 'Main Protocol' : '—')}
+                        {cloud.subscription_tier || (cloud.id === 'syntheverse' ? 'Main Protocol' : '—')}
                       </td>
-                      <td>{getStatusBadge(sandbox)}</td>
+                      <td>{getStatusBadge(cloud)}</td>
                       <td className="cockpit-number text-right font-mono">
-                        {sandbox.contribution_count || 0}
+                        {cloud.contribution_count || 0}
                       </td>
                       <td className="cockpit-number text-right font-mono">
-                        {sandbox.qualified_count || 0}
+                        {cloud.qualified_count || 0}
                       </td>
                       <td className="cockpit-text text-sm">
-                        {sandbox.id === 'syntheverse' ? 'System' : sandbox.operator.split('@')[0]}
+                        {cloud.id === 'syntheverse' ? 'System' : cloud.operator.split('@')[0]}
                       </td>
                       <td>
                         <div className="flex items-center gap-2">
@@ -292,9 +292,9 @@ export function CloudNavigator({ userEmail, isCreator = false, isOperator = fals
                               Selected
                             </span>
                           )}
-                          {sandbox.id !== 'syntheverse' && (
+                          {cloud.id !== 'syntheverse' && (
                             <Link
-                              href={`/enterprise/sandbox/${sandbox.id}`}
+                              href={`/enterprise/sandbox/${cloud.id}`}
                               onClick={(e) => e.stopPropagation()}
                               className="cockpit-lever text-xs"
                             >
@@ -302,25 +302,25 @@ export function CloudNavigator({ userEmail, isCreator = false, isOperator = fals
                               View
                             </Link>
                           )}
-                          {canEdit(sandbox) && (
+                          {canEdit(cloud) && (
                             <button
-                              onClick={(e) => handleEdit(sandbox, e)}
+                              onClick={(e) => handleEdit(cloud, e)}
                               className="cockpit-lever text-xs"
-                              title="Edit sandbox configuration"
+                              title="Edit cloud configuration"
                             >
                               <Edit2 className="mr-1 inline h-3 w-3" />
                               Edit
                             </button>
                           )}
-                          {canDelete(sandbox) && (
+                          {canDelete(cloud) && (
                             <button
-                              onClick={(e) => handleDelete(sandbox.id, e)}
-                              disabled={deletingSandboxId === sandbox.id}
+                              onClick={(e) => handleDelete(cloud.id, e)}
+                              disabled={deletingCloudId === cloud.id}
                               className="cockpit-lever text-xs bg-red-500/20 border-red-500/50 text-red-400 hover:bg-red-500/30 disabled:opacity-50"
-                              title="Delete sandbox"
+                              title="Delete cloud"
                             >
                               <Trash2 className="mr-1 inline h-3 w-3" />
-                              {deletingSandboxId === sandbox.id ? 'Deleting...' : 'Delete'}
+                              {deletingCloudId === cloud.id ? 'Deleting...' : 'Delete'}
                             </button>
                           )}
                         </div>
@@ -334,24 +334,24 @@ export function CloudNavigator({ userEmail, isCreator = false, isOperator = fals
         )}
       </div>
 
-      {/* Edit Dialog - Sandbox Builder Assistant */}
+      {/* Edit Dialog - Cloud Builder Assistant */}
       <Dialog open={showEditDialog} onOpenChange={(open) => {
         setShowEditDialog(open);
-        if (!open) setEditingSandbox(null);
+        if (!open) setEditingCloud(null);
       }}>
         <DialogContent className="cockpit-panel max-w-4xl max-h-[90vh] overflow-y-auto bg-[var(--cockpit-near-black)] border-2 border-[var(--keyline-primary)]">
           <DialogHeader>
             <DialogTitle className="cockpit-title text-xl mb-4">
-              Edit Sandbox: {editingSandbox?.name}
+              Edit Cloud: {editingCloud?.name}
             </DialogTitle>
           </DialogHeader>
-          {editingSandbox && (
+          {editingCloud && (
             <div className="mt-4">
               <SandboxConfigurationWizard
-                sandboxId={editingSandbox.id}
+                sandboxId={editingCloud.id}
                 initialConfig={{
-                  name: editingSandbox.name,
-                  description: editingSandbox.description || '',
+                  name: editingCloud.name,
+                  description: editingCloud.description || '',
                   mission: '',
                   project_goals: '',
                   synth_activation_fee: 10000,
@@ -362,15 +362,15 @@ export function CloudNavigator({ userEmail, isCreator = false, isOperator = fals
                   pioneer_threshold: 6000,
                   community_threshold: 5000,
                   ecosystem_threshold: 4000,
-                  current_epoch: editingSandbox.current_epoch || 'founder',
-                  novelty_weight: editingSandbox.scoring_config?.novelty_weight || 1.0,
-                  density_weight: editingSandbox.scoring_config?.density_weight || 1.0,
-                  coherence_weight: editingSandbox.scoring_config?.coherence_weight || 1.0,
-                  alignment_weight: editingSandbox.scoring_config?.alignment_weight || 1.0,
-                  qualification_threshold: editingSandbox.scoring_config?.qualification_threshold || 4000,
-                  overlap_penalty_start: editingSandbox.scoring_config?.overlap_penalty_start || 30,
-                  sweet_spot_center: editingSandbox.scoring_config?.sweet_spot_center || 14.2,
-                  sweet_spot_tolerance: editingSandbox.scoring_config?.sweet_spot_tolerance || 5.0,
+                  current_epoch: editingCloud.current_epoch || 'founder',
+                  novelty_weight: editingCloud.scoring_config?.novelty_weight || 1.0,
+                  density_weight: editingCloud.scoring_config?.density_weight || 1.0,
+                  coherence_weight: editingCloud.scoring_config?.coherence_weight || 1.0,
+                  alignment_weight: editingCloud.scoring_config?.alignment_weight || 1.0,
+                  qualification_threshold: editingCloud.scoring_config?.qualification_threshold || 4000,
+                  overlap_penalty_start: editingCloud.scoring_config?.overlap_penalty_start || 30,
+                  sweet_spot_center: editingCloud.scoring_config?.sweet_spot_center || 14.2,
+                  sweet_spot_tolerance: editingCloud.scoring_config?.sweet_spot_tolerance || 5.0,
                   public_access: false,
                   contributor_channels: [],
                   allow_external_submissions: false,
