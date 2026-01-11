@@ -345,16 +345,6 @@ export default function HeroCreatorConsole() {
     alert(field ? `Applied suggestion for ${field}` : 'Applied all suggestions');
   };
 
-  const applyGeneratedPrompt = () => {
-    if (aiMode === 'hero') {
-      setHeroForm(prev => ({ ...prev, default_system_prompt: aiGeneratedOutput }));
-      setActiveTab('heroes');
-    } else if (aiMode === 'story') {
-      setStoryForm(prev => ({ ...prev, system_prompt: aiGeneratedOutput }));
-      setActiveTab('stories');
-    }
-    alert('Generated prompt applied!');
-  };
 
   // Form helpers
   const resetHeroForm = () => {
