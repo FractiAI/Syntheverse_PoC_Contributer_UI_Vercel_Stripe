@@ -88,13 +88,12 @@ export default function OnboardingPage() {
       {/* Humboldt's Welcome Message */}
       <div className="relative z-10 container mx-auto px-6 py-4">
         <div className="cockpit-panel p-4" style={{
-          background: 'linear-gradient(135deg, rgba(139, 69, 19, 0.3) 0%, rgba(205, 133, 63, 0.15) 100%)',
           borderLeft: '4px solid #CD853F',
         }}>
           <div className="flex items-start gap-3">
             <div className="text-2xl">🧭</div>
             <div className="flex-1">
-              <h3 className="text-sm font-bold mb-1" style={{color: '#CD853F', fontFamily: 'Georgia, serif'}}>
+              <h3 className="text-sm font-bold mb-1 text-[#CD853F]" style={{fontFamily: 'Georgia, serif'}}>
                 The Interconnectedness of Nature: A Cosmos of Knowledge
               </h3>
               <p className="text-xs text-[var(--text-secondary)]">
@@ -112,42 +111,39 @@ export default function OnboardingPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Mountains Climbed */}
           <div className="cockpit-panel p-3 text-center" style={{
-            background: 'rgba(139, 69, 19, 0.2)',
             borderTop: '2px solid #8B4513',
           }}>
-            <Mountain className="w-6 h-6 mx-auto mb-1" style={{color: '#CD853F'}} />
-            <div className="text-xs uppercase tracking-wider" style={{color: 'rgba(205, 133, 63, 0.7)'}}>
+            <Mountain className="w-6 h-6 mx-auto mb-1 text-[#CD853F]" />
+            <div className="text-xs uppercase tracking-wider text-[#CD853F] opacity-70">
               Peaks Ascended
             </div>
-            <div className="text-lg font-bold" style={{color: '#CD853F'}}>
+            <div className="text-lg font-bold text-[#CD853F]">
               Chimborazo · Andes · Alps
             </div>
           </div>
 
           {/* Continents Explored */}
           <div className="cockpit-panel p-3 text-center" style={{
-            background: 'rgba(139, 69, 19, 0.2)',
             borderTop: '2px solid #8B4513',
           }}>
-            <Globe2 className="w-6 h-6 mx-auto mb-1" style={{color: '#CD853F'}} />
-            <div className="text-xs uppercase tracking-wider" style={{color: 'rgba(205, 133, 63, 0.7)'}}>
+            <Globe2 className="w-6 h-6 mx-auto mb-1 text-[#CD853F]" />
+            <div className="text-xs uppercase tracking-wider text-[#CD853F] opacity-70">
               Continents Mapped
             </div>
-            <div className="text-lg font-bold" style={{color: '#CD853F'}}>
+            <div className="text-lg font-bold text-[#CD853F]">
               Americas · Europe · Asia
             </div>
           </div>
 
           {/* Specimens Collected */}
           <div className="cockpit-panel p-3 text-center" style={{
-            background: 'rgba(139, 69, 19, 0.2)',
             borderTop: '2px solid #8B4513',
           }}>
-            <Compass className="w-6 h-6 mx-auto mb-1" style={{color: '#CD853F'}} />
-            <div className="text-xs uppercase tracking-wider" style={{color: 'rgba(205, 133, 63, 0.7)'}}>
+            <Compass className="w-6 h-6 mx-auto mb-1 text-[#CD853F]" />
+            <div className="text-xs uppercase tracking-wider text-[#CD853F] opacity-70">
               Observations Recorded
             </div>
-            <div className="text-lg font-bold" style={{color: '#CD853F'}}>
+            <div className="text-lg font-bold text-[#CD853F]">
               60,000+ Specimens
             </div>
           </div>
@@ -156,20 +152,19 @@ export default function OnboardingPage() {
 
       {/* Main Onboarding Content */}
       <div className="relative z-10 academy-bg">
-      <OnboardingNavigator />
+        <OnboardingNavigator />
       </div>
 
       {/* Humboldt's Closing Wisdom */}
       <div className="relative z-10 container mx-auto px-6 py-4">
         <div className="cockpit-panel p-4 text-center" style={{
-          background: 'linear-gradient(135deg, rgba(139, 69, 19, 0.3) 0%, rgba(205, 133, 63, 0.15) 100%)',
           borderTop: '2px solid #CD853F',
         }}>
           <div className="text-2xl mb-2">🌍</div>
           <p className="text-xs text-[var(--text-secondary)] italic mb-1" style={{fontFamily: 'Georgia, serif'}}>
             "In this great chain of causes and effects, no single fact can be considered in isolation."
           </p>
-          <p className="text-xs" style={{color: '#CD853F'}}>
+          <p className="text-xs text-[#CD853F]">
             — Alexander von Humboldt, Cosmos: A Sketch of a Physical Description of the Universe (1845)
           </p>
         </div>
