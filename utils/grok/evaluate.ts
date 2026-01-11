@@ -723,9 +723,15 @@ ${truncatedText}
 
 ${calculatedRedundancyContext ? `\n${calculatedRedundancyContext}` : ''}
 
+**Multiplier Toggle Configuration (CRITICAL - Must respect these in scoring):**
+- seed_multiplier_enabled: ${seedMultiplierEnabled} ${!seedMultiplierEnabled ? '(DISABLED - Do NOT apply seed multiplier, use 1.0)' : '(enabled - may apply 1.15 if detected)'}
+- edge_multiplier_enabled: ${edgeMultiplierEnabled} ${!edgeMultiplierEnabled ? '(DISABLED - Do NOT apply edge multiplier, use 1.0)' : '(enabled - may apply 1.15 if detected)'}
+- overlap_adjustments_enabled: ${overlapAdjustmentsEnabled} ${!overlapAdjustmentsEnabled ? '(DISABLED - already reflected in APPLIED values above)' : '(enabled - already reflected in APPLIED values above)'}
+
 Notes:
 - Use the vector-based redundancy information above to determine overlap and redundancy penalties.
 - Apply redundancy penalty ONLY to the composite/total score (as specified in the system prompt).
+- CRITICAL: Respect the toggle configuration above. If a multiplier is DISABLED, use 1.0 in your JSON response, NOT the typical 1.15 value.
 - You MUST include scoring_metadata, pod_composition, and archive_similarity_distribution in your JSON response.
 - You MUST include "is_seed_submission" (boolean) and "seed_justification" (string) fields based on content analysis.
 - You MUST include "is_edge_submission" (boolean) and "edge_justification" (string) fields based on content analysis.
