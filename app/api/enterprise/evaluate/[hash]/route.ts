@@ -130,6 +130,9 @@ export async function POST(request: NextRequest, { params }: { params: { hash: s
     // TSRC: Extract snapshot_id from llm_metadata for top-level storage
     const snapshotId = (evaluation as any).llm_metadata?.tsrc?.archive_snapshot?.snapshot_id || null;
 
+    // THALET Protocol: Extract atomic_score (Single Source of Truth)
+    const atomicScore = (evaluation as any).atomic_score || null;
+
     // Update contribution with evaluation results
     await db
       .update(enterpriseContributionsTable)
@@ -142,6 +145,8 @@ export async function POST(request: NextRequest, { params }: { params: { hash: s
         overlap_percent: overlapPercent.toString(),
         // TSRC: Store snapshot_id for deterministic evaluation reproducibility
         snapshot_id: snapshotId,
+        // THALET Protocol: Store atomic_score in top-level column (Single Source of Truth)
+        atomic_score: atomicScore,
         metadata: {
           coherence: finalCoherence,
           density: finalDensity,
@@ -168,8 +173,10 @@ export async function POST(request: NextRequest, { params }: { params: { hash: s
             raw_grok_response: (evaluation as any).raw_grok_response || null,
           },
           llm_metadata: (evaluation as any).llm_metadata || null,
+          // THALET Protocol: atomic_score (SOVEREIGN FIELD - Single Source of Truth)
+          atomic_score: atomicScore,
           archive_data: archiveData, // Store archive data in metadata for extraction
-          // Deterministic Score Contract (Marek requirement) - AUTHORITATIVE scoring trace
+          // Deterministic Score Contract (Marek requirement) - Legacy scoring trace (backward compat)
           score_trace: evaluation.score_trace || null,
           scoring_metadata: evaluation.scoring_metadata || null,
           pod_composition: evaluation.pod_composition || null,
