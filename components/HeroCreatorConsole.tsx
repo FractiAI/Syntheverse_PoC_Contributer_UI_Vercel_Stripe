@@ -1,3 +1,7 @@
+/**
+ * Hero Creator Console - Lab-styled CRUD interface for hero and story management
+ * Rebuilt with Creator Lab™ aesthetic for consistency
+ */
 'use client';
 
 import React, { useState, useEffect } from 'react';
