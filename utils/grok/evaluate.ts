@@ -1566,9 +1566,26 @@ ${answer}`;
         const config = configResult[0];
         const configValue = config.config_value;
         
-        seedMultiplierEnabled = configValue.seed_enabled !== false;
-        edgeMultiplierEnabled = configValue.edge_enabled !== false;
-        overlapAdjustmentsEnabled = configValue.overlap_enabled !== false;
+        // 🔥 FIX: Explicit boolean checks (=== true instead of !== false)
+        // This ensures ONLY explicit true enables multipliers
+        seedMultiplierEnabled = configValue.seed_enabled === true;
+        edgeMultiplierEnabled = configValue.edge_enabled === true;
+        overlapAdjustmentsEnabled = configValue.overlap_enabled === true;
+        
+        // 🔥 DEBUG: Log toggle states
+        debug('ToggleConfig', 'Database config loaded', {
+          raw_config: {
+            seed_enabled: configValue.seed_enabled,
+            edge_enabled: configValue.edge_enabled,
+            overlap_enabled: configValue.overlap_enabled,
+          },
+          computed_states: {
+            seedMultiplierEnabled,
+            edgeMultiplierEnabled,
+            overlapAdjustmentsEnabled,
+          },
+        });
+        
         scoreConfigVersion = config.version || 'v1.0.0';
         sweetSpotCenter = configValue.sweet_spot_center ?? 0.142;
         sweetSpotTolerance = configValue.sweet_spot_tolerance ?? 0.05;
@@ -1585,6 +1602,26 @@ ${answer}`;
     // =============================================================================
     // CALL ATOMIC SCORER (ONLY place where scoring happens)
     // =============================================================================
+    
+    // 🔥 DEBUG: Log toggle states being passed to AtomicScorer
+    debug('AtomicScorerCall', 'Calling AtomicScorer with toggles', {
+      toggles: {
+        overlap_on: overlapAdjustmentsEnabled,
+        seed_on: seedMultiplierEnabled,
+        edge_on: edgeMultiplierEnabled,
+      },
+      detection: {
+        is_seed_from_ai: isSeedFromAI,
+        is_edge_from_ai: isEdgeFromAI,
+      },
+      scores: {
+        novelty: finalNoveltyScore,
+        density: densityFinal,
+        coherence: coherenceScore,
+        alignment: alignmentScore,
+      },
+    });
+    
     const atomicScore = AtomicScorer.computeScore({
       novelty: finalNoveltyScore,
       density: densityFinal,
