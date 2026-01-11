@@ -29,6 +29,7 @@ import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
 import { MobileStatusIndicators } from '@/components/MobileStatusIndicators';
 import { MultiplierToggleWrapper } from '@/components/MultiplierToggleWrapper';
+import { HeroPanel } from '@/components/HeroPanel';
 // import { CloudChannel } from '@/components/CloudChannel'; // Temporarily disabled
 import '../../control-lab.css';
 
@@ -344,6 +345,9 @@ export default async function CreatorLab() {
           <CloudChannel />
         </aside> */}
       </div>
+      
+      {/* Hero Panel - Fixed Bottom Right - Buckminster Fuller */}
+      <HeroPanel pageContext="creator" pillarContext="creator" userEmail={userEmail} />
     </div>
   );
 }

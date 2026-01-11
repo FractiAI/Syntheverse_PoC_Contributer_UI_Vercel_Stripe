@@ -42,14 +42,14 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Filter by page assignment
+    // Filter by page assignment (supports both page_assignment and assigned_pages)
     if (page) {
-      query = query.contains('assigned_pages', [page]);
+      query = query.or(`page_assignment.eq.${page},assigned_pages.cs.["${page}"]`);
     }
 
-    // Filter by pillar assignment
+    // Filter by pillar assignment (supports both pillar_assignment and assigned_pillars)
     if (pillar) {
-      query = query.contains('assigned_pillars', [pillar]);
+      query = query.or(`pillar_assignment.eq.${pillar},assigned_pillars.cs.["${pillar}"]`);
     }
 
     const { data: heroes, error } = await query;

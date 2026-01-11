@@ -6,7 +6,7 @@ export default function OnboardingPage() {
   return (
     <div className="academy-bg">
       <OnboardingNavigator />
-      <HeroPanel pageContext="onboarding" pillarContext="contributor" userEmail="" />
+      <HeroPanel pageContext="academy" pillarContext="contributor" userEmail="" />
     </div>
   );
 }
