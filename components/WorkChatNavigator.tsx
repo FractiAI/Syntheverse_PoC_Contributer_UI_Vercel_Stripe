@@ -253,7 +253,11 @@ export function WorkChatNavigator() {
                     return (
                       <tr
                         key={room.id}
-                        className={isSelected ? 'bg-[var(--cockpit-carbon)]' : ''}
+                        onClick={() => {
+                          console.log('[WorkChat] Opening chat room:', room.id);
+                          router.push(`/workchat/${room.id}`);
+                        }}
+                        className={`cursor-pointer hover:bg-[var(--cockpit-carbon)]/50 transition-colors ${isSelected ? 'bg-[var(--cockpit-carbon)]' : ''}`}
                       >
                         <td>
                           <div className="flex items-center gap-2">
@@ -302,7 +306,8 @@ export function WorkChatNavigator() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => {
+                              onClick={(e) => {
+                                e.stopPropagation();
                                 console.log('[WorkChat] Opening chat room:', room.id);
                                 router.push(`/workchat/${room.id}`);
                               }}

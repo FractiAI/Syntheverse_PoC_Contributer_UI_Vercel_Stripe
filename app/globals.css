@@ -121,21 +121,7 @@
   }
 }
 
-/* Custom animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fadeIn {
-  animation: fadeIn 0.3s ease-out;
-}
+/* Custom animations - REMOVED per user request */
 
 /* Smooth scroll behavior */
 html {
@@ -144,56 +130,15 @@ html {
 
 /* === HOLOGRAPHIC HYDROGEN EFFECTS === */
 
-/* Hydrogen Glow Animation */
-@keyframes hydrogen-glow {
-  0%, 100% {
-    box-shadow: 
-      0 0 20px hsl(var(--hydrogen-beta) / 0.3),
-      0 0 40px hsl(var(--hydrogen-beta) / 0.2),
-      inset 0 0 20px hsl(var(--hydrogen-beta) / 0.1);
-  }
-  50% {
-    box-shadow: 
-      0 0 30px hsl(var(--hydrogen-beta) / 0.4),
-      0 0 60px hsl(var(--hydrogen-beta) / 0.3),
-      inset 0 0 30px hsl(var(--hydrogen-beta) / 0.15);
-  }
-}
-
-@keyframes hydrogen-pulse {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
-}
-
-@keyframes float-up {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-100vh);
-  }
-}
+/* Animations REMOVED per user request */
 
 /* Utility Classes */
 .holographic-glow {
-  animation: hydrogen-glow 3s ease-in-out infinite;
+  /* animation removed */
 }
 
 .holographic-pulse {
-  animation: hydrogen-pulse 2s ease-in-out infinite;
+  /* animation removed */
 }
 
 .holographic-shimmer {
@@ -212,7 +157,7 @@ html {
     transparent 100%
   );
   background-size: 200% 100%;
-  animation: shimmer 3s ease-in-out infinite;
+  /* animation removed */
 }
 
 /* === HOLOGRAPHIC COMPONENT LIBRARY === */
@@ -416,12 +361,7 @@ html {
     hsl(var(--hydrogen-alpha) / 0.06),
     transparent 40%
   );
-  animation: float-nebula 20s ease-in-out infinite;
-}
-
-@keyframes float-nebula {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(-5%, -5%) scale(1.1); }
+  /* animation removed */
 }
 
 /* Hydrogen Particle Effect */
@@ -432,16 +372,11 @@ html {
   background: hsl(var(--hydrogen-beta));
   border-radius: 50%;
   box-shadow: 0 0 10px hsl(var(--hydrogen-beta));
-  animation: float-up 15s ease-in-out infinite;
+  /* animation removed */
   opacity: 0;
 }
 
 /* Scanning Line Effect */
-@keyframes scan-line {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100%); }
-}
-
 .scan-line {
   position: absolute;
   left: 0;
@@ -453,10 +388,10 @@ html {
     hsl(var(--hydrogen-beta) / 0.5),
     transparent
   );
-  animation: scan-line 3s ease-in-out infinite;
+  /* animation removed */
 }
 
-/* Mobile optimization - reduce animations for better performance and prevent black screen */
+/* Mobile optimization - animations removed, maintaining visual styling */
 @media (max-width: 768px) {
   .hydrogen-particle {
     display: none; /* Hide particles on mobile - prevents rendering issues */
@@ -464,7 +399,6 @@ html {
   
   .nebula-background::before {
     /* Simplify for mobile Safari */
-    animation: none;
     opacity: 0.3;
     /* Smaller size to prevent iOS Safari rendering failure */
     top: 0;
@@ -483,7 +417,7 @@ html {
   }
 }
 
-/* Reduced motion preference */
+/* Reduced motion preference - all animations already removed */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -495,15 +429,6 @@ html {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-  }
-  
-  .holographic-glow,
-  .holographic-pulse,
-  .holographic-shimmer::before,
-  .hydrogen-particle,
-  .scan-line,
-  .nebula-background::before {
-    animation: none !important;
   }
 }
 
@@ -668,7 +593,7 @@ html {
     hsl(var(--tropical-blue)),
     hsl(var(--tropical-light)),
     transparent);
-  animation: scan-horizontal 3s ease-in-out infinite;
+  /* animation removed */
   box-shadow: 0 0 10px hsl(var(--tropical-glow));
 }
 
@@ -685,23 +610,7 @@ html {
     hsl(var(--tropical-light) / 0.2),
     transparent
   );
-  animation: router-pulse 4s ease-in-out infinite;
-}
-
-@keyframes router-pulse {
-  0%, 100% { 
-    opacity: 0.3;
-    box-shadow: -2px 0 10px hsl(var(--tropical-blue) / 0.3);
-  }
-  50% { 
-    opacity: 0.8;
-    box-shadow: -2px 0 20px hsl(var(--tropical-glow) / 0.6);
-  }
-}
-
-@keyframes scan-horizontal {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.8; }
+  /* animation removed */
 }
 
 /* ===========================
@@ -712,12 +621,7 @@ html {
 .fractal-node-post {
   position: relative;
   margin-bottom: 1rem;
-  animation: fractal-float 6s ease-in-out infinite;
-}
-
-@keyframes fractal-float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-2px); }
+  /* animation removed */
 }
 
 .fractal-node-inner {
@@ -750,14 +654,9 @@ html {
     hsl(var(--hydrogen-delta) / 0.2) 300deg,
     transparent 360deg
   );
-  animation: fractal-rotate 20s linear infinite;
+  /* animation removed */
   opacity: 0;
   transition: opacity 0.3s ease;
-}
-
-@keyframes fractal-rotate {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }
 
 .fractal-node-post:hover .fractal-node-inner::before {
@@ -793,12 +692,7 @@ html {
     hsl(var(--hydrogen-beta) / 0.1),
     transparent
   );
-  animation: fractal-scan 3s ease-in-out infinite;
-}
-
-@keyframes fractal-scan {
-  0% { left: -100%; }
-  100% { left: 200%; }
+  /* animation removed */
 }
 
 /* Inner content area with padding */
@@ -827,49 +721,10 @@ html {
 
 .fractal-node-post:hover .fractal-node-inner::after {
   opacity: 1;
-  animation: corner-pulse 2s ease-in-out infinite;
+  /* animation removed */
 }
 
-@keyframes corner-pulse {
-  0%, 100% { 
-    border-color: hsl(var(--hydrogen-beta) / 0.4);
-    box-shadow: 0 0 10px rgba(var(--hydrogen-beta-rgb), 0.3);
-  }
-  50% { 
-    border-color: hsl(var(--hydrogen-beta) / 0.8);
-    box-shadow: 0 0 20px rgba(var(--hydrogen-beta-rgb), 0.6);
-  }
-}
-
-/* Particle effect on hover */
-.fractal-node-post:hover::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 4px;
-  height: 4px;
-  background: hsl(var(--hydrogen-beta));
-  border-radius: 50%;
-  box-shadow: 
-    0 0 10px hsl(var(--hydrogen-beta)),
-    0 0 20px hsl(var(--hydrogen-beta)),
-    0 0 30px hsl(var(--hydrogen-beta));
-  animation: fractal-particle 2s ease-out infinite;
-  pointer-events: none;
-  z-index: 10;
-}
-
-@keyframes fractal-particle {
-  0% {
-    transform: translate(-50%, -50%) scale(0);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-50%, -150%) scale(1);
-    opacity: 0;
-  }
-}
+/* Particle effect on hover - REMOVED */
 
 /* Add depth with multiple box shadows */
 .fractal-node-post:hover {
@@ -924,12 +779,7 @@ html {
     hsl(var(--tropical-light)),
     transparent
   );
-  animation: header-scan 6s ease-in-out infinite;
-}
-
-@keyframes header-scan {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.8; }
+  /* animation removed */
 }
 
 /* Slow spin animation removed per user request */
@@ -965,7 +815,7 @@ html {
 }
 
 .cloud-channel-icon-btn.has-new-posts {
-  animation: pulse-new-posts 2s ease-in-out infinite;
+  /* animation removed */
   border-color: hsl(var(--tropical-blue));
   background: hsl(var(--tropical-blue) / 0.1);
 }
@@ -979,46 +829,15 @@ html {
   background: hsl(var(--tropical-blue));
   border-radius: 50%;
   border: 2px solid rgba(var(--background), 1);
-  animation: pulse-indicator 1.5s ease-in-out infinite;
-}
-
-@keyframes pulse-new-posts {
-  0%, 100% {
-    box-shadow: 0 0 10px hsl(var(--tropical-blue) / 0.3);
-  }
-  50% {
-    box-shadow: 0 0 20px hsl(var(--tropical-blue) / 0.6);
-  }
-}
-
-@keyframes pulse-indicator {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.2);
-    opacity: 0.8;
-  }
+  /* animation removed */
 }
 
 .cloud-channel-create-post {
   padding: 1rem;
   border-bottom: 1px solid hsl(var(--hydrogen-beta) / 0.2);
   background: rgba(var(--background), 0.95);
-  animation: slideDown 0.2s ease-out;
+  /* animation removed */
   flex-shrink: 0;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .cloud-channel-feed {
@@ -1066,7 +885,7 @@ html {
 }
 
 .cloud-channel-loading {
-  animation: pulse 2s ease-in-out infinite;
+  /* animation removed */
 }
 
 .cloud-channel-load-more {
@@ -1177,7 +996,7 @@ html {
       0 4px 16px hsl(var(--tropical-blue) / 0.5),
       0 0 32px hsl(var(--tropical-glow) / 0.4),
       inset 0 1px 4px rgba(255, 255, 255, 0.2);
-    animation: pulse-frontier 2s ease-in-out infinite;
+    /* animation removed */
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
   }
@@ -1241,50 +1060,7 @@ html {
   display: none;
 }
 
-/* Frontier Awareness Animations */
-@keyframes pulse-frontier {
-  0%, 100% {
-    box-shadow: 
-      0 4px 16px hsl(var(--tropical-blue) / 0.5),
-      0 0 32px hsl(var(--tropical-glow) / 0.4),
-      inset 0 1px 4px rgba(255, 255, 255, 0.2);
-  }
-  50% {
-    box-shadow: 
-      0 6px 24px hsl(var(--tropical-blue) / 0.7),
-      0 0 48px hsl(var(--tropical-glow) / 0.6),
-      inset 0 1px 4px rgba(255, 255, 255, 0.3);
-  }
-}
-
-@keyframes awareness-scan {
-  0% {
-    left: -100%;
-  }
-  100% {
-    left: 100%;
-  }
-}
-
-@keyframes awareness-scan-slow {
-  0% {
-    left: -100%;
-  }
-  100% {
-    left: 100%;
-  }
-}
-
-@keyframes bridge-pulse-mobile {
-  0%, 100% {
-    opacity: 0.6;
-    box-shadow: 0 0 10px hsl(var(--tropical-blue) / 0.4);
-  }
-  50% {
-    opacity: 1;
-    box-shadow: 0 0 20px hsl(var(--tropical-glow) / 0.6);
-  }
-}
+/* Frontier Awareness Animations - REMOVED per user request */
 
 /* Very Small Devices (iPhone SE, etc.) */
 @media (max-width: 430px) {
@@ -1302,57 +1078,20 @@ html {
 }
 
 /* =========================================
-   THEME PARK ENTRANCE ANIMATIONS
+   THEME PARK ENTRANCE ANIMATIONS - REMOVED
    ========================================= */
-
-/* Gradient text animation for hero titles */
-@keyframes gradient {
-  0%, 100% { 
-    background-position: 0% 50%; 
-  }
-  50% { 
-    background-position: 100% 50%; 
-  }
-}
 
 .animate-gradient {
   background-size: 200% auto;
-  animation: gradient 3s ease infinite;
-}
-
-/* Floating particles animation */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0) translateX(0);
-    opacity: 0;
-  }
-  10%, 90% {
-    opacity: 0.6;
-  }
-  50% {
-    transform: translateY(-100vh) translateX(20px);
-    opacity: 0.4;
-  }
+  /* animation removed */
 }
 
 .animate-float {
-  animation: float 8s ease-in-out infinite;
-}
-
-/* Slow pulse for holographic portals */
-@keyframes pulse-slow {
-  0%, 100% {
-    opacity: 0.3;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.6;
-    transform: scale(1.05);
-  }
+  /* animation removed */
 }
 
 .animate-pulse-slow {
-  animation: pulse-slow 4s ease-in-out infinite;
+  /* animation removed */
 }
 
 /* Holographic text effect */
@@ -1383,6 +1122,6 @@ html {
   }
   
   .animate-float {
-    animation-duration: 12s; /* Slower on mobile for performance */
+    /* animation removed */
   }
 }
