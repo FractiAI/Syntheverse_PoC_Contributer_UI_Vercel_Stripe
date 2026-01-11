@@ -9,7 +9,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { RefreshCw, MessageSquare, Heart, Image as ImageIcon, X, Plus, Cloud, Sparkles, Radio, Cpu, ChevronDown } from 'lucide-react';
+import { RefreshCw, MessageSquare, Heart, Image as ImageIcon, X, Plus, Cloud, Sparkles, Radio, Cpu, ChevronDown, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { createClient } from '@/utils/supabase/client';
@@ -40,6 +40,7 @@ export function CloudChannel() {
   const [error, setError] = useState<string | null>(null);
   const [selectedSandbox, setSelectedSandbox] = useState<string | null>('syntheverse');
   const [sandboxName, setSandboxName] = useState<string>('Syntheverse');
+  const [showCreateForm, setShowCreateForm] = useState(false);
   const [currentUserEmail, setCurrentUserEmail] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(false);
   const [offset, setOffset] = useState(0);
@@ -216,6 +217,7 @@ export function CloudChannel() {
   };
 
   const handlePostCreated = () => {
+    setShowCreateForm(false);
     setOffset(0);
     setHasNewPosts(false);
     fetchPosts(selectedSandbox, 0, true).then(() => {
@@ -346,19 +348,45 @@ export function CloudChannel() {
                 }}
                 disabled={loading}
                 className={`hydrogen-btn hydrogen-btn-alpha flex items-center gap-2 px-3 py-1.5 text-xs font-semibold ${hasNewPosts ? 'has-new-posts' : ''}`}
-                title={hasNewPosts ? 'New posts available - Reload' : 'New transmission - Reload feed'}
+                title={hasNewPosts ? 'New posts available - Reload' : 'Reload feed'}
               >
                 <RefreshCw className="w-3.5 h-3.5" />
-                NEW TRANSMISSION
+                RELOAD
                 {hasNewPosts && (
                   <span className="new-posts-indicator" />
                 )}
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowCreateForm(!showCreateForm);
+                }}
+                className="flex items-center gap-2 px-3 py-1.5 text-xs font-semibold rounded transition-all"
+                style={{
+                  background: 'hsl(var(--hydrogen-alpha))',
+                  color: 'white',
+                  border: 'none'
+                }}
+                title="Create new transmission"
+              >
+                <Zap className="w-3.5 h-3.5" />
+                NEW TRANSMISSION
               </button>
             </div>
           </div>
         )}
       </div>
 
+      {/* Create Post Form */}
+      {showCreateForm && (
+        <div className="cloud-channel-create-post">
+          <CreatePostForm
+            sandboxId={selectedSandbox}
+            onPostCreated={handlePostCreated}
+            onCancel={() => setShowCreateForm(false)}
+          />
+        </div>
+      )}
 
       {/* Feed */}
       <div 
