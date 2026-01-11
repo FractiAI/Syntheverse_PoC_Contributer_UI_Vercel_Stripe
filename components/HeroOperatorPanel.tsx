@@ -217,7 +217,7 @@ export default function HeroOperatorPanel() {
   if (loading) {
     return (
       <div className="p-4 text-center" style={{ color: 'hsl(var(--text-secondary))' }}>
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto" style={{ borderColor: 'hsl(var(--hydrogen-alpha))' }}></div>
+        <div className="rounded-full h-8 w-8 border-b-2 mx-auto" style={{ borderColor: 'hsl(var(--hydrogen-alpha))' }}></div>
         <p className="mt-2 text-sm">Loading hero operators...</p>
       </div>
     );

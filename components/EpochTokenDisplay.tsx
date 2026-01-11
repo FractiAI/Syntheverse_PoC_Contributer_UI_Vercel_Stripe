@@ -190,7 +190,7 @@ export function EpochTokenDisplay() {
       <Card>
         <CardContent className="pt-6">
           <div className="flex items-center justify-center gap-2">
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Loader2 className="h-4 w-4" />
             <span className="text-sm text-muted-foreground">Loading epoch information...</span>
           </div>
         </CardContent>

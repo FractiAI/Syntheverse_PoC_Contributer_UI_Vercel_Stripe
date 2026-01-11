@@ -83,7 +83,7 @@ export function MultiplierToggle() {
           <div className="cockpit-label text-sm">SCORING MULTIPLIERS</div>
           <div className="text-xs text-gray-400 mt-0.5">Testing & Tuning Controls</div>
         </div>
-        {saving && <RefreshCw className="h-4 w-4 text-amber-400 animate-spin ml-auto" />}
+        {saving && <RefreshCw className="h-4 w-4 text-amber-400 ml-auto" />}
       </div>
 
       <div className="space-y-3">

@@ -306,7 +306,7 @@ export function SandboxMap3D() {
     return (
       <Card>
         <CardContent className="flex h-96 items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <Loader2 className="h-8 w-8 text-muted-foreground" />
         </CardContent>
       </Card>
     );

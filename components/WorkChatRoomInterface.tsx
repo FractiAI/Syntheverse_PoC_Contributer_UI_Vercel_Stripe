@@ -358,7 +358,7 @@ export function WorkChatRoomInterface({
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
         <div className="text-center p-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-500 mx-auto mb-4"></div>
+          <div className="rounded-full h-16 w-16 border-b-4 border-blue-500 mx-auto mb-4"></div>
           <div className="text-xl font-semibold mb-2">Loading Chat Room...</div>
           <div className="text-sm text-gray-500">Room ID: {roomId}</div>
         </div>

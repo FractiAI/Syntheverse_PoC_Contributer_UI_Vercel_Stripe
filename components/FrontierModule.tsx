@@ -631,7 +631,7 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
                     >
                       {registering === selectedSubmission.submission_hash ? (
                         <>
-                          <Loader2 className="mr-2 inline h-5 w-5 animate-spin" />
+                          <Loader2 className="mr-2 inline h-5 w-5" />
                           Processing Registration...
                         </>
                       ) : (

@@ -332,7 +332,7 @@ export function CreatorUserManagement() {
                         className="cockpit-lever"
                       >
                         {managingRole && roleAction.email === user.email ? (
-                          <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                          <Loader2 className="mr-1 h-3 w-3" />
                         ) : (
                           <ShieldOff className="mr-1 h-3 w-3" />
                         )}
@@ -347,7 +347,7 @@ export function CreatorUserManagement() {
                         className="cockpit-lever"
                       >
                         {managingRole && roleAction.email === user.email ? (
-                          <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                          <Loader2 className="mr-1 h-3 w-3" />
                         ) : (
                           <Shield className="mr-1 h-3 w-3" />
                         )}
@@ -362,7 +362,7 @@ export function CreatorUserManagement() {
                       className="cockpit-lever bg-red-600 hover:bg-red-700"
                     >
                       {deleting && deleteMode.email === user.email ? (
-                        <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                        <Loader2 className="mr-1 h-3 w-3" />
                       ) : (
                         <Trash2 className="mr-1 h-3 w-3" />
                       )}
@@ -475,7 +475,7 @@ export function CreatorUserManagement() {
               className="bg-red-600 hover:bg-red-700"
             >
               {deleting && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 className="mr-2 h-4 w-4" />
               )}
               {deleting ? 'Deleting...' : 'Confirm Delete User'}
             </Button>

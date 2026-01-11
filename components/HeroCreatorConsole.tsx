@@ -425,7 +425,7 @@ Always prioritize user experience and goal achievement.`;
   if (loading) {
     return (
       <div className="p-8 text-center">
-        <Loader2 className="h-12 w-12 animate-spin text-[var(--lab-primary)] mx-auto" />
+        <Loader2 className="h-12 w-12 text-[var(--lab-primary)] mx-auto" />
         <p className="mt-4 text-[var(--lab-text-secondary)]">Loading creator console...</p>
       </div>
     );
@@ -916,7 +916,7 @@ Always prioritize user experience and goal achievement.`;
                     className="lab-button w-full disabled:opacity-50"
                   >
                     {aiGenerating ? (
-                      <><Loader2 className="inline h-4 w-4 animate-spin mr-2" /> Generating...</>
+                      <><Loader2 className="inline h-4 w-4 mr-2" /> Generating...</>
                     ) : (
                       <><Sparkles className="inline h-4 w-4 mr-2" /> Generate System Prompt</>
                     )}

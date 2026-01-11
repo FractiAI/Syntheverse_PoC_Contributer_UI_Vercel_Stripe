@@ -149,7 +149,7 @@ export function FinancialAlignmentButton() {
   if (loading) {
     return (
       <button className="cockpit-lever" disabled>
-        <Loader2 className="mr-2 inline h-4 w-4 animate-spin" />
+        <Loader2 className="mr-2 inline h-4 w-4" />
         Loading...
       </button>
     );
@@ -210,7 +210,7 @@ export function FinancialAlignmentButton() {
                       </div>
                       <div className="flex-shrink-0">
                         {processing === product.id ? (
-                          <Loader2 className="h-4 w-4 animate-spin text-[var(--hydrogen-amber)]" />
+                          <Loader2 className="h-4 w-4 text-[var(--hydrogen-amber)]" />
                         ) : (
                           <span className="cockpit-number whitespace-nowrap text-sm">
                             {formatAmount(product.amount)}
@@ -225,7 +225,7 @@ export function FinancialAlignmentButton() {
                         >
                           {processing === product.id ? (
                             <>
-                              <Loader2 className="mr-1 inline h-3 w-3 animate-spin" />
+                              <Loader2 className="mr-1 inline h-3 w-3" />
                               Processing
                             </>
                           ) : (
@@ -321,7 +321,7 @@ export function FinancialAlignmentButton() {
             >
               {processing === selectedProduct?.id ? (
                 <>
-                  <Loader2 className="mr-2 inline h-4 w-4 animate-spin" />
+                  <Loader2 className="mr-2 inline h-4 w-4" />
                   Processing...
                 </>
               ) : (

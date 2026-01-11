@@ -91,7 +91,7 @@ export function ProofLibraryNavigator() {
               className="cockpit-lever px-4 py-2 text-sm"
               disabled={loading}
             >
-              <RefreshCw className={`mr-2 inline h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+              <RefreshCw className="mr-2 inline h-4 w-4" />
               Refresh
             </button>
             <button

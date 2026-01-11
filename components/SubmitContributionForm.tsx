@@ -621,7 +621,7 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                         ) : (
                           <>
                             <div className="mri-scan-icon-scanning">
-                              <Loader2 className="h-6 w-6 animate-spin text-white" />
+                              <Loader2 className="h-6 w-6 text-white" />
                             </div>
                             <div>
                               <div className="mri-report-title">Scanning in Progress</div>
@@ -777,7 +777,7 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                                 >
                                   {registeringPoC ? (
                                     <>
-                                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                                      <Loader2 className="mr-2 h-5 w-5" />
                                       Processing Registration...
                                     </>
                                   ) : (
@@ -1361,7 +1361,7 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                         <div className="flex items-start gap-4">
                           <div className="relative">
                             <Brain className="h-8 w-8 animate-pulse text-primary" />
-                            <Loader2 className="absolute -right-1 -top-1 h-4 w-4 animate-spin text-primary" />
+                            <Loader2 className="absolute -right-1 -top-1 h-4 w-4 text-primary" />
                           </div>
                           <div className="flex-1 space-y-3">
                             <div>
@@ -1411,7 +1411,7 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
 
                             <div className="border-t border-primary/20 pt-3">
                               <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                <Loader2 className="h-3 w-3 animate-spin" />
+                                <Loader2 className="h-3 w-3" />
                                 <span>This may take a few moments. Please wait...</span>
                               </div>
                             </div>
@@ -1444,7 +1444,7 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                       </>
                     ) : (
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <Loader2 className="h-3 w-3 animate-spin" />
+                        <Loader2 className="h-3 w-3" />
                         Evaluation in progress... (this may take up to 2 minutes)
                       </div>
                     )}
@@ -1525,7 +1525,7 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-3">
-                  <Loader2 className="h-5 w-5 animate-spin" />
+                  <Loader2 className="h-5 w-5" />
                   <span>Processing Examination...</span>
                 </span>
               ) : (

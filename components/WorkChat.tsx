@@ -869,7 +869,7 @@ export function WorkChat({ embedded = false }: WorkChatProps = {}) {
                         title="Upload Image"
                       >
                         {uploadingFile ? (
-                          <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                          <div className="h-4 w-4 rounded-full border-2 border-current border-t-transparent" />
                         ) : (
                           <ImageIcon className="h-5 w-5" />
                         )}
@@ -884,7 +884,7 @@ export function WorkChat({ embedded = false }: WorkChatProps = {}) {
                         title="Upload PDF"
                       >
                         {uploadingFile ? (
-                          <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                          <div className="h-4 w-4 rounded-full border-2 border-current border-t-transparent" />
                         ) : (
                           <FileText className="h-5 w-5" />
                         )}

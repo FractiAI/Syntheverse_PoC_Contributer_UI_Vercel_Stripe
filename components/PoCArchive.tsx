@@ -654,7 +654,7 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
     return (
       <Card>
         <CardContent className="flex h-64 items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <Loader2 className="h-8 w-8 text-muted-foreground" />
         </CardContent>
       </Card>
     );
@@ -1308,7 +1308,7 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                     >
                       {registering === selectedSubmission.submission_hash ? (
                         <>
-                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                          <Loader2 className="mr-2 h-5 w-5" />
                           Processing Registration...
                         </>
                       ) : (
@@ -1343,7 +1343,7 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
 
           {onChainLoading && (
             <div className="flex items-center justify-center py-8">
-              <Loader2 className="mr-2 h-6 w-6 animate-spin" />
+              <Loader2 className="mr-2 h-6 w-6" />
               <span>Fetching on-chain PoCs...</span>
             </div>
           )}

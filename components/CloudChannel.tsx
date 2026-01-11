@@ -350,7 +350,7 @@ export function CloudChannel() {
                 className={`hydrogen-btn hydrogen-btn-alpha flex items-center gap-2 px-3 py-1.5 text-xs font-semibold ${hasNewPosts ? 'has-new-posts' : ''}`}
                 title={hasNewPosts ? 'New posts available - Reload' : 'New transmission - Reload feed'}
               >
-                <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+                <RefreshCw className="w-3.5 h-3.5" />
                 NEW TRANSMISSION
                 {hasNewPosts && (
                   <span className="new-posts-indicator" />
@@ -412,7 +412,7 @@ export function CloudChannel() {
                 filter: 'drop-shadow(0 0 15px hsl(var(--tropical-glow) / 0.8))'
               }} />
               <div className="absolute inset-0 flex items-center justify-center">
-                <RefreshCw className="w-6 h-6 animate-spin" style={{ color: 'hsl(var(--tropical-light))' }} />
+                <RefreshCw className="w-6 h-6" style={{ color: 'hsl(var(--tropical-light))' }} />
               </div>
             </div>
             <p className="text-sm font-mono mb-1" style={{ color: 'hsl(var(--tropical-blue))' }}>
@@ -439,7 +439,7 @@ export function CloudChannel() {
                   filter: 'drop-shadow(0 0 20px hsl(var(--hydrogen-beta) / 0.6))'
                 }} 
               />
-              <div className="absolute -inset-8 border-2 border-dashed rounded-full animate-spin-slow" style={{
+              <div className="absolute -inset-8 border-2 border-dashed rounded-full" style={{
                 borderColor: 'hsl(var(--hydrogen-beta) / 0.2)'
               }} />
             </div>
@@ -476,7 +476,7 @@ export function CloudChannel() {
                 className="cloud-channel-load-more"
               >
                 {loading ? (
-                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  <RefreshCw className="w-4 h-4" />
                 ) : (
                   'Load More'
                 )}

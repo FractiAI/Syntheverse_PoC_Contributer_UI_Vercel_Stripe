@@ -464,7 +464,7 @@ export function HeroPanel({ pageContext = 'landing', pillarContext = 'contributo
               className="flex-shrink-0 w-12 h-12 rounded-xl bg-[var(--hydrogen-alpha)] hover:bg-[var(--hydrogen-beta)] disabled:bg-[var(--cockpit-panel-bg)] disabled:opacity-50 text-black disabled:text-[var(--text-secondary)] flex items-center justify-center transition-all disabled:cursor-not-allowed"
             >
               {isLoading ? (
-                <Loader2 className="h-5 w-5 animate-spin" />
+                <Loader2 className="h-5 w-5" />
               ) : (
                 <Send className="h-5 w-5" />
               )}
