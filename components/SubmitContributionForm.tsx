@@ -41,6 +41,7 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
     error?: string;
     notice?: string;
     evaluation?: any; // Full evaluation result for detailed report
+    validationError?: string | null; // THALET Protocol validation error
   } | null>(null);
 
   const [formData, setFormData] = useState({

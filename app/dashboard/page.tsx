@@ -12,7 +12,7 @@ import { SandboxNavigator } from '@/components/SandboxNavigator';
 import { WorkChatNavigator } from "@/components/WorkChatNavigator";
 import { CloudChannel } from '@/components/CloudChannel';
 import { QuickActionsPanel } from '@/components/QuickActionsPanel';
-import HeroPanel from '@/components/HeroPanel';
+import { HeroPanel } from '@/components/HeroPanel';
 import { ChevronDown } from 'lucide-react';
 import { MobileStatusIndicators } from '@/components/MobileStatusIndicators';
 import { PersistentDetails } from '@/components/PersistentDetails';

@@ -63,11 +63,11 @@ export default function HeroCreatorConsole() {
     default_system_prompt: '',
     status: 'offline' as 'online' | 'offline' | 'maintenance',
     metadata: {
-      personality: '',
+      personality: '' as string,
       capabilities: [] as string[],
-      tone: '',
-      style: '',
-    },
+      tone: '' as string,
+      style: '' as string,
+    } as { personality: string; capabilities: string[]; tone: string; style: string },
   });
 
   // Story form state

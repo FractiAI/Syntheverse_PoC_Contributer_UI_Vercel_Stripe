@@ -82,6 +82,7 @@ interface GroqEvaluationResult {
   };
   redundancy_penalty_percent_computed?: number;
   sweet_spot_bonus_multiplier_computed?: number;
+  atomic_score?: any; // THALET Protocol: Atomic score payload
 }
 
 // Sandbox context for customizing system prompt
@@ -1657,7 +1658,7 @@ ${answer}`;
       // Composite (sum of dimensions) - this is ALWAYS the base
       composite: compositeScore,
       composite_used_as_base: compositeScore, // Explicit: this is what we use as base
-      base_pod_score: basePodScore, // Should equal composite (verification)
+      base_pod_score: compositeScore, // Should equal composite (verification)
       
       // Overlap (from redundancy detection)
       overlap_percent: redundancyOverlapPercent,

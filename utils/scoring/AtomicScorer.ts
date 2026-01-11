@@ -12,7 +12,6 @@
  * - Immutable Payload Generation
  */
 
-import { v4 as uuidv4 } from 'uuid';
 import crypto from 'crypto';
 
 export interface ExecutionContext {
@@ -111,7 +110,7 @@ class AtomicScorerSingleton {
   ): ExecutionContext {
     return {
       toggles,
-      seed: seed || uuidv4(), // Explicit seed, never implicit
+      seed: seed || crypto.randomUUID(), // Explicit seed, never implicit
       timestamp_utc: new Date().toISOString(),
       pipeline_version: '2.0.0-thalet',
       operator_id: process.env.OPERATOR_ID || 'syntheverse-primary',
