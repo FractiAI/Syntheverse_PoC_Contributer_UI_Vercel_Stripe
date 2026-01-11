@@ -18,6 +18,7 @@ import { BroadcastArchiveNavigator } from '@/components/BroadcastArchiveNavigato
 import CockpitHeader from '@/components/CockpitHeader';
 import { QuickActionsPanel } from '@/components/QuickActionsPanel';
 import { OperatorBroadcastBanner } from '@/components/OperatorBroadcastBanner';
+import HeroOperatorPanel from '@/components/HeroOperatorPanel';
 // import { CloudChannel } from '@/components/CloudChannel'; // Temporarily disabled
 import { Settings, Activity, FileText, BookOpen, Shield, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
@@ -126,6 +127,22 @@ export default async function OperatorLab() {
             <FrontierModule userEmail={userEmail} />
             <WorkChatNavigator />
             <BroadcastArchiveNavigator />
+          </div>
+        </details>
+
+        {/* Hero Operator Panel - Collapsible */}
+        <details className="mb-6 frontier-panel relative" open>
+          <div className="scan-line" />
+          <summary className="cursor-pointer select-none list-none p-4 md:p-5 mb-0 border-b" style={{borderColor: 'hsl(var(--hydrogen-beta) / 0.1)'}}>
+            <div className="flex items-center justify-between">
+              <div className="text-xs md:text-sm uppercase tracking-wider font-semibold" style={{color: 'hsl(var(--hydrogen-alpha))'}}>
+                🤖 HERO HOST OPERATORS
+              </div>
+              <ChevronDown className="h-5 w-5 opacity-70" style={{color: 'hsl(var(--hydrogen-alpha))'}} />
+            </div>
+          </summary>
+          <div className="px-4 md:px-5 pb-4 md:pb-5" style={{color: 'hsl(var(--text-primary))'}}>
+            <HeroOperatorPanel />
           </div>
         </details>
 

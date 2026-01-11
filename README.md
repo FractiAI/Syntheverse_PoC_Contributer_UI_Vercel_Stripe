@@ -11,7 +11,15 @@
 
 > **📖 New to the codebase?** See the [Senior Engineer Production Briefing](docs/SENIOR_ENGINEER_PRODUCTION_BRIEFING.md) for a comprehensive system overview covering architecture, workflows, key features, and operational considerations.
 
-> **🔬 Latest Major Updates (Jan 10, 2026):** 
+> **🔬 Latest Major Updates (Jan 11, 2026):** 
+> - **🤖 Hero Host System (Complete)**: Fully integrated collapsible hero/story catalog system with AI-assisted interactions across the platform:
+>   - **Consumer Component**: Collapsible bottom panel on landing, dashboard, and onboarding pages with hero selection, story browser, and AI chat interface
+>   - **Operator Component**: Integrated panel in Operator Lab™ for hero online/offline control, session launching, and active session monitoring
+>   - **Creator Component**: Full catalog management console in Creator Lab™ with CRUD operations, AI-assisted prompt generation (3 modes: hero persona, story narrative, interaction behavior), and page/pillar assignment
+>   - **Analytics Tracking**: Comprehensive event tracking (hero_viewed, story_selected, message_sent, session metrics) with engagement statistics and performance metrics
+>   - **Database Layer**: 5 tables (hero_catalog, story_catalog, hero_sessions, hero_analytics, ai_prompt_templates) with RLS policies, seed data (3 heroes + 6 stories), and JSONB metadata
+>   - **API Endpoints**: Full RESTful API for heroes, stories, and sessions with query filtering by page/pillar/status
+>   - See `HERO_SYSTEM_COMPLETE.md` for full implementation details and deployment guide
 > - **🔧 Critical Scoring Fixes (Marek/Simba Testing)**: Fixed "two parallel scorers" issue identified in first round testing:
 >   - **Single Source of Truth**: Enforced `pod_score` as authoritative (never use LLM's `total_score`)
 >   - **Toggle Enforcement**: Seed/edge multipliers now respect toggle states (OFF → 1.0, not 1.15)

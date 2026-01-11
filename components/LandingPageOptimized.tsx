@@ -7,6 +7,7 @@ import { ThemeParkEntrance } from './landing/ThemeParkEntrance';
 import { SectionWhy } from './landing/SectionWhy';
 import { SectionTechnical } from './landing/SectionTechnical';
 import { SectionEngage } from './landing/SectionEngage';
+import { HeroPanel } from './HeroPanel';
 
 export default function LandingPageOptimized() {
   return (
@@ -28,6 +29,9 @@ export default function LandingPageOptimized() {
 
       {/* Footer spacer */}
       <div className="h-16" />
+
+      {/* Hero Panel - Fixed Bottom */}
+      <HeroPanel pageContext="landing" pillarContext="contributor" userEmail="" />
     </div>
   );
 }

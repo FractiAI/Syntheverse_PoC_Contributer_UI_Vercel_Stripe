@@ -23,7 +23,8 @@ import { BroadcastArchiveNavigator } from '@/components/BroadcastArchiveNavigato
 import CockpitHeader from '@/components/CockpitHeader';
 import { QuickActionsPanel } from '@/components/QuickActionsPanel';
 import { OperatorBroadcastBanner } from '@/components/OperatorBroadcastBanner';
-import { Shield, Activity, FileText, BookOpen, Settings, Users } from 'lucide-react';
+import HeroCreatorConsole from '@/components/HeroCreatorConsole';
+import { Shield, Activity, FileText, BookOpen, Settings, Users, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
 import { MobileStatusIndicators } from '@/components/MobileStatusIndicators';
@@ -220,6 +221,27 @@ export default async function CreatorLab() {
             <CreatorCockpitStats />
           </div>
         </details>
+
+        {/* Hero Creator Console - Collapsible (Creators Only) */}
+        {isCreator && (
+          <details className="lab-panel" open>
+            <summary className="lab-panel-header cursor-pointer select-none list-none">
+              <div className="flex items-center justify-between">
+                <div className="lab-panel-title">
+                  <Sparkles className="lab-panel-icon" />
+                  <span>🤖 Hero Creator Console</span>
+                </div>
+                <ChevronDown className="lab-chevron h-5 w-5" />
+              </div>
+              <div className="lab-panel-description mt-2">
+                Full catalog management with AI-assisted prompt creation
+              </div>
+            </summary>
+            <div className="lab-panel-body">
+              <HeroCreatorConsole />
+            </div>
+          </details>
+        )}
 
         {/* Control Panels - Collapsible */}
         <details className="lab-panel" open>
