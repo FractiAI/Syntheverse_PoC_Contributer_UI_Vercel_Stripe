@@ -56,6 +56,38 @@ export const contributionsTable = pgTable('contributions', {
   overlap_percent: numeric('overlap_percent', { precision: 5, scale: 2 }).default('0'), // Percentage overlap with archive (0-100)
   // TSRC: Content-addressed archive snapshot for deterministic evaluation
   snapshot_id: text('snapshot_id'), // SHA-256 hash of archive state at evaluation time (enables exact reproducibility)
+  // THALET Protocol: Atomic Score (Single Source of Truth for scoring)
+  atomic_score: jsonb('atomic_score').$type<{
+    final: number; // [0, 10000] - SOVEREIGN FIELD
+    execution_context: {
+      toggles: {
+        overlap_on: boolean;
+        seed_on: boolean;
+        edge_on: boolean;
+        metal_policy_on: boolean;
+      };
+      seed: string; // Explicit entropy seed (UUID)
+      timestamp_utc: string; // ISO 8601 UTC timestamp
+      pipeline_version: string; // e.g., "2.0.0-thalet"
+      operator_id: string; // e.g., "syntheverse-primary"
+    };
+    trace: {
+      composite: number;
+      penalty_percent: number;
+      bonus_multiplier: number;
+      seed_multiplier: number;
+      edge_multiplier: number;
+      formula: string;
+      intermediate_steps: {
+        after_penalty: number;
+        after_bonus: number;
+        after_seed: number;
+        raw_final: number;
+        clamped_final: number;
+      };
+    };
+    integrity_hash: string; // SHA-256 hash for tamper detection
+  }>(),
   created_at: timestamp('created_at').defaultNow().notNull(),
   updated_at: timestamp('updated_at').defaultNow().notNull(),
 });
@@ -261,6 +293,38 @@ export const enterpriseContributionsTable = pgTable('enterprise_contributions', 
   overlap_percent: numeric('overlap_percent', { precision: 5, scale: 2 }).default('0'), // Percentage overlap with archive (0-100)
   // TSRC: Content-addressed archive snapshot for deterministic evaluation
   snapshot_id: text('snapshot_id'), // SHA-256 hash of archive state at evaluation time (enables exact reproducibility)
+  // THALET Protocol: Atomic Score (Single Source of Truth for scoring)
+  atomic_score: jsonb('atomic_score').$type<{
+    final: number; // [0, 10000] - SOVEREIGN FIELD
+    execution_context: {
+      toggles: {
+        overlap_on: boolean;
+        seed_on: boolean;
+        edge_on: boolean;
+        metal_policy_on: boolean;
+      };
+      seed: string; // Explicit entropy seed (UUID)
+      timestamp_utc: string; // ISO 8601 UTC timestamp
+      pipeline_version: string; // e.g., "2.0.0-thalet"
+      operator_id: string; // e.g., "syntheverse-primary"
+    };
+    trace: {
+      composite: number;
+      penalty_percent: number;
+      bonus_multiplier: number;
+      seed_multiplier: number;
+      edge_multiplier: number;
+      formula: string;
+      intermediate_steps: {
+        after_penalty: number;
+        after_bonus: number;
+        after_seed: number;
+        raw_final: number;
+        clamped_final: number;
+      };
+    };
+    integrity_hash: string; // SHA-256 hash for tamper detection
+  }>(),
   created_at: timestamp('created_at').defaultNow().notNull(),
   updated_at: timestamp('updated_at').defaultNow().notNull(),
 });
