@@ -350,11 +350,12 @@ export function CloudChannel() {
                   e.stopPropagation();
                   setShowCreateForm(!showCreateForm);
                 }}
-                className="flex items-center gap-2 px-3 py-1.5 text-xs font-semibold rounded transition-all"
+                className="flex items-center gap-2 px-3 py-1.5 text-xs font-semibold rounded transition-all hover:brightness-110"
                 style={{
-                  background: 'hsl(var(--hydrogen-alpha))',
+                  background: 'hsl(var(--tropical-blue))',
                   color: 'white',
-                  border: 'none'
+                  border: 'none',
+                  boxShadow: '0 2px 8px hsl(var(--tropical-blue) / 0.4)'
                 }}
                 title="Create new transmission"
               >
