@@ -129,11 +129,11 @@ export default async function Dashboard() {
               </PersistentDetails>
 
               {/* WorkChat Navigator */}
-              <PersistentDetails storageKey="synthchat-navigator" defaultOpen={true} className="cockpit-panel">
+              <PersistentDetails storageKey="workchat-navigator" defaultOpen={true} className="cockpit-panel">
                 <summary className="cursor-pointer select-none list-none p-3 border-b border-[var(--keyline-primary)]">
                   <div className="flex items-center justify-between">
                     <div className="cockpit-label text-[10px] uppercase tracking-wider">
-                      SYNTHCHAT NAVIGATOR
+                      WORKCHAT NAVIGATOR
                     </div>
                     <ChevronDown className="cockpit-chevron h-4 w-4 opacity-70" />
                   </div>
