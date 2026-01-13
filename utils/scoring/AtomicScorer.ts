@@ -29,7 +29,7 @@ export interface ExecutionContext {
 
 export interface AtomicScore {
   final: number; // [0, 10000] - SOVEREIGN FIELD (full precision)
-  final_clamped: number; // Integer clamped version for display
+  final_clamped?: number; // Optional: Integer clamped version for display (not part of integrity hash)
   execution_context: ExecutionContext;
   trace: {
     composite: number;
