@@ -805,18 +805,25 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
                                       {selectedSubmission.redundancy.toFixed(1)}%
                                     </span>
                                   </div>
-                                  {selectedSubmission.metadata.grok_evaluation_details
-                                    .density_penalty_percent !== undefined && (
-                                    <div className="flex items-center justify-between text-xs">
-                                      <span className="cockpit-text">Density Penalty:</span>
-                                      <span className="cockpit-number text-orange-400">
-                                        {selectedSubmission.metadata.grok_evaluation_details.density_penalty_percent.toFixed(
-                                          1
-                                        )}
-                                        %
-                                      </span>
-                                    </div>
-                                  )}
+                                  {(() => {
+                                    // THALET PROTOCOL: Use atomic_score.trace as authoritative source
+                                    const atomicTrace = selectedSubmission.metadata?.atomic_score?.trace;
+                                    const scoreTrace = selectedSubmission.metadata?.score_trace;
+                                    const trace = atomicTrace || scoreTrace;
+                                    
+                                    const penaltyApplied = trace?.penalty_percent ?? scoreTrace?.penalty_percent_applied;
+                                    
+                                    if (penaltyApplied === undefined || penaltyApplied === 0) return null;
+                                    
+                                    return (
+                                      <div className="flex items-center justify-between text-xs">
+                                        <span className="cockpit-text">Penalty Applied (authoritative):</span>
+                                        <span className="cockpit-number text-orange-400">
+                                          {penaltyApplied.toFixed(2)}%
+                                        </span>
+                                      </div>
+                                    );
+                                  })()}
                                 </div>
                               </div>
                             )}
@@ -870,7 +877,10 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
                           if (raw && raw.trim().length > 0) {
                             return (
                               <div>
-                                <div className="cockpit-label mb-2">SynthScan™ MRI Evaluation Report</div>
+                                <div className="cockpit-label mb-2">LLM Narrative (NON-AUDITED / Informational Only)</div>
+                                <div className="mb-2 rounded border-2 border-amber-500/50 bg-amber-900/20 p-2 text-xs font-semibold text-amber-300">
+                                  ⚠️ NON-AUDITED: This LLM narrative may contain incorrect penalty values. The authoritative source is atomic_score.trace.
+                                </div>
                                 <div className="rounded border border-[var(--keyline-primary)] bg-[var(--cockpit-obsidian)] p-3 md:p-4">
                                   <pre className="cockpit-text max-h-96 overflow-auto whitespace-pre-wrap font-mono text-xs">
                                     {raw}
@@ -884,7 +894,10 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
                           ) {
                             return (
                               <div>
-                                <div className="cockpit-label mb-2">Parsed Evaluation (JSON)</div>
+                                <div className="cockpit-label mb-2">LLM Parsed JSON (NON-AUDITED / Informational Only)</div>
+                                <div className="mb-2 rounded border-2 border-amber-500/50 bg-amber-900/20 p-2 text-xs font-semibold text-amber-300">
+                                  ⚠️ NON-AUDITED: This LLM-parsed JSON may contain incorrect values. The authoritative source is atomic_score.trace.
+                                </div>
                                 <pre className="cockpit-text max-h-96 overflow-auto rounded border border-[var(--keyline-primary)] bg-[var(--cockpit-obsidian)] p-3 font-mono text-xs">
                                   {JSON.stringify(
                                     selectedSubmission.metadata.grok_evaluation_details

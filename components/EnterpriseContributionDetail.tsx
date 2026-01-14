@@ -368,10 +368,16 @@ export default function EnterpriseContributionDetail({
             </Card>
           )}
 
-          {/* Full Evaluation Response */}
+          {/* LLM Narrative - NON-AUDITED / INFORMATIONAL ONLY */}
           {contribution.metadata?.raw_grok_response && (
-            <Card hover={false} className="mb-8 border-l-4 border-green-500/50">
-              <h3 className="cockpit-title mb-2 text-lg">Full Evaluation Response</h3>
+            <Card hover={false} className="mb-8 border-l-4 border-amber-500/50">
+              <h3 className="cockpit-title mb-2 text-lg">LLM Narrative (NON-AUDITED / Informational Only)</h3>
+              <div className="mb-3 rounded-lg border-2 border-amber-300 bg-amber-50 p-3">
+                <div className="text-xs font-semibold text-amber-900">
+                  ⚠️ NON-AUDITED: This LLM narrative may contain incorrect penalty values or calculations.
+                  The authoritative source is the atomic_score.trace (shown in evaluation details above).
+                </div>
+              </div>
               <div className="cockpit-panel max-h-96 overflow-y-auto p-4">
                 <pre className="cockpit-text whitespace-pre-wrap font-mono text-xs opacity-90">
                   {contribution.metadata.raw_grok_response}

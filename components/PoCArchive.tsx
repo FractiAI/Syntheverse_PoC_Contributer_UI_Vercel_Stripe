@@ -1151,7 +1151,7 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                       </div>
                     )}
 
-                    {/* SynthScan™ MRI Evaluation Report */}
+                    {/* LLM Narrative - NON-AUDITED / INFORMATIONAL ONLY */}
                     {(() => {
                       const raw =
                         selectedSubmission.metadata.grok_evaluation_details?.raw_grok_response ||
@@ -1162,9 +1162,13 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                       return (
                         <details className="mt-3">
                           <summary className="cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground">
-                            View SynthScan™ MRI Evaluation Report
+                            View LLM Narrative (NON-AUDITED / Informational Only)
                           </summary>
-                          <div className="mt-3 rounded-lg border bg-muted p-4">
+                          <div className="mt-3 rounded-lg border-2 border-amber-300 bg-amber-50 p-4">
+                            <div className="mb-2 rounded bg-amber-100 border border-amber-300 p-2 text-xs font-semibold text-amber-900">
+                              ⚠️ NON-AUDITED: This LLM narrative may contain incorrect penalty values or calculations.
+                              The authoritative source is the atomic_score.trace (shown above).
+                            </div>
                             <pre className="max-h-96 overflow-auto whitespace-pre-wrap font-mono text-sm text-foreground">
                               {raw}
                             </pre>
@@ -1173,7 +1177,7 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                       );
                     })()}
 
-                    {/* Fallback to JSON if raw response not available */}
+                    {/* LLM Parsed JSON - NON-AUDITED / INFORMATIONAL ONLY */}
                     {(() => {
                       const raw =
                         selectedSubmission.metadata.grok_evaluation_details?.raw_grok_response ||
@@ -1186,15 +1190,21 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                       return (
                         <details className="mt-3">
                           <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground">
-                            View Parsed Evaluation (JSON)
+                            View LLM Parsed JSON (NON-AUDITED / Informational Only)
                           </summary>
-                          <pre className="mt-2 max-h-96 overflow-auto rounded bg-slate-900 p-3 text-xs text-slate-100">
-                            {JSON.stringify(
-                              selectedSubmission.metadata.grok_evaluation_details.full_evaluation,
-                              null,
-                              2
-                            )}
-                          </pre>
+                          <div className="mt-2 rounded-lg border-2 border-amber-300 bg-amber-50 p-3">
+                            <div className="mb-2 rounded bg-amber-100 border border-amber-300 p-2 text-xs font-semibold text-amber-900">
+                              ⚠️ NON-AUDITED: This LLM-parsed JSON may contain incorrect values.
+                              The authoritative source is atomic_score.trace (shown above).
+                            </div>
+                            <pre className="max-h-96 overflow-auto rounded bg-slate-900 p-3 text-xs text-slate-100">
+                              {JSON.stringify(
+                                selectedSubmission.metadata.grok_evaluation_details.full_evaluation,
+                                null,
+                                2
+                              )}
+                            </pre>
+                          </div>
                         </details>
                       );
                     })()}
