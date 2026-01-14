@@ -161,8 +161,8 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
             });
             
             const pocScore = scoreResult.score;
-            const scoreMismatch = scoreResult.hasMismatch;
-            const mismatchDetails = scoreResult.mismatchDetails;
+            let scoreMismatch = scoreResult.hasMismatch;
+            let mismatchDetails = scoreResult.mismatchDetails;
             let validationError: string | null = null;
             
             // Set validation warning based on source
