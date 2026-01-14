@@ -8,6 +8,7 @@
 
 import { useState, useEffect } from 'react';
 import { IntegrityValidator } from '@/utils/validation/IntegrityValidator';
+import { extractSovereignScore, formatSovereignScore } from '@/utils/thalet/ScoreExtractor';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -527,7 +528,8 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
                         </div>
                       </td>
                       <td className="cockpit-number text-right font-mono">
-                        {formatScore(submission.pod_score)}
+                        {/* NSPFRP: Use sovereign score extractor */}
+                        {formatSovereignScore(extractSovereignScore(submission), '—')}
                       </td>
                       <td className="cockpit-number text-right font-mono">
                         <span
@@ -654,7 +656,8 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
                   <div>
                     <div className="cockpit-text mb-1 text-xs">PoC Score</div>
                     <div className="cockpit-number cockpit-number-medium">
-                      {formatScore(selectedSubmission.pod_score)}
+                      {/* NSPFRP: Use sovereign score extractor */}
+                      {formatSovereignScore(extractSovereignScore(selectedSubmission), '—')}
                     </div>
                     <div className="cockpit-text mt-1 text-xs">/ 10,000</div>
                   </div>
@@ -823,21 +826,8 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
                             <div className="flex items-center justify-between">
                               <span className="cockpit-text font-medium">Final PoC Score</span>
                               <span className="cockpit-number cockpit-number-medium">
-                                {/* THALET PROTOCOL: Use validated atomic score */}
-                                {(() => {
-                                  try {
-                                    if (selectedSubmission.metadata?.atomic_score) {
-                                      return IntegrityValidator.getValidatedScore(selectedSubmission.metadata.atomic_score).toLocaleString();
-                                    } else if (selectedSubmission.metadata?.score_trace?.final_score) {
-                                      return (selectedSubmission.metadata.score_trace.final_score).toLocaleString();
-                                    } else {
-                                      return (selectedSubmission.pod_score ?? 0).toLocaleString();
-                                    }
-                                  } catch (error) {
-                                    console.error('[THALET] Validation failed:', error);
-                                    return 'INVALID';
-                                  }
-                                })()} / 10,000
+                                {/* THALET PROTOCOL: Use centralized extractor (NSP-First pattern) */}
+                                {formatSovereignScore(extractSovereignScore(selectedSubmission), '0')} / 10,000
                               </span>
                             </div>
                           </div>

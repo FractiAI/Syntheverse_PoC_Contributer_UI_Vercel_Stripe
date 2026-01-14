@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { IntegrityValidator } from '@/utils/validation/IntegrityValidator';
+import { extractSovereignScore, extractSovereignScoreWithValidation, formatSovereignScore } from '@/utils/thalet/ScoreExtractor';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -34,14 +35,26 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
   const [submissionHash, setSubmissionHash] = useState<string | null>(null);
   const [registeringPoC, setRegisteringPoC] = useState(false);
   const [registerError, setRegisterError] = useState<string | null>(null);
+  
+  // THALET PROTOCOL: Use centralized score extractor (NSP-First pattern)
+  const getSovereignScore = (): number | null => {
+    if (!evaluationStatus) return null;
+    return extractSovereignScore({
+      atomic_score: evaluationStatus.evaluation?.atomic_score,
+      metadata: evaluationStatus.evaluation,
+      pod_score: evaluationStatus.podScore,
+    });
+  };
   const [evaluationStatus, setEvaluationStatus] = useState<{
     completed?: boolean;
-    podScore?: number;
+    podScore?: number | null; // null indicates validation failure
     qualified?: boolean;
     error?: string;
     notice?: string;
     evaluation?: any; // Full evaluation result for detailed report
     validationError?: string | null; // THALET Protocol validation error
+    scoreMismatch?: boolean; // Zero-Delta violation flag
+    mismatchDetails?: string | null; // Details of the mismatch
   } | null>(null);
 
   const [formData, setFormData] = useState({
@@ -139,34 +152,59 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
 
             const metadata = submission.metadata || {};
             
-            // THALET PROTOCOL: Validate atomic score integrity
-            let pocScore = 0;
-            let validationError = null;
+            // THALET PROTOCOL: Use centralized extractor (NSP-First pattern eliminates fractalized errors)
+            const scoreResult = extractSovereignScoreWithValidation({
+              atomic_score: submission.atomic_score || metadata.atomic_score,
+              metadata,
+              pod_score: submission.pod_score,
+              evaluation: metadata,
+            });
             
-            try {
-              if (metadata.atomic_score) {
-                // New THALET-compliant path
-                pocScore = IntegrityValidator.getValidatedScore(metadata.atomic_score);
-              } else if (metadata.score_trace?.final_score) {
-                // Legacy fallback (pre-THALET)
-                pocScore = metadata.score_trace.final_score;
-                console.warn('[THALET] Using legacy score_trace.final_score - atomic_score not found');
-              } else {
-                pocScore = metadata.pod_score ?? 0;
-                console.warn('[THALET] Using fallback pod_score - no atomic_score or score_trace');
-              }
-            } catch (error) {
-              console.error('[THALET] Score validation failed:', error);
-              validationError = error instanceof Error ? error.message : 'Invalid score data';
-              pocScore = 0;
+            const pocScore = scoreResult.score;
+            const scoreMismatch = scoreResult.hasMismatch;
+            const mismatchDetails = scoreResult.mismatchDetails;
+            let validationError: string | null = null;
+            
+            // Set validation warning based on source
+            if (scoreResult.source === 'score_trace') {
+              validationError = 'WARNING: Legacy evaluation format (atomic_score missing). Please re-evaluate.';
+              console.warn('[THALET] Using legacy score_trace.final_score - atomic_score not found');
+            } else if (scoreResult.source === 'pod_score') {
+              validationError = 'ERROR: No atomic_score found. Evaluation may be incomplete or corrupted.';
+              console.warn('[THALET] Using fallback pod_score - no atomic_score or score_trace');
+            } else if (scoreResult.source === 'none') {
+              validationError = 'ERROR: No score data found. Evaluation may be incomplete.';
+              console.error('[THALET] No score data found in submission');
+            }
+            
+            if (scoreMismatch) {
+              console.error('[THALET_ZERO_DELTA_VIOLATION]', mismatchDetails);
+            }
+            
+            // Determine qualification based on atomic_score.final ONLY (not metadata.pod_score)
+            const qualifiedScore = pocScore ?? 0;
+            const shouldBeQualified = qualifiedScore >= 8000;
+            const actualQualified = submission.status === 'qualified';
+            
+            // Check for qualification mismatch (Founder with score 0 when atomic final is 8600)
+            if (actualQualified && pocScore !== null && pocScore < 8000) {
+              scoreMismatch = true;
+              mismatchDetails = `Founder qualification mismatch: Status is 'qualified' but atomic_score.final (${pocScore}) < 8000 threshold. This violates Zero-Delta protocol.`;
+              console.error('[THALET_QUALIFICATION_MISMATCH]', mismatchDetails);
             }
             
             setEvaluationStatus({
               completed: true,
               podScore: pocScore,
-              qualified: submission.status === 'qualified',
-              evaluation: metadata,
-              validationError,
+              qualified: actualQualified,
+              evaluation: {
+                ...metadata,
+                // Ensure atomic_score is in evaluation object for UI access
+                atomic_score: atomicScore || null,
+              },
+              validationError: validationError || (scoreMismatch ? mismatchDetails : null),
+              scoreMismatch, // Flag for UI to block registration
+              mismatchDetails,
             });
           } else if (submission.status === 'payment_pending') {
             // Payment not yet processed - continue polling
@@ -383,6 +421,13 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
 
   const handleRegisterQualifiedPoC = async () => {
     if (!submissionHash) return;
+    
+    // ZERO-DELTA ENFORCEMENT: Block registration if score mismatch detected
+    if (evaluationStatus?.scoreMismatch) {
+      setRegisterError('Registration blocked: Zero-Delta protocol violation detected. Score mismatch between UI and backend.');
+      return;
+    }
+    
     setRegisterError(null);
     setRegisteringPoC(true);
     try {
@@ -636,7 +681,7 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                       <div className="mri-scan-id font-mono text-xs break-all">
                         {submissionHash}
                       </div>
-                      <div className="mt-1 text-xs opacity-70">
+                      <div className="mt-1 text-xs opacity-70 flex items-center gap-3">
                         <a 
                           href={`/api/archive/contributions/${submissionHash}`}
                           target="_blank"
@@ -645,6 +690,31 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                         >
                           📊 View JSON
                         </a>
+                        {submissionHash && (
+                          <button
+                            onClick={async () => {
+                              try {
+                                const response = await fetch(`/api/archive/contributions/${submissionHash}`);
+                                const data = await response.json();
+                                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = `syntheverse-evaluation-${submissionHash.substring(0, 16)}.json`;
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                                URL.revokeObjectURL(url);
+                              } catch (error) {
+                                console.error('Failed to download JSON:', error);
+                                alert('Failed to download JSON. Please try again.');
+                              }
+                            }}
+                            className="text-cyan-400 hover:text-cyan-300 underline"
+                          >
+                            💾 Download JSON
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -659,14 +729,45 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                       <div className="mt-1 text-sm text-blue-700">{evaluationStatus.notice}</div>
                     </div>
                   ) : null}
-                  {evaluationStatus.completed && evaluationStatus.podScore !== undefined ? (
+                  {/* ZERO-DELTA VIOLATION: Fail-hard display */}
+                  {evaluationStatus.scoreMismatch && evaluationStatus.mismatchDetails ? (
+                    <div className="rounded-lg border-2 border-red-500 bg-red-50 p-4 mb-4">
+                      <div className="flex items-start gap-2">
+                        <AlertTriangle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+                        <div className="flex-1">
+                          <div className="font-bold text-red-800 mb-2">
+                            🚨 ZERO-DELTA PROTOCOL VIOLATION
+                          </div>
+                          <div className="text-sm text-red-700 mb-3 whitespace-pre-wrap">
+                            {evaluationStatus.mismatchDetails}
+                          </div>
+                          <div className="text-xs text-red-600 mt-2 p-2 bg-red-100 rounded border border-red-200">
+                            <strong>Action Required:</strong> Registration is BLOCKED until this mismatch is resolved. 
+                            Please contact support with Exam ID: {submissionHash?.substring(0, 16)}...
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : null}
+                  
+                  {/* Validation Error Display */}
+                  {evaluationStatus.validationError && !evaluationStatus.scoreMismatch ? (
+                    <div className="rounded-lg border border-amber-500 bg-amber-50 p-3 mb-4">
+                      <div className="text-sm font-semibold text-amber-800 mb-1">
+                        ⚠️ Validation Warning
+                      </div>
+                      <div className="text-xs text-amber-700">{evaluationStatus.validationError}</div>
+                    </div>
+                  ) : null}
+                  
+                  {evaluationStatus.completed && (evaluationStatus.evaluation?.atomic_score || evaluationStatus.podScore !== undefined) ? (
                     <>
                       <div className="space-y-4">
                         <div className="text-lg font-semibold text-green-700">
                           ✅ Evaluation Complete
                         </div>
 
-                        {/* PoC Score - MRI Style */}
+                        {/* PoC Score - MRI Style - ALWAYS from atomic_score.final */}
                         <div className="mri-score-display">
                           <div className="mri-score-label">
                             {evaluationStatus.evaluation?.is_seed_submission
@@ -674,8 +775,49 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                               : 'POC SCORE'}
                           </div>
                           <div className="mri-score-value">
-                            {evaluationStatus.podScore.toLocaleString()} / 10,000
+                            {/* THALET PROTOCOL: Display atomic_score.final - ALWAYS, NO FALLBACKS */}
+                            {(() => {
+                              try {
+                                const atomicScore = evaluationStatus.evaluation?.atomic_score;
+                                if (atomicScore && typeof atomicScore.final === 'number') {
+                                  const finalScore = atomicScore.final;
+                                  // ZERO-DELTA CHECK: If podScore exists and doesn't match, show error
+                                  if (evaluationStatus.podScore !== null && 
+                                      Math.abs(evaluationStatus.podScore - finalScore) > 0.01) {
+                                    return 'MISMATCH';
+                                  }
+                                  return finalScore.toLocaleString();
+                                }
+                                // FAIL-HARD: If atomic_score missing, show error
+                                if (evaluationStatus.validationError) {
+                                  return 'INVALID';
+                                }
+                                // Last resort (should never happen)
+                                const sovereign = getSovereignScore();
+                                return sovereign?.toLocaleString() || '0';
+                              } catch (error) {
+                                console.error('[THALET] Score display error:', error);
+                                return 'ERROR';
+                              }
+                            })()} / 10,000
                           </div>
+                          {/* Show trace header with atomic_score.final for audit - MUST match displayed score */}
+                          {evaluationStatus.evaluation?.atomic_score && (
+                            <div className="mt-2 text-xs text-slate-600 font-mono">
+                              Final Score (clamped): {evaluationStatus.evaluation.atomic_score.final?.toFixed(2) ?? 'N/A'}
+                              {/* ZERO-DELTA VERIFICATION: Show if mismatch detected */}
+                              {evaluationStatus.scoreMismatch && (
+                                <span className="block mt-1 text-red-600 font-bold">
+                                  ⚠️ MISMATCH: pod_score ≠ atomic_score.final
+                                </span>
+                              )}
+                              {evaluationStatus.evaluation.atomic_score.integrity_hash && (
+                                <span className="block mt-1 opacity-60">
+                                  Hash: {evaluationStatus.evaluation.atomic_score.integrity_hash.substring(0, 16)}...
+                                </span>
+                              )}
+                            </div>
+                          )}
                           {evaluationStatus.evaluation?.is_seed_submission && (
                             <div className="mt-2 text-xs text-slate-600">
                               Maximum score awarded for foundational contribution
@@ -733,70 +875,93 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                           </div>
                         )}
 
-                        {/* Qualification Status */}
-                        {evaluationStatus.qualified && (
-                          <div className="rounded-lg border border-green-500 bg-green-100 p-4">
-                            <div className="flex items-center gap-2 font-semibold text-green-800">
-                              <Award className="h-5 w-5" />✅ Qualified for{' '}
-                              {evaluationStatus.evaluation?.qualified_epoch
-                                ? evaluationStatus.evaluation.qualified_epoch
-                                    .charAt(0)
-                                    .toUpperCase() +
-                                  evaluationStatus.evaluation.qualified_epoch.slice(1)
-                                : 'Open'}{' '}
-                              Epoch!
-                            </div>
-                            <div className="mt-2 text-sm text-green-700">
-                              {evaluationStatus.evaluation?.qualified_epoch ? (
-                                <>
-                                  Your contribution qualifies for the{' '}
-                                  <strong>
-                                    {evaluationStatus.evaluation.qualified_epoch
+                        {/* Qualification Status - MUST derive from atomic_score.final */}
+                        {evaluationStatus.qualified && (() => {
+                          // ZERO-DELTA: Qualification must be based on atomic_score.final ONLY
+                          const atomicFinal = evaluationStatus.evaluation?.atomic_score?.final;
+                          const qualifiesByAtomicScore = atomicFinal !== undefined && atomicFinal >= 8000;
+                          
+                          // If qualified status doesn't match atomic_score.final, show error
+                          if (!qualifiesByAtomicScore && atomicFinal !== undefined) {
+                            return (
+                              <div className="rounded-lg border-2 border-red-500 bg-red-50 p-4">
+                                <div className="font-semibold text-red-800 mb-2">
+                                  ⚠️ Qualification Mismatch Detected
+                                </div>
+                                <div className="text-sm text-red-700">
+                                  Status shows 'qualified' but atomic_score.final ({atomicFinal.toLocaleString()}) &lt; 8000 threshold.
+                                  This is a split-brain violation. Registration is BLOCKED.
+                                </div>
+                              </div>
+                            );
+                          }
+                          
+                          return (
+                            <div className="rounded-lg border border-green-500 bg-green-100 p-4">
+                              <div className="flex items-center gap-2 font-semibold text-green-800">
+                                <Award className="h-5 w-5" />✅ Qualified for{' '}
+                                {evaluationStatus.evaluation?.qualified_epoch
+                                  ? evaluationStatus.evaluation.qualified_epoch
                                       .charAt(0)
                                       .toUpperCase() +
-                                      evaluationStatus.evaluation.qualified_epoch.slice(1)}
-                                  </strong>{' '}
-                                  epoch
-                                  {evaluationStatus.evaluation?.is_seed_submission ? (
-                                    <>
-                                      {' '}
-                                      (maximum qualification score awarded for foundational
-                                      contribution)
-                                    </>
-                                  ) : (
-                                    <> (PoC Score: {evaluationStatus.podScore.toLocaleString()})</>
-                                  )}
-                                </>
-                              ) : (
-                                <>
-                                  Your contribution has met the qualification threshold (≥8,000
-                                  points)
-                                </>
-                              )}
-                            </div>
-                            {/* Register CTA (inside qualification notification) */}
-                            {submissionHash ? (
-                              <div className="mt-4">
-                                <Button
-                                  type="button"
-                                  onClick={handleRegisterQualifiedPoC}
-                                  disabled={registeringPoC}
-                                  size="lg"
-                                  variant="default"
-                                  className="w-full border-2 border-primary/20 bg-primary py-6 text-lg font-bold text-primary-foreground shadow-lg transition-all duration-200 hover:bg-primary/90 hover:shadow-xl"
-                                >
-                                  {registeringPoC ? (
-                                    <>
-                                      <Loader2 className="mr-2 h-5 w-5" />
-                                      Processing Registration...
-                                    </>
-                                  ) : (
-                                    <>
-                                      <CreditCard className="mr-2 h-5 w-5" />⚡ Register PoC
-                                      on‑chain
-                                    </>
-                                  )}
-                                </Button>
+                                    evaluationStatus.evaluation.qualified_epoch.slice(1)
+                                  : 'Open'}{' '}
+                                Epoch!
+                              </div>
+                              <div className="mt-2 text-sm text-green-700">
+                                {evaluationStatus.evaluation?.qualified_epoch ? (
+                                  <>
+                                    Your contribution qualifies for the{' '}
+                                    <strong>
+                                      {evaluationStatus.evaluation.qualified_epoch
+                                        .charAt(0)
+                                        .toUpperCase() +
+                                        evaluationStatus.evaluation.qualified_epoch.slice(1)}
+                                    </strong>{' '}
+                                    epoch
+                                    {evaluationStatus.evaluation?.is_seed_submission ? (
+                                      <>
+                                        {' '}
+                                        (maximum qualification score awarded for foundational
+                                        contribution)
+                                      </>
+                                    ) : (
+                                      <> (PoC Score: {(() => {
+                                        const sovereign = atomicFinal ?? getSovereignScore();
+                                        return sovereign?.toLocaleString() ?? '0';
+                                      })()})</>
+                                    )}
+                                  </>
+                                ) : (
+                                  <>
+                                    Your contribution has met the qualification threshold (≥8,000
+                                    points)
+                                  </>
+                                )}
+                              </div>
+                              {/* Register CTA (inside qualification notification) - BLOCKED if mismatch */}
+                              {submissionHash && !evaluationStatus.scoreMismatch ? (
+                                <div className="mt-4">
+                                  <Button
+                                    type="button"
+                                    onClick={handleRegisterQualifiedPoC}
+                                    disabled={registeringPoC || evaluationStatus.scoreMismatch}
+                                    size="lg"
+                                    variant="default"
+                                    className="w-full border-2 border-primary/20 bg-primary py-6 text-lg font-bold text-primary-foreground shadow-lg transition-all duration-200 hover:bg-primary/90 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                                  >
+                                    {registeringPoC ? (
+                                      <>
+                                        <Loader2 className="mr-2 h-5 w-5" />
+                                        Processing Registration...
+                                      </>
+                                    ) : (
+                                      <>
+                                        <CreditCard className="mr-2 h-5 w-5" />⚡ Register PoC
+                                        on‑chain
+                                      </>
+                                    )}
+                                  </Button>
                                 {registerError ? (
                                   <div className="mt-2 text-xs text-red-700">{registerError}</div>
                                 ) : null}
@@ -804,6 +969,41 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                             ) : null}
                           </div>
                         )}
+
+                            {/* Archive Snapshot Display - TSRC Protocol */}
+                            {(evaluationStatus.evaluation?.tsrc?.archive_snapshot || evaluationStatus.evaluation?.archive_data) && (
+                              <div className="rounded-lg border border-slate-300 bg-slate-50 p-4">
+                                <div className="mb-2 text-sm font-semibold text-slate-700">Archive Snapshot (TSRC)</div>
+                                {(() => {
+                                  const snapshot = evaluationStatus.evaluation?.tsrc?.archive_snapshot;
+                                  const itemCount = snapshot?.item_count ?? 0;
+                                  const snapshotId = snapshot?.snapshot_id;
+                                  return (
+                                    <div className="space-y-2 text-xs text-slate-600">
+                                      <div className="flex items-center justify-between">
+                                        <span>Item Count:</span>
+                                        <span className="font-mono font-semibold">{itemCount}</span>
+                                      </div>
+                                      {itemCount === 0 ? (
+                                        <div className="mt-2 rounded bg-amber-50 border border-amber-200 p-2 text-amber-700">
+                                          <strong>Empty Archive:</strong> No redundancy detected yet. This is normal for early submissions. 
+                                          The archive will populate as more contributions are evaluated.
+                                        </div>
+                                      ) : (
+                                        <div className="mt-2 text-slate-500">
+                                          Archive contains {itemCount} contribution{itemCount !== 1 ? 's' : ''} for redundancy comparison.
+                                        </div>
+                                      )}
+                                      {snapshotId && (
+                                        <div className="mt-2 font-mono text-xs opacity-60 break-all">
+                                          Snapshot ID: {snapshotId.substring(0, 32)}...
+                                        </div>
+                                      )}
+                                    </div>
+                                  );
+                                })()}
+                              </div>
+                            )}
 
                         {/* Evaluation Report - Detailed Analysis */}
                         {evaluationStatus.evaluation && (
@@ -905,7 +1105,10 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                                 </div>
                                 <div className="mt-2 text-sm text-muted-foreground">
                                   Based on composite score (PoC Score):{' '}
-                                  {evaluationStatus.podScore?.toLocaleString() || 'N/A'} / 10,000
+                                  {(() => {
+                                    const sovereign = getSovereignScore();
+                                    return sovereign?.toLocaleString() || 'N/A';
+                                  })()} / 10,000
                                 </div>
                               </div>
                             )}
@@ -1155,7 +1358,10 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                                               Final PoC Score
                                             </span>
                                             <span className="text-lg font-bold">
-                                              {evaluationStatus.podScore?.toLocaleString() || 'N/A'}{' '}
+                                              {(() => {
+                                                const sovereign = getSovereignScore();
+                                                return sovereign?.toLocaleString() || 'N/A';
+                                              })()}{' '}
                                               / 10,000
                                             </span>
                                           </div>
@@ -1242,9 +1448,24 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                                             <div className="flex items-center justify-between">
                                               <span className="font-semibold text-blue-900">Final Score (clamped 0-10000):</span>
                                               <span className="text-lg font-bold text-blue-900">
-                                                {evaluationStatus.podScore.toLocaleString()}
+                                                {/* THALET PROTOCOL: Always use atomic_score.final */}
+                                                {(() => {
+                                                  const atomicScore = evaluationStatus.evaluation?.atomic_score;
+                                                  if (atomicScore && typeof atomicScore.final === 'number') {
+                                                    return atomicScore.final.toLocaleString();
+                                                  }
+                                                  // Fallback only if atomic_score missing
+                                                  const sovereign = getSovereignScore();
+                                                  return sovereign?.toLocaleString() || '0';
+                                                })()}
                                               </span>
                                             </div>
+                                            {/* ZERO-DELTA VERIFICATION: Show mismatch warning if detected */}
+                                            {evaluationStatus.scoreMismatch && (
+                                              <div className="mt-1 text-xs text-red-600 font-semibold">
+                                                ⚠️ Score mismatch detected - see error above
+                                              </div>
+                                            )}
                                           </div>
                                         </div>
 

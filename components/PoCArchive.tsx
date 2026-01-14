@@ -34,6 +34,7 @@ import {
 import Link from 'next/link';
 import { debug, debugError } from '@/utils/debug';
 import { IntegrityValidator } from '@/utils/validation/IntegrityValidator';
+import { extractSovereignScore, formatSovereignScore } from '@/utils/thalet/ScoreExtractor';
 
 interface PoCSubmission {
   submission_hash: string;
@@ -605,7 +606,8 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                     <td className="p-2">{getEpochBadge(submission.qualified_epoch)}</td>
                     <td className="p-2">{getMetalBadges(submission.metals)}</td>
                     <td className="p-2 text-right font-mono text-sm">
-                      {formatScore(submission.pod_score)}
+                      {/* NSPFRP: Use sovereign score extractor */}
+                      {formatSovereignScore(extractSovereignScore(submission), '—')}
                     </td>
                     <td className="p-2 text-right font-mono text-sm">
                       {formatScore(submission.novelty)}
@@ -815,7 +817,8 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                           <td className="p-2">{getEpochBadge(submission.qualified_epoch)}</td>
                           <td className="p-2">{getMetalBadges(submission.metals)}</td>
                           <td className="p-2 text-right font-mono text-sm">
-                            {formatScore(submission.pod_score)}
+                            {/* NSPFRP: Use sovereign score extractor */}
+                            {formatSovereignScore(extractSovereignScore(submission), '—')}
                           </td>
                           <td className="p-2 text-right font-mono text-sm">
                             {formatScore(submission.novelty)}
@@ -944,7 +947,8 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                   <div>
                     <div className="text-xs text-muted-foreground">PoC Score</div>
                     <div className="font-mono font-semibold">
-                      {formatScore(selectedSubmission.pod_score)}
+                      {/* NSPFRP: Use sovereign score extractor */}
+                      {formatSovereignScore(extractSovereignScore(selectedSubmission), '—')}
                     </div>
                   </div>
                   <div>
@@ -1114,21 +1118,8 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                                 Final PoC Score
                               </span>
                               <span className="text-lg font-bold">
-                                {/* THALET PROTOCOL: Use validated atomic score */}
-                                {(() => {
-                                  try {
-                                    if (selectedSubmission.metadata?.atomic_score) {
-                                      return IntegrityValidator.getValidatedScore(selectedSubmission.metadata.atomic_score).toLocaleString();
-                                    } else if (selectedSubmission.metadata?.score_trace?.final_score) {
-                                      return (selectedSubmission.metadata.score_trace.final_score).toLocaleString();
-                                    } else {
-                                      return (selectedSubmission.pod_score ?? 0).toLocaleString();
-                                    }
-                                  } catch (error) {
-                                    console.error('[THALET] Validation failed:', error);
-                                    return 'INVALID';
-                                  }
-                                })()} / 10,000
+                                {/* THALET PROTOCOL: Use centralized extractor (NSP-First pattern) */}
+                                {formatSovereignScore(extractSovereignScore(selectedSubmission), '0')} / 10,000
                               </span>
                             </div>
                           </div>

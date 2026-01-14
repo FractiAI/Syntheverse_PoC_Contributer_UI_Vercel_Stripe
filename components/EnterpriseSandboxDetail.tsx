@@ -110,8 +110,12 @@ export default function EnterpriseSandboxDetail({
           data.contributions?.filter((c: Contribution) => c.status === 'evaluating').length || 0;
         const scores =
           data.contributions
-            ?.filter((c: Contribution) => c.metadata?.pod_score)
-            .map((c: Contribution) => c.metadata.pod_score) || [];
+            ?.map((c: Contribution) => {
+              // NSPFRP: Use sovereign score extractor
+              const { extractSovereignScore } = require('@/utils/thalet/ScoreExtractor');
+              return extractSovereignScore(c);
+            })
+            .filter((score: number | null) => score !== null) || [];
         const averageScore =
           scores.length > 0 ? scores.reduce((a: number, b: number) => a + b, 0) / scores.length : 0;
 

@@ -165,7 +165,8 @@ export async function GET(request: NextRequest) {
             submission_hash: contrib.submission_hash,
             status_field: contrib.status,
             qualified_founder: qualified,
-            pod_score: contrib.meta_pod_score,
+            // NSPFRP: Use sovereign score (atomic_score.final takes priority)
+            pod_score: contrib.atomic_score?.final ?? contrib.meta_pod_score,
           }
         );
       } else if (!qualified && contrib.status === 'qualified') {
@@ -183,7 +184,8 @@ export async function GET(request: NextRequest) {
         // THALET Protocol: Include atomic_score for UI consumption
         atomic_score: contrib.atomic_score || null,
         // Extract scores from metadata
-        pod_score: contrib.meta_pod_score ?? null,
+        // NSPFRP: Use sovereign score (atomic_score.final takes priority)
+        pod_score: contrib.atomic_score?.final ?? contrib.meta_pod_score ?? null,
         novelty: contrib.meta_novelty ?? null,
         density: contrib.meta_density ?? null,
         coherence: contrib.meta_coherence ?? null,

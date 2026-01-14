@@ -1,0 +1,62 @@
+#!/bin/sh
+# NSPFRP Protocol Enforcement: Pre-Commit Hook
+# Prevents fractalized self-similar logic errors
+
+. "$(dirname "$0")/_/husky.sh"
+
+echo "🔍 NSPFRP Protocol: Checking for forbidden patterns..."
+
+# Check for direct pod_score access (excluding utilities and tests)
+FORBIDDEN_POD_SCORE=$(git diff --cached --name-only | xargs grep -l "\.pod_score\|pod_score\s*[?:]" 2>/dev/null | grep -v "ScoreExtractor\|ToggleExtractor\|test\|spec" || true)
+
+if [ ! -z "$FORBIDDEN_POD_SCORE" ]; then
+  echo ""
+  echo "❌ NSPFRP PROTOCOL VIOLATION DETECTED"
+  echo "═══════════════════════════════════════════════════════"
+  echo "Files with direct pod_score access:"
+  echo "$FORBIDDEN_POD_SCORE"
+  echo ""
+  echo "REQUIRED: Use extractSovereignScore() from @/utils/thalet/ScoreExtractor"
+  echo ""
+  echo "Example fix:"
+  echo "  import { extractSovereignScore } from '@/utils/thalet/ScoreExtractor';"
+  echo "  const score = extractSovereignScore(data);"
+  echo ""
+  echo "See .nspfrp-protocol.md for details"
+  echo "═══════════════════════════════════════════════════════"
+  exit 1
+fi
+
+# Check for inline atomic_score extraction patterns
+FORBIDDEN_ATOMIC=$(git diff --cached --name-only | xargs grep -l "atomic_score.*final.*\?\?\|atomic_score.*final.*\|\|" 2>/dev/null | grep -v "ScoreExtractor\|ToggleExtractor\|test\|spec" || true)
+
+if [ ! -z "$FORBIDDEN_ATOMIC" ]; then
+  echo ""
+  echo "❌ NSPFRP PROTOCOL VIOLATION DETECTED"
+  echo "═══════════════════════════════════════════════════════"
+  echo "Files with inline atomic_score extraction:"
+  echo "$FORBIDDEN_ATOMIC"
+  echo ""
+  echo "REQUIRED: Use extractSovereignScore() instead of inline extraction"
+  echo ""
+  exit 1
+fi
+
+# Check for inline toggle extraction
+FORBIDDEN_TOGGLE=$(git diff --cached --name-only | xargs grep -l "seed_enabled.*===.*true\|edge_enabled.*===.*true\|overlap_enabled.*===.*true" 2>/dev/null | grep -v "ToggleExtractor\|test\|spec" || true)
+
+if [ ! -z "$FORBIDDEN_TOGGLE" ]; then
+  echo ""
+  echo "❌ NSPFRP PROTOCOL VIOLATION DETECTED"
+  echo "═══════════════════════════════════════════════════════"
+  echo "Files with inline toggle extraction:"
+  echo "$FORBIDDEN_TOGGLE"
+  echo ""
+  echo "REQUIRED: Use extractToggleStates() from @/utils/thalet/ToggleExtractor"
+  echo ""
+  exit 1
+fi
+
+echo "✅ NSPFRP Protocol: No violations detected"
+exit 0
+

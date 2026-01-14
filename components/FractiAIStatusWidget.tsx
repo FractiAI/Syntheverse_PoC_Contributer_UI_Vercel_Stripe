@@ -193,9 +193,14 @@ export default function FractiAIStatusWidget({ limit = 6 }: { limit?: number }) 
                         {q.qualified_epoch ? (
                           <span className="cockpit-badge">{q.qualified_epoch.toUpperCase()}</span>
                         ) : null}
-                        {typeof q.pod_score === 'number' ? (
-                          <span className="cockpit-badge">PoC {Math.round(q.pod_score)}</span>
-                        ) : null}
+                        {(() => {
+                          // NSPFRP: Use sovereign score extractor
+                          const { extractSovereignScore, formatSovereignScore } = require('@/utils/thalet/ScoreExtractor');
+                          const score = extractSovereignScore(q);
+                          return score !== null ? (
+                            <span className="cockpit-badge">PoC {formatSovereignScore(score)}</span>
+                          ) : null;
+                        })()}
                         {(q.metals || []).map((m) => (
                           <span key={m} className="cockpit-badge">
                             {String(m).toUpperCase()}

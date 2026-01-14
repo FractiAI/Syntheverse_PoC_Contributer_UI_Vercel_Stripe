@@ -283,10 +283,12 @@ export async function evaluateWithGroq(
       const config = configResult[0];
       const configValue = config.config_value;
       
-      // 🔥 FIX: Explicit boolean checks (=== true instead of !== false)
-      seedMultiplierEnabled = configValue.seed_enabled === true;
-      edgeMultiplierEnabled = configValue.edge_enabled === true;
-      overlapAdjustmentsEnabled = configValue.overlap_enabled === true;
+      // NSPFRP: Use centralized toggle extractor (eliminates fractalized self-similar errors)
+      const { extractToggleStates } = await import('@/utils/thalet/ToggleExtractor');
+      const toggleStates = extractToggleStates(configValue);
+      seedMultiplierEnabled = toggleStates.seedMultiplierEnabled;
+      edgeMultiplierEnabled = toggleStates.edgeMultiplierEnabled;
+      overlapAdjustmentsEnabled = toggleStates.overlapAdjustmentsEnabled;
       
       debug('ToggleConfig', 'Early toggle load (before AI prompt)', {
         raw_config: {

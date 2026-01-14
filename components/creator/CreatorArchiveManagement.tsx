@@ -228,11 +228,16 @@ export function CreatorArchiveManagement() {
                           <span className="cockpit-text opacity-60">
                             Status: <span className="opacity-100">{poc.status}</span>
                           </span>
-                          {poc.pod_score !== null && (
-                            <span className="cockpit-text opacity-60">
-                              Score: <span className="opacity-100">{poc.pod_score}</span>
-                            </span>
-                          )}
+                          {(() => {
+                            // NSPFRP: Use sovereign score extractor
+                            const { extractSovereignScore, formatSovereignScore } = require('@/utils/thalet/ScoreExtractor');
+                            const score = extractSovereignScore(poc);
+                            return score !== null ? (
+                              <span className="cockpit-text opacity-60">
+                                Score: <span className="opacity-100">{formatSovereignScore(score)}</span>
+                              </span>
+                            ) : null;
+                          })()}
                           {poc.registered && (
                             <span className="cockpit-text text-green-400">On-Chain</span>
                           )}

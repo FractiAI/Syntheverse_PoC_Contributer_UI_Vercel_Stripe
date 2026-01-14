@@ -131,7 +131,9 @@ export default function EnterpriseContributionDetail({
     );
   }
 
-  const score = contribution.metadata?.pod_score || 0;
+  // NSPFRP: Use sovereign score extractor
+  const { extractSovereignScore } = require('@/utils/thalet/ScoreExtractor');
+  const score = extractSovereignScore(contribution) || 0;
   const novelty = contribution.metadata?.novelty || 0;
   const density = contribution.metadata?.density || 0;
   const coherence = contribution.metadata?.coherence || 0;

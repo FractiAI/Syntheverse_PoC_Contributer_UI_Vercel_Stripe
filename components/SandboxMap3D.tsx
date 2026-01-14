@@ -187,8 +187,9 @@ export function SandboxMap3D() {
         color = '#e5e7eb'; // Silver
       }
 
-      // Size by pod_score
-      const podScore = node.scores?.pod_score || 0;
+      // NSPFRP: Size by sovereign score
+      const { extractSovereignScore } = require('@/utils/thalet/ScoreExtractor');
+      const podScore = extractSovereignScore(node) || 0;
       const radius = Math.max(3, Math.min(12, podScore / 1000));
 
       // Highlight selected node
@@ -421,7 +422,10 @@ export function SandboxMap3D() {
                     </div>
                     <div>
                       <span className="text-muted-foreground">PoC Score:</span>{' '}
-                      {selectedNode.scores?.pod_score || 'N/A'}
+                      {(() => {
+                        const { extractSovereignScore, formatSovereignScore } = require('@/utils/thalet/ScoreExtractor');
+                        return formatSovereignScore(extractSovereignScore(selectedNode), 'N/A');
+                      })()}
                     </div>
                   </>
                 )}
