@@ -927,71 +927,71 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                           }
                           
                           return (
-                            <div className="rounded-lg border border-green-500 bg-green-100 p-4">
-                              <div className="flex items-center gap-2 font-semibold text-green-800">
-                                <Award className="h-5 w-5" />✅ Qualified for{' '}
-                                {evaluationStatus.evaluation?.qualified_epoch
-                                  ? evaluationStatus.evaluation.qualified_epoch
+                          <div className="rounded-lg border border-green-500 bg-green-100 p-4">
+                            <div className="flex items-center gap-2 font-semibold text-green-800">
+                              <Award className="h-5 w-5" />✅ Qualified for{' '}
+                              {evaluationStatus.evaluation?.qualified_epoch
+                                ? evaluationStatus.evaluation.qualified_epoch
+                                    .charAt(0)
+                                    .toUpperCase() +
+                                  evaluationStatus.evaluation.qualified_epoch.slice(1)
+                                : 'Open'}{' '}
+                              Epoch!
+                            </div>
+                            <div className="mt-2 text-sm text-green-700">
+                              {evaluationStatus.evaluation?.qualified_epoch ? (
+                                <>
+                                  Your contribution qualifies for the{' '}
+                                  <strong>
+                                    {evaluationStatus.evaluation.qualified_epoch
                                       .charAt(0)
                                       .toUpperCase() +
-                                    evaluationStatus.evaluation.qualified_epoch.slice(1)
-                                  : 'Open'}{' '}
-                                Epoch!
-                              </div>
-                              <div className="mt-2 text-sm text-green-700">
-                                {evaluationStatus.evaluation?.qualified_epoch ? (
-                                  <>
-                                    Your contribution qualifies for the{' '}
-                                    <strong>
-                                      {evaluationStatus.evaluation.qualified_epoch
-                                        .charAt(0)
-                                        .toUpperCase() +
-                                        evaluationStatus.evaluation.qualified_epoch.slice(1)}
-                                    </strong>{' '}
-                                    epoch
-                                    {evaluationStatus.evaluation?.is_seed_submission ? (
-                                      <>
-                                        {' '}
-                                        (maximum qualification score awarded for foundational
-                                        contribution)
-                                      </>
-                                    ) : (
+                                      evaluationStatus.evaluation.qualified_epoch.slice(1)}
+                                  </strong>{' '}
+                                  epoch
+                                  {evaluationStatus.evaluation?.is_seed_submission ? (
+                                    <>
+                                      {' '}
+                                      (maximum qualification score awarded for foundational
+                                      contribution)
+                                    </>
+                                  ) : (
                                       <> (PoC Score: {(() => {
                                         const sovereign = atomicFinal ?? getSovereignScore();
                                         return sovereign?.toLocaleString() ?? '0';
                                       })()})</>
-                                    )}
-                                  </>
-                                ) : (
-                                  <>
-                                    Your contribution has met the qualification threshold (≥8,000
-                                    points)
-                                  </>
-                                )}
-                              </div>
+                                  )}
+                                </>
+                              ) : (
+                                <>
+                                  Your contribution has met the qualification threshold (≥8,000
+                                  points)
+                                </>
+                              )}
+                            </div>
                               {/* Register CTA (inside qualification notification) - BLOCKED if mismatch */}
                               {submissionHash && !evaluationStatus.scoreMismatch ? (
-                                <div className="mt-4">
-                                  <Button
-                                    type="button"
-                                    onClick={handleRegisterQualifiedPoC}
+                              <div className="mt-4">
+                                <Button
+                                  type="button"
+                                  onClick={handleRegisterQualifiedPoC}
                                     disabled={registeringPoC || evaluationStatus.scoreMismatch}
-                                    size="lg"
-                                    variant="default"
+                                  size="lg"
+                                  variant="default"
                                     className="w-full border-2 border-primary/20 bg-primary py-6 text-lg font-bold text-primary-foreground shadow-lg transition-all duration-200 hover:bg-primary/90 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-                                  >
-                                    {registeringPoC ? (
-                                      <>
-                                        <Loader2 className="mr-2 h-5 w-5" />
-                                        Processing Registration...
-                                      </>
-                                    ) : (
-                                      <>
-                                        <CreditCard className="mr-2 h-5 w-5" />⚡ Register PoC
-                                        on‑chain
-                                      </>
-                                    )}
-                                  </Button>
+                                >
+                                  {registeringPoC ? (
+                                    <>
+                                      <Loader2 className="mr-2 h-5 w-5" />
+                                      Processing Registration...
+                                    </>
+                                  ) : (
+                                    <>
+                                      <CreditCard className="mr-2 h-5 w-5" />⚡ Register PoC
+                                      on‑chain
+                                    </>
+                                  )}
+                                </Button>
                                 {registerError ? (
                                   <div className="mt-2 text-xs text-red-700">{registerError}</div>
                                 ) : null}
@@ -1033,8 +1033,8 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                                     </div>
                                   );
                                 })()}
-                              </div>
-                            )}
+                          </div>
+                        )}
 
                         {/* Evaluation Report - Detailed Analysis */}
                         {evaluationStatus.evaluation && (
@@ -1332,51 +1332,51 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                                           if (overlapPercent === undefined && penaltyApplied === 0) return null;
                                           
                                           return (
-                                            <div className="border-t pt-2">
+                                          <div className="border-t pt-2">
                                               <div className="mb-2 text-xs font-semibold text-slate-700">
                                                 Overlap & Penalties (Authoritative)
-                                              </div>
-                                              <div className="space-y-1">
+                                            </div>
+                                            <div className="space-y-1">
                                                 {overlapPercent !== undefined && (
-                                                  <div className="flex items-center justify-between text-xs">
-                                                    <span className="text-slate-600">
+                                                <div className="flex items-center justify-between text-xs">
+                                                  <span className="text-slate-600">
                                                       Overlap Signal (computed):
-                                                    </span>
-                                                    <span className={`font-semibold ${
+                                                  </span>
+                                                  <span className={`font-semibold ${
                                                       overlapPercent >= 9.2 && overlapPercent <= 19.2
-                                                        ? 'text-green-600'
+                                                      ? 'text-green-600'
                                                         : overlapPercent > 30
-                                                        ? 'text-orange-600'
-                                                        : 'text-slate-900'
-                                                    }`}>
+                                                      ? 'text-orange-600'
+                                                      : 'text-slate-900'
+                                                  }`}>
                                                       {overlapPercent.toFixed(2)}%
                                                       {overlapPercent >= 9.2 && overlapPercent <= 19.2 && ' (⚡ Sweet Spot)'}
                                                       {overlapPercent > 30 && ' (⚠ Penalty Zone)'}
-                                                    </span>
-                                                  </div>
-                                                )}
+                                                  </span>
+                                                </div>
+                                              )}
                                                 {penaltyApplied > 0 && (
-                                                  <div className="flex items-center justify-between text-xs">
-                                                    <span className="text-slate-600">
+                                                <div className="flex items-center justify-between text-xs">
+                                                  <span className="text-slate-600">
                                                       Penalty Applied (authoritative):
-                                                    </span>
-                                                    <span className="font-semibold text-orange-600">
+                                                  </span>
+                                                  <span className="font-semibold text-orange-600">
                                                       {penaltyApplied.toFixed(2)}%
-                                                    </span>
-                                                  </div>
-                                                )}
+                                                  </span>
+                                                </div>
+                                              )}
                                                 {bonusApplied !== 1 && (
-                                                  <div className="flex items-center justify-between text-xs">
-                                                    <span className="text-slate-600">
+                                                <div className="flex items-center justify-between text-xs">
+                                                  <span className="text-slate-600">
                                                       Bonus Multiplier Applied (authoritative):
-                                                    </span>
+                                                  </span>
                                                     <span className="font-semibold text-green-600">
                                                       ×{bonusApplied.toFixed(3)}
-                                                    </span>
-                                                  </div>
-                                                )}
-                                              </div>
+                                                  </span>
+                                                </div>
+                                              )}
                                             </div>
+                                          </div>
                                           );
                                         })()}
 
@@ -1496,30 +1496,30 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                                             </div>
                                           );
                                         })()}
-                                          <div className="border-t border-blue-300 pt-2">
-                                            <div className="flex items-center justify-between">
-                                              <span className="font-semibold text-blue-900">Final Score (clamped 0-10000):</span>
-                                              <span className="text-lg font-bold text-blue-900">
-                                                {/* THALET PROTOCOL: Always use atomic_score.final */}
-                                                {(() => {
-                                                  const atomicScore = evaluationStatus.evaluation?.atomic_score;
-                                                  if (atomicScore && typeof atomicScore.final === 'number') {
-                                                    return atomicScore.final.toLocaleString();
-                                                  }
-                                                  // Fallback only if atomic_score missing
-                                                  const sovereign = getSovereignScore();
-                                                  return sovereign?.toLocaleString() || '0';
-                                                })()}
-                                              </span>
-                                            </div>
-                                            {/* ZERO-DELTA VERIFICATION: Show mismatch warning if detected */}
-                                            {evaluationStatus.scoreMismatch && (
-                                              <div className="mt-1 text-xs text-red-600 font-semibold">
-                                                ⚠️ Score mismatch detected - see error above
-                                              </div>
-                                            )}
+                                        <div className="border-t border-blue-300 pt-2">
+                                          <div className="flex items-center justify-between">
+                                            <span className="font-semibold text-blue-900">Final Score (clamped 0-10000):</span>
+                                            <span className="text-lg font-bold text-blue-900">
+                                              {/* THALET PROTOCOL: Always use atomic_score.final */}
+                                              {(() => {
+                                                const atomicScore = evaluationStatus.evaluation?.atomic_score;
+                                                if (atomicScore && typeof atomicScore.final === 'number') {
+                                                  return atomicScore.final.toLocaleString();
+                                                }
+                                                // Fallback only if atomic_score missing
+                                                const sovereign = getSovereignScore();
+                                                return sovereign?.toLocaleString() || '0';
+                                              })()}
+                                            </span>
                                           </div>
+                                          {/* ZERO-DELTA VERIFICATION: Show mismatch warning if detected */}
+                                          {evaluationStatus.scoreMismatch && (
+                                            <div className="mt-1 text-xs text-red-600 font-semibold">
+                                              ⚠️ Score mismatch detected - see error above
+                                            </div>
+                                          )}
                                         </div>
+                                      </div>
 
                                         {/* Formula String */}
                                         <div className="rounded border border-blue-300 bg-white p-2 text-xs font-mono text-slate-700">
@@ -1614,13 +1614,13 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                                             Use the "Download JSON" button for the audited backend payload.
                                           </div>
                                           <pre className="max-h-96 overflow-auto rounded bg-slate-900 p-3 text-xs text-slate-100">
-                                            {JSON.stringify(
-                                              evaluationStatus.evaluation.grok_evaluation_details
-                                                .full_evaluation,
-                                              null,
-                                              2
-                                            )}
-                                          </pre>
+                                          {JSON.stringify(
+                                            evaluationStatus.evaluation.grok_evaluation_details
+                                              .full_evaluation,
+                                            null,
+                                            2
+                                          )}
+                                        </pre>
                                         </div>
                                       </details>
                                     );
