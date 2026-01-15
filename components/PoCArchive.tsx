@@ -7,6 +7,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { sanitizeNarrative } from '@/utils/narrative/sanitizeNarrative';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -1159,18 +1160,19 @@ export function PoCArchive({ userEmail }: PoCArchiveProps) {
                           ?.raw_grok_response ||
                         '';
                       if (!raw || raw.trim().length === 0) return null;
+                      // Option A: Sanitize narrative - remove all numeric claims and JSON
+                      const sanitized = sanitizeNarrative(raw);
                       return (
                         <details className="mt-3">
                           <summary className="cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground">
-                            View LLM Narrative (NON-AUDITED / Informational Only)
+                            View LLM Narrative (NON-AUDITED / Informational Only - Text-Only)
                           </summary>
                           <div className="mt-3 rounded-lg border-2 border-amber-300 bg-amber-50 p-4">
                             <div className="mb-2 rounded bg-amber-100 border border-amber-300 p-2 text-xs font-semibold text-amber-900">
-                              ⚠️ NON-AUDITED: This LLM narrative may contain incorrect penalty values or calculations.
-                              The authoritative source is the atomic_score.trace (shown above).
+                              ⚠️ NON-AUDITED: This LLM narrative is text-only. All numeric claims (penalties, scores, totals) and embedded JSON have been removed per AAC-1 Option A. The authoritative source is atomic_score.trace (shown above).
                             </div>
                             <pre className="max-h-96 overflow-auto whitespace-pre-wrap font-mono text-sm text-foreground">
-                              {raw}
+                              {sanitized}
                             </pre>
                           </div>
                         </details>

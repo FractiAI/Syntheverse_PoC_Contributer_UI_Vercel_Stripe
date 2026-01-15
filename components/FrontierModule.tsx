@@ -9,6 +9,7 @@
 import { useState, useEffect } from 'react';
 import { IntegrityValidator } from '@/utils/validation/IntegrityValidator';
 import { extractSovereignScore, formatSovereignScore } from '@/utils/thalet/ScoreExtractor';
+import { sanitizeNarrative } from '@/utils/narrative/sanitizeNarrative';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -875,15 +876,17 @@ export function FrontierModule({ userEmail }: FrontierModuleProps) {
                               ?.raw_grok_response ||
                             '';
                           if (raw && raw.trim().length > 0) {
+                            // Option A: Sanitize narrative - remove all numeric claims and JSON
+                            const sanitized = sanitizeNarrative(raw);
                             return (
                               <div>
-                                <div className="cockpit-label mb-2">LLM Narrative (NON-AUDITED / Informational Only)</div>
+                                <div className="cockpit-label mb-2">LLM Narrative (NON-AUDITED / Informational Only - Text-Only)</div>
                                 <div className="mb-2 rounded border-2 border-amber-500/50 bg-amber-900/20 p-2 text-xs font-semibold text-amber-300">
-                                  ⚠️ NON-AUDITED: This LLM narrative may contain incorrect penalty values. The authoritative source is atomic_score.trace.
+                                  ⚠️ NON-AUDITED: This LLM narrative is text-only. All numeric claims (penalties, scores, totals) and embedded JSON have been removed per AAC-1 Option A. The authoritative source is atomic_score.trace.
                                 </div>
                                 <div className="rounded border border-[var(--keyline-primary)] bg-[var(--cockpit-obsidian)] p-3 md:p-4">
                                   <pre className="cockpit-text max-h-96 overflow-auto whitespace-pre-wrap font-mono text-xs">
-                                    {raw}
+                                    {sanitized}
                                   </pre>
                                 </div>
                               </div>

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { IntegrityValidator } from '@/utils/validation/IntegrityValidator';
 import { extractSovereignScore, extractSovereignScoreWithValidation, formatSovereignScore } from '@/utils/thalet/ScoreExtractor';
+import { sanitizeNarrative } from '@/utils/narrative/sanitizeNarrative';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -1568,19 +1569,19 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                                         ?.full_evaluation?.raw_grok_response ||
                                       '';
                                     if (!raw || raw.trim().length === 0) return null;
+                                    // Option A: Sanitize narrative - remove all numeric claims and JSON
+                                    const sanitized = sanitizeNarrative(raw);
                                     return (
                                       <details className="mt-3">
                                         <summary className="cursor-pointer text-sm font-medium text-slate-600 hover:text-slate-800">
-                                          View LLM Narrative (NON-AUDITED / Informational Only)
+                                          View LLM Narrative (NON-AUDITED / Informational Only - Text-Only)
                                         </summary>
                                         <div className="mt-3 rounded-lg border-2 border-amber-300 bg-amber-50 p-4">
                                           <div className="mb-2 rounded bg-amber-100 border border-amber-300 p-2 text-xs font-semibold text-amber-900">
-                                            ⚠️ NON-AUDITED: This LLM narrative may contain incorrect penalty values or calculations.
-                                            The authoritative source is the atomic_score.trace (shown above).
-                                            Use the "Download JSON" button for the audited backend payload.
+                                            ⚠️ NON-AUDITED: This LLM narrative is text-only. All numeric claims (penalties, scores, totals) and embedded JSON have been removed per AAC-1 Option A. The authoritative source is atomic_score.trace (shown above).
                                           </div>
                                           <pre className="max-h-96 overflow-auto whitespace-pre-wrap font-mono text-sm text-slate-900">
-                                            {raw}
+                                            {sanitized}
                                           </pre>
                                         </div>
                                       </details>

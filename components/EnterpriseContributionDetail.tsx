@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, CheckCircle2, XCircle, Clock } from 'lucide-react';
 import { useEffect, useState, useCallback } from 'react';
+import { sanitizeNarrative } from '@/utils/narrative/sanitizeNarrative';
 import { SectionWrapper } from './landing/shared/SectionWrapper';
 import { Card } from './landing/shared/Card';
 import { SnapshotViewer, OAxisDiagnostic } from './tsrc';
@@ -371,16 +372,15 @@ export default function EnterpriseContributionDetail({
           {/* LLM Narrative - NON-AUDITED / INFORMATIONAL ONLY */}
           {contribution.metadata?.raw_grok_response && (
             <Card hover={false} className="mb-8 border-l-4 border-amber-500/50">
-              <h3 className="cockpit-title mb-2 text-lg">LLM Narrative (NON-AUDITED / Informational Only)</h3>
+              <h3 className="cockpit-title mb-2 text-lg">LLM Narrative (NON-AUDITED / Informational Only - Text-Only)</h3>
               <div className="mb-3 rounded-lg border-2 border-amber-300 bg-amber-50 p-3">
                 <div className="text-xs font-semibold text-amber-900">
-                  ⚠️ NON-AUDITED: This LLM narrative may contain incorrect penalty values or calculations.
-                  The authoritative source is the atomic_score.trace (shown in evaluation details above).
+                  ⚠️ NON-AUDITED: This LLM narrative is text-only. All numeric claims (penalties, scores, totals) and embedded JSON have been removed per AAC-1 Option A. The authoritative source is atomic_score.trace (shown in evaluation details above).
                 </div>
               </div>
               <div className="cockpit-panel max-h-96 overflow-y-auto p-4">
                 <pre className="cockpit-text whitespace-pre-wrap font-mono text-xs opacity-90">
-                  {contribution.metadata.raw_grok_response}
+                  {sanitizeNarrative(contribution.metadata.raw_grok_response)}
                 </pre>
               </div>
             </Card>
