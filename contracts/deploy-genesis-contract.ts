@@ -166,13 +166,15 @@ async function deployGenesisContract() {
   // Step 6: Verify Deployment
   console.log('✅ Step 6: Verifying Deployment...');
   
-  const protocolInfo = await contract.getProtocolInfo();
+  // TypeScript doesn't have full type definitions for custom contract methods
+  const contractWithMethods = contract as any;
+  const protocolInfo = await contractWithMethods.getProtocolInfo();
   console.log(`   Protocol Name: ${protocolInfo[0]}`);
   console.log(`   Protocol Version: ${protocolInfo[2]}`);
   console.log(`   Instrument-Grade Fidelity: ${Number(protocolInfo[4]) / 100}%`);
   console.log('');
   
-  const metrics = await contract.getProtocolMetrics();
+  const metrics = await contractWithMethods.getProtocolMetrics();
   console.log('   Initial Metrics:');
   console.log(`   - Total Translations: ${metrics[0]}`);
   console.log(`   - Total NSP Verifications: ${metrics[1]}`);

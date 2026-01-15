@@ -814,6 +814,7 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                                   const finalScore = atomicScore.final;
                                   // ZERO-DELTA CHECK: If podScore exists and doesn't match, show error
                                   if (evaluationStatus.podScore !== null && 
+                                      evaluationStatus.podScore !== undefined &&
                                       Math.abs(evaluationStatus.podScore - finalScore) > 0.01) {
                                     return 'MISMATCH';
                                   }
