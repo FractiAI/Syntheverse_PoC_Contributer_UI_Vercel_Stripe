@@ -2,6 +2,7 @@
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
+import { headers } from 'next/headers';
 import { createStripeCustomer } from '@/utils/stripe/api';
 import { db } from '@/utils/db/db';
 import { usersTable } from '@/utils/db/schema';
@@ -174,10 +175,12 @@ export const signOut = logout;
 
 export async function signInWithGoogle() {
   const supabase = createClient();
+  const origin = headers().get('origin') || PUBLIC_URL;
+  
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${PUBLIC_URL}/auth/callback`,
+      redirectTo: `${origin}/auth/callback`,
     },
   });
 
