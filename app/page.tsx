@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import FractiAILanding from '@/components/FractiAILanding';
 import { getAuthenticatedUserWithRole } from '@/utils/auth/permissions';
 
@@ -12,28 +13,21 @@ export const metadata = {
 export default async function LandingPage() {
   const { user, isOperator, isCreator } = await getAuthenticatedUserWithRole();
 
-  const isRegularUser = user && !isOperator && !isCreator;
+  // Redirect approved testers automatically if logged in
+  if (user && (isOperator || isCreator)) {
+    redirect('/operator/dashboard');
+  }
 
   return (
     <FractiAILanding
       variant="fractiai"
       isAuthenticated={!!user}
-      systemNotice={isRegularUser ? "WE ARE IN TEST AND WILL BE BACK ONLINE SHORTLY" : undefined}
-      cta={
-        user
-          ? {
-            primaryHref: '/submit',
-            primaryLabel: 'SUBMISSION PAGE',
-            secondaryHref: isOperator || isCreator ? '/operator' : undefined,
-            secondaryLabel: isOperator || isCreator ? 'OPERATOR CONSOLE' : undefined,
-          }
-          : {
-            primaryHref: '/signup',
-            primaryLabel: 'JOIN THE FRONTIER',
-            secondaryHref: '/login',
-            secondaryLabel: 'LOG IN',
-          }
-      }
+      isApprovedTester={isOperator || isCreator}
+      systemNotice={user && !isOperator && !isCreator ? "WE ARE IN TEST AND WILL BE BACK ONLINE SHORTLY" : undefined}
+      cta={{
+        primaryHref: '/login?redirect=/operator/dashboard',
+        primaryLabel: 'TESTER LOGIN',
+      }}
     />
   );
 }

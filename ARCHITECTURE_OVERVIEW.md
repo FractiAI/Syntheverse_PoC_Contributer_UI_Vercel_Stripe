@@ -261,7 +261,7 @@ The system uses a multi-modal UI themed after historical figures, organized by "
     - **Buckminster Fuller Creator Studio™** (`/creator/dashboard`): System architect interface. Employs futuristic geodesic design aesthetics. Focus: System architecture & evolution.
 
 - **ARCHIVE (Local Storage)**:
-    - **Alan Turing Command Center™** & **Leonardo da Vinci Contributors Lab™**: These legacy octaves have been moved to a local archive directory on the administrator's desktop (`Desktop/Syntheverse_Thematic_Archive`) and are no longer part of the live GitHub repository.
+    - **Alan Turing Command Center™**, **Leonardo da Vinci Contributors Lab™**, and **Buckminster Fuller Creator Studio™**: These legacy octaves and their associated API/components have been moved to a local archive directory on the administrator's desktop (`Desktop/Syntheverse_Thematic_Archive`) and are no longer part of the live GitHub repository.
 
 ### Styling
 

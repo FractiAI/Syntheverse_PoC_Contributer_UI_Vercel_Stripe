@@ -141,14 +141,7 @@ export async function signup(currentState: { message: string }, formData: FormDa
   }
 
   revalidatePath('/', 'layout');
-
-  // If email confirmation is required and not confirmed, redirect to check email page
-  if (requiresEmailConfirmation && !isEmailConfirmed) {
-    redirect('/signup/check-email');
-  }
-
-  // Otherwise, redirect to dashboard (user is confirmed or in dev mode)
-  redirect('/dashboard');
+  redirect('/operator/dashboard');
 }
 
 export async function loginUser(currentState: { message: string }, formData: FormData) {
@@ -166,7 +159,7 @@ export async function loginUser(currentState: { message: string }, formData: For
   }
 
   revalidatePath('/', 'layout');
-  redirect('/dashboard');
+  redirect('/operator/dashboard');
 }
 
 export async function logout() {

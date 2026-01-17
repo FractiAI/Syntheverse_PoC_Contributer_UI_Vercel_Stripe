@@ -36,15 +36,6 @@ export function QuickActionsPanel({
                 <span>Faraday Console</span>
               </Link>
             )}
-            {isCreator && (
-              <Link 
-                href="/creator/dashboard" 
-                className="cockpit-lever inline-flex items-center border-[#FFD700] text-[#FFD700] whitespace-nowrap py-1.5 px-3 text-xs font-bold"
-              >
-                <Shield className="mr-1.5 h-3 w-3" />
-                <span>Fuller Studio</span>
-              </Link>
-            )}
 
             <Link 
               href="/onboarding" 

@@ -39,9 +39,9 @@ export default async function OperatorLab() {
 
   const { user, isOperator } = await getAuthenticatedUserWithRole();
 
-  // Only Operators can access this lab (Creators should use Creator Lab™)
+  // Only Operators can access this lab
   if (!isOperator || !user?.email) {
-    redirect('/dashboard');
+    redirect('/');
   }
 
   // TypeScript guard: ensure user and email exist after checks
