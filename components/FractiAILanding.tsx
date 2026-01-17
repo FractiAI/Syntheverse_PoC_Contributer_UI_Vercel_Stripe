@@ -202,6 +202,7 @@ export default function FractiAILanding({
   variant = 'home',
   isAuthenticated = false,
   cta,
+  systemNotice,
 }: FractiAILandingProps) {
   const showAuthButtons = variant === 'fractiai' && !isAuthenticated;
 
