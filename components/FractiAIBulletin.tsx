@@ -169,21 +169,12 @@ export default function FractiAIBulletin({
                 {isAuthenticated ? (
                   <>
                     <Link
-                      href="/dashboard"
+                      href="/operator/dashboard"
                       className="cockpit-lever inline-flex items-center gap-2 text-xs"
                     >
                       <LayoutDashboard className="h-3.5 w-3.5" />
-                      Dashboard
+                      Operator Console
                     </Link>
-                    {isOperator && (
-                      <Link
-                        href="/operator/dashboard"
-                        className="cockpit-lever inline-flex items-center gap-2 text-xs"
-                      >
-                        <Settings className="h-3.5 w-3.5" />
-                        Operator Console
-                      </Link>
-                    )}
                   </>
                 ) : (
                   <>

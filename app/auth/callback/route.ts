@@ -10,7 +10,7 @@ import { debug, debugError } from '@/utils/debug';
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get('code');
-  const next = searchParams.get('next') ?? '/dashboard';
+  const next = searchParams.get('next') ?? '/operator/dashboard';
 
   if (!code) {
     console.error('OAuth callback: No code parameter found');

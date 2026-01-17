@@ -47,7 +47,7 @@ export default async function OperatorLab() {
   // TypeScript guard: ensure user and email exist after checks
   const userEmail = user?.email;
   if (!userEmail) {
-    redirect('/dashboard');
+    redirect('/');
   }
 
   return (

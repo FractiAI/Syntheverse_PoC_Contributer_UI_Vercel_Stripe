@@ -175,7 +175,9 @@ export const signOut = logout;
 
 export async function signInWithGoogle() {
   const supabase = createClient();
-  const origin = headers().get('origin') || PUBLIC_URL;
+  const host = headers().get('host');
+  const protocol = host?.includes('localhost') ? 'http' : 'https';
+  const origin = host ? `${protocol}://${host}` : PUBLIC_URL;
   
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
