@@ -11,8 +11,9 @@
 
 **Marcin's complete specifications received and implemented using NSPFRP prophylactic methodology.** All type definitions, utility functions, and validation logic are created as centralized single sources of truth. The n̂ (BMP) formula, BridgeSpec schema, T-B-01..03 fail-closed logic, and degeneracy detection are all implemented and ready for integration.
 
-**Status:** ✅ **UTILITIES COMPLETE - INTEGRATION READY**  
+**Status:** ✅ **UTILITIES + SCHEMA COMPLETE - INTEGRATION READY**  
 **NSPFRP Compliance:** ✅ **ENFORCED - NO FRACTALIZED ERRORS POSSIBLE**  
+**Database Migration:** ✅ **COMPLETE - All indexes verified**  
 **Next Step:** Sprint 1 — Integrate utilities into evaluation pipeline
 
 ---
@@ -145,7 +146,7 @@ const precision = calculateBMPPrecisionWithBridgeSpec(coherence, validation);
 2. ✅ Zero-Delta Discipline — **COMPLETE**
 3. ✅ Environment Variable Safety — **COMPLETE** (fixed unsafe accesses)
 
-### ⏳ Sprint 1: BridgeSpec + T-B Integration (Ready)
+### ✅ Sprint 1: BridgeSpec + T-B Integration (In Progress)
 
 **Utilities created — ready for integration:**
 
@@ -166,10 +167,17 @@ const precision = calculateBMPPrecisionWithBridgeSpec(coherence, validation);
    - Calculate n̂
    - Include in evaluation result
 
-4. ⏳ **Database schema update** (if needed)
-   - Ensure `atomic_score` JSONB field can store extended trace
+4. ✅ **Database schema update** — **COMPLETE**
+   - ✅ `bridge_spec` JSONB column added to `contributions` table
+   - ✅ All 5 indexes created successfully:
+     - `idx_contributions_bridge_spec` (GIN index)
+     - `idx_contributions_bridgespec_hash` (btree)
+     - `idx_contributions_bubble_class` (btree)
+     - `idx_contributions_n_hat` (btree DESC)
+     - `idx_contributions_t_b_overall` (btree)
+   - ✅ `atomic_score` JSONB field supports extended trace (no migration needed)
 
-**Estimated effort:** 2-3 days (utilities ready, just integration)
+**Estimated effort:** 2-3 days (utilities + schema ready, integration remaining)
 
 ---
 
@@ -181,13 +189,17 @@ const precision = calculateBMPPrecisionWithBridgeSpec(coherence, validation);
 1. ✅ BridgeSpec utilities created
 2. ✅ T-B-01..03 validation implemented
 3. ✅ n̂ formula implemented
-4. ⏳ Integrate into `AtomicScorer`
-5. ⏳ Write to `atomic_score.trace`
-6. ⏳ Test with sample BridgeSpec
+4. ✅ **Database schema migration completed** (2026-01-15)
+   - `bridge_spec` column added
+   - 5 indexes created for performance
+5. ⏳ Integrate into `AtomicScorer`
+6. ⏳ Write to `atomic_score.trace`
+7. ⏳ Test with sample BridgeSpec
 
 **Deliverables:**
 - ✅ BridgeSpec JSON schema + validation
 - ✅ T-B-01..03 fail-closed logic
+- ✅ Database schema ready (bridge_spec column + indexes)
 - ⏳ BridgeSpec hash in atomic_score.trace
 - ⏳ n̂ calculation in atomic_score.trace
 
@@ -241,6 +253,12 @@ const precision = calculateBMPPrecisionWithBridgeSpec(coherence, validation);
 3. ⏳ **UI components** — Chamber A/B panels, BubbleClass display
 4. ⏳ **Testing** — Sample BridgeSpec validation, n̂ calculation verification
 
+### ✅ Completed (Just Now)
+
+1. ✅ **Database schema migration** — BridgeSpec column and indexes created
+   - Migration: `20260115000001_add_bridge_spec_columns.sql`
+   - Verified: All 5 indexes created successfully in Supabase
+
 ### ⚠️ Minor Clarifications (Non-Blocking)
 
 1. **Δmin threshold** — Currently defaulting to 0.1 (can adjust)
@@ -284,21 +302,26 @@ const precision = calculateBMPPrecisionWithBridgeSpec(coherence, validation);
 
 ### Sprint 1 (This Week)
 
-1. **Integrate into AtomicScorer**
+1. ✅ **Database schema ready** (COMPLETE - 2026-01-15)
+   - `bridge_spec` JSONB column added
+   - All indexes created and verified
+   - Ready for data insertion
+
+2. **Integrate into AtomicScorer**
    - Call `extractBridgeSpec()` in `computeScore()`
    - Call `validateBridgeSpec()` 
    - Call `calculateBMPPrecisionWithBridgeSpec()`
    - Extend trace with new fields
 
-2. **Extend atomic_score.trace**
+3. **Extend atomic_score.trace**
    - Add precision object
    - Add T_B results
    - Add bridgespec_hash
 
-3. **Update evaluation pipeline**
+4. **Update evaluation pipeline**
    - Extract BridgeSpec from submission
    - Include in evaluation result
-   - Write to database
+   - Write to database (schema ready)
 
 ### Testing
 

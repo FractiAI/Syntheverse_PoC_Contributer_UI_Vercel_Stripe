@@ -220,6 +220,7 @@ This transformation embodies Turing's core principles:
 
 | Aspect | Turing (FractiAI) | Leonardo (Contributor) | Faraday (Operator) | Fuller (Creator) |
 |--------|-------------------|------------------------|--------------------| -----------------|
+| Status | **ARCHIVE** | **ARCHIVE** | **KEEP (ACTIVE)** | **KEEP (ACTIVE)** |
 | Icon | Turing Machine | Vitruvian Man | Candle Flame | Geodesic Dome |
 | Primary Color | Matrix Green (#00FF41) | Sepia (#CD853F) | Electric Blue (#4169E1) | Gold (#FFD700) |
 | Philosophy | Computation, AI | Observation, Art | Induction, Experiment | Synergetics, Design |

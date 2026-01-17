@@ -1,164 +1,26 @@
-/**
- * AtomicScorer - Single Source of Truth for PoC Scoring
- * THALET Protocol Compliant
- * 
- * This is the ONLY place where scoring computation occurs.
- * All UI components are prohibited from score calculation.
- * 
- * Implements:
- * - Atomic Data Sovereignty
- * - Multi-Level Neutralization Gating (MLN)
- * - Execution Context Determinism
- * - Immutable Payload Generation
- */
-
 import crypto from 'crypto';
+import { 
+  ScoringInput, 
+  AtomicScore, 
+  ScoringExecutionContext,
+  BridgeSpec,
+  BridgeSpecValidationResult,
+  BMPPrecisionResult
+} from '@/types/scoring';
+import { validateBridgeSpec } from '@/utils/bridgespec/BridgeSpecValidator';
+import { calculateBMPPrecisionWithBridgeSpec } from '@/utils/gates/PrecisionCoupling';
 
-export interface ExecutionContext {
-  toggles: {
-    overlap_on: boolean;
-    seed_on: boolean;
-    edge_on: boolean;
-    metal_policy_on: boolean;
-  };
-  seed: string; // Explicit entropy seed
-  timestamp_utc: string; // ISO 8601 UTC
-  pipeline_version: string;
-  operator_id: string;
-}
-
-export interface AtomicScore {
-  final: number; // [0, 10000] - SOVEREIGN FIELD (full precision)
-  final_clamped?: number; // Optional: Integer clamped version for display (not part of integrity hash)
-  execution_context: ExecutionContext;
-  trace: {
-    composite: number;
-    penalty_percent: number; // Full precision
-    penalty_percent_exact: number; // Exact value for recomputation (Marek/Simba audit requirement)
-    bonus_multiplier: number; // Full precision
-    bonus_multiplier_exact: number; // Exact value for recomputation
-    seed_multiplier: number;
-    edge_multiplier: number;
-    formula: string;
-    intermediate_steps: {
-      after_penalty: number; // Full precision
-      after_penalty_exact: number; // Exact value
-      after_bonus: number; // Full precision
-      after_bonus_exact: number; // Exact value
-      after_seed: number;
-      raw_final: number; // Full precision before clamp
-      clamped_final: number; // Integer after clamp
-    };
-  };
-  integrity_hash: string; // SHA-256 of deterministic payload
-}
-
-export interface ScoringInput {
-  novelty: number;
-  density: number;
-  coherence: number;
-  alignment: number;
-  redundancy_overlap_percent: number;
-  is_seed_from_ai: boolean;
-  is_edge_from_ai: boolean;
-  toggles: ExecutionContext['toggles'];
-  seed?: string;
-}
-
-class AtomicScorerSingleton {
-  private static instance: AtomicScorerSingleton;
+export class AtomicScorer {
+  private static instance: AtomicScorer;
   private executionCount: number = 0;
 
-  private constructor() {
-    // Enforce singleton pattern - private constructor
-    console.log('[AtomicScorer] Singleton initialized - THALET Protocol Active');
-  }
+  private constructor() {}
 
-  public static getInstance(): AtomicScorerSingleton {
-    if (!AtomicScorerSingleton.instance) {
-      AtomicScorerSingleton.instance = new AtomicScorerSingleton();
+  public static getInstance(): AtomicScorer {
+    if (!AtomicScorer.instance) {
+      AtomicScorer.instance = new AtomicScorer();
     }
-    return AtomicScorerSingleton.instance;
-  }
-
-  /**
-   * Multi-Level Neutralization Gate (MLN)
-   * Enforces [0, 10000] range with fail-hard option
-   * 
-   * @param score - Computed score to validate
-   * @param failHard - If true, throws exception instead of clamping
-   */
-  private neutralizationGate(score: number, failHard: boolean = false): number {
-    if (score < 0 || score > 10000) {
-      const violation = `Score ${score} outside authorized range [0, 10000]`;
-
-      if (failHard) {
-        throw new Error(
-          `THALET_VIOLATION: ${violation}. ` +
-          `Emission blocked per Multi-Level Neutralization Gating.`
-        );
-      }
-
-      // Hard clamp if fail-hard disabled
-      console.error(`[THALET_WARNING] ${violation}. Applying hard clamp.`);
-      return Math.max(0, Math.min(10000, score));
-    }
-    return score;
-  }
-
-  /**
-   * Generate deterministic execution context
-   */
-  private generateExecutionContext(
-    toggles: ExecutionContext['toggles'],
-    seed?: string
-  ): ExecutionContext {
-    return {
-      toggles,
-      seed: seed || crypto.randomUUID(), // Explicit seed, never implicit
-      timestamp_utc: new Date().toISOString(),
-      pipeline_version: '2.0.0-thalet',
-      operator_id: process.env.OPERATOR_ID || 'syntheverse-primary',
-    };
-  }
-
-  /**
-   * Generate integrity hash for payload validation
-   * Uses SHA-256 for bit-by-bit equality verification
-   */
-  private generateIntegrityHash(payload: Omit<AtomicScore, 'integrity_hash'>): string {
-    // Sort keys for deterministic serialization
-    const deterministicPayload = JSON.stringify(payload, Object.keys(payload).sort());
-    return crypto.createHash('sha256').update(deterministicPayload).digest('hex');
-  }
-
-  /**
-   * Build human-readable formula string
-   */
-  private buildFormula(
-    composite: number,
-    penalty: number,
-    bonus: number,
-    seed: number,
-    edge: number,
-    final: number
-  ): string {
-    const parts: string[] = [`Composite=${composite}`];
-
-    if (penalty > 0) {
-      parts.push(`Penalty=${penalty.toFixed(2)}%`);
-    }
-    if (bonus !== 1.0) {
-      parts.push(`Bonus=${bonus.toFixed(3)}×`);
-    }
-    if (seed !== 1.0) {
-      parts.push(`Seed=${seed.toFixed(2)}×`);
-    }
-    if (edge !== 1.0) {
-      parts.push(`Edge=${edge.toFixed(2)}×`);
-    }
-
-    return `${parts.join(' → ')} = ${final.toFixed(2)}`;
+    return AtomicScorer.instance;
   }
 
   /**
@@ -180,7 +42,25 @@ class AtomicScorerSingleton {
     // TRINARY NEUTRALIZATION GATE (Range protection only)
     const finalScore = this.neutralizationGate(rawFinal, false);
 
-    // Build trace for auditability (Raw metrics only)
+    // BridgeSpec & TO Integration (NSPFRP-prophylactic)
+    // Extract and validate BridgeSpec if provided
+    const bridgeSpec = params.bridgeSpec || null;
+    const bridgeSpecValidation = bridgeSpec ? validateBridgeSpec(bridgeSpec) : null;
+    
+    // Calculate n̂ (BMP precision) with BridgeSpec coupling
+    const precisionResult = calculateBMPPrecisionWithBridgeSpec(
+      params.coherence,
+      bridgeSpecValidation
+    );
+    
+    // Calculate BridgeSpec hash (SHA-256) if BridgeSpec exists
+    let bridgespecHash: string | undefined;
+    if (bridgeSpec) {
+      const bridgeSpecJson = JSON.stringify(bridgeSpec, Object.keys(bridgeSpec).sort());
+      bridgespecHash = crypto.createHash('sha256').update(bridgeSpecJson).digest('hex');
+    }
+
+    // Build trace for auditability (with full precision for Marek/Simba audit + BridgeSpec/TO)
     const trace = {
       composite,
       penalty_percent: 0,
@@ -199,9 +79,35 @@ class AtomicScorerSingleton {
         raw_final: rawFinal,
         clamped_final: finalScore,
       },
+      // NEW: Precision/BMP fields (n̂, bubble_class, epsilon, tier)
+      precision: {
+        n_hat: precisionResult.n_hat,
+        bubble_class: precisionResult.bubble_class,
+        epsilon: precisionResult.epsilon,
+        coherence: precisionResult.coherence,
+        c: precisionResult.c,
+        penalty_inconsistency: precisionResult.penalty_inconsistency,
+        tier: precisionResult.tier,
+      },
+      // NEW: Extended THALET with T-B (Testability/Bicameral) checks
+      thalet: bridgeSpecValidation
+        ? {
+            T_B: {
+              T_B_01: bridgeSpecValidation.T_B_01,
+              T_B_02: bridgeSpecValidation.T_B_02,
+              T_B_03: bridgeSpecValidation.T_B_03,
+              T_B_04: bridgeSpecValidation.T_B_04,
+              overall: bridgeSpecValidation.overall,
+              testabilityScore: bridgeSpecValidation.testabilityScore,
+              degeneracyPenalty: bridgeSpecValidation.degeneracyPenalty,
+            },
+          }
+        : undefined,
+      // NEW: BridgeSpec hash pointer
+      bridgespec_hash: bridgespecHash,
     };
 
-    // Build atomic payload
+    // Build atomic payload (without hash)
     const payloadWithoutHash: Omit<AtomicScore, 'integrity_hash'> = {
       final: finalScore,
       execution_context: executionContext,
@@ -211,37 +117,31 @@ class AtomicScorerSingleton {
     // Generate integrity hash
     const integrityHash = this.generateIntegrityHash(payloadWithoutHash);
 
-    // Construct final immutable atomic score
-    const atomicScore: AtomicScore = {
+    return {
       ...payloadWithoutHash,
-      final_clamped: Math.round(finalScore),
       integrity_hash: integrityHash,
+    } as AtomicScore;
+  }
+
+  private neutralizationGate(score: number, isQualified: boolean): number {
+    // Range protection: [0, 10000]
+    return Math.max(0, Math.min(10000, score));
+  }
+
+  private generateExecutionContext(toggles?: any, seed?: number | null): ScoringExecutionContext {
+    return {
+      timestamp_utc: new Date().toISOString(),
+      pipeline_version: '2.0.13',
+      execution_id: crypto.randomUUID(),
+      config_id: 'default-v2',
+      sandbox_id: null,
+      toggles: toggles || { seed_enabled: false, edge_enabled: false },
+      seed: seed || null,
     };
-
-    console.log(
-      `[AtomicScorer] RAW Execution #${this.executionCount} | ` +
-      `Final: ${finalScore} | ` +
-      `Hash: ${integrityHash.substring(0, 8)}...`
-    );
-
-    return Object.freeze(atomicScore) as AtomicScore;
   }
 
-  /**
-   * Get execution count for monitoring
-   */
-  public getExecutionCount(): number {
-    return this.executionCount;
-  }
-
-  /**
-   * Reset execution count (for testing only)
-   */
-  public resetExecutionCount(): void {
-    this.executionCount = 0;
+  private generateIntegrityHash(payload: any): string {
+    const canonical = JSON.stringify(payload, Object.keys(payload).sort());
+    return crypto.createHash('sha256').update(canonical).digest('hex');
   }
 }
-
-// Export singleton instance (not class)
-export const AtomicScorer = AtomicScorerSingleton.getInstance();
-

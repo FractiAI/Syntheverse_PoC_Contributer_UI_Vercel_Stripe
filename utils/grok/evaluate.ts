@@ -30,6 +30,8 @@ import { SYNTHEVERSE_SYSTEM_PROMPT } from '@/utils/grok/system-prompt';
 import crypto from 'crypto';
 // THALET Protocol: Import AtomicScorer for single source of truth
 import { AtomicScorer } from '@/utils/scoring/AtomicScorer';
+// NSPFRP: Import BridgeSpec utilities for TO/Testability integration
+import { extractBridgeSpec } from '@/utils/bridgespec/BridgeSpecExtractor';
 // SCALABILITY FIX: Removed archive utilities - using vectors-only approach for infinite scalability
 
 // TSRC: Import snapshot and operator utilities
@@ -125,7 +127,8 @@ export async function evaluateWithGroq(
   title: string,
   category?: string,
   excludeHash?: string,
-  sandboxContext?: SandboxContext
+  sandboxContext?: SandboxContext,
+  bridgeSpec?: any // Optional BridgeSpec for TO/Testability integration
 ): Promise<{
   coherence: number;
   density: number;
@@ -227,6 +230,9 @@ export async function evaluateWithGroq(
   };
   // THALET Protocol: Atomic Score (Single Source of Truth)
   atomic_score?: any;
+  // NEW: BridgeSpec info (for TO/Testability integration)
+  bridge_spec?: any | null;
+  bridgespec_hash?: string | null;
 }> {
   // Try both GROQ and GROK variants for backwards compatibility
   const groqApiKey = process.env.NEXT_PUBLIC_GROQ_API_KEY || process.env.NEXT_PUBLIC_GROK_API_KEY;
@@ -1640,6 +1646,10 @@ ${answer}`;
       },
     });
     
+    // NSPFRP: Extract BridgeSpec from submission data (if provided)
+    const extractedBridgeSpec = extractBridgeSpec({ bridge_spec: bridgeSpec });
+    
+    // Call AtomicScorer with BridgeSpec (if provided)
     const atomicScore = AtomicScorer.computeScore({
       novelty: finalNoveltyScore,
       density: densityFinal,
@@ -1654,6 +1664,7 @@ ${answer}`;
         edge_on: edgeMultiplierEnabled,
         metal_policy_on: true,
       },
+      bridgeSpec: extractedBridgeSpec, // Pass BridgeSpec for TO/Testability integration
       // Let AtomicScorer generate seed (deterministic)
     });
 
@@ -2125,6 +2136,9 @@ ${answer}`;
       pod_composition: podComposition,
       // THALET Protocol: Atomic Score (Single Source of Truth)
       atomic_score: atomicScore,
+      // NEW: BridgeSpec info (for TO/Testability integration)
+      bridge_spec: extractedBridgeSpec || null, // Include BridgeSpec if provided
+      bridgespec_hash: atomicScore.trace.bridgespec_hash || null, // BridgeSpec hash from atomic_score.trace
     };
   } catch (error) {
     debugError('EvaluateWithGroq', 'Groq API call failed', error);

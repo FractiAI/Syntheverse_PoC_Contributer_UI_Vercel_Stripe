@@ -26,66 +26,40 @@ export function QuickActionsPanel({
         <div className="flex items-center justify-between gap-3 flex-wrap">
           {/* Quick Actions Links */}
           <div className="flex items-center gap-2 flex-wrap">
-            <Link 
-              href="/fractiai" 
-              className="cockpit-lever inline-flex items-center whitespace-nowrap py-1.5 px-3 text-xs"
-            >
-              <span className="mr-1.5">◎</span>
-              FractiAI
-            </Link>
-            {showContributorDashboard && (
+            {/* Active Interfaces */}
+            {isOperator && (
               <Link 
-                href="/dashboard" 
-                className="cockpit-lever inline-flex items-center whitespace-nowrap py-1.5 px-3 text-xs"
+                href="/operator/dashboard" 
+                className="cockpit-lever inline-flex items-center border-[#4169E1] text-[#4169E1] whitespace-nowrap py-1.5 px-3 text-xs font-bold"
               >
-                <LayoutDashboard className="mr-1.5 h-3 w-3" />
-                <span className="hidden sm:inline">Dashboard</span>
-                <span className="sm:hidden">Dash</span>
+                <Settings className="mr-1.5 h-3 w-3" />
+                <span>Faraday Console</span>
               </Link>
             )}
+            {isCreator && (
+              <Link 
+                href="/creator/dashboard" 
+                className="cockpit-lever inline-flex items-center border-[#FFD700] text-[#FFD700] whitespace-nowrap py-1.5 px-3 text-xs font-bold"
+              >
+                <Shield className="mr-1.5 h-3 w-3" />
+                <span>Fuller Studio</span>
+              </Link>
+            )}
+
             <Link 
               href="/onboarding" 
               className="cockpit-lever inline-flex items-center whitespace-nowrap py-1.5 px-3 text-xs"
             >
               <BookOpen className="mr-1.5 h-3 w-3" />
-              <span className="hidden sm:inline">Onboarding</span>
-              <span className="sm:hidden">Onboarding</span>
+              Onboarding
             </Link>
             <Link 
               href="/submit" 
               className="cockpit-lever inline-flex items-center whitespace-nowrap py-1.5 px-3 text-xs"
             >
               <span className="mr-1.5">✎</span>
-              <span className="hidden sm:inline">Submit</span>
-              <span className="sm:hidden">Submit</span>
+              Submit
             </Link>
-            <Link 
-              href="/blog" 
-              className="cockpit-lever inline-flex items-center whitespace-nowrap py-1.5 px-3 text-xs"
-            >
-              <FileText className="mr-1.5 h-3 w-3" />
-              Blog
-            </Link>
-            {isCreator && (
-              <Link 
-                href="/creator/dashboard" 
-                className="cockpit-lever inline-flex items-center whitespace-nowrap py-1.5 px-3 text-xs"
-              >
-                <Shield className="mr-1.5 h-3 w-3" />
-                <span className="hidden sm:inline">Creator</span>
-                <span className="sm:hidden">Creator</span>
-              </Link>
-            )}
-            {isOperator && !isCreator && (
-              <Link 
-                href="/operator/dashboard" 
-                className="cockpit-lever inline-flex items-center whitespace-nowrap py-1.5 px-3 text-xs"
-              >
-                <Settings className="mr-1.5 h-3 w-3" />
-                <span className="hidden sm:inline">Operator</span>
-                <span className="sm:hidden">Ops</span>
-              </Link>
-            )}
           </div>
           
           {/* Account Icon - Top Right (hidden on mobile, shown in CockpitHeader) */}

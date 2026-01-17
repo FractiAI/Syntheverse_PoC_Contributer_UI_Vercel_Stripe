@@ -252,23 +252,16 @@ Update `contributions` table:
 
 ---
 
-## 🎨 UI Components
+## 🎨 UI Components (Thematic Octaves)
 
-### Dashboard (`/dashboard`)
+The system uses a multi-modal UI themed after historical figures, organized by "Octaves":
 
-- **ReactorCore**: Central display for SYNTH token availability, epoch balances
-- **FrontierModule**: PoC archive viewer (user's submissions)
-- **BootSequenceIndicators**: Status lights (Beta Active, Base Mainnet LIVE)
-- **OperatorBroadcastBanner**: Dismissible notifications
-- **GenesisButton**: Genesis contract info modal
+- **ACTIVE (Current Octaves)**:
+    - **Michael Faraday Operator's Console™** (`/operator/dashboard`): Admin/Operator interface. Employs Victorian experimental science aesthetics. Focus: System management & diagnostics (SynthScan™ MRI).
+    - **Buckminster Fuller Creator Studio™** (`/creator/dashboard`): System architect interface. Employs futuristic geodesic design aesthetics. Focus: System architecture & evolution.
 
-### Key Components
-
-- `components/ReactorCore.tsx` - Main dashboard widget
-- `components/FrontierModule.tsx` - PoC archive
-- `components/SubmitContributionForm.tsx` - Submission form
-- `components/BootSequenceIndicators.tsx` - Status indicators
-- `components/GenesisButton.tsx` - Contract info
+- **ARCHIVE (Local Storage)**:
+    - **Alan Turing Command Center™** & **Leonardo da Vinci Contributors Lab™**: These legacy octaves have been moved to a local archive directory on the administrator's desktop (`Desktop/Syntheverse_Thematic_Archive`) and are no longer part of the live GitHub repository.
 
 ### Styling
 
@@ -505,7 +498,6 @@ Update database (mark payment complete, trigger evaluation/registration)
 - `components/ReactorCore.tsx` - Main dashboard widget
 - `components/FrontierModule.tsx` - PoC archive
 - `components/SubmitContributionForm.tsx` - Submission form
-- `app/dashboard/page.tsx` - Dashboard page
 
 ### Configuration
 

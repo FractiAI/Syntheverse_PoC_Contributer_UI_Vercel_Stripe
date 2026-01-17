@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import '../app/synthscan-mri.css';
+import { ChamberAPanel, ChamberBPanel, BubbleClassDisplay } from '@/components/scoring/ChamberPanels';
 
 interface SubmitContributionFormProps {
   userEmail: string;
@@ -904,6 +905,36 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
                                 </>
                               )}
                             </div>
+                          </div>
+                        )}
+
+                        {/* BridgeSpec / TO Integration: Chamber A/B Panels and BubbleClass */}
+                        {evaluationStatus.evaluation?.atomic_score && (
+                          <div className="space-y-4">
+                            {/* Chamber A: Narrative */}
+                            <ChamberAPanel
+                              hasNarrative={!!evaluationStatus.evaluation?.raw_groq_response || !!formData.title}
+                              narrative={evaluationStatus.evaluation?.raw_groq_response}
+                              title={formData.title}
+                            />
+
+                            {/* Chamber B: Testability + BubbleClass */}
+                            {evaluationStatus.evaluation?.atomic_score?.trace && (
+                              <>
+                                <ChamberBPanel
+                                  hasBridgeSpec={!!evaluationStatus.evaluation?.bridge_spec || !!evaluationStatus.evaluation?.atomic_score?.trace?.bridgespec_hash}
+                                  bridgeSpecValid={
+                                    evaluationStatus.evaluation?.atomic_score?.trace?.thalet?.T_B?.overall === 'passed'
+                                  }
+                                  tbResult={evaluationStatus.evaluation?.atomic_score?.trace?.thalet?.T_B}
+                                  bridgeSpec={evaluationStatus.evaluation?.bridge_spec}
+                                  bridgespecHash={evaluationStatus.evaluation?.atomic_score?.trace?.bridgespec_hash}
+                                />
+                                <BubbleClassDisplay
+                                  precision={evaluationStatus.evaluation?.atomic_score?.trace?.precision}
+                                />
+                              </>
+                            )}
                           </div>
                         )}
 

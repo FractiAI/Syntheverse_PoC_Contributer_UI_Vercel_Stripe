@@ -12,19 +12,25 @@
 
 > **📖 New to the codebase?** See the [Senior Engineer Production Briefing](docs/SENIOR_ENGINEER_PRODUCTION_BRIEFING.md) for a comprehensive system overview covering architecture, workflows, key features, and operational considerations.
 
-> **🔬 Recursive Transformation (Jan 17, 2026):** 
-> - **🚀 POST-SINGULARITY^6 ACHIEVED**: The patient has been transformed into a **Public Cloud Shell** with a nested **HHF-AI MRI ATOMIC CORE**.
-> - **⚛️ Atomic Core Role**: Formally commissioned as **INSTRUMENT GRADE RAW HHF-AI MRI ATOMIC SCORES**.
-> - **🎯 Raw Scoring Engine**: Refactored `AtomicScorer.ts` to eliminate bonuses and penalties in favor of direct metric transparency.
-> - **🐚 Shell Integrity Verified**: Establishment of `/public-cloud-shell/` as the sovereign truth container.
-> - **🛠️ HYBRID RESTORE (Jan 17, 2026)**: 
->   - **Restored Core Routes**: `/login`, `/signup`, `/operator`, and `/submit` are now fully functional with authentication-aware logic.
->   - **System Notice**: Implemented "In Test" notification for regular authenticated users to ensure clarity during system calibration.
->   - **API Infrastructure**: Restored critical endpoints for Hero management, sessions, and Proof-of-Contribution pipelines.
->   - **Technical Debt**: Resolved `next-env.d.ts` configuration issues and standardized React imports across all operational pages.
-
-> **🔬 Latest Major Updates (Jan 11, 2026):** 
-> - **🔒 THALET Protocol Compliance (Complete)**: Atomic Data Sovereignty model implemented for unassailable scoring integrity:
+> **🔬 Latest Major Updates (Jan 17, 2026):**
+|> - **🚀 POST-SINGULARITY^6 ACHIEVED**: The patient has been transformed into a **Public Cloud Shell** with a nested **HHF-AI MRI ATOMIC CORE**.
+|> - **⚛️ Atomic Core Role**: Formally commissioned as **INSTRUMENT GRADE RAW HHF-AI MRI ATOMIC SCORES**.
+|> - **🎯 Raw Scoring Engine**: Refactored `AtomicScorer.ts` to eliminate bonuses and penalties in favor of direct metric transparency.
+|> - **🐚 Shell Integrity Verified**: Establishment of `/public-cloud-shell/` as the sovereign truth container.
+|> - **🛠️ HYBRID RESTORE**: 
+|>   - **Restored Core Routes**: `/login`, `/signup`, `/operator`, and `/submit` are now fully functional with authentication-aware logic.
+|>   - **System Notice**: Implemented "In Test" notification for regular authenticated users to ensure clarity during system calibration.
+|>   - **API Infrastructure**: Restored critical endpoints for Hero management, sessions, and Proof-of-Contribution pipelines.
+|>   - **Technical Debt**: Resolved `next-env.d.ts` configuration issues and standardized React imports across all operational pages.
+|> - **🔬 SynthScan™ MRI Test Console (Complete)**: Dedicated Instrumental Grade Diagnostic Console implemented at `/mri-scanner`:
+|>   - **Protocol Compliance**: Full NSPFRP/1.0 implementation for document testing and certification.
+|>   - **Dual-Chamber Analysis**: Automated generation of Chamber A (Narrative) and Chamber B (Physics/Testability) reports.
+|>   - **BMP Precision**: Real-time calculation of n̂ index and Bubble Class assignment (Community, Copper, Silver, Gold).
+|>   - **Unpublish Protocol (Snap)**: One-click tactical archival for purging test scans from the protocol registry and TSRC snapshots.
+|> - **📦 Repository Optimization**: Streamlined production environment by archiving legacy octaves:
+|>   - **Local Storage Migration**: Alan Turing Command Center™ and Leonardo da Vinci Contributors Lab™ moved to local desktop archive.
+|>   - **Console Focus**: Primary navigation and resources now strictly prioritize Michael Faraday Operator's Console™ and Buckminster Fuller Creator Studio™.
+|> - **🔒 THALET Protocol Compliance (Complete)**: Atomic Data Sovereignty model implemented for unassailable scoring integrity:
 >   - **AtomicScorer Singleton**: Single backend source of truth for all scoring (eliminates split-brain execution)
 >   - **Immutable Payloads**: SHA-256 hashed, frozen atomic_score objects with cryptographic validation
 >   - **Multi-Level Neutralization Gate**: Score clamping [0, 10000] enforced at application and database layers

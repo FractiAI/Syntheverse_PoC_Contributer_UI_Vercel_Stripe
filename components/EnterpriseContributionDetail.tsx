@@ -7,6 +7,7 @@ import { sanitizeNarrative } from '@/utils/narrative/sanitizeNarrative';
 import { SectionWrapper } from './landing/shared/SectionWrapper';
 import { Card } from './landing/shared/Card';
 import { SnapshotViewer, OAxisDiagnostic } from './tsrc';
+import { ChamberAPanel, ChamberBPanel, BubbleClassDisplay } from '@/components/scoring/ChamberPanels';
 
 type EnterpriseContributionDetailProps = {
   submissionHash: string;
@@ -24,6 +25,8 @@ type Contribution = {
   category: string | null;
   metals: string[] | null;
   snapshot_id?: string | null;
+  atomic_score?: any; // THALET Protocol: Atomic Score (Single Source of Truth)
+  bridge_spec?: any; // NEW: BridgeSpec for TO/Testability integration
   metadata: {
     pod_score?: number;
     novelty?: number;
@@ -37,6 +40,8 @@ type Contribution = {
     metal_justification?: string;
     grok_evaluation_details?: any;
     raw_grok_response?: string;
+    atomic_score?: any; // Also available in metadata (backward compat)
+    bridge_spec?: any; // Also available in metadata (backward compat)
     tsrc?: {
       determinism_contract?: any;
       archive_snapshot?: {
@@ -241,6 +246,40 @@ export default function EnterpriseContributionDetail({
                 </div>
               </div>
             </Card>
+          )}
+
+          {/* BridgeSpec / TO Integration: Chamber A/B Panels and BubbleClass */}
+          {(contribution.atomic_score || contribution.metadata?.atomic_score) && (
+            <div className="space-y-4 mb-8">
+              {/* Chamber A: Narrative */}
+              <ChamberAPanel
+                hasNarrative={!!contribution.text_content || !!contribution.title}
+                narrative={contribution.text_content || undefined}
+                title={contribution.title}
+              />
+
+              {/* Chamber B: Testability + BubbleClass */}
+              {(() => {
+                const atomicScore = contribution.atomic_score || contribution.metadata?.atomic_score;
+                const bridgeSpec = contribution.bridge_spec || contribution.metadata?.bridge_spec;
+                const trace = atomicScore?.trace;
+                
+                return (
+                  <>
+                    <ChamberBPanel
+                      hasBridgeSpec={!!bridgeSpec || !!trace?.bridgespec_hash}
+                      bridgeSpecValid={trace?.thalet?.T_B?.overall === 'passed'}
+                      tbResult={trace?.thalet?.T_B}
+                      bridgeSpec={bridgeSpec}
+                      bridgespecHash={trace?.bridgespec_hash}
+                    />
+                    <BubbleClassDisplay
+                      precision={trace?.precision}
+                    />
+                  </>
+                );
+              })()}
+            </div>
           )}
 
           {/* Metals */}
