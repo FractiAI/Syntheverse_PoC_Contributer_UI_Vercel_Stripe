@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { Activity, Zap, Gauge } from 'lucide-react';
-import { CreatorCockpitStats } from '../creator/CreatorCockpitStats';
 
 export function FieldMeasurementsNavigator() {
   const [isOpen, setIsOpen] = useState(() => {
@@ -67,7 +66,6 @@ export function FieldMeasurementsNavigator() {
               <span className="block mt-2 text-xs text-[#4169E1]">— Michael Faraday</span>
             </p>
           </div>
-          <CreatorCockpitStats />
         </div>
       )}
     </div>

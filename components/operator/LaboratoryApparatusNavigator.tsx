@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { Settings, Cpu, Sparkles } from 'lucide-react';
-import { CreatorCockpitNavigation } from '../creator/CreatorCockpitNavigation';
 
 export function LaboratoryApparatusNavigator() {
   const [isOpen, setIsOpen] = useState(() => {
@@ -69,7 +68,6 @@ export function LaboratoryApparatusNavigator() {
               <span className="block mt-2 text-xs text-[#9370DB]">— Michael Faraday</span>
             </p>
           </div>
-          <CreatorCockpitNavigation />
         </div>
       )}
     </div>
