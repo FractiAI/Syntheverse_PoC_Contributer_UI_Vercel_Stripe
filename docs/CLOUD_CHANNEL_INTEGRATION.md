@@ -184,7 +184,6 @@ export default function OperatorDashboard() {
           <h1>Cloud Control Center</h1>
           <ReactorCore />
           <OperatorBroadcastBanner />
-          <MultiplierToggleWrapper />
           {/* ...other content */}
         </main>
         
