@@ -330,12 +330,15 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
       // Register PoC on Hard Hat L1 blockchain
       // Text-only submissions: anchor using a stable SHA-256 hash of the submitted text (no file storage).
       let blockchainTxHash: string | null = null;
+      // On-chain anchoring is done OFF-PROCESS with intentional octave separation
+      // Main process: Octave 5 (Protocol Catalog, Natural Systems Protocol)
+      // On-chain anchoring: Octave 2 (Base Mainnet Shell)
       try {
-        const { registerPoCOnBlockchain } = await import('@/utils/blockchain/register-poc');
-        const blockchainResult = await registerPoCOnBlockchain(
+        const { queueOffProcessAnchoring } = await import('@/utils/blockchain/off-process-anchoring');
+        const anchoringResult = queueOffProcessAnchoring({
           submissionHash,
-          contrib.contributor,
-          {
+          contributor: contrib.contributor,
+          metadata: {
             novelty: metadata.novelty,
             density: metadata.density,
             coherence: metadata.coherence,
@@ -344,32 +347,38 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
             qualified_epoch: metadata.qualified_epoch || 'founder',
           },
           metals,
-          contrib.text_content || null
-        );
-
-        debug('StripeWebhook', 'Blockchain registration includes submission text hash', {
-          submissionHash,
-          hasText: !!contrib.text_content && String(contrib.text_content).trim().length > 0,
-          note: 'Text-only: submission text is hashed and anchored (no Supabase Storage dependency)',
+          submissionText: contrib.text_content || null,
+          sourceOctave: 5, // Octave 5: Protocol Catalog, Natural Systems Protocol
+          targetOctave: 2, // Octave 2: Base Mainnet Shell
         });
 
-        if (blockchainResult.success && blockchainResult.transaction_hash) {
-          blockchainTxHash = blockchainResult.transaction_hash;
-          debug('StripeWebhook', 'PoC registered on Hard Hat L1 blockchain', {
+        debug('StripeWebhook', 'Off-process on-chain anchoring queued with intentional octave separation', {
+          submissionHash,
+          anchoringId: anchoringResult.anchoringId,
+          sourceOctave: anchoringResult.sourceOctave,
+          targetOctave: anchoringResult.targetOctave,
+          status: anchoringResult.status,
+          note: 'On-chain anchoring is done off-process to maintain octave separation (Octave 5 → Octave 2)',
+        });
+
+        if (anchoringResult.success && anchoringResult.status === 'queued') {
+          // Anchoring is queued for off-process execution
+          // The actual blockchain transaction will happen asynchronously
+          debug('StripeWebhook', 'Off-process on-chain anchoring queued successfully', {
             submissionHash,
-            txHash: blockchainTxHash,
-            blockNumber: blockchainResult.block_number,
+            anchoringId: anchoringResult.anchoringId,
+            note: 'Anchoring will be processed off-process to maintain octave separation',
           });
         } else {
-          debugError('StripeWebhook', 'Blockchain registration failed', {
+          debugError('StripeWebhook', 'Failed to queue off-process on-chain anchoring', {
             submissionHash,
-            error: blockchainResult.error,
+            error: anchoringResult.error,
           });
-          // Continue with registration even if blockchain fails (payment is complete)
+          // Continue with registration even if anchoring queue fails (payment is complete)
         }
-      } catch (blockchainError) {
-        debugError('StripeWebhook', 'Blockchain registration error (non-fatal)', blockchainError);
-        // Continue with registration even if blockchain fails
+      } catch (anchoringError) {
+        debugError('StripeWebhook', 'Off-process anchoring queue error (non-fatal)', anchoringError);
+        // Continue with registration even if anchoring queue fails
       }
 
       // Update contribution with registration info (Stripe payment + blockchain transaction)

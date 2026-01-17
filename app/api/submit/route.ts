@@ -128,6 +128,7 @@ export async function POST(request: NextRequest) {
     // Category is determined by evaluation, not user input
     const category = null;
     const text_content = (formData.get('text_content') as string | null) || '';
+    const payment_method = (formData.get('payment_method') as string | null) || 'stripe'; // Default to Stripe
 
     if (!title || !title.trim()) {
       const corsHeaders = createCorsHeaders(request);
@@ -379,34 +380,48 @@ export async function POST(request: NextRequest) {
     const productName = `PoC Submission: ${sanitizedTitle}`;
     const productDescription = `AI evaluation and scoring service for your Proof-of-Contribution submission`;
 
+    // Handle different payment methods
     let session;
     try {
-      session = await stripe.checkout.sessions.create({
-        payment_method_types: ['card'],
-        line_items: [
-          {
-            price_data: {
-              currency: 'usd',
-              product_data: {
-                name: productName,
-                description: productDescription,
+      if (payment_method === 'stripe') {
+        // Create Stripe checkout session
+        session = await stripe.checkout.sessions.create({
+          payment_method_types: ['card'],
+          line_items: [
+            {
+              price_data: {
+                currency: 'usd',
+                product_data: {
+                  name: productName,
+                  description: productDescription,
+                },
+                unit_amount: 50000, // $500.00
               },
-              unit_amount: 50000, // $500.00
+              quantity: 1,
             },
-            quantity: 1,
+          ],
+          mode: 'payment',
+          success_url: `${baseUrl}/submit?session_id={CHECKOUT_SESSION_ID}&status=success&hash=${submissionHash}`,
+          cancel_url: `${baseUrl}/submit?canceled=true`,
+          metadata: {
+            submission_hash: submissionHash,
+            user_email: user.email,
+            title: sanitizedTitle,
+            category: category,
+            submission_type: 'poc_submission',
+            payment_method: 'stripe',
           },
-        ],
-        mode: 'payment',
-        success_url: `${baseUrl}/submit?session_id={CHECKOUT_SESSION_ID}&status=success&hash=${submissionHash}`,
-        cancel_url: `${baseUrl}/submit?canceled=true`,
-        metadata: {
-          submission_hash: submissionHash,
-          user_email: user.email,
-          title: sanitizedTitle,
-          category: category,
-          submission_type: 'poc_submission',
-        },
-      });
+        });
+      } else {
+        // For non-Stripe methods, create a placeholder session that will be handled by payment processor
+        // The actual payment will be processed via /api/payments/process
+        // For non-Stripe methods, create a placeholder session
+        // The actual payment will be processed via /api/payments/process in the frontend
+        session = {
+          id: `session-${submissionHash}`,
+          url: `${baseUrl}/submit?session_id=payment-pending&status=pending&hash=${submissionHash}&method=${payment_method}`,
+        } as any;
+      }
     } catch (stripeError: any) {
       debugError('SubmitContribution', 'Stripe checkout creation failed', {
         error: stripeError.message,

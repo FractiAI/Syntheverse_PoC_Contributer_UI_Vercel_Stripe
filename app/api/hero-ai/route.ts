@@ -25,6 +25,43 @@ export async function POST(request: NextRequest) {
       additionalContext 
     } = await request.json();
 
+    // Check for shell audit commands
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage && lastMessage.role === 'user') {
+      const content = lastMessage.content.toLowerCase().trim();
+      
+      // Detect shell audit commands
+      if (content.startsWith('scan shell') || content.startsWith('audit shell') || content.startsWith('apply hardening')) {
+        // Extract shell and options
+        const shellMatch = content.match(/(?:shell|cloud|sandbox|all)/);
+        const shell = shellMatch ? shellMatch[0] : 'all';
+        const hardeningMatch = content.match(/(?:snap|hard|full)/);
+        const hardeningLevel = hardeningMatch ? hardeningMatch[0] : 'snap';
+        
+        // Route to shell audit API
+        const baseUrl = request.url.replace('/api/hero-ai', '');
+        const auditUrl = `${baseUrl}/api/shell-audit/pixel-scan${content.startsWith('apply hardening') ? '' : `?shell=${shell}&hardeningLevel=${hardeningLevel}&audit=${content.startsWith('audit shell')}`}`;
+        
+        const auditResponse = await fetch(auditUrl, {
+          method: content.startsWith('apply hardening') ? 'POST' : 'GET',
+          headers: { 'Content-Type': 'application/json' },
+          body: content.startsWith('apply hardening') ? JSON.stringify({
+            action: 'applyHardening',
+            shell,
+            hardeningLevel,
+          }) : undefined,
+        });
+        
+        if (auditResponse.ok) {
+          const auditData = await auditResponse.json();
+          return NextResponse.json({
+            message: formatShellAuditResponse(auditData, content),
+            auditData,
+          });
+        }
+      }
+    }
+
     // Fetch hero from database
     const heroes = await db
       .select()
@@ -102,3 +139,66 @@ Remember: You are an AI entity in the Syntheverse, not the historical figure. Yo
   }
 }
 
+/**
+ * Format shell audit response for Hero AI Console
+ */
+function formatShellAuditResponse(data: any, command: string): string {
+  if (data.audit) {
+    const audit = data.audit;
+    return `✅ Shell State Audit Complete
+
+📊 Audit Results:
+- Shell: ${audit.shell}
+- Total Pixels: ${audit.pixels.total.toLocaleString()}
+- Scanned: ${audit.pixels.scanned.toLocaleString()}
+- Confirmed: ${audit.pixels.confirmed.toLocaleString()}
+- Audited: ${audit.pixels.audited.toLocaleString()}
+
+🔐 State Status:
+- Confirmable: ${audit.state.confirmable ? '✅ Yes' : '❌ No'}
+- Auditable: ${audit.state.auditable ? '✅ Yes' : '❌ No'}
+- Hardening Level: ${audit.state.hardeningLevel}
+- Snap Protocol: ${audit.state.snapProtocol}
+
+🛡️ Protocols:
+- Active: ${audit.protocols.active}
+- Hardened: ${audit.protocols.hardened}
+- Snap Hardened: ${audit.protocols.snapHardened}
+
+⏱️ Scan Duration: ${audit.metadata.scanDuration}ms
+🌀 Recursive Depth: ${audit.metadata.recursiveDepth}
+📈 Octave: ${audit.metadata.octave}
+✨ Fidelity: ${audit.metadata.fidelity}`;
+  }
+  
+  if (data.scan) {
+    const scan = data.scan;
+    return `✅ Pixel Scan Complete
+
+📊 Scan Results:
+- Shell: ${scan.shell}
+- Region: ${scan.region.width}x${scan.region.height} at (${scan.region.x}, ${scan.region.y})
+- Pixels Scanned: ${scan.metadata.scannedPixels.toLocaleString()}
+
+🔐 State:
+- Confirmable: ${scan.state.confirmable ? '✅ Yes' : '❌ No'}
+- Auditable: ${scan.state.auditable ? '✅ Yes' : '❌ No'}
+- Hardening Level: ${scan.state.hardeningLevel}
+
+⏱️ Scan Duration: ${scan.metadata.scanDuration}ms`;
+  }
+  
+  if (data.hardening) {
+    const hardening = data.hardening;
+    return `✅ Snap Hardening Applied
+
+🛡️ Hardening Results:
+- Protocol: ${hardening.protocolId}
+- Shell: ${hardening.applied ? '✅ Hardened' : '❌ Failed'}
+- Protocols Hardened: ${hardening.hardenedProtocols}
+
+⏱️ Applied At: ${new Date(hardening.timestamp).toLocaleString()}`;
+  }
+  
+  return 'Shell audit command processed.';
+}

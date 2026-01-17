@@ -1,17 +1,39 @@
 'use client';
 
 import React from 'react';
-import { Cpu, Globe, Zap, Shield, Activity, BarChart3 } from 'lucide-react';
+import { Cpu, Globe, Zap, Shield, Activity, BarChart3, Scan, CheckCircle2, FileSearch } from 'lucide-react';
 
 export default function PublicCloudShell() {
     const [score, setScore] = React.useState<any>(null);
+    const [nodeStatus, setNodeStatus] = React.useState<any>(null);
+    const [shellAudit, setShellAudit] = React.useState<any>(null);
+    const [isScanning, setIsScanning] = React.useState(false);
 
     React.useEffect(() => {
         fetch('/public-cloud-shell/atomic_score.final')
             .then(res => res.json())
             .then(data => setScore(data))
             .catch(err => console.error('Failed to load atomic score', err));
+        
+        // Load node status
+        fetch('/api/hhf-spin-cloud/register-node?nodeType=public-cloud-shell')
+            .then(res => res.json())
+            .then(data => setNodeStatus(data.node))
+            .catch(err => console.error('Failed to load node status', err));
     }, []);
+
+    const handleShellAudit = async () => {
+        setIsScanning(true);
+        try {
+            const response = await fetch('/api/shell-audit/pixel-scan?shell=cloud&audit=true&hardeningLevel=snap');
+            const data = await response.json();
+            setShellAudit(data.audit);
+        } catch (error) {
+            console.error('Failed to perform shell audit', error);
+        } finally {
+            setIsScanning(false);
+        }
+    };
 
     return (
         <div className="min-h-screen bg-[#05070a] text-[#c0c0c0] p-8 font-mono selection:bg-[#ffcc33] selection:text-black">
@@ -26,7 +48,7 @@ export default function PublicCloudShell() {
                             <Globe className="text-[#3399ff] w-6 h-6 animate-pulse" />
                             PUBLIC CLOUD SHELL <span className="text-xs bg-[#1a1f2e] px-2 py-0.5 rounded text-[#3399ff]">P-CLOUD-V1.0</span>
                         </h1>
-                        <p className="text-xs text-[#606060]">POST-SINGULARITY^6 INFRASTRUCTURE PROJECTION</p>
+                        <p className="text-xs text-[#606060]">POST-SINGULARITY^7 INFRASTRUCTURE PROJECTION | HHF-AI SPIN CLOUD NODE</p>
                     </div>
                     <div className="text-right">
                         <div className="text-[10px] text-[#606060] uppercase tracking-widest mb-1">Status</div>
@@ -76,7 +98,94 @@ export default function PublicCloudShell() {
                                 <li className="flex items-center gap-2 truncate">
                                     <Zap size={10} className="text-[#ffcc33]" /> HHF_MRI_TRANS-TRUTH [LOCKED]
                                 </li>
+                                <li className="flex items-center gap-2 truncate">
+                                    <Zap size={10} className="text-[#ffcc33]" /> SNAP_HARDENING_SHELL [ACTIVE]
+                                </li>
+                                <li className="flex items-center gap-2 truncate">
+                                    <Zap size={10} className="text-[#ffcc33]" /> INFINITE_OCTAVE_FIDELITY [7.75+]
+                                </li>
                             </ul>
+                        </div>
+
+                        <div className="bg-[#0c0e14]/50 border border-[#1a1f2e] p-6 rounded-lg">
+                            <h2 className="text-[#3399ff] text-xs font-bold mb-4 flex items-center gap-2">
+                                <Activity size={14} /> HHF-AI SPIN CLOUD NODE
+                            </h2>
+                            {nodeStatus ? (
+                                <div className="space-y-3 text-[10px]">
+                                    <div className="flex justify-between border-b border-[#151926] pb-2">
+                                        <span className="text-[#606060]">NODE ID</span>
+                                        <span className="text-white font-mono text-[9px]">{nodeStatus.nodeId.substring(0, 16)}...</span>
+                                    </div>
+                                    <div className="flex justify-between border-b border-[#151926] pb-2">
+                                        <span className="text-[#606060]">STATUS</span>
+                                        <span className="text-[#33ff99]">{nodeStatus.status.toUpperCase()}</span>
+                                    </div>
+                                    <div className="flex justify-between border-b border-[#151926] pb-2">
+                                        <span className="text-[#606060]">OCTAVE</span>
+                                        <span className="text-[#3399ff]">{nodeStatus.octave}</span>
+                                    </div>
+                                    <div className="flex justify-between border-b border-[#151926] pb-2">
+                                        <span className="text-[#606060]">FIDELITY</span>
+                                        <span className="text-[#33ff99]">{nodeStatus.fidelity.toFixed(3)}</span>
+                                    </div>
+                                    {nodeStatus.onChainAddress && (
+                                        <div className="flex justify-between border-b border-[#151926] pb-2">
+                                            <span className="text-[#606060]">ON-CHAIN</span>
+                                            <span className="text-[#3399ff] font-mono text-[9px]">{nodeStatus.onChainAddress.substring(0, 10)}...</span>
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="text-[10px] text-[#606060]">Loading node status...</div>
+                            )}
+                        </div>
+
+                        <div className="bg-[#0c0e14]/50 border border-[#1a1f2e] p-6 rounded-lg">
+                            <h2 className="text-[#3399ff] text-xs font-bold mb-4 flex items-center gap-2">
+                                <Scan size={14} /> SHELL AUDIT
+                            </h2>
+                            <button
+                                onClick={handleShellAudit}
+                                disabled={isScanning}
+                                className="w-full bg-[#3399ff]/20 hover:bg-[#3399ff]/30 border border-[#3399ff]/50 text-[#3399ff] text-[10px] font-bold py-2 px-4 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                            >
+                                {isScanning ? (
+                                    <>
+                                        <Activity className="animate-spin" size={12} />
+                                        SCANNING...
+                                    </>
+                                ) : (
+                                    <>
+                                        <FileSearch size={12} />
+                                        SCAN SHELL STATE
+                                    </>
+                                )}
+                            </button>
+                            {shellAudit && (
+                                <div className="mt-4 space-y-2 text-[10px]">
+                                    <div className="flex justify-between">
+                                        <span className="text-[#606060]">Pixels Scanned</span>
+                                        <span className="text-white">{shellAudit.pixels?.scanned?.toLocaleString() || 0}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-[#606060]">Confirmable</span>
+                                        <span className={shellAudit.state?.confirmable ? 'text-[#33ff99]' : 'text-[#ff3333]'}>
+                                            {shellAudit.state?.confirmable ? '✅ YES' : '❌ NO'}
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-[#606060]">Auditable</span>
+                                        <span className={shellAudit.state?.auditable ? 'text-[#33ff99]' : 'text-[#ff3333]'}>
+                                            {shellAudit.state?.auditable ? '✅ YES' : '❌ NO'}
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-[#606060]">Hardening</span>
+                                        <span className="text-[#3399ff]">{shellAudit.state?.hardeningLevel?.toUpperCase() || 'N/A'}</span>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </section>
 
@@ -153,7 +262,7 @@ export default function PublicCloudShell() {
                     <div className="flex items-center gap-6">
                         <span className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-[#3399ff] rounded-full" /> GEYSER_ENGINE: RUNNING</span>
                         <span className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-[#3399ff] rounded-full" /> TRINARY_ENGINE: SYNCED</span>
-                        <span className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-[#3399ff] rounded-full" /> NETWORK: POST-SINGULARITY^6</span>
+                        <span className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-[#3399ff] rounded-full" /> NETWORK: POST-SINGULARITY^7</span>
                     </div>
                     <div className="font-bold tracking-widest text-[#606060]">
                         © 2026 FRACTIAI / SYNETHEVERSE_OPERATOR_1

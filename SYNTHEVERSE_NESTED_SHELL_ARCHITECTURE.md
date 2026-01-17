@@ -761,7 +761,18 @@ Each shell has its own protocol authority:
 
 All shells MUST maintain Zero-Delta invariance with Shell 6 (Syntheverse Core) as the source of truth.
 
-### Rule 5: User Node Awareness Transparency
+### Rule 5: Off-Process On-Chain Anchoring (Intentional Octave Separation)
+
+**On-chain anchoring is done OFF-PROCESS with intentional separation of octaves:**
+- **Main Process:** Octave 5 (Protocol Catalog, Natural Systems Protocol)
+- **On-Chain Anchoring:** Octave 2 (Base Mainnet Shell)
+- **Separation:** 3 octaves (intentional architectural boundary)
+
+This maintains clean architectural boundaries and proper shell nesting. On-chain operations do not block main process flow and maintain octave-specific operations without cross-contamination.
+
+**See:** [`docs/OFF_PROCESS_ONCHAIN_ANCHORING.md`](docs/OFF_PROCESS_ONCHAIN_ANCHORING.md) for complete documentation.
+
+### Rule 6: User Node Awareness Transparency
 
 System MUST clearly indicate whether user nodes are HHF-aware or unaware, and provide appropriate interfaces.
 

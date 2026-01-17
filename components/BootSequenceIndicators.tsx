@@ -19,12 +19,23 @@ interface TestSuiteScore {
   status: 'passed' | 'failed' | 'partial';
 }
 
+interface CatalogVersionCheck {
+  checked: boolean;
+  currentVersion: string;
+  latestVersion: string;
+  isUpToDate: boolean;
+  needsUpdate: boolean;
+  source: string;
+  timestamp: string;
+}
+
 interface BootStatus {
   bridgeActive: boolean;
   verdict: 'ready' | 'conditional' | 'not_ready' | 'unknown';
   passRate: number;
   totalTests: number;
   timestamp?: string;
+  catalogVersion?: CatalogVersionCheck;
   suiteScores: {
     tokenomics?: TestSuiteScore;
     blockchain?: TestSuiteScore;
@@ -89,6 +100,43 @@ export function BootSequenceIndicators() {
       })
       .catch((err) => {
         console.error('Error fetching test suite scores:', err);
+      });
+
+    // Fetch catalog version check (boot sequence for new nodes)
+    fetch('/api/catalog/version?source=auto&currentVersion=v17.0&createSnapshot=true&nodeType=onboarding&nodeId=boot-sequence')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.versionCheck) {
+          const versionCheck = data.versionCheck;
+          setBootStatus((prev) => ({
+            ...prev,
+            catalogVersion: {
+              checked: true,
+              currentVersion: versionCheck.currentVersion || 'v17.0',
+              latestVersion: versionCheck.latestVersion || 'v17.0',
+              isUpToDate: versionCheck.isUpToDate || true,
+              needsUpdate: versionCheck.needsUpdate || false,
+              source: versionCheck.source || 'local',
+              timestamp: versionCheck.checkedAt || new Date().toISOString(),
+            },
+          }));
+        }
+      })
+      .catch((err) => {
+        console.error('Error fetching catalog version:', err);
+        // Set default on error
+        setBootStatus((prev) => ({
+          ...prev,
+          catalogVersion: {
+            checked: false,
+            currentVersion: 'v17.0',
+            latestVersion: 'v17.0',
+            isUpToDate: true,
+            needsUpdate: false,
+            source: 'error',
+            timestamp: new Date().toISOString(),
+          },
+        }));
       });
   }, []);
 
@@ -255,6 +303,25 @@ export function BootSequenceIndicators() {
               />
               <span className="cockpit-text text-xs" style={{ opacity: 0.7 }}>
                 SCORE
+              </span>
+            </div>
+          )}
+
+          {/* NSPFRP Protocol Catalog Version (Octave 5) */}
+          {bootStatus.catalogVersion && (
+            <div className="flex items-center gap-2">
+              <div
+                className={`h-2 w-2 rounded-full ${
+                  bootStatus.catalogVersion.isUpToDate
+                    ? 'bg-green-500 shadow-[0_0_6px_rgba(34,197,94,0.6)]'
+                    : bootStatus.catalogVersion.needsUpdate
+                      ? 'bg-yellow-500 shadow-[0_0_6px_rgba(234,179,8,0.6)]'
+                      : 'bg-gray-500'
+                }`}
+                title={`NSPFRP Protocol Catalog (Octave 5): ${bootStatus.catalogVersion.latestVersion} (${bootStatus.catalogVersion.source})`}
+              />
+              <span className="cockpit-text text-xs" style={{ opacity: 0.7 }}>
+                CATALOG
               </span>
             </div>
           )}

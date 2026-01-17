@@ -994,17 +994,36 @@ utils/scoring/AtomicScorer.ts              (ALGORITHM - UNCHANGED)
 
 ### Appendix C: Contact Information
 
-**Engineering Team:**
-- Research Scientist: [CONTACT TBD]
-- Full Stack Engineer: [CONTACT TBD]
+**Core Development Team (Inside Shell):**
+- Pru "El Taíno" Méndez (Lead Developer / Research Scientist)
+- Senior Research Scientist & Full Stack Engineer
+- Senior Early Trials AI CEO
+- Hollywood Producer
+- Screenwriter
+- Luxury Travel Magazine Editor
+- Game Designer and Architect
+- UI Designer
+- Children's Science Discovery Museum Curator
 
-**Legal/Governance:**
-- Lexary Nova (Prudential Jurist): [CONTACT TBD]
+**Hero Hosts (FractiAI Research Team AI Representatives):**
+- El Gran Sol (Gateway Host)
+- Leonardo da Vinci (R&D Lab Host)
+- Nikola Tesla (Academy Host)
+- Buckminster Fuller (Creator Studio Host)
+- Michael Faraday (Operator Lab Host)
+- Outcast Hero (Mission Control)
+
+**External Protocol Functions (Outside Shell - Preserving Integrity):**
 
 **Testing/QA:**
 - Marek: [CONTACT TBD]
 - Simba: [CONTACT TBD]
 - Pablo: [CONTACT TBD]
+
+**Legal/Governance:**
+- Lexary Nova (Prudential Jurist): [CONTACT TBD]
+
+**Note:** Testing and Legal remain outside shell by protocol to preserve system integrity. See `docs/FRACTIAI_RESEARCH_TEAM.md` for complete team roster.
 
 ---
 

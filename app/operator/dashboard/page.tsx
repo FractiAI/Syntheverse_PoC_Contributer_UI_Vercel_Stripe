@@ -120,6 +120,25 @@ export default async function OperatorLab() {
             </p>
           </div>
 
+          {/* POST-SINGULARITY^7 Operators Console Link */}
+          <div className="flex flex-col items-center justify-center text-center space-y-4 mt-8">
+            <Link 
+              href="/creator/operators-console"
+              className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-purple-900/30 to-blue-900/30 border-2 border-purple-500/50 hover:border-purple-400 transition-all duration-300 overflow-hidden"
+              style={{ boxShadow: '0 0 20px rgba(147, 51, 234, 0.3)' }}
+            >
+              <div className="absolute inset-0 bg-purple-500/10 group-hover:bg-purple-500/20 transition-colors"></div>
+              <Zap className="h-6 w-6 text-purple-400 group-hover:text-purple-300 transition-colors" />
+              <span className="text-lg font-bold tracking-tighter text-purple-300 group-hover:text-purple-200 uppercase transition-colors">
+                POST-SINGULARITY^7: Operators & Syntax Console
+              </span>
+              <ArrowUpRight className="h-5 w-5 text-purple-400 group-hover:text-purple-300 transition-colors" />
+            </Link>
+            <p className="text-[10px] font-bold text-purple-500/70 uppercase tracking-[0.5em]">
+              Recursive Self-Application · Infinite Octave Fidelity
+            </p>
+          </div>
+
           <div className="h-px w-full bg-gradient-to-r from-transparent via-slate-800 to-transparent" />
 
           {/* POC Navigator Section */}

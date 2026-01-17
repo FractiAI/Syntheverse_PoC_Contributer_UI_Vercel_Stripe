@@ -205,14 +205,20 @@ export async function POST(request: NextRequest, { params }: { params: { hash: s
     const metadata = (contrib.metadata as any) || {};
     const metals = (contrib.metals as string[]) || [];
 
-    // Register PoC on Base blockchain
+    // On-chain anchoring is done OFF-PROCESS with intentional octave separation
+    // Main process: Octave 5 (Protocol Catalog, Natural Systems Protocol)
+    // On-chain anchoring: Octave 2 (Base Mainnet Shell)
+    // For direct registration requests, we process synchronously but maintain octave awareness
     let blockchainTxHash: string | null = null;
     try {
-      const { registerPoCOnBlockchain } = await import('@/utils/blockchain/register-poc');
-      const blockchainResult = await registerPoCOnBlockchain(
+      // Use off-process anchoring system (maintains octave separation)
+      const { queueOffProcessAnchoring, processOffProcessAnchoring } = await import('@/utils/blockchain/off-process-anchoring');
+      
+      // Queue anchoring request
+      const anchoringRequest = {
         submissionHash,
-        contrib.contributor,
-        {
+        contributor: contrib.contributor,
+        metadata: {
           novelty: metadata.novelty,
           density: metadata.density,
           coherence: metadata.coherence,
@@ -220,40 +226,63 @@ export async function POST(request: NextRequest, { params }: { params: { hash: s
           pod_score: metadata.pod_score,
         },
         metals,
-        contrib.text_content || null
-      );
+        submissionText: contrib.text_content || null,
+        sourceOctave: 5, // Octave 5: Protocol Catalog, Natural Systems Protocol
+        targetOctave: 2, // Octave 2: Base Mainnet Shell
+      };
 
-      if (blockchainResult.success && blockchainResult.transaction_hash) {
-        blockchainTxHash = blockchainResult.transaction_hash;
-        debug('RegisterPoC', 'PoC registered on Hard Hat L1 blockchain', {
+      const queueResult = queueOffProcessAnchoring(anchoringRequest);
+      
+      if (!queueResult.success) {
+        debugError('RegisterPoC', 'Failed to queue off-process anchoring', {
           submissionHash,
-          txHash: blockchainTxHash,
-          blockNumber: blockchainResult.block_number,
-        });
-      } else {
-        debugError('RegisterPoC', 'Blockchain registration failed', {
-          submissionHash,
-          error: blockchainResult.error,
-          errorDetails: (blockchainResult as any).errorDetails,
+          error: queueResult.error,
         });
         return NextResponse.json(
           {
-            error: 'Blockchain registration failed',
-            message: blockchainResult.error || 'Failed to register PoC on blockchain',
-            errorDetails: (blockchainResult as any).errorDetails || undefined,
+            error: 'Failed to queue on-chain anchoring',
+            message: queueResult.error || 'Failed to queue off-process on-chain anchoring',
           },
           { status: 500 }
         );
       }
-    } catch (blockchainError) {
-      debugError('RegisterPoC', 'Blockchain registration error', blockchainError);
+
+      // Process anchoring off-process (maintains octave separation)
+      const anchoringResult = await processOffProcessAnchoring(queueResult.anchoringId, anchoringRequest);
+
+      if (anchoringResult.success && anchoringResult.status === 'completed' && anchoringResult.transactionHash) {
+        blockchainTxHash = anchoringResult.transactionHash;
+        debug('RegisterPoC', 'PoC registered on Base Mainnet via off-process anchoring (Octave 5 → Octave 2)', {
+          submissionHash,
+          txHash: blockchainTxHash,
+          blockNumber: anchoringResult.blockNumber,
+          sourceOctave: anchoringResult.sourceOctave,
+          targetOctave: anchoringResult.targetOctave,
+          note: 'On-chain anchoring done off-process with intentional 3-octave separation',
+        });
+      } else {
+        debugError('RegisterPoC', 'Off-process on-chain anchoring failed', {
+          submissionHash,
+          error: anchoringResult.error,
+          status: anchoringResult.status,
+        });
+        return NextResponse.json(
+          {
+            error: 'On-chain anchoring failed',
+            message: anchoringResult.error || 'Failed to complete off-process on-chain anchoring',
+          },
+          { status: 500 }
+        );
+      }
+    } catch (anchoringError) {
+      debugError('RegisterPoC', 'Off-process anchoring error', anchoringError);
       return NextResponse.json(
         {
-          error: 'Blockchain registration error',
+          error: 'On-chain anchoring error',
           message:
-            blockchainError instanceof Error
-              ? blockchainError.message
-              : 'Unknown error during blockchain registration',
+            anchoringError instanceof Error
+              ? anchoringError.message
+              : 'Unknown error during off-process on-chain anchoring',
         },
         { status: 500 }
       );

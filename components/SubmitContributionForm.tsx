@@ -24,6 +24,7 @@ import {
 import Link from 'next/link';
 import '../app/synthscan-mri.css';
 import { ChamberAPanel, ChamberBPanel, BubbleClassDisplay } from '@/components/scoring/ChamberPanels';
+import { PaymentMethodSelector, type PaymentMethod } from '@/components/PaymentMethodSelector';
 
 interface SubmitContributionFormProps {
   userEmail: string;
@@ -65,6 +66,8 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
     text_content: '' as string,
   });
   const [processingSupport, setProcessingSupport] = useState<string | null>(null);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod | null>(null);
+  const [showPaymentSelector, setShowPaymentSelector] = useState(false);
 
   // Character limit based on Groq API constraints:
   // - System prompt: ~4,500 tokens (~18,000 chars)
@@ -337,6 +340,20 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    // Show payment selector if not already selected
+    if (!selectedPaymentMethod && !showPaymentSelector) {
+      setShowPaymentSelector(true);
+      setError(null);
+      return;
+    }
+    
+    // Require payment method selection before submission
+    if (!selectedPaymentMethod) {
+      setError('Please select a payment method to continue');
+      return;
+    }
+    
     setLoading(true);
     setError(null);
     setSuccess(false);
@@ -364,6 +381,10 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
       submitFormData.append('text_content', formData.text_content);
       // Category is determined by evaluation, not user input
       submitFormData.append('contributor', userEmail);
+      // Payment method (if selected)
+      if (selectedPaymentMethod) {
+        submitFormData.append('payment_method', selectedPaymentMethod.type);
+      }
 
       // Create an AbortController for timeout handling
       // Increased timeout to 120 seconds to allow for Holographic Hydrogen Fractal AI evaluation which can take time
@@ -429,10 +450,89 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
         checkEvaluationStatusAfterPayment(result.submission_hash);
         return;
       } else if (result.checkout_url && result.submission_hash) {
-        // Redirect to Stripe checkout for payment ($500 submission fee)
-        // Evaluation will start after payment is completed via webhook
-        window.location.href = result.checkout_url;
-        return; // Don't set loading to false - we're redirecting
+        // Handle different payment methods
+        if (selectedPaymentMethod?.type === 'stripe') {
+          // Redirect to Stripe checkout for payment ($500 submission fee)
+          // Evaluation will start after payment is completed via webhook
+          window.location.href = result.checkout_url;
+          return; // Don't set loading to false - we're redirecting
+        } else if (selectedPaymentMethod?.type === 'onchain' || selectedPaymentMethod?.type === 'blockchain') {
+          // Process on-chain or blockchain payment
+          try {
+            const paymentResponse = await fetch('/api/payments/process', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                amount: 500.00,
+                currency: 'usd',
+                method: selectedPaymentMethod.type,
+                metadata: {
+                  submission_hash: result.submission_hash,
+                  user_email: userEmail,
+                },
+              }),
+            });
+
+            const paymentData = await paymentResponse.json();
+            if (paymentData.success && paymentData.payment) {
+              // Payment processed, continue with submission
+              setSubmissionHash(result.submission_hash);
+              setSuccess(true);
+              setLoading(false);
+              setEvaluationStatus({ completed: false });
+              checkEvaluationStatusAfterPayment(result.submission_hash);
+              return;
+            } else {
+              throw new Error(paymentData.message || 'Payment processing failed');
+            }
+          } catch (paymentError) {
+            throw new Error(
+              paymentError instanceof Error
+                ? paymentError.message
+                : 'Payment processing failed. Please try again.'
+            );
+          }
+        } else if (selectedPaymentMethod?.type === 'venmo' || selectedPaymentMethod?.type === 'cashapp') {
+          // Process Venmo or Cash App payment
+          try {
+            const paymentResponse = await fetch('/api/payments/process', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                amount: 500.00,
+                currency: 'usd',
+                method: selectedPaymentMethod.type,
+                metadata: {
+                  submission_hash: result.submission_hash,
+                  user_email: userEmail,
+                },
+              }),
+            });
+
+            const paymentData = await paymentResponse.json();
+            if (paymentData.success && paymentData.payment) {
+              // Payment processed, continue with submission
+              setSubmissionHash(result.submission_hash);
+              setSuccess(true);
+              setLoading(false);
+              setEvaluationStatus({ completed: false });
+              checkEvaluationStatusAfterPayment(result.submission_hash);
+              return;
+            } else {
+              throw new Error(paymentData.message || 'Payment processing failed');
+            }
+          } catch (paymentError) {
+            throw new Error(
+              paymentError instanceof Error
+                ? paymentError.message
+                : 'Payment processing failed. Please try again.'
+            );
+          }
+        } else {
+          // Default to Stripe if method not recognized
+          window.location.href = result.checkout_url;
+          return;
+        }
       } else if (result.success !== false && result.submission_hash) {
         // Fallback: if no checkout_url but submission_hash exists, something went wrong
         setSubmissionHash(result.submission_hash);
@@ -1878,21 +1978,71 @@ export default function SubmitContributionForm({ userEmail }: SubmitContribution
               </div>
             )}
 
+            {/* Payment Method Selector */}
+            {showPaymentSelector && (
+              <div className="mri-input-section">
+                <PaymentMethodSelector
+                  amount={500.00}
+                  currency="usd"
+                  onMethodSelect={(method) => {
+                    setSelectedPaymentMethod(method);
+                    setShowPaymentSelector(false);
+                  }}
+                  selectedMethod={selectedPaymentMethod}
+                />
+              </div>
+            )}
+
+            {/* Selected Payment Method Display */}
+            {selectedPaymentMethod && !showPaymentSelector && (
+              <div className="mri-input-section bg-green-500/5 border-green-500/30">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-green-500" />
+                    <div>
+                      <div className="font-semibold text-green-900 dark:text-green-100">
+                        Payment Method Selected
+                      </div>
+                      <div className="text-xs text-green-700 dark:text-green-300">
+                        {selectedPaymentMethod.name}
+                      </div>
+                    </div>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setSelectedPaymentMethod(null);
+                      setShowPaymentSelector(true);
+                    }}
+                  >
+                    Change
+                  </Button>
+                </div>
+              </div>
+            )}
+
             {/* Start Examination Button */}
             <button
               type="submit"
               className="mri-start-exam-btn"
-              disabled={loading || !formData.title.trim() || !formData.text_content.trim()}
+              disabled={loading || !formData.title.trim() || !formData.text_content.trim() || (!selectedPaymentMethod && showPaymentSelector)}
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-3">
                   <Loader2 className="h-5 w-5" />
                   <span>Processing Examination...</span>
                 </span>
+              ) : showPaymentSelector ? (
+                <span className="flex items-center justify-center gap-3">
+                  <CreditCard className="h-5 w-5" />
+                  <span>Select Payment Method</span>
+                </span>
               ) : (
                 <span className="flex items-center justify-center gap-3">
                   <CreditCard className="h-5 w-5" />
-                  <span>Start Examination - $500</span>
+                  <span>Start Examination - $500 ({selectedPaymentMethod?.name || 'Payment Required'})</span>
                 </span>
               )}
             </button>

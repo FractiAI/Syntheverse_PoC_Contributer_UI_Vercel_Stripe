@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
+import { runChatBootSequence } from '@/utils/api-boot-sequence';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,6 +24,9 @@ export async function GET(
     }
 
     const { roomId } = await params;
+
+    // Run boot sequence check (catalog version check for new node connection)
+    const bootSequence = await runChatBootSequence(`chat-${roomId}-${user.email}`, 'auto', 'v17.0');
 
     // Fetch room details
     const { data: room, error: roomError } = await supabase
@@ -93,6 +97,10 @@ export async function GET(
         participant_count: participantCount,
         is_connected: isConnected,
         participants: participants || [],
+      },
+      bootSequence: {
+        catalogVersion: bootSequence.catalogVersion,
+        ready: bootSequence.ready,
       },
     });
   } catch (error) {

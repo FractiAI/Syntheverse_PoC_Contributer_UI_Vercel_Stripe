@@ -103,6 +103,25 @@ export function OnboardingNavigator() {
     }
   };
 
+  // Boot sequence: Catalog version check for onboarding (major category snapshot)
+  useEffect(() => {
+    // Create onboarding snapshot with catalog version check
+    const nodeId = `onboarding-${Date.now()}`;
+    fetch(`/api/catalog/version?source=auto&currentVersion=v17.0&createSnapshot=true&nodeType=onboarding&nodeId=${nodeId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.snapshot) {
+          console.log('[Onboarding Boot Sequence] Catalog version check complete:', data.versionCheck);
+          console.log('[Onboarding Major Category Snapshot]', data.snapshot);
+          // Snapshot created - can be logged or stored if needed
+        }
+      })
+      .catch((err) => {
+        console.error('[Onboarding Boot Sequence] Error:', err);
+        // Non-blocking: continue onboarding even if check fails
+      });
+  }, []);
+
   // Scroll to top of page (ONBOARDING NAVIGATOR section) when onboarding page is first loaded
   useEffect(() => {
     // Small delay to ensure page is fully rendered
