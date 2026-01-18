@@ -684,6 +684,27 @@ export default function ProfessionalSubmissionExperience({ userEmail }: Professi
                                 <li>On-chain anchoring for ultimate protection</li>
                               </ul>
                             </div>
+                            
+                            {/* Max Encryption Plans Include Certifications */}
+                            <div className="mt-3 p-3 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/30 rounded">
+                              <p className="text-[10px] font-bold text-blue-400 uppercase tracking-wider mb-2">
+                                Max Encryption Plans Include Certifications
+                              </p>
+                              <p className="text-xs text-slate-400 mb-2">
+                                All maximum encryption plans include SynthScan™ and Omnibeam certifications at the end,
+                                ensuring ultimate protection and verification.
+                              </p>
+                              <div className="flex gap-2">
+                                <span className="px-2 py-1 bg-blue-500/20 border border-blue-500/50 rounded text-[10px] font-bold text-blue-400 flex items-center gap-1">
+                                  <Sparkles className="h-3 w-3" />
+                                  SynthScan™
+                                </span>
+                                <span className="px-2 py-1 bg-purple-500/20 border border-purple-500/50 rounded text-[10px] font-bold text-purple-400 flex items-center gap-1">
+                                  <Zap className="h-3 w-3" />
+                                  Omnibeam
+                                </span>
+                              </div>
+                            </div>
                           </div>
                         )}
                       </div>

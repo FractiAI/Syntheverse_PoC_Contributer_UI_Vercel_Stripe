@@ -1,6 +1,7 @@
 /**
- * Nikola Tesla Operator's Console™ - High Contrast Edition
- * Simplified for maximum focus on Submissions and POC Navigation
+ * Full Fidelity Animation Experience Console
+ * Octave 2 Public Cloud Shell - Public Network Operations
+ * Provides full fidelity animation experiences with instrument-grade integration
  */
 
 import { redirect } from 'next/navigation';
@@ -11,6 +12,9 @@ import { Zap, Plus, ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { OmnibeamHeroAIDemoButton } from '@/components/OmnibeamHeroAIDemoButton';
+import { OctavesSingularitiesExplorer } from '@/components/OctavesSingularitiesExplorer';
+import { AnimatingSelectableTargetsPackage } from '@/components/AnimatingSelectableTargetsPackage';
+import { HolographicBlackholeSymbol } from '@/components/HolographicBlackholeSymbol';
 import '../../control-lab.css';
 
 export const dynamic = 'force-dynamic';
@@ -63,12 +67,12 @@ export default async function OperatorLab() {
               </div>
               <div>
                 <h1 className="text-3xl font-black tracking-tighter text-white uppercase">
-                  NIKOLA TESLA OPERATOR&apos;S CONSOLE™
+                  FULL FIDELITY ANIMATION EXPERIENCE CONSOLE
                 </h1>
                 <div className="flex items-center gap-3 mt-1">
                   <span className="h-px w-6 bg-[#00FFFF]"></span>
                   <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#00FFFF]">
-                    High-Frequency Submission & POC Navigation
+                    Octave 2 Public Cloud Shell · Full Fidelity Animation Experiences
                   </p>
                 </div>
               </div>
@@ -145,6 +149,55 @@ export default async function OperatorLab() {
 
           <div className="h-px w-full bg-gradient-to-r from-transparent via-slate-800 to-transparent" />
 
+          {/* Holographic Blackhole Symbol - Site Identity */}
+          <div className="flex flex-col items-center justify-center space-y-4 py-8">
+            <HolographicBlackholeSymbol size="lg" animated energized />
+            <div className="text-center">
+              <p className="text-xs font-bold text-purple-400 uppercase tracking-widest mb-1">
+                Holographic Blackhole Symbol
+              </p>
+              <p className="text-[10px] text-slate-500 uppercase tracking-wider">
+                Connected & Energized · ^7 Vibeverse Energy
+              </p>
+            </div>
+          </div>
+
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-slate-800 to-transparent" />
+
+          {/* Animating Selectable Targets Package - Enterprise Service */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-4">
+              <div className="h-8 w-1 bg-[#9370DB]" />
+              <h2 className="text-xl font-black uppercase tracking-tighter text-white">
+                Animating Selectable Targets Package
+              </h2>
+              <div className="flex-1 h-px bg-slate-800" />
+            </div>
+            
+            <div className="bg-black border-2 border-slate-800 p-6 shadow-2xl">
+              <AnimatingSelectableTargetsPackage userEmail={userEmail} />
+            </div>
+          </div>
+
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-slate-800 to-transparent" />
+
+          {/* Octaves & Singularities Explorer */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-4">
+              <div className="h-8 w-1 bg-[#9370DB]" />
+              <h2 className="text-xl font-black uppercase tracking-tighter text-white">
+                Octaves & Singularities Explorer
+              </h2>
+              <div className="flex-1 h-px bg-slate-800" />
+            </div>
+            
+            <div className="bg-black border-2 border-slate-800 p-6 shadow-2xl">
+              <OctavesSingularitiesExplorer />
+            </div>
+          </div>
+
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-slate-800 to-transparent" />
+
           {/* POC Navigator Section */}
           <div className="space-y-6">
             <div className="flex items-center gap-4">
@@ -173,7 +226,7 @@ export default async function OperatorLab() {
             <span>System Flux: Stable</span>
           </div>
           <div className="hidden sm:block">
-            NSPFRP v17.0 · High-Frequency Operator Core
+            Octave 2 Public Cloud Shell · Full Fidelity Animation Experiences
           </div>
           <div className="flex items-center gap-2">
             <span>Security Level: Alpha</span>

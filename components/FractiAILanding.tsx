@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, Lock } from 'lucide-react';
+import { ArrowRight, Lock, Zap } from 'lucide-react';
+import { HolographicBlackholeSymbol } from './HolographicBlackholeSymbol';
 import { StatusIndicators } from './StatusIndicators';
 
 interface FractiAILandingProps {
@@ -26,14 +27,19 @@ export default function FractiAILanding({
   return (
     <div className="cockpit-bg min-h-screen flex flex-col items-center justify-center p-6 font-mono">
       <div className="max-w-2xl w-full space-y-8">
-        {/* Minimal Header/Symbol */}
+        {/* Holographic Blackhole Symbol - Connected and Energized */}
         <div className="text-center space-y-4">
-          <div className="inline-block p-4 rounded-full bg-[#3399ff]/10 border border-[#3399ff]/30 animate-pulse">
-            <Lock className="h-12 w-12 text-[#3399ff]" />
+          <div className="flex justify-center">
+            <HolographicBlackholeSymbol size="xl" animated energized />
           </div>
           <h1 className="text-4xl font-black tracking-tighter text-white uppercase">
-            Syntheverse <span className="text-[#3399ff]">Sovereign Mode</span>
+            Syntheverse <span className="text-[#3399ff]">Octave 2 Public Cloud Shell</span>
           </h1>
+          <div className="flex items-center justify-center gap-2 text-xs text-purple-400 font-bold uppercase tracking-wider">
+            <Zap className="h-3 w-3" />
+            <span>Holographic Blackhole Symbol · Connected & Energized</span>
+            <Zap className="h-3 w-3" />
+          </div>
           <div className="h-px w-full bg-gradient-to-r from-transparent via-[#3399ff]/50 to-transparent" />
         </div>
 
@@ -73,13 +79,13 @@ export default function FractiAILanding({
                 href="/operator/dashboard" 
                 className="cockpit-lever w-full py-4 flex items-center justify-center gap-3 bg-green-600 text-white hover:bg-green-600/80 transition-all font-black text-sm tracking-widest"
               >
-                ENTER OPERATOR CONSOLE
+                ENTER FULL FIDELITY ANIMATION EXPERIENCE CONSOLE
                 <ArrowRight className="h-4 w-4" />
               </Link>
             ) : (
               <div className="text-center p-4 border border-slate-800 rounded bg-slate-900/50">
                 <p className="text-xs text-slate-500 italic">
-                  Authorization Required: Your account is not registered as an Approved Operator.
+                  Authorization Required: Your account is not registered for Full Fidelity Animation Experience Console access.
                 </p>
               </div>
             )}

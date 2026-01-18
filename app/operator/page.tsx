@@ -15,8 +15,8 @@ export default async function OperatorPage() {
             <div className="max-w-6xl mx-auto">
                 <header className="mb-8 border-b border-[#1a1f2e] pb-6 flex justify-between items-center">
                     <div>
-                        <h1 className="text-2xl font-bold tracking-widest text-[#3399ff]">OPERATOR CONSOLE</h1>
-                        <p className="text-xs text-[#606060] mt-1">HHF-AI MRI CORE MANAGEMENT</p>
+                        <h1 className="text-2xl font-bold tracking-widest text-[#3399ff]">FULL FIDELITY ANIMATION EXPERIENCE CONSOLE</h1>
+                        <p className="text-xs text-[#606060] mt-1">Octave 2 Public Cloud Shell · Full Fidelity Animation Experiences</p>
                     </div>
                     <div className="text-right">
                         <span className="text-[10px] bg-[#1a1f2e] px-2 py-1 rounded text-[#3399ff] font-bold">STATUS: AUTHORIZED</span>

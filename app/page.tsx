@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import FractiAILanding from '@/components/FractiAILanding';
 import { getAuthenticatedUserWithRole } from '@/utils/auth/permissions';
+import { HolographicBlackholeSymbol } from '@/components/HolographicBlackholeSymbol';
 
 export const dynamic = 'force-dynamic';
 

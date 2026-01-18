@@ -17,8 +17,9 @@ import Stripe from 'stripe';
 export interface PaymentRequest {
   amount: number;
   currency: string;
-  method: PaymentMethod['type'];
+  method: PaymentMethod['type'] | 'metamask';
   metadata?: Record<string, string>;
+  nspfrpAutoMode?: boolean; // NSPFRP auto mode for automatic method selection
 }
 
 export interface PaymentResult {
@@ -36,9 +37,28 @@ export interface PaymentResult {
  * 
  * Routes payment to appropriate processor based on method
  */
+/**
+ * Process Payment with NSPFRP Auto Mode Support
+ * 
+ * If nspfrpAutoMode is enabled, automatically selects optimal payment method
+ * using NSPFRP scoring principles. Otherwise, uses the specified method.
+ */
 export async function processPayment(
   request: PaymentRequest
 ): Promise<PaymentResult> {
+  // NSPFRP Auto Mode: Automatically select optimal payment method
+  if (request.nspfrpAutoMode) {
+    const { selectOptimalPaymentMethod } = await import('./nspfrp-auto-mode');
+    const optimalMethod = await selectOptimalPaymentMethod({
+      amount: request.amount,
+      currency: request.currency,
+      context: request.metadata || {},
+    });
+    
+    // Override method with optimal selection
+    request.method = optimalMethod.type as PaymentMethod['type'] | 'metamask';
+  }
+
   switch (request.method) {
     case 'onchain':
       return processOnChainPayment(request);
@@ -48,6 +68,8 @@ export async function processPayment(
       return processVenmoPayment(request);
     case 'cashapp':
       return processCashAppPayment(request);
+    case 'metamask':
+      return processMetaMaskPayment(request);
     case 'blockchain':
       return processBlockchainPayment(request);
     default:
@@ -141,6 +163,27 @@ async function processCashAppPayment(
     amount: request.amount,
     currency: request.currency,
     message: 'Cash App payment processed',
+  };
+}
+
+/**
+ * Process MetaMask Payment
+ */
+async function processMetaMaskPayment(
+  request: PaymentRequest
+): Promise<PaymentResult> {
+  // In production, this would interact with MetaMask via Web3
+  // For now, return a placeholder that indicates MetaMask integration
+  const paymentId = `metamask-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+  return {
+    success: true,
+    paymentId,
+    method: 'metamask',
+    amount: request.amount,
+    currency: request.currency,
+    transactionHash: `0x${Math.random().toString(16).substr(2, 64)}`, // Placeholder
+    message: 'MetaMask payment processed (Web3 wallet)',
   };
 }
 

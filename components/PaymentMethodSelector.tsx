@@ -14,7 +14,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { CreditCard, Coins, Wallet, Smartphone, Zap, CheckCircle2 } from 'lucide-react';
+import { CreditCard, Coins, Wallet, Smartphone, Zap, CheckCircle2, Sparkles } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -22,7 +22,7 @@ import { Badge } from '@/components/ui/badge';
 export interface PaymentMethod {
   id: string;
   name: string;
-  type: 'onchain' | 'stripe' | 'venmo' | 'cashapp' | 'blockchain';
+  type: 'onchain' | 'stripe' | 'venmo' | 'cashapp' | 'blockchain' | 'metamask';
   enabled: boolean;
   icon: React.ReactNode;
   description: string;
@@ -101,6 +101,8 @@ export function PaymentMethodSelector({
         return <Smartphone className="w-5 h-5" />;
       case 'blockchain':
         return <Zap className="w-5 h-5" />;
+      case 'metamask':
+        return <Wallet className="w-5 h-5" />;
       default:
         return <Wallet className="w-5 h-5" />;
     }
@@ -116,6 +118,8 @@ export function PaymentMethodSelector({
         return 'Quick payment via Venmo';
       case 'cashapp':
         return 'Quick payment via Cash App';
+      case 'metamask':
+        return 'Web3 wallet payment via MetaMask';
       case 'blockchain':
         return method.score
           ? `Top-scoring blockchain method (Score: ${method.score.toFixed(2)})`

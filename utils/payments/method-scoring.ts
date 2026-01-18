@@ -10,7 +10,7 @@
 export interface PaymentMethod {
   id: string;
   name: string;
-  type: 'onchain' | 'stripe' | 'venmo' | 'cashapp' | 'blockchain';
+  type: 'onchain' | 'stripe' | 'venmo' | 'cashapp' | 'blockchain' | 'metamask';
   enabled: boolean;
   score?: number;
   metadata: {
@@ -20,6 +20,7 @@ export interface PaymentMethod {
     fees?: number;
     speed?: string;
     reliability?: number;
+    walletType?: string;
   };
 }
 
@@ -301,6 +302,18 @@ export function getAllPaymentMethods(): PaymentMethod[] {
       metadata: {
         speed: 'instant',
         reliability: 0.95,
+      },
+    },
+    {
+      id: 'metamask',
+      name: 'MetaMask',
+      type: 'metamask',
+      enabled: true,
+      metadata: {
+        network: 'Base Mainnet',
+        walletType: 'web3',
+        speed: 'instant',
+        reliability: 0.99,
       },
     },
     topBlockchain, // Top-scoring blockchain method

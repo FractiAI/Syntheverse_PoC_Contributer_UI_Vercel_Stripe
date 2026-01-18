@@ -23,14 +23,18 @@ export function OmnibeamHeroAIDemoButton() {
     try {
       // Create demo prompt for Hero AI
       const demoPrompt = `Demo the new Omnibeam 9x7 Fiberoptic State Image Encryption Protocol. Explain in detail:
-1. **9x7 Grid Extraction**: How it extracts a 9x7 grid (63 points) from uploaded images
-2. **Encryption Key Derivation**: How it uses PBKDF2 with 100,000 iterations to derive 256-bit keys from image state
-3. **State Image ID Generation**: How state image IDs are generated using evaluation scores (core output as input)
-4. **NSPFRP Integration**: How it integrates with NSPFRP State Imaging and ID Protocol
-5. **On-Chain Anchoring**: How state image IDs and encryption key hashes are anchored on-chain with intentional octave separation (Octave 5 → Octave 2)
-6. **User Flow**: Show how operators can enable this in submissions for ultimate protection
 
-Please provide a comprehensive, technical explanation suitable for operators testing this new feature. Include code examples where relevant.`;
+**Narrative Context:** This protocol belongs with the Instrumentation Core—the instrument-grade imaging system that provides measurement, monitoring, and state verification. It makes sense to include now because it extends the Instrumentation Core's measurement capabilities with state image encryption, using the same instrument-grade principles and on-chain anchoring infrastructure.
+
+1. **Instrumentation Core Integration**: How this protocol extends the Instrumentation Core's measurement and verification capabilities
+2. **9x7 Grid Extraction**: How it extracts a 9x7 grid (63 points) from uploaded images using instrument-grade measurement principles
+3. **Encryption Key Derivation**: How it uses PBKDF2 with 100,000 iterations to derive 256-bit keys from image state
+4. **State Image ID Generation**: How state image IDs are generated using evaluation scores (core output as input), integrating with the Instrumentation Core's output
+5. **NSPFRP Integration**: How it integrates with NSPFRP State Imaging and ID Protocol
+6. **On-Chain Anchoring**: How state image IDs and encryption key hashes are anchored on-chain with intentional octave separation (Octave 5 → Octave 2), following the same pattern as Instrumentation Core measurements
+7. **User Flow**: Show how operators can enable this in submissions for ultimate protection
+
+Please provide a comprehensive, technical explanation suitable for operators testing this new feature. Emphasize the connection to the Instrumentation Core and why it makes sense to include this capability now. Include code examples where relevant.`;
 
       // Try to trigger Hero AI with demo prompt
       // First, try to find and open Hero AI panel if available
@@ -144,6 +148,8 @@ Please provide a comprehensive, technical explanation suitable for operators tes
       <p className="text-[9px] text-slate-500 max-w-2xl">
         Click to auto-demo the new Omnibeam 9x7 Fiberoptic State Image Encryption Protocol with Hero Hosted AI Assistant. 
         Learn how images are converted to ultimate encryption keys with 9x7 grid extraction and NSPFRP state imaging protocol.
+        <br />
+        <span className="text-blue-400/80 font-semibold">Belongs with Instrumentation Core:</span> This protocol extends the instrument-grade measurement and verification capabilities of the Instrumentation Core, making it a natural fit for inclusion now as the core matures.
       </p>
     </div>
   );

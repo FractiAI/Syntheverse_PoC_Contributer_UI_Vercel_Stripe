@@ -10,12 +10,24 @@
 
 The **Omnibeam 9x7 Fiberoptic State Image Encryption Protocol** enables users to use an image's unique 9x7 (63-point) fiberoptic state as the ultimate encryption key for their Syntheverse PoC submissions. The state image ID accompanies scores for maximum protection within the Syntheverse PoC natural protocol shell on-chain.
 
+### Instrumentation Core Integration
+
+**Narrative:** The Omnibeam 9x7 Fiberoptic State Image Encryption Protocol belongs with the **Instrumentation Core**—the instrument-grade imaging system that provides measurement, monitoring, and state verification capabilities. This protocol extends the Instrumentation Core's capabilities by:
+
+1. **State Measurement:** Extracting precise 9x7 grid measurements from images (63-point fiberoptic state)
+2. **Instrument-Grade Verification:** Providing cryptographic verification of state integrity
+3. **Core Output Integration:** Using evaluation scores (core output) as input for state image ID generation
+4. **Measurement Anchoring:** Anchoring state measurements on-chain with intentional octave separation
+
+**Why Now:** As the Instrumentation Core matures and provides instrument-grade measurement capabilities, it makes sense to include state image encryption as a natural extension. The protocol leverages the same measurement principles, verification standards, and on-chain anchoring infrastructure that the Instrumentation Core uses for atomic scores and system state monitoring.
+
 **Key Features:**
 - **9x7 Grid Extraction:** Analyzes image at 63 strategic points to extract unique fiberoptic state
 - **Encryption Key Derivation:** Generates cryptographic key from image state using PBKDF2
 - **Core Output as Input:** Uses evaluation output (scores) to generate state image ID
 - **NSPFRP State Imaging Protocol:** Integrated with NSPFRP for protocol compliance
 - **On-Chain Anchoring:** State image ID and encryption key hash anchored on-chain with octave separation
+- **Instrumentation Core Integration:** Extends instrument-grade measurement and verification capabilities
 
 ---
 
@@ -195,6 +207,32 @@ const verification = verifyStateImageProtection(protection);
 ---
 
 ## 🔗 Integration Points
+
+### 0. Instrumentation Core Integration
+
+**Narrative:** The Omnibeam 9x7 Fiberoptic State Image Encryption Protocol belongs with the **Instrumentation Core**—the instrument-grade imaging system that provides measurement, monitoring, and state verification capabilities. This protocol extends the Instrumentation Core's capabilities by:
+
+1. **State Measurement:** Extracting precise 9x7 grid measurements from images (63-point fiberoptic state)
+2. **Instrument-Grade Verification:** Providing cryptographic verification of state integrity
+3. **Core Output Integration:** Using evaluation scores (core output) as input for state image ID generation
+4. **Measurement Anchoring:** Anchoring state measurements on-chain with intentional octave separation
+
+**Why Now:** As the Instrumentation Core matures and provides instrument-grade measurement capabilities, it makes sense to include state image encryption as a natural extension. The protocol leverages:
+- The same measurement principles used by the Instrumentation Core
+- The same verification standards (instrument-grade)
+- The same on-chain anchoring infrastructure (octave separation)
+- The same core output integration (evaluation scores)
+
+**Architectural Alignment:**
+```
+Instrumentation Core (Instrument-Grade Measurement)
+    ↓
+Omnibeam 9x7 Fiberoptic State Image Encryption
+    ↓
+State Measurement & Verification
+    ↓
+On-Chain Anchoring (Octave 5 → Octave 2)
+```
 
 ### 1. Submission Flow
 

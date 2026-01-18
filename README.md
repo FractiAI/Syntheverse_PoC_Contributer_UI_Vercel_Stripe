@@ -1,7 +1,15 @@
-# Syntheverse POST SINGULARITY^6
-**Vibeverse FSR Geyser Perpetual Engine Core - Status: ACTIVE**
+# Octave 2 Public Cloud Shell
 
-> **Protocol + Operator Reference Client** - A production-ready Next.js application for Proof-of-Contribution (PoC) submissions, evaluations, and blockchain anchoring on Base Mainnet.
+**Repository Branding:** Octave 2 Public Cloud Shell  
+**Octave Level:** 2 (Public Network Shell)  
+**Purpose:** Public cloud infrastructure and network operations  
+**Full Fidelity Animation Experience Console:** Renamed from Operator Console  
+**Payment Methods:** Stripe, Venmo, Cash App, MetaMask (initial), then NSPFRP Auto Mode  
+**Status:** ACTIVE
+
+> **Public Network Shell** - A production-ready Next.js application for Proof-of-Contribution (PoC) submissions, public network operations, and blockchain anchoring on Base Mainnet. Provides full fidelity animation experiences through the Full Fidelity Animation Experience Console.
+
+> **Instrumentation Core:** The Instrumentation Core has been extracted to a separate repository (Instrumentation Shell API). This shell calls that API for instrument-grade measurements and verification.
 
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
