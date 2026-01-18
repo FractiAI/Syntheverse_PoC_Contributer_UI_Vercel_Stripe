@@ -422,6 +422,33 @@ export async function POST(request: NextRequest, { params }: { params: { hash: s
       evaluation,
     });
 
+    // Process state image if provided (using core output as input)
+    const metadata = (contrib.metadata as any) || {};
+    if (metadata.use_state_image_encryption && metadata.state_image_path) {
+      try {
+        const baseUrl =
+          process.env.NEXT_PUBLIC_SITE_URL ||
+          process.env.NEXT_PUBLIC_WEBSITE_URL ||
+          'http://localhost:3000';
+        const stateImageUrl = `${baseUrl}/api/state-image/process`;
+
+        // Process state image asynchronously (don't await)
+        fetch(stateImageUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            submissionHash,
+            evaluation,
+          }),
+        }).catch((err) => {
+          debugError('EvaluateContribution', 'Failed to process state image', err);
+        });
+      } catch (stateImageError) {
+        debugError('EvaluateContribution', 'Error triggering state image processing', stateImageError);
+        // Don't fail evaluation if state image processing fails
+      }
+    }
+
     // Send approval request email if qualified
     if (qualified) {
       try {

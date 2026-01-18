@@ -72,6 +72,9 @@ export default function ProfessionalSubmissionExperience({ userEmail }: Professi
     title: '',
     text_content: '' as string,
   });
+  const [stateImage, setStateImage] = useState<File | null>(null);
+  const [stateImagePreview, setStateImagePreview] = useState<string | null>(null);
+  const [useStateImageEncryption, setUseStateImageEncryption] = useState(false);
 
   const [evaluationStatus, setEvaluationStatus] = useState<{
     completed?: boolean;
@@ -277,6 +280,10 @@ export default function ProfessionalSubmissionExperience({ userEmail }: Professi
       submitFormData.append('contributor', userEmail);
       if (selectedPaymentMethod) {
         submitFormData.append('payment_method', selectedPaymentMethod.type);
+      }
+      if (useStateImageEncryption && stateImage) {
+        submitFormData.append('state_image', stateImage);
+        submitFormData.append('use_state_image_encryption', 'true');
       }
 
       const controller = new AbortController();
@@ -591,10 +598,102 @@ export default function ProfessionalSubmissionExperience({ userEmail }: Professi
                     )}
                   </div>
 
+                  {/* Omnibeam 9x7 Fiberoptic State Image Encryption Option */}
+                  <div className="space-y-4 p-6 bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/30 rounded-lg">
+                    <div className="flex items-start gap-3">
+                      <div className="flex-shrink-0 mt-1">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-400/30 flex items-center justify-center">
+                          <Shield className="h-5 w-5 text-blue-400" />
+                        </div>
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <input
+                            type="checkbox"
+                            id="use_state_image_encryption"
+                            checked={useStateImageEncryption}
+                            onChange={(e) => setUseStateImageEncryption(e.target.checked)}
+                            className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                            disabled={loading}
+                          />
+                          <Label htmlFor="use_state_image_encryption" className="text-base font-semibold text-white cursor-pointer">
+                            Ultimate Encryption: Omnibeam 9x7 Fiberoptic State Image
+                          </Label>
+                        </div>
+                        <p className="text-sm text-slate-400 mb-4">
+                          Use your image's unique 9x7 fiberoptic state as the ultimate encryption key. 
+                          The state image ID will accompany your scores for maximum protection within the Syntheverse PoC natural protocol shell on-chain.
+                        </p>
+                        
+                        {useStateImageEncryption && (
+                          <div className="space-y-3">
+                            <div>
+                              <Label htmlFor="state_image" className="text-sm text-slate-300">
+                                State Image (JPG, PNG, WebP - Max 10MB)
+                              </Label>
+                              <input
+                                id="state_image"
+                                type="file"
+                                accept="image/jpeg,image/png,image/webp"
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    if (file.size > 10 * 1024 * 1024) {
+                                      setError('Image must be less than 10MB');
+                                      return;
+                                    }
+                                    setStateImage(file);
+                                    const reader = new FileReader();
+                                    reader.onloadend = () => {
+                                      setStateImagePreview(reader.result as string);
+                                    };
+                                    reader.readAsDataURL(file);
+                                  }
+                                }}
+                                className="w-full mt-2 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 cursor-pointer"
+                                disabled={loading}
+                              />
+                            </div>
+                            
+                            {stateImagePreview && (
+                              <div className="relative">
+                                <img
+                                  src={stateImagePreview}
+                                  alt="State image preview"
+                                  className="w-full max-w-md mx-auto rounded-lg border border-blue-500/30"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setStateImage(null);
+                                    setStateImagePreview(null);
+                                  }}
+                                  className="absolute top-2 right-2 p-2 bg-red-500/80 hover:bg-red-500 rounded-full text-white transition-colors"
+                                >
+                                  <X className="h-4 w-4" />
+                                </button>
+                              </div>
+                            )}
+                            
+                            <div className="text-xs text-slate-500 bg-slate-900/50 p-3 rounded border border-slate-700">
+                              <p className="font-semibold mb-1">NSPFRP State Imaging Protocol:</p>
+                              <ul className="list-disc list-inside space-y-1">
+                                <li>9x7 (63-point) fiberoptic grid extraction</li>
+                                <li>Encryption key derived from unique state</li>
+                                <li>State image ID generated from core output</li>
+                                <li>On-chain anchoring for ultimate protection</li>
+                              </ul>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
                   <Button
                     type="submit"
                     className="w-full py-6 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                    disabled={loading || !formData.title.trim() || !formData.text_content.trim()}
+                    disabled={loading || !formData.title.trim() || !formData.text_content.trim() || (useStateImageEncryption && !stateImage)}
                   >
                     {loading ? (
                       <span className="flex items-center gap-3">

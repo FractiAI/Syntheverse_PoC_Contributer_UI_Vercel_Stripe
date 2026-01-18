@@ -129,6 +129,8 @@ export async function POST(request: NextRequest) {
     const category = null;
     const text_content = (formData.get('text_content') as string | null) || '';
     const payment_method = (formData.get('payment_method') as string | null) || 'stripe'; // Default to Stripe
+    const stateImageFile = formData.get('state_image') as File | null;
+    const useStateImageEncryption = formData.get('use_state_image_encryption') === 'true';
 
     if (!title || !title.trim()) {
       const corsHeaders = createCorsHeaders(request);
@@ -223,6 +225,65 @@ export async function POST(request: NextRequest) {
     const submissionHash = crypto.randomBytes(32).toString('hex');
     const contentHash = crypto.createHash('sha256').update(text_content.trim()).digest('hex');
 
+    // Handle state image upload if provided
+    let stateImagePath: string | null = null;
+    if (useStateImageEncryption && stateImageFile) {
+      try {
+        // Validate file type
+        if (!stateImageFile.type.startsWith('image/')) {
+          return NextResponse.json(
+            { error: 'State image must be an image file' },
+            { status: 400 }
+          );
+        }
+
+        // Validate file size (max 10MB)
+        if (stateImageFile.size > 10 * 1024 * 1024) {
+          return NextResponse.json(
+            { error: 'State image must be less than 10MB' },
+            { status: 400 }
+          );
+        }
+
+        // Convert file to buffer
+        const arrayBuffer = await stateImageFile.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+
+        // Generate unique filename
+        const fileExt = stateImageFile.name.split('.').pop() || 'jpg';
+        const fileName = `${submissionHash}.${fileExt}`;
+        const filePath = `submissions/${fileName}`;
+
+        // Upload to Supabase storage
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('state-images')
+          .upload(filePath, buffer, {
+            contentType: stateImageFile.type,
+            upsert: false,
+          });
+
+        if (uploadError) {
+          debugError('SubmitContribution', 'Failed to upload state image', uploadError);
+          return NextResponse.json(
+            { error: 'Failed to upload state image' },
+            { status: 500 }
+          );
+        }
+
+        stateImagePath = filePath;
+        debug('SubmitContribution', 'State image uploaded', {
+          submissionHash,
+          path: stateImagePath,
+        });
+      } catch (imageError) {
+        debugError('SubmitContribution', 'Error processing state image', imageError);
+        return NextResponse.json(
+          { error: 'Failed to process state image' },
+          { status: 500 }
+        );
+      }
+    }
+
     // Check if user is creator or operator - exempt from payment for testing
     const { isCreator, isOperator } = await getAuthenticatedUserWithRole();
     const isExemptFromPayment = isCreator || isOperator;
@@ -252,6 +313,8 @@ export async function POST(request: NextRequest) {
             submission_timestamp: new Date().toISOString(),
             creator_mode: isCreator,
             operator_mode: isOperator,
+            use_state_image_encryption: useStateImageEncryption,
+            state_image_path: stateImagePath,
           },
           created_at: new Date(),
           updated_at: new Date(),
