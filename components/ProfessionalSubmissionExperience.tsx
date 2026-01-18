@@ -96,8 +96,14 @@ export default function ProfessionalSubmissionExperience({ userEmail, isCreator 
   const contentLength = formData.text_content.length;
   const isOverLimit = contentLength > MAX_CONTENT_LENGTH;
 
-  // Professional narration system
-  const narrations = {
+  // Professional narration system (Tesla Operator's Console for testers)
+  const narrations = isExemptFromPayment ? {
+    form: "Tesla Operator's Console: Submit test contributions for instrumental-grade evaluation. NSPFRP protocol active.",
+    payment: "", // Not used for testers
+    processing: "Initializing evaluation pipeline. HHF-AI system preparing instrumental-grade analysis...",
+    evaluation: "Instrumental-grade analysis in progress: Evaluating across N/D/C/A dimensions with THALET Protocol enforcement.",
+    complete: "Evaluation complete. Instrumental-grade results ready for review and validation."
+  } : {
     form: "Welcome to the Syntheverse Proof-of-Contribution system. Your journey begins here, where innovation meets verification.",
     payment: "Select your preferred payment method. Every contribution is valued and processed with care.",
     processing: "Your contribution is being prepared for evaluation. The HHF-AI system is initializing...",
@@ -462,14 +468,18 @@ export default function ProfessionalSubmissionExperience({ userEmail, isCreator 
         <div className="mb-12 text-center">
           <div className="inline-flex items-center gap-3 mb-6">
             <div className="p-3 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-400/30">
-              <Sparkles className="h-8 w-8 text-blue-400" />
+              {isExemptFromPayment ? (
+                <Zap className="h-8 w-8 text-blue-400" />
+              ) : (
+                <Sparkles className="h-8 w-8 text-blue-400" />
+              )}
             </div>
             <div>
               <h1 className="text-4xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-blue-400 via-purple-400 to-amber-400 text-transparent bg-clip-text">
-                Syntheverse
+                {isExemptFromPayment ? "Tesla Operator's Console" : "Syntheverse"}
               </h1>
               <p className="text-sm text-slate-400 uppercase tracking-widest mt-1">
-                Proof-of-Contribution System
+                {isExemptFromPayment ? "Instrumental-Grade Testing Interface" : "Proof-of-Contribution System"}
               </p>
             </div>
           </div>
@@ -562,30 +572,33 @@ export default function ProfessionalSubmissionExperience({ userEmail, isCreator 
               <CardHeader>
                 <CardTitle className="flex items-center gap-3">
                   <FileText className="h-5 w-5 text-blue-400" />
-                  Contribution Details
+                  {isExemptFromPayment ? "Test Submission Parameters" : "Contribution Details"}
                 </CardTitle>
                 <CardDescription>
-                  Provide the title and content of your contribution (abstract, equations, and constants only)
+                  {isExemptFromPayment 
+                    ? "Enter test case title and content for instrumental-grade evaluation (abstract, equations, and constants only)"
+                    : "Provide the title and content of your contribution (abstract, equations, and constants only)"
+                  }
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
-                    <Label htmlFor="title">Contribution Title *</Label>
+                    <Label htmlFor="title">{isExemptFromPayment ? "Test Case Title *" : "Contribution Title *"}</Label>
                     <input
                       id="title"
                       type="text"
                       className="w-full mt-2 px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
                       value={formData.title}
                       onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                      placeholder="Enter your contribution title"
+                      placeholder={isExemptFromPayment ? "Enter test case title" : "Enter your contribution title"}
                       required
                       disabled={loading}
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="text_content">Contribution Content *</Label>
+                    <Label htmlFor="text_content">{isExemptFromPayment ? "Test Case Content *" : "Contribution Content *"}</Label>
                     <textarea
                       id="text_content"
                       className={`w-full mt-2 px-4 py-3 bg-slate-800 border rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all min-h-[200px] ${
@@ -593,7 +606,10 @@ export default function ProfessionalSubmissionExperience({ userEmail, isCreator 
                       }`}
                       value={formData.text_content}
                       onChange={(e) => setFormData({ ...formData, text_content: e.target.value })}
-                      placeholder="Enter your contribution content (abstract, equations, and constants only - 4,000 character limit)"
+                      placeholder={isExemptFromPayment 
+                        ? "Enter test case content (abstract, equations, and constants only - 4,000 character limit)"
+                        : "Enter your contribution content (abstract, equations, and constants only - 4,000 character limit)"
+                      }
                       required
                       disabled={loading}
                     />
@@ -699,26 +715,28 @@ export default function ProfessionalSubmissionExperience({ userEmail, isCreator 
                               </ul>
                             </div>
                             
-                            {/* Max Encryption Plans Include Certifications */}
-                            <div className="mt-3 p-3 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/30 rounded">
-                              <p className="text-[10px] font-bold text-blue-400 uppercase tracking-wider mb-2">
-                                Max Encryption Plans Include Certifications
-                              </p>
-                              <p className="text-xs text-slate-400 mb-2">
-                                All maximum encryption plans include SynthScan™ and Omnibeam certifications at the end,
-                                ensuring ultimate protection and verification.
-                              </p>
-                              <div className="flex gap-2">
-                                <span className="px-2 py-1 bg-blue-500/20 border border-blue-500/50 rounded text-[10px] font-bold text-blue-400 flex items-center gap-1">
-                                  <Sparkles className="h-3 w-3" />
-                                  SynthScan™
-                                </span>
-                                <span className="px-2 py-1 bg-purple-500/20 border border-purple-500/50 rounded text-[10px] font-bold text-purple-400 flex items-center gap-1">
-                                  <Zap className="h-3 w-3" />
-                                  Omnibeam
-                                </span>
+                            {/* Technical certifications for non-testers only */}
+                            {!isExemptFromPayment && (
+                              <div className="mt-3 p-3 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/30 rounded">
+                                <p className="text-[10px] font-bold text-blue-400 uppercase tracking-wider mb-2">
+                                  Max Encryption Plans Include Certifications
+                                </p>
+                                <p className="text-xs text-slate-400 mb-2">
+                                  All maximum encryption plans include SynthScan™ and Omnibeam certifications at the end,
+                                  ensuring ultimate protection and verification.
+                                </p>
+                                <div className="flex gap-2">
+                                  <span className="px-2 py-1 bg-blue-500/20 border border-blue-500/50 rounded text-[10px] font-bold text-blue-400 flex items-center gap-1">
+                                    <Sparkles className="h-3 w-3" />
+                                    SynthScan™
+                                  </span>
+                                  <span className="px-2 py-1 bg-purple-500/20 border border-purple-500/50 rounded text-[10px] font-bold text-purple-400 flex items-center gap-1">
+                                    <Zap className="h-3 w-3" />
+                                    Omnibeam
+                                  </span>
+                                </div>
                               </div>
-                            </div>
+                            )}
                           </div>
                         )}
                       </div>
@@ -737,8 +755,8 @@ export default function ProfessionalSubmissionExperience({ userEmail, isCreator 
                       </span>
                     ) : isExemptFromPayment ? (
                       <span className="flex items-center gap-3">
-                        <Rocket className="h-5 w-5" />
-                        Submit Contribution
+                        <Zap className="h-5 w-5" />
+                        Initialize Evaluation
                         <ArrowRight className="h-5 w-5" />
                       </span>
                     ) : (
@@ -810,8 +828,8 @@ export default function ProfessionalSubmissionExperience({ userEmail, isCreator 
                   <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-400/30 mb-6">
                     <Loader2 className="h-10 w-10 text-blue-400 animate-spin" />
                   </div>
-                  <h3 className="text-2xl font-bold mb-2">Processing Your Submission</h3>
-                  <p className="text-slate-400">Preparing your contribution for evaluation...</p>
+                  <h3 className="text-2xl font-bold mb-2">{isExemptFromPayment ? "Processing Test Submission" : "Processing Your Submission"}</h3>
+                  <p className="text-slate-400">{isExemptFromPayment ? "Initializing evaluation pipeline..." : "Preparing your contribution for evaluation..."}</p>
                 </div>
               </CardContent>
             </Card>
@@ -825,11 +843,11 @@ export default function ProfessionalSubmissionExperience({ userEmail, isCreator 
                   <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-400/30 mb-6">
                     <Brain className="h-10 w-10 text-blue-400 animate-pulse" />
                   </div>
-                  <h3 className="text-2xl font-bold mb-2">Evaluation in Progress</h3>
-                  <p className="text-slate-400">The HHF-AI system is analyzing your contribution...</p>
+                  <h3 className="text-2xl font-bold mb-2">{isExemptFromPayment ? "Instrumental-Grade Evaluation in Progress" : "Evaluation in Progress"}</h3>
+                  <p className="text-slate-400">{isExemptFromPayment ? "NSPFRP + THALET Protocol analysis executing..." : "The HHF-AI system is analyzing your contribution..."}</p>
                   {submissionHash && (
                     <div className="mt-4 p-4 bg-slate-800/50 rounded-lg">
-                      <div className="text-xs text-slate-500 mb-1">Submission Hash</div>
+                      <div className="text-xs text-slate-500 mb-1">{isExemptFromPayment ? "Test Case Hash" : "Submission Hash"}</div>
                       <div className="font-mono text-sm text-blue-400 break-all">{submissionHash}</div>
                     </div>
                   )}
@@ -845,7 +863,7 @@ export default function ProfessionalSubmissionExperience({ userEmail, isCreator 
                 <CardHeader>
                   <CardTitle className="flex items-center gap-3">
                     <CheckCircle2 className="h-5 w-5 text-green-400" />
-                    Evaluation Complete
+                    {isExemptFromPayment ? "Evaluation Results" : "Evaluation Complete"}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -854,7 +872,7 @@ export default function ProfessionalSubmissionExperience({ userEmail, isCreator 
                       <div className="text-6xl font-black mb-2 bg-gradient-to-r from-green-400 to-blue-400 text-transparent bg-clip-text">
                         {evaluationStatus.podScore.toLocaleString()}
                       </div>
-                      <div className="text-slate-400 mb-4">PoC Score / 10,000</div>
+                      <div className="text-slate-400 mb-4">{isExemptFromPayment ? "Atomic Score / 10,000" : "PoC Score / 10,000"}</div>
                       {evaluationStatus.qualified && (
                         <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/20 border border-green-500/30 rounded-full">
                           <Award className="h-5 w-5 text-green-400" />
