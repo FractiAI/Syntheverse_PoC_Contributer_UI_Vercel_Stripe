@@ -155,6 +155,19 @@ export default function ProfessionalSubmissionExperience({ userEmail, isCreator 
         const submission = await response.json();
 
         if (submission && submission.submission_hash) {
+          // Handle error or evaluation_failed status
+          if (submission.status === 'error' || submission.status === 'evaluation_failed') {
+            clearInterval(pollInterval);
+            const errorMessage = submission.metadata?.evaluation_error || 'Evaluation failed. Please try again or contact support.';
+            setEvaluationStatus({
+              completed: false,
+              error: errorMessage,
+            });
+            setCurrentStep('form');
+            setError(errorMessage);
+            return;
+          }
+          
           if (submission.status === 'evaluating') {
             if (pollCount >= maxPolls) {
               clearInterval(pollInterval);
