@@ -61,27 +61,11 @@ export default function FractiAILanding({
             {!isAuthenticated ? (
               <>
                 <Link 
-                  href={cta?.primaryHref || '/login'} 
+                  href={cta?.primaryHref || '/auth/google'} 
                   className="cockpit-lever w-full py-4 flex items-center justify-center gap-3 bg-[#3399ff] text-white hover:bg-[#3399ff]/80 transition-all font-black text-sm tracking-widest"
                 >
                   {cta?.primaryLabel || 'SHELL ACCESS'}
                   <ArrowRight className="h-4 w-4" />
-                </Link>
-
-                <div className="relative py-2">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-slate-800"></div>
-                  </div>
-                  <div className="relative flex justify-center text-[10px] uppercase tracking-[0.2em]">
-                    <span className="bg-[#050505] px-4 text-slate-600">Secure Cloud Shell Access</span>
-                  </div>
-                </div>
-
-                <Link 
-                  href="/auth/google"
-                  className="cockpit-lever w-full py-2 flex items-center justify-center gap-2 bg-slate-950/30 text-slate-500 hover:bg-slate-900 hover:text-slate-300 transition-all font-bold text-[9px] tracking-[0.2em] border border-slate-900"
-                >
-                  SHELL ACCESS VIA GOOGLE
                 </Link>
               </>
             ) : isApprovedTester ? (

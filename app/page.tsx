@@ -32,7 +32,7 @@ export default async function LandingPage() {
       isApprovedTester={isOperator || isCreator}
       notice={systemNoticeText}
       cta={{
-        primaryHref: '/login?redirect=/operator/dashboard',
+        primaryHref: '/auth/google',
         primaryLabel: 'SHELL ACCESS',
       }}
     />
