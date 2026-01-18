@@ -10,6 +10,7 @@ import { FrontierModule } from '@/components/FrontierModule';
 import { Zap, Plus, ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { OmnibeamHeroAIDemoButton } from '@/components/OmnibeamHeroAIDemoButton';
 import '../../control-lab.css';
 
 export const dynamic = 'force-dynamic';
@@ -138,6 +139,9 @@ export default async function OperatorLab() {
               Recursive Self-Application · Infinite Octave Fidelity
             </p>
           </div>
+
+          {/* Omnibeam 9x7 Fiberoptic State Image Encryption - Hero AI Demo */}
+          <OmnibeamHeroAIDemoButton />
 
           <div className="h-px w-full bg-gradient-to-r from-transparent via-slate-800 to-transparent" />
 
