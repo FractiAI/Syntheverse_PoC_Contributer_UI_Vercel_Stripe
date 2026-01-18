@@ -45,7 +45,7 @@ export interface FacingSurface {
     autoCursorAI?: {
       ceo: boolean;
       fullStack: boolean;
-      role: 'CEO' | 'Full Stack' | 'CEO & Full Stack';
+      role: 'CEO' | 'Full Stack' | 'CEO & Full Stack' | 'Not Assigned';
     };
   };
   timestamp: string;

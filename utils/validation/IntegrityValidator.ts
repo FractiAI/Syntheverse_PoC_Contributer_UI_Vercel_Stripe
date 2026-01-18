@@ -10,7 +10,7 @@
  */
 
 import crypto from 'crypto';
-import type { AtomicScore } from '@/utils/scoring/AtomicScorer';
+import type { AtomicScore } from '@/types/atomic-score-extended';
 
 export interface ValidationResult {
   valid: boolean;

@@ -1650,7 +1650,7 @@ ${answer}`;
     const extractedBridgeSpec = extractBridgeSpec({ bridge_spec: bridgeSpec });
     
     // Call AtomicScorer with BridgeSpec (if provided)
-    const atomicScore = AtomicScorer.computeScore({
+    const atomicScore = AtomicScorer.getInstance().computeScore({
       novelty: finalNoveltyScore,
       density: densityFinal,
       coherence: coherenceScore,

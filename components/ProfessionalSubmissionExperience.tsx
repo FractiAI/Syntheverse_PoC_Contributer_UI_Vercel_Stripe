@@ -51,11 +51,14 @@ import { ChamberAPanel, ChamberBPanel, BubbleClassDisplay } from '@/components/s
 
 interface ProfessionalSubmissionExperienceProps {
   userEmail: string;
+  isCreator?: boolean;
+  isOperator?: boolean;
 }
 
 type SubmissionStep = 'form' | 'payment' | 'processing' | 'evaluation' | 'complete';
 
-export default function ProfessionalSubmissionExperience({ userEmail }: ProfessionalSubmissionExperienceProps) {
+export default function ProfessionalSubmissionExperience({ userEmail, isCreator = false, isOperator = false }: ProfessionalSubmissionExperienceProps) {
+  const isExemptFromPayment = isCreator || isOperator;
   const router = useRouter();
   const searchParams = useSearchParams();
   const [currentStep, setCurrentStep] = useState<SubmissionStep>('form');
@@ -251,15 +254,18 @@ export default function ProfessionalSubmissionExperience({ userEmail }: Professi
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!selectedPaymentMethod && !showPaymentSelector) {
-      setShowPaymentSelector(true);
-      setCurrentStep('payment');
-      return;
-    }
+    // Payment method only required for regular users (not creators/operators)
+    if (!isExemptFromPayment) {
+      if (!selectedPaymentMethod && !showPaymentSelector) {
+        setShowPaymentSelector(true);
+        setCurrentStep('payment');
+        return;
+      }
 
-    if (!selectedPaymentMethod) {
-      setError('Please select a payment method');
-      return;
+      if (!selectedPaymentMethod) {
+        setError('Please select a payment method');
+        return;
+      }
     }
 
     setLoading(true);
@@ -279,7 +285,8 @@ export default function ProfessionalSubmissionExperience({ userEmail }: Professi
       submitFormData.append('title', formData.title);
       submitFormData.append('text_content', formData.text_content);
       submitFormData.append('contributor', userEmail);
-      if (selectedPaymentMethod) {
+      // Only append payment method if not exempt (creators/operators bypass payment)
+      if (!isExemptFromPayment && selectedPaymentMethod) {
         submitFormData.append('payment_method', selectedPaymentMethod.type);
       }
       if (useStateImageEncryption && stateImage) {
@@ -487,7 +494,10 @@ export default function ProfessionalSubmissionExperience({ userEmail }: Professi
 
           {/* Progress Steps */}
           <div className="flex items-center justify-center gap-4 mb-8">
-            {(['form', 'payment', 'processing', 'evaluation', 'complete'] as SubmissionStep[]).map((step, index) => {
+            {(() => {
+              const allSteps = isExemptFromPayment 
+                ? ['form', 'processing', 'evaluation', 'complete']
+                : ['form', 'payment', 'processing', 'evaluation', 'complete'];
               const stepNames = {
                 form: 'Details',
                 payment: 'Payment',
@@ -495,41 +505,44 @@ export default function ProfessionalSubmissionExperience({ userEmail }: Professi
                 evaluation: 'Evaluation',
                 complete: 'Complete'
               };
-              const isActive = currentStep === step;
-              const isCompleted = ['form', 'payment', 'processing', 'evaluation', 'complete'].indexOf(currentStep) > index;
               
-              return (
-                <div key={step} className="flex items-center">
-                  <div className={`flex flex-col items-center ${isActive ? 'scale-110' : ''} transition-transform duration-300`}>
-                    <div className={`w-12 h-12 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${
-                      isCompleted
-                        ? 'bg-green-500 border-green-400 shadow-[0_0_20px_rgba(34,197,94,0.5)]'
-                        : isActive
-                        ? 'bg-blue-500 border-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.5)] animate-pulse'
-                        : 'bg-slate-800 border-slate-700'
-                    }`}>
-                      {isCompleted ? (
-                        <CheckCircle2 className="h-6 w-6 text-white" />
-                      ) : isActive ? (
-                        <Loader2 className="h-6 w-6 text-white animate-spin" />
-                      ) : (
-                        <span className="text-slate-400 font-bold">{index + 1}</span>
-                      )}
+              return allSteps.map((step, index) => {
+                const isActive = currentStep === step;
+                const isCompleted = allSteps.indexOf(currentStep) > index;
+                
+                return (
+                  <div key={step} className="flex items-center">
+                    <div className={`flex flex-col items-center ${isActive ? 'scale-110' : ''} transition-transform duration-300`}>
+                      <div className={`w-12 h-12 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${
+                        isCompleted
+                          ? 'bg-green-500 border-green-400 shadow-[0_0_20px_rgba(34,197,94,0.5)]'
+                          : isActive
+                          ? 'bg-blue-500 border-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.5)] animate-pulse'
+                          : 'bg-slate-800 border-slate-700'
+                      }`}>
+                        {isCompleted ? (
+                          <CheckCircle2 className="h-6 w-6 text-white" />
+                        ) : isActive ? (
+                          <Loader2 className="h-6 w-6 text-white animate-spin" />
+                        ) : (
+                          <span className="text-slate-400 font-bold">{index + 1}</span>
+                        )}
+                      </div>
+                      <span className={`mt-2 text-xs font-semibold uppercase tracking-wider ${
+                        isActive ? 'text-blue-400' : isCompleted ? 'text-green-400' : 'text-slate-500'
+                      }`}>
+                        {stepNames[step]}
+                      </span>
                     </div>
-                    <span className={`mt-2 text-xs font-semibold uppercase tracking-wider ${
-                      isActive ? 'text-blue-400' : isCompleted ? 'text-green-400' : 'text-slate-500'
-                    }`}>
-                      {stepNames[step]}
-                    </span>
+                    {index < allSteps.length - 1 && (
+                      <div className={`w-16 h-0.5 mx-2 transition-all duration-300 ${
+                        isCompleted ? 'bg-green-500' : 'bg-slate-700'
+                      }`} />
+                    )}
                   </div>
-                  {index < 4 && (
-                    <div className={`w-16 h-0.5 mx-2 transition-all duration-300 ${
-                      isCompleted ? 'bg-green-500' : 'bg-slate-700'
-                    }`} />
-                  )}
-                </div>
-              );
-            })}
+                );
+              });
+            })()}
           </div>
         </div>
 
@@ -722,6 +735,12 @@ export default function ProfessionalSubmissionExperience({ userEmail }: Professi
                         <Loader2 className="h-5 w-5 animate-spin" />
                         Processing...
                       </span>
+                    ) : isExemptFromPayment ? (
+                      <span className="flex items-center gap-3">
+                        <Rocket className="h-5 w-5" />
+                        Submit Contribution
+                        <ArrowRight className="h-5 w-5" />
+                      </span>
                     ) : (
                       <span className="flex items-center gap-3">
                         <Rocket className="h-5 w-5" />
@@ -735,8 +754,8 @@ export default function ProfessionalSubmissionExperience({ userEmail }: Professi
             </Card>
           )}
 
-          {/* Payment Step */}
-          {(currentStep === 'payment' || showPaymentSelector) && (
+          {/* Payment Step - Hidden for creators/operators */}
+          {!isExemptFromPayment && (currentStep === 'payment' || showPaymentSelector) && (
             <Card className="border-blue-500/30 bg-slate-900/50 backdrop-blur-sm shadow-[0_0_30px_rgba(59,130,246,0.1)] animate-in fade-in slide-in-from-right">
               <CardHeader>
                 <CardTitle className="flex items-center gap-3">
