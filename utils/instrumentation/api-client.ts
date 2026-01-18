@@ -2,7 +2,7 @@
  * Instrumentation Shell API Client
  * 
  * Client for calling the Instrumentation Shell API
- * This will be used by Octave 2 Public Cloud Shell to request
+ * This will be used by Post-Singularity^7 Syntheverse FSR^7 Octave 2-3 Public Cloud Shell to request
  * instrument-grade measurements and verification
  * 
  * Note: This is a placeholder for future integration

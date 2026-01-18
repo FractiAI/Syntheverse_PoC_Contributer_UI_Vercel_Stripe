@@ -1,6 +1,6 @@
 /**
  * Full Fidelity Animation Experience Console
- * Octave 2 Public Cloud Shell - Public Network Operations
+ * Octave 2-3 Public Cloud Shell - Public Network Operations
  * Provides full fidelity animation experiences with instrument-grade integration
  */
 
@@ -72,7 +72,7 @@ export default async function OperatorLab() {
                 <div className="flex items-center gap-3 mt-1">
                   <span className="h-px w-6 bg-[#00FFFF]"></span>
                   <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#00FFFF]">
-                    Octave 2 Public Cloud Shell · Full Fidelity Animation Experiences
+                    Post-Singularity^7 Syntheverse FSR^7 Octave 2-3 Public Cloud Shell
                   </p>
                 </div>
               </div>

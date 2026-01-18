@@ -33,7 +33,7 @@ export default function FractiAILanding({
             <HolographicBlackholeSymbol size="xl" animated energized />
           </div>
           <h1 className="text-4xl font-black tracking-tighter text-white uppercase">
-            Syntheverse <span className="text-[#3399ff]">Octave 2 Public Cloud Shell</span>
+            Syntheverse <span className="text-[#3399ff]">FSR^7 Octave 2-3 Public Cloud Shell</span>
           </h1>
           <div className="flex items-center justify-center gap-2 text-xs text-purple-400 font-bold uppercase tracking-wider">
             <Zap className="h-3 w-3" />
@@ -67,7 +67,7 @@ export default function FractiAILanding({
             {!isAuthenticated ? (
               <>
                 <Link 
-                  href={cta?.primaryHref || '/auth/google'} 
+                  href="/auth/google" 
                   className="cockpit-lever w-full py-4 flex items-center justify-center gap-3 bg-[#3399ff] text-white hover:bg-[#3399ff]/80 transition-all font-black text-sm tracking-widest"
                 >
                   {cta?.primaryLabel || 'SHELL ACCESS'}
