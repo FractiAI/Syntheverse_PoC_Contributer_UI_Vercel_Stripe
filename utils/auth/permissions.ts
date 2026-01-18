@@ -3,7 +3,7 @@
  *
  * Roles:
  * - Creator: info@fractiai.com (hard-coded)
- * - Operator: Users with role='operator' in database
+ * - Operator: Users with role='operator' in database OR authorized testers
  * - User: Standard users (default)
  */
 
@@ -15,6 +15,13 @@ import { eq } from 'drizzle-orm';
 // Hard-coded Creator email
 export const CREATOR_EMAIL = 'info@fractiai.com';
 
+// Authorized Tester emails (external testing team - outside shell by protocol)
+export const AUTHORIZED_TESTER_EMAILS = [
+  'marek@example.com', // Marek - Tester/QA Specialist
+  'simba@example.com', // Simba - Tester/QA Specialist
+  'pablo@example.com', // Pablo - Tester/QA Specialist
+];
+
 export type UserRole = 'creator' | 'operator' | 'user';
 
 /**
@@ -25,9 +32,16 @@ export async function getUserRole(email: string): Promise<UserRole> {
     return 'user';
   }
 
+  const normalizedEmail = email.toLowerCase();
+
   // Creator is hard-coded
-  if (email.toLowerCase() === CREATOR_EMAIL.toLowerCase()) {
+  if (normalizedEmail === CREATOR_EMAIL.toLowerCase()) {
     return 'creator';
+  }
+
+  // Check if user is an authorized tester (treated as operator)
+  if (AUTHORIZED_TESTER_EMAILS.some(testerEmail => testerEmail.toLowerCase() === normalizedEmail)) {
+    return 'operator';
   }
 
   // Check database for operator role
@@ -35,7 +49,7 @@ export async function getUserRole(email: string): Promise<UserRole> {
     const users = await db
       .select()
       .from(usersTable)
-      .where(eq(usersTable.email, email.toLowerCase()))
+      .where(eq(usersTable.email, normalizedEmail))
       .limit(1);
 
     if (users.length > 0) {
