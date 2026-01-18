@@ -444,41 +444,69 @@ export default function ProfessionalSubmissionExperience({ userEmail, isCreator 
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#05070a] via-[#0a0d12] to-[#05070a] text-white">
-      {/* Animated Background */}
+    <div className={`min-h-screen text-white ${
+      isExemptFromPayment 
+        ? 'bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950' 
+        : 'bg-gradient-to-b from-[#05070a] via-[#0a0d12] to-[#05070a]'
+    }`}>
+      {/* Background - Operator skin uses technical grid, regular uses animated */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute inset-0 holographic-grid opacity-20"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/5 to-purple-500/10"></div>
-        {[...Array(15)].map((_, i) => (
-          <div
-            key={i}
-            className="hydrogen-particle absolute w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 opacity-40 animate-float"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${3 + Math.random() * 4}s`
-            }}
-          />
-        ))}
+        {isExemptFromPayment ? (
+          <>
+            {/* Operator Skin: Technical grid background */}
+            <div className="absolute inset-0 opacity-10" style={{
+              backgroundImage: 'linear-gradient(rgba(6, 182, 212, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(6, 182, 212, 0.1) 1px, transparent 1px)',
+              backgroundSize: '50px 50px'
+            }}></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/5 to-slate-900/50"></div>
+          </>
+        ) : (
+          <>
+            {/* Regular Skin: Animated holographic background */}
+            <div className="absolute inset-0 holographic-grid opacity-20"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/5 to-purple-500/10"></div>
+            {[...Array(15)].map((_, i) => (
+              <div
+                key={i}
+                className="hydrogen-particle absolute w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 opacity-40 animate-float"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 3}s`,
+                  animationDuration: `${3 + Math.random() * 4}s`
+                }}
+              />
+            ))}
+          </>
+        )}
       </div>
 
       <div className="relative z-10 container mx-auto max-w-6xl px-6 py-12">
         {/* Header */}
         <div className="mb-12 text-center">
           <div className="inline-flex items-center gap-3 mb-6">
-            <div className="p-3 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-400/30">
+            <div className={`p-3 rounded-full border ${
+              isExemptFromPayment 
+                ? 'bg-gradient-to-br from-cyan-500/10 to-slate-800/50 border-cyan-500/40'
+                : 'bg-gradient-to-br from-blue-500/20 to-purple-500/20 border-blue-400/30'
+            }`}>
               {isExemptFromPayment ? (
-                <Brain className="h-8 w-8 text-blue-400" />
+                <Brain className="h-8 w-8 text-cyan-400" />
               ) : (
                 <Sparkles className="h-8 w-8 text-blue-400" />
               )}
             </div>
             <div>
-              <h1 className="text-4xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-blue-400 via-purple-400 to-amber-400 text-transparent bg-clip-text">
+              <h1 className={`text-4xl md:text-5xl font-black tracking-tight text-transparent bg-clip-text ${
+                isExemptFromPayment
+                  ? 'bg-gradient-to-r from-cyan-400 via-slate-200 to-cyan-400'
+                  : 'bg-gradient-to-r from-blue-400 via-purple-400 to-amber-400'
+              }`}>
                 {isExemptFromPayment ? "Test Submission" : "Syntheverse"}
               </h1>
-              <p className="text-sm text-slate-400 uppercase tracking-widest mt-1">
+              <p className={`text-sm uppercase tracking-widest mt-1 ${
+                isExemptFromPayment ? 'text-cyan-500/70' : 'text-slate-400'
+              }`}>
                 {isExemptFromPayment ? "Core Testing & Archive Navigator" : "Proof-of-Contribution System"}
               </p>
             </div>
@@ -487,15 +515,23 @@ export default function ProfessionalSubmissionExperience({ userEmail, isCreator 
           {/* Status Display */}
           {narrationText && (
             <div className="max-w-3xl mx-auto mb-8">
-              <div className="rounded-lg border border-blue-500/30 bg-blue-500/5 backdrop-blur-sm p-4">
+              <div className={`rounded-lg border backdrop-blur-sm p-4 ${
+                isExemptFromPayment
+                  ? 'border-cyan-500/30 bg-cyan-500/5'
+                  : 'border-blue-500/30 bg-blue-500/5'
+              }`}>
                 <div className="flex items-center gap-3">
                   <div className="flex-shrink-0">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-400/30 flex items-center justify-center">
-                      <Brain className="h-5 w-5 text-blue-400" />
+                    <div className={`w-10 h-10 rounded-full border flex items-center justify-center ${
+                      isExemptFromPayment
+                        ? 'bg-gradient-to-br from-cyan-500/20 to-slate-800/50 border-cyan-400/30'
+                        : 'bg-gradient-to-br from-blue-500/20 to-purple-500/20 border-blue-400/30'
+                    }`}>
+                      <Brain className={`h-5 w-5 ${isExemptFromPayment ? 'text-cyan-400' : 'text-blue-400'}`} />
                     </div>
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm text-slate-300">
+                    <p className={`text-sm ${isExemptFromPayment ? 'text-cyan-100/90 font-mono' : 'text-slate-300'}`}>
                       {narrationText}
                     </p>
                   </div>
@@ -527,9 +563,13 @@ export default function ProfessionalSubmissionExperience({ userEmail, isCreator 
                     <div className={`flex flex-col items-center ${isActive ? 'scale-110' : ''} transition-transform duration-300`}>
                       <div className={`w-12 h-12 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${
                         isCompleted
-                          ? 'bg-green-500 border-green-400 shadow-[0_0_20px_rgba(34,197,94,0.5)]'
+                          ? isExemptFromPayment
+                            ? 'bg-cyan-500 border-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.5)]'
+                            : 'bg-green-500 border-green-400 shadow-[0_0_20px_rgba(34,197,94,0.5)]'
                           : isActive
-                          ? 'bg-blue-500 border-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.5)] animate-pulse'
+                          ? isExemptFromPayment
+                            ? 'bg-cyan-600 border-cyan-500 shadow-[0_0_20px_rgba(6,182,212,0.5)] animate-pulse'
+                            : 'bg-blue-500 border-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.5)] animate-pulse'
                           : 'bg-slate-800 border-slate-700'
                       }`}>
                         {isCompleted ? (
@@ -541,14 +581,20 @@ export default function ProfessionalSubmissionExperience({ userEmail, isCreator 
                         )}
                       </div>
                       <span className={`mt-2 text-xs font-semibold uppercase tracking-wider ${
-                        isActive ? 'text-blue-400' : isCompleted ? 'text-green-400' : 'text-slate-500'
+                        isActive 
+                          ? isExemptFromPayment ? 'text-cyan-400' : 'text-blue-400' 
+                          : isCompleted 
+                          ? isExemptFromPayment ? 'text-cyan-400' : 'text-green-400'
+                          : 'text-slate-500'
                       }`}>
                         {stepNames[step]}
                       </span>
                     </div>
                     {index < allSteps.length - 1 && (
                       <div className={`w-16 h-0.5 mx-2 transition-all duration-300 ${
-                        isCompleted ? 'bg-green-500' : 'bg-slate-700'
+                        isCompleted 
+                          ? isExemptFromPayment ? 'bg-cyan-500' : 'bg-green-500'
+                          : 'bg-slate-700'
                       }`} />
                     )}
                   </div>
@@ -570,10 +616,14 @@ export default function ProfessionalSubmissionExperience({ userEmail, isCreator 
 
           {/* Form Step */}
           {currentStep === 'form' && (
-            <Card className="border-blue-500/30 bg-slate-900/50 backdrop-blur-sm shadow-[0_0_30px_rgba(59,130,246,0.1)]">
+            <Card className={`backdrop-blur-sm ${
+              isExemptFromPayment
+                ? 'border-cyan-500/30 bg-slate-900/70 shadow-[0_0_30px_rgba(6,182,212,0.1)]'
+                : 'border-blue-500/30 bg-slate-900/50 shadow-[0_0_30px_rgba(59,130,246,0.1)]'
+            }`}>
               <CardHeader>
                 <CardTitle className="flex items-center gap-3">
-                  <FileText className="h-5 w-5 text-blue-400" />
+                  <FileText className={`h-5 w-5 ${isExemptFromPayment ? 'text-cyan-400' : 'text-blue-400'}`} />
                   {isExemptFromPayment ? "Test Case" : "Contribution Details"}
                 </CardTitle>
                 <CardDescription>
@@ -747,7 +797,11 @@ export default function ProfessionalSubmissionExperience({ userEmail, isCreator 
 
                   <Button
                     type="submit"
-                    className="w-full py-6 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                    className={`w-full py-6 text-white font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 ${
+                      isExemptFromPayment
+                        ? 'bg-gradient-to-r from-cyan-600 to-slate-700 hover:from-cyan-700 hover:to-slate-800'
+                        : 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700'
+                    }`}
                     disabled={loading || !formData.title.trim() || !formData.text_content.trim() || (useStateImageEncryption && !stateImage)}
                   >
                     {loading ? (
@@ -757,7 +811,7 @@ export default function ProfessionalSubmissionExperience({ userEmail, isCreator 
                       </span>
                     ) : isExemptFromPayment ? (
                       <span className="flex items-center gap-3">
-                        <Rocket className="h-5 w-5" />
+                        <Zap className="h-5 w-5" />
                         Submit Test
                         <ArrowRight className="h-5 w-5" />
                       </span>
@@ -861,20 +915,30 @@ export default function ProfessionalSubmissionExperience({ userEmail, isCreator 
           {/* Complete Step - Evaluation Results */}
           {currentStep === 'complete' && evaluationStatus && (
             <div className="space-y-6">
-              <Card className="border-green-500/30 bg-slate-900/50 backdrop-blur-sm shadow-[0_0_30px_rgba(34,197,94,0.1)]">
+              <Card className={`backdrop-blur-sm ${
+                isExemptFromPayment
+                  ? 'border-cyan-500/30 bg-slate-900/70 shadow-[0_0_30px_rgba(6,182,212,0.1)]'
+                  : 'border-green-500/30 bg-slate-900/50 shadow-[0_0_30px_rgba(34,197,94,0.1)]'
+              }`}>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-green-400" />
+                    <CheckCircle2 className={`h-5 w-5 ${isExemptFromPayment ? 'text-cyan-400' : 'text-green-400'}`} />
                     {isExemptFromPayment ? "Results" : "Evaluation Complete"}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   {evaluationStatus.completed && evaluationStatus.podScore !== undefined && evaluationStatus.podScore !== null && (
                     <div className="text-center mb-6">
-                      <div className="text-6xl font-black mb-2 bg-gradient-to-r from-green-400 to-blue-400 text-transparent bg-clip-text">
+                      <div className={`text-6xl font-black mb-2 text-transparent bg-clip-text ${
+                        isExemptFromPayment
+                          ? 'bg-gradient-to-r from-cyan-400 to-slate-200'
+                          : 'bg-gradient-to-r from-green-400 to-blue-400'
+                      }`}>
                         {evaluationStatus.podScore.toLocaleString()}
                       </div>
-                      <div className="text-slate-400 mb-4">{isExemptFromPayment ? "Score" : "PoC Score / 10,000"}</div>
+                      <div className={`mb-4 ${isExemptFromPayment ? 'text-cyan-500/70 font-mono text-sm' : 'text-slate-400'}`}>
+                        {isExemptFromPayment ? "Score" : "PoC Score / 10,000"}
+                      </div>
                       {evaluationStatus.qualified && (
                         <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/20 border border-green-500/30 rounded-full">
                           <Award className="h-5 w-5 text-green-400" />
