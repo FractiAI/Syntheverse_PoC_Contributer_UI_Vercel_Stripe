@@ -155,7 +155,7 @@ export default function EnterpriseSubmitForm({
             <option value="scientific">Scientific</option>
             <option value="tech">Technical</option>
             <option value="alignment">Alignment</option>
-            <option value="snap experience">Snap Experience</option>
+            <option value="experience">Experience</option>
           </select>
         </div>
 
