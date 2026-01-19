@@ -57,56 +57,6 @@ export default function FractiAILanding({
             Public access is temporarily suspended while we stabilize the HHF-AI MRI Atomic Core.
           </p>
 
-          {/* Team Information */}
-          <div className="pt-4 border-t border-slate-800 space-y-4">
-            <h3 className="text-xs font-bold text-[#3399ff] tracking-[0.3em] uppercase">FractiAI Research Team</h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-              {/* Core Development Team */}
-              <div className="space-y-2">
-                <h4 className="font-bold text-white uppercase tracking-wider">Core Development (Inside Shell)</h4>
-                <ul className="text-slate-400 space-y-1 text-[10px]">
-                  <li>• Pru "El Taíno" Méndez - Lead Developer</li>
-                  <li>• Senior Research Scientist & Engineer</li>
-                  <li>• Senior Early Trials AI CEO</li>
-                  <li>• Senior Hollywood Producer</li>
-                  <li>• Senior Screenwriter</li>
-                  <li>• Senior Luxury Travel Magazine Editor</li>
-                  <li>• Senior Game Designer & Architect</li>
-                  <li>• Senior UI Designer</li>
-                  <li>• Senior Children's Science Museum Curator</li>
-                </ul>
-              </div>
-
-              {/* External Protocol Functions */}
-              <div className="space-y-2">
-                <h4 className="font-bold text-white uppercase tracking-wider">Testing & Legal (Outside Shell)</h4>
-                <ul className="text-slate-400 space-y-1 text-[10px]">
-                  <li className="text-green-400">• Marek - QA Specialist (Authorized)</li>
-                  <li className="text-green-400">• Simba - QA Specialist (Authorized)</li>
-                  <li className="text-green-400">• Pablo - QA Specialist (Authorized)</li>
-                  <li>• Lexary Nova - Prudential Jurist</li>
-                </ul>
-                <p className="text-[9px] text-slate-500 italic pt-2">
-                  Testing and legal remain outside shell by protocol to preserve system integrity
-                </p>
-              </div>
-            </div>
-
-            {/* Hero Hosts */}
-            <div className="space-y-2 pt-2">
-              <h4 className="font-bold text-white uppercase tracking-wider text-xs">Hero Hosts (AI Representatives)</h4>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-[10px] text-slate-400">
-                <div>☀️ El Gran Sol - Gateway</div>
-                <div>🔬 Leonardo da Vinci - R&D</div>
-                <div>⚡ Nikola Tesla - Academy</div>
-                <div>🏛️ Buckminster Fuller - Creator</div>
-                <div>📊 Michael Faraday - Operator</div>
-                <div>🔥 Outcast Hero - Mission Control</div>
-              </div>
-            </div>
-          </div>
-
           {notice && (
             <div className="p-4 bg-red-500/10 border border-red-500/30 rounded text-red-400 text-xs font-bold uppercase tracking-wider text-center">
               {notice}
