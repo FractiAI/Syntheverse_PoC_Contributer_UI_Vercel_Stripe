@@ -200,12 +200,12 @@ Output
 - Pru "El Taíno" Méndez (Lead Developer / Research Scientist)
 - Senior Research Scientist & Full Stack Engineer
 - Senior Early Trials AI CEO
-- Hollywood Producer
-- Screenwriter
-- Luxury Travel Magazine Editor
-- Game Designer and Architect
-- UI Designer
-- Children's Science Discovery Museum Curator
+- Senior Hollywood Producer
+- Senior Screenwriter
+- Senior Luxury Travel Magazine Editor
+- Senior Game Designer & Architect
+- Senior UI Designer
+- Senior Children's Science Museum Curator
 
 **Specialist Generalists:**
 - General Contractor (Project Coordination)

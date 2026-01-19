@@ -37,12 +37,12 @@
 1. **Pru "El Taíno" Méndez** - Lead Developer / Research Scientist
 2. **Senior Research Scientist & Full Stack Engineer** - Engineering Lead
 3. **Senior Early Trials AI CEO** - AI Strategy & Early Trials Leadership
-4. **Hollywood Producer** - Creative Production & Media Strategy
-5. **Screenwriter** - Narrative Architecture & Story Development
-6. **Luxury Travel Magazine Editor** - Content Strategy & Editorial Direction
-7. **Game Designer and Architect** - Interactive Design & System Architecture
-8. **UI Designer** - User Interface & Experience Design
-9. **Children's Science Discovery Museum Curator** - Educational Content & Public Engagement
+4. **Senior Hollywood Producer** - Creative Production & Media Strategy
+5. **Senior Screenwriter** - Narrative Architecture & Story Development
+6. **Senior Luxury Travel Magazine Editor** - Content Strategy & Editorial Direction
+7. **Senior Game Designer & Architect** - Interactive Design & System Architecture
+8. **Senior UI Designer** - User Interface & Experience Design
+9. **Senior Children's Science Museum Curator** - Educational Content & Public Engagement
 
 ### Hero Hosts (FractiAI Research Team AI Representatives)
 

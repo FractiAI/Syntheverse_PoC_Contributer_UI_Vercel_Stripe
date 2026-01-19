@@ -40,15 +40,15 @@ The **FractiAI Research Team** is a multidisciplinary collective spanning AI res
 
 ### Creative & Media Team
 
-**Hollywood Producer**  
+**Senior Hollywood Producer**  
 - **Role:** Creative Production & Media Strategy  
 - **Focus:** Narrative development, media production, creative direction
 
-**Screenwriter**  
+**Senior Screenwriter**  
 - **Role:** Narrative Architecture & Story Development  
 - **Focus:** Script development, narrative design, storytelling frameworks
 
-**Luxury Travel Magazine Editor**  
+**Senior Luxury Travel Magazine Editor**  
 - **Role:** Content Strategy & Editorial Direction  
 - **Focus:** Content curation, editorial standards, publication strategy
 
@@ -56,11 +56,11 @@ The **FractiAI Research Team** is a multidisciplinary collective spanning AI res
 
 ### Design & Architecture Team
 
-**Game Designer and Architect**  
+**Senior Game Designer & Architect**  
 - **Role:** Interactive Design & System Architecture  
 - **Focus:** Game mechanics, user experience design, architectural planning
 
-**UI Designer**  
+**Senior UI Designer**  
 - **Role:** User Interface & Experience Design  
 - **Focus:** Visual design, interaction design, user experience optimization
 
@@ -68,7 +68,7 @@ The **FractiAI Research Team** is a multidisciplinary collective spanning AI res
 
 ### Education & Curation Team
 
-**Children's Science Discovery Museum Curator**  
+**Senior Children's Science Museum Curator**  
 - **Role:** Educational Content & Public Engagement  
 - **Focus:** Science education, museum curation, public outreach, educational content development
 
@@ -163,16 +163,16 @@ FractiAI Research Team
 │   │   └── Senior Early Trials AI CEO
 │   │
 │   ├── Creative & Media (3 members)
-│   │   ├── Hollywood Producer
-│   │   ├── Screenwriter
-│   │   └── Luxury Travel Magazine Editor
+│   │   ├── Senior Hollywood Producer
+│   │   ├── Senior Screenwriter
+│   │   └── Senior Luxury Travel Magazine Editor
 │   │
 │   ├── Design & Architecture (2 members)
-│   │   ├── Game Designer and Architect
-│   │   └── UI Designer
+│   │   ├── Senior Game Designer & Architect
+│   │   └── Senior UI Designer
 │   │
 │   └── Education & Curation (1 member)
-│       └── Children's Science Discovery Museum Curator
+│       └── Senior Children's Science Museum Curator
 │
 ├── Hero Hosts (AI Representatives - 6 members)
 │   ├── El Gran Sol (Gateway)
@@ -197,12 +197,12 @@ FractiAI Research Team
 | Pru "El Taíno" Méndez | ✅ | ✅ | ✅ | | | | |
 | Senior Research Scientist | ✅ | | | | | | |
 | Senior Early Trials AI CEO | ✅ | | | | | | |
-| Hollywood Producer | | ✅ | | | ✅ | | |
-| Screenwriter | | ✅ | | | ✅ | | |
-| Luxury Travel Editor | | ✅ | | | ✅ | | |
-| Game Designer/Architect | | ✅ | ✅ | | | | |
-| UI Designer | | | ✅ | | | | |
-| Museum Curator | | | | ✅ | | | |
+| Senior Hollywood Producer | | ✅ | | | ✅ | | |
+| Senior Screenwriter | | ✅ | | | ✅ | | |
+| Senior Luxury Travel Editor | | ✅ | | | ✅ | | |
+| Senior Game Designer/Architect | | ✅ | ✅ | | | | |
+| Senior UI Designer | | | ✅ | | | | |
+| Senior Museum Curator | | | | ✅ | | | |
 | **Hero Hosts** |
 | El Gran Sol | ✅ | ✅ | ✅ | ✅ | ✅ | | |
 | Leonardo da Vinci | ✅ | ✅ | | ✅ | | | |

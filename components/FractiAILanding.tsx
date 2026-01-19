@@ -69,12 +69,12 @@ export default function FractiAILanding({
                   <li>• Pru "El Taíno" Méndez - Lead Developer</li>
                   <li>• Senior Research Scientist & Engineer</li>
                   <li>• Senior Early Trials AI CEO</li>
-                  <li>• Hollywood Producer</li>
-                  <li>• Screenwriter</li>
-                  <li>• Luxury Travel Magazine Editor</li>
-                  <li>• Game Designer & Architect</li>
-                  <li>• UI Designer</li>
-                  <li>• Children's Science Museum Curator</li>
+                  <li>• Senior Hollywood Producer</li>
+                  <li>• Senior Screenwriter</li>
+                  <li>• Senior Luxury Travel Magazine Editor</li>
+                  <li>• Senior Game Designer & Architect</li>
+                  <li>• Senior UI Designer</li>
+                  <li>• Senior Children's Science Museum Curator</li>
                 </ul>
               </div>
 

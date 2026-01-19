@@ -65,12 +65,12 @@ return 'user';
    - Pru "El Taíno" Méndez - Lead Developer
    - Senior Research Scientist & Engineer
    - Senior Early Trials AI CEO
-   - Hollywood Producer
-   - Screenwriter
-   - Luxury Travel Magazine Editor
-   - Game Designer & Architect
-   - UI Designer
-   - Children's Science Museum Curator
+   - Senior Hollywood Producer
+   - Senior Screenwriter
+   - Senior Luxury Travel Magazine Editor
+   - Senior Game Designer & Architect
+   - Senior UI Designer
+   - Senior Children's Science Museum Curator
 
 2. **Testing & Legal (Outside Shell)** - 4 members
    - Marek - QA Specialist (Authorized ✅)
