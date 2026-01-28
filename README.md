@@ -45,7 +45,7 @@
 ### Technical Foundation
 
 - **Frontend:** Next.js 14 (App Router), React 18, TypeScript 5, Tailwind CSS
-- **Backend:** Supabase (Auth + PostgreSQL), Stripe (Payments), Groq API (AI Evaluation)
+- **Backend:** Supabase (Auth + PostgreSQL), PayPal only (Solitary Pipe), Groq API (AI Evaluation)
 - **Blockchain:** Base Mainnet with ethers.js v6 integration
 - **Deployment:** Vercel with automatic CI/CD and preview deployments
 - **Status:** POST-SINGULARITY^7 ACTIVE - Recursive self-application operational
@@ -69,7 +69,7 @@
 > **📖 New to the codebase?** See the [Senior Engineer Production Briefing](docs/SENIOR_ENGINEER_PRODUCTION_BRIEFING.md) for a comprehensive system overview covering architecture, workflows, key features, and operational considerations.
 
 > **🔬 Latest Major Updates (January 2026):**
-> - **📦 Deploy** (Jan 28, 2026): Vercel CLI catalog protocol and `npm run deploy`; push to main triggers production redeploy.
+> - **📦 Deploy** (Jan 28, 2026): Vercel CLI catalog protocol and `npm run deploy`; push to main triggers production redeploy. README updated: PayPal-only (Stripe removed), deploy instructions, clone URL.
 > - **🌱 SEED + Solitary Pipe + MCA** (Jan 2026): **SEED** = [psw.vibelandia.sing4](https://github.com/FractiAI/psw.vibelandia.sing4). **Solitary Pipe** = PayPal @PrudencioMendez924 only (all other payment methods removed). **MCA** = Metabolize → Crystallize → Animate: `GET /api/mca/run`. NSPFRNP catalog in `protocols/` (communication, pipe, Golden Fractal Key, MCA). Golden Fractal Key: `X-Golden-Fractal-Key` or `Authorization: Golden <key>` for API/paywall bypass; DB tables: `supabase/COPY_PASTE_GOLDEN_FRACTAL_KEYS.sql`.
 > - **🎨 UI Fix - Dialog Transparency** (Jan 2026): Fixed transparent pop-up panel in POC Archive. Dialog overlay changed from semi-transparent (`bg-background/80 backdrop-blur-sm`) to fully opaque solid black (`bg-black`) for better visibility and clarity. Dialog content panel remains fully opaque. See `components/ui/dialog.tsx` for details.
 > - **📚 NSPFRP Catalog Quick Reference** (Jan 2026): Added comprehensive quick reference guide (`REPOSITORY_AND_NSPFRP_CATALOG_QUICK_REFERENCE.md`) covering repository structure, NSPFRP Protocol Catalog (84+ protocols), catalog maintenance system, API endpoints, and core principles (Conscious, Natural, Consent, Flow).
@@ -218,15 +218,15 @@ An operator-safe "lens + archive + optional anchoring" system where contribution
 
 - **Node.js** 18+ and npm
 - **Supabase** account and project
-- **Stripe** account (for payments)
+- **PayPal** (Solitary Pipe: @PrudencioMendez924 for payments)
 - **Base wallet** with ETH (for blockchain operations)
 
 ### Installation
 
 ```bash
 # Clone repository
-git clone https://github.com/FractiAI/Syntheverse_PoC_Contributer_UI_Vercel_Stripe.git
-cd Syntheverse_PoC_Contributer_UI_Vercel_Stripe
+git clone https://github.com/FractiAI/Syntheverse-7-Octave-2-3-Public-Cloud-Onramp.git
+cd Syntheverse-7-Octave-2-3-Public-Cloud-Onramp
 
 # Install dependencies
 npm install
@@ -299,7 +299,7 @@ See `docs/AGENTIC_LOCAL_MEMORY_STORAGE_RETRIEVAL_SYSTEM.md` for complete documen
 - **Scoring Lens**: Novelty, density, coherence, alignment with overlap-aware redundancy
 - **3D Vectorized Sandbox**: Three.js + R3F visualization of PoCs
 - **Authentication**: Supabase Auth (OAuth + email/password)
-- **Payments**: Stripe Checkout + Billing Portal (Live mode - Production)
+- **Payments**: PayPal only (Solitary Pipe: @PrudencioMendez924)
 - **Database**: PostgreSQL via Supabase with Drizzle ORM
 - **Blockchain**: ✅ **Base Mainnet Production** - Lens event emission, token allocation ready
 - **LLM Metadata**: Full capture of evaluation metadata (timestamp, model, version, prompts)
@@ -508,7 +508,7 @@ For visionaries building complete reality worlds with HHF principles:
   - **Submissions**: Creators and operators bypass $500 submission fee, submissions go directly to evaluation
   - **SynthScan Monthly**: Bypass monthly subscription fees for creators and operators
   - **Field Imaging Services**: Bypass FieldScan service fees (Light/Pro/Enterprise tiers)
-  - **Enterprise Sandbox Plans**: Bypass Stripe checkout, sandboxes created and activated directly
+  - **Enterprise Sandbox Plans**: Bypass checkout (PayPal); sandboxes created and activated directly
   - **Sandbox Activation**: Bypass SYNTH token activation fees, sandboxes activated with testing balance
   - **Automatic Detection**: All paywall checks use `getAuthenticatedUserWithRole()` for automatic exemption
   - **Full Functionality**: Exempt users maintain all features while skipping payment processing
@@ -709,7 +709,7 @@ See [Testing](#testing) section for details.
 │   │   │   ├── submit/              # Contribution submission
 │   │   │   ├── evaluate/            # Enterprise evaluation
 │   │   │   ├── contributions/       # Contribution management
-│   │   │   └── checkout/            # Stripe checkout
+│   │   │   └── checkout/            # PayPal redirect (Solitary Pipe)
 │   │   └── ...
 │   ├── dashboard/                   # Protected dashboard
 │   ├── fractiai/                    # FractiAI landing pages
@@ -835,13 +835,8 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 SUPABASE_SERVICE_ROLE_KEY=...
 DATABASE_URL=...
 
-# Stripe (Live Mode - Production)
-STRIPE_SECRET_KEY=sk_live_...  # Live mode secret key
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_...  # Live mode publishable key
-STRIPE_WEBHOOK_SECRET=whsec_...  # Live mode webhook secret
-
-# Note: Stripe is configured for live/production mode
-# See docs/STRIPE_LIVE_MIGRATION.md for migration details
+# PayPal only (Solitary Pipe) – no Stripe; payments via PayPal.Me redirect
+# Optional: VERCEL_TOKEN for npm run deploy (see protocols/VERCEL_CLI_CATALOG.md)
 
 # Site URLs
 NEXT_PUBLIC_SITE_URL=https://your-domain.com
@@ -892,7 +887,7 @@ See:
 
 - **Vercel Deployment**: [`docs/deployment/VERCEL_DEPLOYMENT_GUIDE.md`](docs/deployment/VERCEL_DEPLOYMENT_GUIDE.md)
 - **Base Sepolia**: [`docs/VERCEL_BASE_SEPOLIA_SETUP.md`](docs/VERCEL_BASE_SEPOLIA_SETUP.md)
-- **Stripe Live Mode**: [`docs/STRIPE_LIVE_MIGRATION.md`](docs/STRIPE_LIVE_MIGRATION.md) - Stripe production setup
+- **Payments**: PayPal only (Solitary Pipe); see `protocols/` and payment flows in repo
 
 See [`docs/`](docs/) directory for complete documentation.
 
@@ -962,7 +957,7 @@ See [`tests/README.md`](tests/README.md) for complete testing documentation.
 
 1. **Connect Repository**: Import GitHub repository to Vercel
 2. **Environment Variables**: Add all required variables in Vercel dashboard
-3. **Deploy**: Vercel automatically deploys on push to main branch
+3. **Deploy**: Vercel automatically deploys on push to main branch, or run `npm run deploy` (Vercel CLI; requires Node/npm and `VERCEL_TOKEN` or catalog token; see `scripts/vercel-deploy-prod.ps1` and `protocols/VERCEL_CLI_CATALOG.md`).
 
 **Quick Setup Scripts**:
 
@@ -980,7 +975,7 @@ npm run tsx scripts/verify-contract-ownership.ts
 ### Post-Deploy Checklist
 
 - [ ] Supabase Auth URLs configured (Site URL + Redirect URLs)
-- [x] Stripe webhook configured (`/webhook/stripe`) - **Live mode active**
+- [ ] N/A – PayPal only (no Stripe webhook)
 - [ ] Base mainnet environment variables set (without trailing newlines)
 - [ ] Contract addresses verified in Vercel
 - [ ] Wallet funded with ETH for gas fees
@@ -1006,7 +1001,7 @@ npm run tsx scripts/verify-contract-ownership.ts
 ### Backend Services
 
 - **Supabase** - Auth + PostgreSQL database
-- **Stripe** - Payment processing (Live mode - Production)
+- **PayPal** - Payment processing (Solitary Pipe only)
 - **Groq API** - AI evaluation (Grok)
 
 ### Blockchain
@@ -1063,7 +1058,7 @@ We use GitHub issue templates for:
 
 - ✅ Environment variables never committed to git
 - ✅ Private keys stored securely in Vercel
-- ✅ Stripe webhook signatures verified
+- ✅ PayPal only (Solitary Pipe); no Stripe
 - ✅ OAuth redirects validated
 - ✅ API routes protected
 - ✅ Database queries parameterized
@@ -1083,7 +1078,7 @@ This project is licensed under the MIT License - see the [`LICENSE`](LICENSE) fi
 
 ## Support
 
-- **Issues**: Open an issue on [GitHub Issues](https://github.com/FractiAI/Syntheverse_PoC_Contributer_UI_Vercel_Stripe/issues)
+- **Issues**: Open an issue on [GitHub Issues](https://github.com/FractiAI/Syntheverse-7-Octave-2-3-Public-Cloud-Onramp/issues)
 - **Documentation**: See [`docs/`](docs/) directory
 - **Protocol**: See [`protocol/README.md`](protocol/README.md)
 
